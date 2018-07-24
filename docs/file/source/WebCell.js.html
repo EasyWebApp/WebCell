@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">source/WebCell.js | web-cell</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/WebCell"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/View.js~View.html">View</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ChangedCallback">ChangedCallback</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./Component&apos;;
+
+export {Component};
+
+export {default as View} from &apos;./view/View&apos;;
+
+export {default as ObjectView} from &apos;./view/ObjectView&apos;;
+
+export {default as ArrayView} from &apos;./view/ArrayView&apos;;
+
+
+/**
+ * Equivalent to the integration of Array&apos;s map() &amp; filter() methods
+ *
+ * @param {Iterable}                                           list
+ * @param {function(item: *, index: number, list:Iterable): *} filter
+ *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
+ *
+ * @return {Array}
+ */
+export function multipleMap(list, filter) {
+
+    const result = [ ];  filter = (filter instanceof Function)  &amp;&amp;  filter;
+
+    for (let i = 0;  i &lt; list.length;  i++) {
+
+        let item = filter  ?  filter(list[i], i, list)  :  list[i];
+
+        if (item != null)
+            if (item instanceof Array)
+                result.push(...item);
+            else
+                result.push( item );
+    }
+
+    return result;
+}
+
+
+/**
+ * Merge own properties of two or more objects together into the first object
+ * by their descriptor
+ *
+ * @param {Object}    target - An object that will receive the new properties
+ *                             if `source` are passed in
+ * @param {...Object} source - Additional objects containing properties to merge in
+ *
+ * @return {Object} The `target` parameter
+ */
+export function extend(target, ...source) {
+
+    for (let object of source)  if (object instanceof Object) {
+
+        let descriptor = Object.getOwnPropertyDescriptors( object );
+
+        if (object instanceof Function) {
+
+            delete descriptor.name;
+            delete descriptor.length;
+            delete descriptor.prototype;
+
+            let prototype = Object.getOwnPropertyDescriptors( object.prototype );
+
+            delete prototype.constructor;
+
+            Object.defineProperties(target.prototype, prototype);
+        }
+
+        Object.defineProperties(target, descriptor);
+    }
+
+    return target;
+}
+
+
+var depth = 0;
+
+/**
+ * Traverse Object-tree &amp; return Node array through the filter
+ *
+ * @param {object}        node     - Object tree
+ * @param {string}        fork_key - Key of children list
+ * @param {MapTreeFilter} filter   - Map filter
+ *
+ * @return {Array}  Result list of Map filter
+ */
+export function mapTree(node, fork_key, filter) {
+
+    var children = node[fork_key], list = [ ];    depth++ ;
+
+    for (var i = 0, value;  i &lt; children.length;  i++) {
+        /**
+         * @typedef {function} MapTreeFilter
+         *
+         * @param {object} child
+         * @param {number} index
+         * @param {number} depth
+         *
+         * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
+         *                    and Any other Type to Add into the Result Array.
+         */
+        try {
+            value = filter.call(node, children[i], i, depth);
+
+        } catch (error) {
+
+            depth = 0;    throw error;
+        }
+
+        if (! (value != null))  continue;
+
+        list.push( value );
+
+        if ((children[i] != null)  &amp;&amp;  (children[i][fork_key] || &apos;&apos;)[0])
+            list.push.apply(
+                list,  mapTree(children[i], fork_key, filter)
+            );
+    }
+
+    depth-- ;
+
+    return list;
+}
+
+
+/**
+ * @return {boolean} Whether current script is running in a sub DOM
+ */
+export function inSubDOM() {
+
+    return  (document.currentScript || &apos;&apos;).ownerDocument  !==  document;
+}
+
+
+/**
+ * @return {boolean} Whether current script is in `&lt;head /&gt;` of a DOM
+ */
+export function inHead() {
+
+    const script = document.currentScript || &apos;&apos;;
+
+    const DOM = script.ownerDocument;
+
+    return  DOM  &amp;&amp;  (script.parentNode === DOM.head);
+}
+
+
+/**
+ * Register a component
+ *
+ * @param {function} subClass
+ *
+ * @return {function} `subClass`
+ */
+export function component(subClass) {
+
+    const static_member = { };
+
+    if (inSubDOM()  ||  (! inHead())) {
+
+        let { template } = Component.findTemplate();
+
+        Object.defineProperty(static_member,  &apos;template&apos;,  {
+            get:         () =&gt; template,
+            enumerable:  true
+        });
+    }
+
+    extend(subClass,  Component,  static_member);
+
+    customElements.define(subClass.tagName, subClass);
+
+    return subClass;
+}
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

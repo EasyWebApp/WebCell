@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/Template.js | web-cell</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/WebCell"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/View.js~View.html">View</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ChangedCallback">ChangedCallback</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><h1 data-ice="title">test/Template.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Template from &apos;../source/view/Template&apos;;
+
+import sinon from &apos;sinon&apos;;
+
+
+/**
+ * @test {Template}
+ */
+describe(&apos;Template&apos;,  () =&gt; {
+
+    /**
+     * @test {Template#parse}
+     * @test {Template#clear}
+     */
+    it(&apos;Parsing&apos;,  () =&gt; {
+
+        const template = new Template(
+            &apos;[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !&apos;
+        );
+
+        template.should.have.length( 2 );
+
+        template.reference.get(&apos;this&apos;)[0].should.be.equal(&apos;name&apos;);
+
+        template.toString().should.be.equal(
+            `[ ${(new Date()).getFullYear()} ]  Hello,  !`
+        );
+    });
+
+    /**
+     * @test {Template#evaluate}
+     */
+    it(&apos;Evaluate text&apos;,  () =&gt; {
+
+        const template = new Template(
+            &apos;[ ${this.time} ]  Hello, ${scope.creator}\&apos;s ${view.name} !&apos;,
+            [&apos;view&apos;, &apos;scope&apos;]
+        );
+
+        template.should.have.length( 3 );
+
+        template.reference.size.should.be.equal( 3 );
+
+        template.evaluate(
+            {time: &apos;2015-07-23&apos;},  {name: &apos;EasyWebApp.js&apos;},  {creator: &apos;TechQuery&apos;}
+        ).should.be.equal(
+            &apos;[ 2015-07-23 ]  Hello, TechQuery\&apos;s EasyWebApp.js !&apos;
+        );
+    });
+
+    /**
+     * @test {Template#evaluate}
+     */
+    it(&apos;Evaluate non-text&apos;,  () =&gt; {
+
+        function method() { }
+
+        (new Template(&apos;${this.method}&apos;)).evaluate({ method })
+            .should.be.equal( method );
+    });
+
+    /**
+     * @test {Template#onChange}
+     */
+    it(&apos;Changed callback&apos;,  () =&gt; {
+
+        const empty = `[ ${(new Date()).getFullYear()} ]  Hello,  !`;
+
+        const onChange = sinon.spy((newValue, oldValue, ...bindData)  =&gt;  {
+
+            if (oldValue === null)
+                newValue.should.be.equal( empty );
+            else {
+                oldValue.should.be.equal( empty );
+
+                newValue.should.be.equal(
+                    `[ ${(new Date()).getFullYear()} ]  Hello, EWA !`
+                );
+            }
+
+            bindData.should.be.eql([1, 2, 3]);
+        });
+
+        const template = new Template(
+            &apos;[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !&apos;,
+            onChange,
+            [1, 2, 3]
+        );
+
+        template.evaluate({name: &apos;EWA&apos;});
+
+        onChange.should.have.callCount(2);
+    });
+});
+</code></pre>
+
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

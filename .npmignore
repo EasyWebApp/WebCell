@@ -1,0 +1,6 @@
+docs/
+test/
+.editorconfig
+.eslintrc.json
+.esdoc.json
+.github/

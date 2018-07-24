@@ -1,0 +1,7 @@
+--require babel-register
+--require babel-polyfill
+--require should
+--require should-sinon
+--recursive
+--colors
+--inline-diffs

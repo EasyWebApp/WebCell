@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <base data-ice="baseUrl">
+  <title data-ice="title">Home | web-cell</title>
+  <link type="text/css" rel="stylesheet" href="css/style.css">
+  <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
+  <script src="script/prettify/prettify.js"></script>
+  <script src="script/manual.js"></script>
+<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<body class="layout-container" data-ice="rootContainer">
+
+<header>
+  <a href="./">Home</a>
+  
+  <a href="identifiers.html">Reference</a>
+  <a href="source.html">Source</a>
+  <a href="test.html" data-ice="testLink">Test</a>
+  <div class="search-box">
+  <span>
+    <img src="./image/search.png">
+    <span class="search-input-edge"></span><input class="search-input"><span class="search-input-edge"></span>
+  </span>
+    <ul class="search-result"></ul>
+  </div>
+<a style="position:relative; top:3px;" href="https://github.com/EasyWebApp/WebCell"><img width="20px" src="./image/github.png"></a></header>
+
+<nav class="navigation" data-ice="nav"><div>
+  <ul>
+    
+  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/View.js~View.html">View</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-ChangedCallback">ChangedCallback</a></span></span></li>
+</ul>
+</div>
+</nav>
+
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="web-cell">Web Cell</h1><p>Light-weight <strong><a href="https://www.webcomponents.org/">Web Components</a> engine</strong> based on ECMAScript 6+, powered by the practice &amp; experience from developing <a href="https://gitee.com/Tech_Query/EasyWebApp/">EWA v1.0 ~ 4.0</a>.</p>
+<p><a href="https://gitter.im/EasyWebApp-js/Lobby?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/EasyWebApp-js/Lobby.svg" alt="Join the chat at https://gitter.im/EasyWebApp-js/Lobby"></a></p>
+<p><a href="https://david-dm.org/EasyWebApp/WebCell"><img src="https://david-dm.org/EasyWebApp/WebCell.svg" alt="NPM Dependency"></a></p>
+<p><a href="https://nodei.co/npm/web-cell/"><img src="https://nodei.co/npm/web-cell.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
+<h2 id="basic-usage">Basic Usage</h2><h3 id="installation">Installation</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm init
+
+npm install web-cell babel-polyfill
+
+npm install web-cell-cli -D</code>
+</code></pre>
+<p>(More about <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
+<h3 id="configuration">Configuration</h3><p>Add <strong>Source code folder</strong> of your components to <code>directories.lib</code> field of <code>package.json</code> (<a href="https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6">Example</a>)</p>
+<h3 id="index-page">Index page</h3><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;!DocType HTML&gt;
+&lt;html&gt;&lt;head&gt;
+    &lt;script src=&quot;node_modules/babel-polyfill/dist/polyfill.min.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.bootcss.com/webcomponentsjs/1.2.0/webcomponents-lite.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdn.bootcss.com/webcomponentsjs/1.2.0/custom-elements-es5-adapter.js&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;node_modules/web-cell/dist/web-cell.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script src=&quot;dist/your-component.js&quot; /&gt;
+    &lt;!-- More Script tags of your Web components --&gt;
+&lt;/head&gt;&lt;body&gt;
+    &lt;your-component&gt;&lt;/your-component&gt;
+&lt;/body&gt;&lt;/html&gt;</code>
+</code></pre>
+<h3 id="component">Component</h3><p>Create <a href="https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js">files as shown below</a> in <code>path/to/your-component</code> directory:</p>
+<p><code>index.html</code></p>
+<pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
+    &lt;textarea onchange=&quot;${host.bubbleOut.bind( host )}&quot;&gt;
+        Hello, ${view.name}!
+    &lt;/textarea&gt;
+&lt;/template&gt;</code>
+</code></pre>
+<p><code>index.css</code></p>
+<pre><code class="lang-CSS"><code class="source-code prettyprint">textarea {
+    font-style: italic;
+}</code>
+</code></pre>
+<p><code>index.json</code></p>
+<pre><code class="lang-JSON"><code class="source-code prettyprint">{
+    &quot;name&quot;:  &quot;Web components&quot;
+}</code>
+</code></pre>
+<p><code>index.js</code></p>
+<pre><code class="lang-JavaScript"><code class="source-code prettyprint">import {component} from &apos;web-cell&apos;;
+
+import template from &apos;./index.html&apos;;
+
+import style from &apos;./index.css&apos;;
+
+import data from &apos;./index.json&apos;;
+
+
+export default  component(class YourComponent extends HTMLElement {
+
+    constructor() {  super().buildDOM(template, style);  }
+
+    static get data() {  return data;  }
+
+    get value() {  return this.$(&apos;textarea&apos;)[0].value  }
+
+    set value(raw) {  this.$(&apos;textarea&apos;)[0].value = raw;  }
+});</code>
+</code></pre>
+<p>and then preview them during development with:</p>
+<pre><code class="lang-Shell"><code class="source-code prettyprint">web-cell preview</code>
+</code></pre>
+<h3 id="bundle">Bundle</h3><p>Bundle components to a package with JS modules in it:</p>
+<pre><code class="lang-Shell"><code class="source-code prettyprint">web-cell pack</code>
+</code></pre>
+<h2 id="integration">Integration</h2><h3 id="webpack-configuration">webpack configuration</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm install --save-dev \
+    webpack webpack-cli \
+    html-loader posthtml-loader \
+    to-string-loader css-loader</code>
+</code></pre>
+<p><code>webpack.config.js</code></p>
+<pre><code class="lang-JavaScript"><code class="source-code prettyprint">const path = require(&apos;path&apos;);
+
+module.exports = {
+    entry: &apos;path/to/your-component/index.js&apos;,
+    output: {
+        filename: &apos;your-component.js&apos;,
+        path: path.resolve(__dirname, &apos;dist&apos;)
+    },
+    module: {
+        rules: [
+            {
+                test: /\.html$/,
+                use: [
+                    &apos;html-loader&apos;,
+                    {
+                        loader: &apos;posthtml-loader&apos;,
+                        options: {
+                            ident: &apos;posthtml&apos;
+                        }
+                    }
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: [
+                    &apos;to-string-loader&apos;,
+                    &apos;css-loader&apos;
+                ]
+            }
+        ]
+    }
+};</code>
+</code></pre>
+<h3 id="import-to-other-frameworks">Import to other frameworks</h3><p><code>your-component-wrapper.vue</code></p>
+<pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
+    &lt;your-component v-model=&quot;message&quot;&gt;&lt;/your-component&gt;
+    &lt;p&gt;
+        Text from Web component: {{message}}
+    &lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+    import &apos;path/to/your-component&apos;;
+
+    export default {
+        data() {
+
+            return  {message: &apos;Come from Vue!&apos;};
+        }
+    }
+&lt;/script&gt;</code>
+</code></pre>
+<h2 id="api-document">API document</h2><ul>
+<li><p>Online --- <a href="https://web-cell.tk/">https://web-cell.tk/</a> or <code>npm docs</code></p>
+</li>
+<li><p>Offline --- <code>npm start</code></p>
+</li>
+</ul>
+<h2 id="component-library">Component library</h2><ol>
+<li><p><a href="https://easywebapp.github.io/cell-router/">cell-router</a></p>
+</li>
+<li><p><a href="https://github.com/EasyWebApp/BootCell">BootCell</a> based on BootStrap v4</p>
+</li>
+</ol>
+</div>
+</div>
+
+<footer class="footer">
+  Generated by <a href="https://esdoc.org">ESDoc<span data-ice="esdocVersion">(1.1.0)</span><img src="./image/esdoc-logo-mini-black.png"></a>
+</footer>
+
+<script src="script/search_index.js"></script>
+<script src="script/search.js"></script>
+<script src="script/pretty-print.js"></script>
+<script src="script/inherited-summary.js"></script>
+<script src="script/test-summary.js"></script>
+<script src="script/inner-link.js"></script>
+<script src="script/patch-for-local.js"></script>
+</body>
+</html>

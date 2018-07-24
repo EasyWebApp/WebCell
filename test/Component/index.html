@@ -1,0 +1,12 @@
+<!DocType HTML>
+<html><head>
+    <script src="../../node_modules/babel-polyfill/dist/polyfill.min.js"></script>
+    <script src="https://cdn.bootcss.com/webcomponentsjs/1.2.0/webcomponents-lite.js"></script>
+    <script src="../../dist/web-cell.js"></script>
+
+    <link rel="import" href="cell-test.html" />
+</head><body>
+    <cell-test oninput="this.testInput( event )"
+        onchange="console.log( this.value )">
+    </cell-test>
+</body></html>

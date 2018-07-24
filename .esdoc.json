@@ -1,0 +1,23 @@
+{
+    "index": "./ReadMe.markdown",
+    "source": "./source",
+    "destination": "./docs",
+    "plugins": [
+        {
+            "name": "esdoc-standard-plugin",
+            "option": {
+                "test": {
+                    "source": "./test",
+                    "interfaces": ["describe", "it"],
+                    "includes": ["\\.js$"]
+                }
+            }
+        },
+        {
+            "name": "esdoc-external-webapi-plugin",
+            "option": {
+                "enable": true
+            }
+        }
+    ]
+}

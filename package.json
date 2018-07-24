@@ -1,0 +1,73 @@
+{
+  "name": "web-cell",
+  "version": "0.9.4",
+  "description": "Light-weight Web Components engine based on ECMAScript 6+ with MVVM support",
+  "keywords": [
+    "WebApp",
+    "Web-component",
+    "SPA",
+    "ECMAScript",
+    "MVVM"
+  ],
+  "author": "shiy007@qq.com",
+  "license": "LGPL-3.0",
+  "browser": "dist/web-cell.js",
+  "directories": {
+    "lib": "source",
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EasyWebApp/WebCell.git"
+  },
+  "bugs": {
+    "url": "https://github.com/EasyWebApp/WebCell/issues"
+  },
+  "homepage": "https://web-cell.tk/",
+  "engines": {
+    "node": "^6.5.0"
+  },
+  "scripts": {
+    "lint": "eslint ./source/ ./test/",
+    "build": "amd-bundle source/WebCell dist/web-cell  &&  esdoc",
+    "start": "web-server docs/ -o",
+    "test": "mocha --exit",
+    "debug": "mocha --inspect-brk",
+    "precommit": "npm run lint  &&  npm test"
+  },
+  "devDependencies": {
+    "amd-bundle": "^1.3.1",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
+    "babel-runtime": "^6.26.0",
+    "esdoc": "^1.1.0",
+    "esdoc-external-webapi-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0",
+    "eslint": "^4.19.1",
+    "husky": "^0.14.3",
+    "jsdom": "^11.11.0",
+    "koapache": "^0.2.3",
+    "mocha": "^5.2.0",
+    "puppeteer-browser": "^0.3.1",
+    "should": "^13.2.1",
+    "should-sinon": "0.0.6",
+    "sinon": "^5.0.10"
+  },
+  "babel": {
+    "presets": [
+      "env"
+    ],
+    "plugins": [
+      [
+        "transform-runtime",
+        {
+          "polyfill": false
+        }
+      ],
+      "transform-es2015-modules-commonjs"
+    ]
+  }
+}
