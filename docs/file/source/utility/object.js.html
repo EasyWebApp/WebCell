@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/WebCell.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/utility/object.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -49,50 +49,128 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./Component&apos;;
-
-import { extend } from &apos;./utility/object&apos;;
-
-import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
-
-
+<div class="content" data-ice="content"><h1 data-ice="title">source/utility/object.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
 /**
- * Register a component
+ * Equivalent to the integration of Array&apos;s map() &amp; filter() methods
  *
- * @param {function} subClass
+ * @param {Iterable}                                           list
+ * @param {function(item: *, index: number, list:Iterable): *} filter
+ *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
  *
- * @return {function} `subClass`
+ * @return {Array}
  */
-export function component(subClass) {
+export function multipleMap(list, filter) {
 
-    const static_member = { };
+    const result = [ ];  filter = (filter instanceof Function)  &amp;&amp;  filter;
 
-    if (inSubDOM()  ||  (! inHead())) {
+    for (let i = 0;  i &lt; list.length;  i++) {
 
-        let { template } = Component.findTemplate();
+        let item = filter  ?  filter(list[i], i, list)  :  list[i];
 
-        Object.defineProperty(static_member,  &apos;template&apos;,  {
-            get:         () =&gt; template,
-            enumerable:  true
-        });
+        if (item != null)
+            if (item instanceof Array)
+                result.push(...item);
+            else
+                result.push( item );
     }
 
-    extend(subClass,  Component,  static_member);
-
-    customElements.define(subClass.tagName, subClass);
-
-    return subClass;
+    return result;
 }
 
 
-export { Component };
+/**
+ * Merge own properties of two or more objects together into the first object
+ * by their descriptor
+ *
+ * @param {Object}    target - An object that will receive the new properties
+ *                             if `source` are passed in
+ * @param {...Object} source - Additional objects containing properties to merge in
+ *                             (Value of `null` or `undefined` will be skipped)
+ *
+ * @return {Object} The `target` parameter
+ */
+export function extend(target, ...source) {
 
-export {default as View} from &apos;./view/View&apos;;
+    for (let object of source)  if (object instanceof Object) {
 
-export {default as ObjectView} from &apos;./view/ObjectView&apos;;
+        let descriptor = Object.getOwnPropertyDescriptors( object );
 
-export {default as ArrayView} from &apos;./view/ArrayView&apos;;
+        for (let key  of  Object.keys( descriptor ))
+            if (
+                (&apos;value&apos; in descriptor[key])  &amp;&amp;
+                !(descriptor[key].value != null)
+            )
+                delete descriptor[key];
+
+        if (object instanceof Function) {
+
+            delete descriptor.name;
+            delete descriptor.length;
+            delete descriptor.prototype;
+
+            let prototype = Object.getOwnPropertyDescriptors( object.prototype );
+
+            delete prototype.constructor;
+
+            Object.defineProperties(target.prototype, prototype);
+        }
+
+        Object.defineProperties(target, descriptor);
+    }
+
+    return target;
+}
+
+
+var depth = 0;
+
+/**
+ * Traverse Object-tree &amp; return Node array through the filter
+ *
+ * @param {object}        node     - Object tree
+ * @param {string}        fork_key - Key of children list
+ * @param {MapTreeFilter} filter   - Map filter
+ *
+ * @return {Array}  Result list of Map filter
+ */
+export function mapTree(node, fork_key, filter) {
+
+    var children = node[fork_key], list = [ ];    depth++ ;
+
+    for (var i = 0, value;  i &lt; children.length;  i++) {
+        /**
+         * @typedef {function} MapTreeFilter
+         *
+         * @param {object} child
+         * @param {number} index
+         * @param {number} depth
+         *
+         * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
+         *                    and Any other Type to Add into the Result Array.
+         */
+        try {
+            value = filter.call(node, children[i], i, depth);
+
+        } catch (error) {
+
+            depth = 0;    throw error;
+        }
+
+        if (! (value != null))  continue;
+
+        list.push( value );
+
+        if ((children[i] != null)  &amp;&amp;  (children[i][fork_key] || &apos;&apos;)[0])
+            list.push.apply(
+                list,  mapTree(children[i], fork_key, filter)
+            );
+    }
+
+    depth-- ;
+
+    return list;
+}
 </code></pre>
 
 </div>

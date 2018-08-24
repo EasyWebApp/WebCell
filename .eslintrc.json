@@ -20,6 +20,14 @@
         "no-cond-assign": "off",
         "no-console": ["error", {
             "allow": ["info", "warn", "error", "time", "timeEnd"]
+        }],
+        "valid-jsdoc": ["error", {
+            "prefer": {
+                "returns": "return"
+            },
+            "requireParamDescription": false,
+            "requireReturn": false,
+            "requireReturnDescription": false
         }]
     }
 }

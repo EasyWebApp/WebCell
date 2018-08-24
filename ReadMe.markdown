@@ -18,7 +18,7 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** based o
 ```Shell
 npm init
 
-npm install web-cell babel-polyfill
+npm install web-cell babel-polyfill @webcomponents/webcomponentsjs
 
 npm install web-cell-cli -D
 ```
@@ -27,7 +27,7 @@ npm install web-cell-cli -D
 
 ### Configuration
 
-Add **Source code folder** of your components to `directories.lib` field of `package.json` ([Example](https://github.com/EasyWebApp/BootCell/blob/V2/package.json#L6))
+Add **Source code folder** of your components to `directories.lib` field of `package.json` ([Example](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6))
 
 
 ### Index page
@@ -36,11 +36,11 @@ Add **Source code folder** of your components to `directories.lib` field of `pac
 <!DocType HTML>
 <html><head>
     <script src="node_modules/babel-polyfill/dist/polyfill.min.js"></script>
-    <script src="https://cdn.bootcss.com/webcomponentsjs/1.2.0/webcomponents-lite.js"></script>
-    <script src="https://cdn.bootcss.com/webcomponentsjs/1.2.0/custom-elements-es5-adapter.js"></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
     <script src="node_modules/web-cell/dist/web-cell.js"></script>
 
-    <script src="dist/your-component.js" />
+    <script src="dist/your-component.js"></script>
     <!-- More Script tags of your Web components -->
 </head><body>
     <your-component></your-component>

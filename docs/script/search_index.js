@@ -36,33 +36,45 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell/source/webcell.js~extend",
+    "web-cell/source/utility/object.js~extend",
     "function/index.html#static-function-extend",
-    "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
     "function"
   ],
   [
-    "web-cell/source/webcell.js~inhead",
+    "web-cell/source/utility/dom.js~inhead",
     "function/index.html#static-function-inHead",
-    "<span>inHead</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "<span>inHead</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
-    "web-cell/source/webcell.js~insubdom",
+    "web-cell/source/utility/dom.js~insubdom",
     "function/index.html#static-function-inSubDOM",
-    "<span>inSubDOM</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "<span>inSubDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
-    "web-cell/source/webcell.js~maptree",
+    "web-cell/source/utility/http.js~isxdomain",
+    "function/index.html#static-function-isXDomain",
+    "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/object.js~maptree",
     "function/index.html#static-function-mapTree",
-    "<span>mapTree</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "<span>mapTree</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
     "function"
   ],
   [
-    "web-cell/source/webcell.js~multiplemap",
+    "web-cell/source/utility/object.js~multiplemap",
     "function/index.html#static-function-multipleMap",
-    "<span>multipleMap</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "<span>multipleMap</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/http.js~request",
+    "function/index.html#static-function-request",
+    "<span>request</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
     "function"
   ],
   [
@@ -133,7 +145,7 @@ window.esdocSearchIndex = [
   ],
   [
     "component#on source/component.js~component#on,component#on",
-    "test-file/test/Component/index.js.html#lineNumber89",
+    "test-file/test/Component/index.js.html#lineNumber99",
     "Component mixin Delegate DOM events",
     "test"
   ],
@@ -150,62 +162,68 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
+    "component#\\$up source/component.js~component#$up,component#\\$up",
+    "test-file/test/Component/index.js.html#lineNumber89",
+    "Component mixin should find a parent element matched a CSS selector",
+    "test"
+  ],
+  [
     "objectview source/view/objectview.js~objectview,objectview",
-    "test-file/test/ObjectView/index.js.html#lineNumber19",
+    "test-file/test/ObjectView/index.js.html#lineNumber17",
     "ObjectView()",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber84",
+    "test-file/test/ObjectView/index.js.html#lineNumber82",
     "ObjectView() Nested view",
     "test"
   ],
   [
     "view#bindwith view.instanceof objectview#watch source/view/view.js~view#bindwith,view#bindwith source/view/view.js~view.instanceof,view.instanceof source/view/objectview.js~objectview#watch,objectview#watch",
-    "test-file/test/ObjectView/index.js.html#lineNumber106",
+    "test-file/test/ObjectView/index.js.html#lineNumber104",
     "ObjectView() Nested view Associate DOM",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber147",
+    "test-file/test/ObjectView/index.js.html#lineNumber145",
     "ObjectView() Nested view Get data",
     "test"
   ],
   [
     "objectview#render source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber116",
+    "test-file/test/ObjectView/index.js.html#lineNumber114",
     "ObjectView() Nested view Render data",
     "test"
   ],
   [
     "view.parsedom objectview#scan source/view/view.js~view.parsedom,view.parsedom source/view/objectview.js~objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber92",
+    "test-file/test/ObjectView/index.js.html#lineNumber90",
     "ObjectView() Nested view Scan DOM",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber25",
+    "test-file/test/ObjectView/index.js.html#lineNumber23",
     "ObjectView() Single view",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber76",
+    "test-file/test/ObjectView/index.js.html#lineNumber74",
     "ObjectView() Single view Get data",
     "test"
   ],
   [
     "objectview#watch objectview#render source/view/objectview.js~objectview#watch,objectview#watch source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber50",
+    "test-file/test/ObjectView/index.js.html#lineNumber48",
     "ObjectView() Single view Render data",
     "test"
   ],
   [
     "objectview#scan source/view/objectview.js~objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber39",
+    "test-file/test/ObjectView/index.js.html#lineNumber37",
     "ObjectView() Single view Scan DOM",
     "test"
   ],
@@ -241,31 +259,73 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/WebCell.js.html#lineNumber4",
+    "test-file/test/utility.js.html#lineNumber12",
     "Utility",
     "test"
   ],
   [
-    "maptree source/webcell.js~maptree,maptree",
-    "test-file/test/WebCell.js.html#lineNumber46",
+    "maptree source/utility/object.js~maptree,maptree",
+    "test-file/test/utility.js.html#lineNumber79",
     "Utility Filter object tree",
     "test"
   ],
   [
-    "extend source/webcell.js~extend,extend",
-    "test-file/test/WebCell.js.html#lineNumber8",
+    "request source/utility/http.js~request,request",
+    "test-file/test/utility.js.html#lineNumber108",
+    "Utility HTTP request",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber134",
+    "Utility HTTP request Get HTML document",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber127",
+    "Utility HTTP request Get JSON object",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber120",
+    "Utility HTTP request Get Plain text",
+    "test"
+  ],
+  [
+    "multiplemap source/utility/object.js~multiplemap,multiplemap",
+    "test-file/test/utility.js.html#lineNumber16",
+    "Utility Map & filter",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber18",
+    "Utility Map & filter Filter `null` & `undefined`",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber27",
+    "Utility Map & filter Merge Array elements into result",
+    "test"
+  ],
+  [
+    "extend source/utility/object.js~extend,extend",
+    "test-file/test/utility.js.html#lineNumber36",
     "Utility Mixin objects",
     "test"
   ],
   [
     "",
-    "test-file/test/WebCell.js.html#lineNumber19",
+    "test-file/test/utility.js.html#lineNumber52",
     "Utility Mixin objects Function or Class",
     "test"
   ],
   [
     "",
-    "test-file/test/WebCell.js.html#lineNumber10",
+    "test-file/test/utility.js.html#lineNumber38",
     "Utility Mixin objects Ordinary objects",
     "test"
   ],
@@ -612,6 +672,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "source/component.js~component#$up",
+    "class/source/Component.js~Component.html#instance-method-$up",
+    "source/Component.js~Component#$up",
+    "method"
+  ],
+  [
     "source/component.js~component#[name]",
     "class/source/Component.js~Component.html#instance-member-[name]",
     "source/Component.js~Component#[name]",
@@ -648,10 +714,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "source/component.js~component.domeventhandler",
-    "typedef/index.html#static-typedef-DOMEventHandler",
-    "source/Component.js~Component.DOMEventHandler",
-    "typedef"
+    "source/component.js~component.delegate",
+    "class/source/Component.js~Component.html#static-method-delegate",
+    "source/Component.js~Component.delegate",
+    "method"
   ],
   [
     "source/component.js~component.findtemplate",
@@ -684,15 +750,45 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "source/component.js~domeventhandler",
+    "typedef/index.html#static-typedef-DOMEventHandler",
+    "source/Component.js~DOMEventHandler",
+    "typedef"
+  ],
+  [
     "source/webcell.js",
     "file/source/WebCell.js.html",
     "source/WebCell.js",
     "file"
   ],
   [
-    "source/webcell.js~maptreefilter",
+    "source/utility/dom-polyfill.js",
+    "file/source/utility/DOM-polyfill.js.html",
+    "source/utility/DOM-polyfill.js",
+    "file"
+  ],
+  [
+    "source/utility/dom.js",
+    "file/source/utility/DOM.js.html",
+    "source/utility/DOM.js",
+    "file"
+  ],
+  [
+    "source/utility/http.js",
+    "file/source/utility/HTTP.js.html",
+    "source/utility/HTTP.js",
+    "file"
+  ],
+  [
+    "source/utility/object.js",
+    "file/source/utility/object.js.html",
+    "source/utility/object.js",
+    "file"
+  ],
+  [
+    "source/utility/object.js~maptreefilter",
     "typedef/index.html#static-typedef-MapTreeFilter",
-    "source/WebCell.js~MapTreeFilter",
+    "source/utility/object.js~MapTreeFilter",
     "typedef"
   ],
   [
@@ -1074,9 +1170,9 @@ window.esdocSearchIndex = [
     "testFile"
   ],
   [
-    "test/webcell.js",
-    "test-file/test/WebCell.js.html",
-    "test/WebCell.js",
+    "test/utility.js",
+    "test-file/test/utility.js.html",
+    "test/utility.js",
     "testFile"
   ]
 ]

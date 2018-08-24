@@ -1,6 +1,6 @@
 import View from './View';
 
-import {mapTree, extend} from '../WebCell';
+import { mapTree, extend } from '../utility/object';
 
 import Template from './Template';
 

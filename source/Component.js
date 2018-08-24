@@ -165,7 +165,7 @@ export default  class Component {
     }
 
     /**
-     * @protected
+     * @private
      *
      * @return   {Object}
      * @property {HTMLTemplateElement}                      template
@@ -202,13 +202,56 @@ export default  class Component {
     }
 
     /**
-     * @param {string} selector
+     * @param {string} selector - CSS selector
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
      */
     $(selector) {
 
         return  [... this.shadowRoot.querySelectorAll( selector )];
+    }
+
+    /**
+     * @param {string} selector - CSS selector
+     *
+     * @return {?Element} Matched parent
+     */
+    $up(selector) {
+
+        var element = this;
+
+        while ( element.parentNode ) {
+
+            element = element.parentNode;
+
+            if (element.matches  &&  element.matches( selector ))
+                return element;
+        }
+    }
+
+    /**
+     * DOM event delegate
+     *
+     * @private
+     *
+     * @param {string}          selector
+     * @param {DOMEventHandler} handler
+     *
+     * @return {Function} Handler wrapper
+     */
+    static delegate(selector, handler) {
+
+        const $up = Component.prototype.$up;
+
+        return  function (event) {
+
+            var target = Component.targetOf( event );
+
+            if (! target.matches( selector ))
+                target = $up.call(target, selector);
+
+            if ( target )  return handler.call(target, event);
+        };
     }
 
     /**
@@ -224,25 +267,14 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = '';
 
-        this.addEventListener(type,  selector ? event => {
-
-            var element = Component.targetOf( event );
-
-            while (! element.matches( selector )) {
-
-                element = element.parentNode;
-
-                if ((element === this)  ||  (element.nodeType !== 1))
-                    return;
-            }
-
-            /**
-             * @typedef {function(event: Event): ?boolean} DOMEventHandler
-             */
-            return  callback.call(element, event);
-
-        } : callback);
+        this.addEventListener(
+            type,  selector ? Component.delegate(selector, callback) : callback
+        );
 
         return this;
     }
 }
+
+/**
+ * @typedef {function(event: Event): *} DOMEventHandler
+ */

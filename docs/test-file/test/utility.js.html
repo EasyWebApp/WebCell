@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/WebCell.js | web-cell</title>
+  <title data-ice="title">test/utility.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -49,50 +49,150 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./Component&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/utility.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { multipleMap, extend, mapTree } from &apos;../source/utility/object&apos;;
 
-import { extend } from &apos;./utility/object&apos;;
+import { request } from &apos;../source/utility/HTTP&apos;;
 
-import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
+import &apos;../source/utility/DOM-polyfill&apos;;
+
+import { readFileSync } from &apos;fs&apos;;
+
+import WebServer from &apos;koapache&apos;;
 
 
-/**
- * Register a component
- *
- * @param {function} subClass
- *
- * @return {function} `subClass`
- */
-export function component(subClass) {
+describe(&apos;Utility&apos;,  () =&gt; {
+    /**
+     * @test {multipleMap}
+     */
+    describe(&apos;Map &amp; filter&apos;,  () =&gt; {
 
-    const static_member = { };
+        it(&apos;Filter `null` &amp; `undefined`&apos;,  () =&gt; {
 
-    if (inSubDOM()  ||  (! inHead())) {
-
-        let { template } = Component.findTemplate();
-
-        Object.defineProperty(static_member,  &apos;template&apos;,  {
-            get:         () =&gt; template,
-            enumerable:  true
+            multipleMap(
+                [null, undefined, NaN, false, 0, 1],  item =&gt; item
+            ).should.be.eql([
+                NaN, false, 0, 1
+            ]);
         });
-    }
 
-    extend(subClass,  Component,  static_member);
+        it(&apos;Merge Array elements into result&apos;,  () =&gt; {
 
-    customElements.define(subClass.tagName, subClass);
+            multipleMap([[1], [2, 3]],  item =&gt; item).should.be.eql([1, 2, 3]);
+        });
+    });
 
-    return subClass;
-}
+    /**
+     * @test {extend}
+     */
+    describe(&apos;Mixin objects&apos;,  () =&gt; {
+
+        it(&apos;Ordinary objects&apos;,  () =&gt; {
+
+            Object.keys(extend(
+                { },  null,  {
+                    example:   1,
+                    get test() { },
+                    null:       null,
+                    undefined:  undefined
+                }
+            )).should.be.eql([
+                &apos;example&apos;, &apos;test&apos;
+            ]);
+        });
+
+        it(&apos;Function or Class&apos;,  () =&gt; {
+
+            function Test() { }
+
+            class Example {
+                constructor(test) {  test;  }
+
+                static test() { }
+
+                test() { }
+            }
+
+            extend(Test, Example).should.have.properties({
+                name:    &apos;Test&apos;,
+                length:  0,
+                test:    Example.test
+            });
+
+            Test.prototype.should.not.be.equal( Example );
+
+            Test.prototype.should.have.property(&apos;test&apos;, Example.prototype.test);
+        });
+    });
+
+    /**
+     *  @test {mapTree}
+     */
+    it(&apos;Filter object tree&apos;,  () =&gt; {
+
+        mapTree({
+            id:        0,
+            children:  [
+                {
+                    id:        1,
+                    children:  [
+                        {
+                            id:        3,
+                            children:  []
+                        }
+                    ]
+                },
+                {
+                    id:        2,
+                    children:  []
+                }
+            ]
+        },  &apos;children&apos;,  function (child, index, depth) {
+
+            if (depth &lt; 2)  return child.id;
+
+        }).should.be.eql([1, 2]);
+    });
+
+    /**
+     * @test {request}
+     */
+    describe(&apos;HTTP request&apos;,  () =&gt; {
+
+        var server;
+
+        before(async () =&gt; {
+
+            server = await (new WebServer()).workerHost();
+
+            server = `http://${server.address}:${server.port}`;
+        });
 
 
-export { Component };
+        it(&apos;Get Plain text&apos;,  () =&gt; request(
+            `${server}/ReadMe.markdown`,
+        ).should.be.fulfilledWith(
+            readFileSync(&apos;ReadMe.markdown&apos;) + &apos;&apos;
+        ));
 
-export {default as View} from &apos;./view/View&apos;;
 
-export {default as ObjectView} from &apos;./view/ObjectView&apos;;
+        it(&apos;Get JSON object&apos;,  () =&gt; request(
+            `${server}/package.json`,
+        ).should.be.fulfilledWith(
+            JSON.parse( readFileSync(&apos;package.json&apos;) )
+        ));
 
-export {default as ArrayView} from &apos;./view/ArrayView&apos;;
+
+        it(&apos;Get HTML document&apos;,  async () =&gt; {
+
+            (await request(
+                `${server}/test/ObjectView/index.html`,
+            )).should.be.class(
+                &apos;DocumentFragment&apos;
+            );
+        });
+    });
+});
 </code></pre>
 
 </div>

@@ -176,6 +176,8 @@ export default  class View {
     /**
      * Get original data of this view
      *
+     * @abstract
+     *
      * @return {Object}
      */
     valueOf() {
@@ -186,6 +188,8 @@ export default  class View {
     /**
      * Render this view with data or Update without data
      *
+     * @abstract
+     *
      * @return {View}
      */
     render() {
@@ -195,6 +199,8 @@ export default  class View {
 
     /**
      * Reset this view to empty data
+     *
+     * @abstract
      *
      * @return {View}
      */

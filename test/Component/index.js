@@ -84,6 +84,16 @@ describe('Component mixin',  () => {
     });
 
     /**
+     * @test {Component#\$up}
+     */
+    it(
+        'should find a parent element matched a CSS selector',
+        () => page.$eval(
+            'cell-test',  element => element.$up('html').tagName
+        ).should.be.fulfilledWith('HTML')
+    );
+
+    /**
      * @test {Component#on}
      */
     it('Delegate DOM events',  async () => {

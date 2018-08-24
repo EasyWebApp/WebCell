@@ -2,15 +2,13 @@ import { resolve } from 'path';
 
 import { readFileSync } from 'fs';
 
-import { JSDOM } from 'jsdom';
+import JSDOM from '../../source/utility/DOM-polyfill';
 
 import View from '../../source/view/View';
 
 import ObjectView from '../../source/view/ObjectView';
 
-var page = new JSDOM(), HTML;
-
-global.window = page.window;  global.document = window.document;
+var HTML;
 
 
 /**
