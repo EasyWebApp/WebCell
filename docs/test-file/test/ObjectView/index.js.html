@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -60,7 +62,17 @@ import View from &apos;../../source/view/View&apos;;
 
 import ObjectView from &apos;../../source/view/ObjectView&apos;;
 
-var HTML;
+import Sinon from &apos;sinon&apos;;
+
+import { nextTick } from &apos;../../source/utility/DOM&apos;;
+
+var HTML, fragment = `
+    &lt;fieldset&gt;
+        &lt;legend title=&quot;Test field&quot;&gt;
+            Test
+            &lt;input type=&quot;checkbox&quot;&gt;
+        &lt;/legend&gt;
+    &lt;/fieldset&gt;`.trim();
 
 
 /**
@@ -108,14 +120,7 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
 
             view.extra.should.be.equal(&apos;test&apos;);
 
-            view.toString().should.be.equal(`
-    &lt;fieldset&gt;
-        &lt;legend title=&quot;Test field&quot;&gt;
-            Test
-            &lt;input type=&quot;checkbox&quot;&gt;
-        &lt;/legend&gt;
-    &lt;/fieldset&gt;`.trim()
-            );
+            view.toString().should.be.equal( fragment );
 
             view.content.querySelector(&apos;input&apos;).checked.should.be.true();
         });
@@ -129,6 +134,31 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
 
             view.valueOf().should.not.be.equal( view.data );
         });
+
+        /**
+         * @test {ObjectView#commit}
+         * @test {ObjectView#watch}
+         */
+        it(&apos;Async render&apos;,  async () =&gt; {
+
+            view.render = Sinon.spy( view.render );
+
+            view.commit(&apos;name&apos;, &apos;Example&apos;);
+
+            view.title = &apos;Example field&apos;;
+
+            view.render.should.not.be.called();
+
+            view.toString().should.be.equal( fragment );
+
+            await nextTick();
+
+            view.render.should.be.calledOnce();
+
+            view.toString().should.be.equal(
+                fragment.replace(/Test/g, &apos;Example&apos;)
+            );
+        });
     });
 
     describe(&apos;Nested view&apos;,  () =&gt; {
@@ -136,7 +166,6 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
         var view;
 
         /**
-         * @test {View.parseDOM}
          * @test {ObjectView#scan}
          */
         it(&apos;Scan DOM&apos;,  () =&gt; {
@@ -177,12 +206,7 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
 
             view.toString().trim().should.be.equal(`
 &lt;form&gt;
-    &lt;fieldset&gt;
-        &lt;legend title=&quot;Test field&quot;&gt;
-            Test
-            &lt;input type=&quot;checkbox&quot;&gt;
-        &lt;/legend&gt;
-    &lt;/fieldset&gt;
+    ${fragment}
     &lt;dl data-object=&quot;tips&quot;&gt;
         &lt;dt&gt;Test tips&lt;/dt&gt;
         &lt;dd&gt;Test content&lt;/dd&gt;

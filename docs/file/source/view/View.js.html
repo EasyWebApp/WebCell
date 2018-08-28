@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,7 +52,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/view/View.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">const view_DOM = new WeakMap(), DOM_view = new WeakMap();
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM, stringifyDOM } from &apos;../utility/DOM&apos;;
+
+const view_DOM = new WeakMap(), DOM_view = new WeakMap();
 
 const view_data = new WeakMap(), view_parent = new WeakMap();
 
@@ -80,7 +84,7 @@ export default  class View {
                 break;
             default:
                 template = Array.from(
-                    document.importNode(View.parseDOM( template ),  true).childNodes
+                    document.importNode(parseDOM( template ),  true).childNodes
                 );
         }
 
@@ -93,27 +97,7 @@ export default  class View {
             return _this_;
         }
 
-        view_data.set(this, data);  view_parent.set(this, parent);
-    }
-
-    /**
-     * @param {string} markup - Code of an markup fragment
-     *
-     * @return {DocumentFragment}
-     */
-    static parseDOM(markup) {
-
-        markup = (new window.DOMParser()).parseFromString(markup, &apos;text/html&apos;);
-
-        const fragment = document.createDocumentFragment();
-
-        fragment.append(
-            ... Array.from( markup.head.childNodes ).concat(
-                Array.from( markup.body.childNodes )
-            )
-        );
-
-        return fragment;
+        view_data.set(this, data),  view_parent.set(this, parent);
     }
 
     /**
@@ -164,20 +148,7 @@ export default  class View {
     /**
      * @return {string} Full markup code of this view
      */
-    toString() {
-
-        const content = this.content;
-
-        return  (content.nodeType === 1)  ?
-            content.outerHTML  :
-            Array.from(content.childNodes || content,  node =&gt; {
-
-                switch ( node.nodeType ) {
-                    case 1:    return node.outerHTML;
-                    case 3:    return node.nodeValue;
-                }
-            }).join(&apos;&apos;);
-    }
+    toString() {  return stringifyDOM( this.content );  }
 
     /**
      * @protected

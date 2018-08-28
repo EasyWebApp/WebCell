@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,13 +52,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/Component.js.html#lineNumber9">web-cell/source/Component.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/Component.js.html#lineNumber11">web-cell/source/Component.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/source/Component.js.html#lineNumber9">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/source/Component.js.html#lineNumber11">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -176,100 +178,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-setAccessor">setAccessor</a></span></span><span class="code" data-ice="signature">(map: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>Define a set of Getter or Setter for DOM properties,
-and store their values into private object.</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
           <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-targetOf">targetOf</a></span></span><span class="code" data-ice="signature">(event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event">Event</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-<table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Static Private Methods</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-delegate">delegate</a></span></span><span class="code" data-ice="signature">(selector: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, handler: <span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        <div data-ice="description"><p>DOM event delegate</p>
-</div>
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#static-method-findTemplate">findTemplate</a></span></span><span class="code" data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
         </p>
       </div>
       <div>
@@ -292,34 +201,6 @@ and store their values into private object.</p>
   <tbody>
   
   <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#instance-member-[name]">[name]</a></span></span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
     <td>
       <span class="access" data-ice="access">public</span>
       
@@ -398,34 +279,6 @@ and store their values into private object.</p>
           
           
           <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#instance-method-$up">$up</a></span></span><span class="code" data-ice="signature">(selector: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/Component.js~Component.html#instance-method-attributeChangedCallback">attributeChangedCallback</a></span></span><span class="code" data-ice="signature">(name: <span>*</span>, oldValue: <span>*</span>, newValue: <span>*</span>)</span>
         </p>
       </div>
       <div>
@@ -544,7 +397,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber13">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber15">source</a></span></span>
     </span>
   </h3>
 
@@ -596,7 +449,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber131">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber71">source</a></span></span>
     </span>
   </h3>
 
@@ -663,101 +516,6 @@ and store their values into private object.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-setAccessor">
-    <span class="access" data-ice="access">public</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span class="code" data-ice="name">setAccessor</span><span class="code" data-ice="signature">(map: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber87">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>Define a set of Getter or Setter for DOM properties,
-and store their values into private object.</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">map</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"><p><code>1</code> for Getter, <code>2</code> for Setter &amp; sum for both
-                      in each key&apos;s value</p>
-</td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span><span>[]</span></span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>Keys of <code>map</code></p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="example">
-    <h4>Example:</h4>
-    
-  <div class="example-doc" data-ice="exampleDoc">
-      
-      <pre class="prettyprint source-code"><code data-ice="exampleCode">
-   WebCell.component(class MyInput extends HTMLElement {
-
-       constructor() {  super();  }
-
-       static get observedAttributes() {
-
-           return this.setAccessor({
-               value:  1,
-               step:   3
-           });
-       }
-   });</code></pre>
-    </div>
-</div>
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-method-targetOf">
     <span class="access" data-ice="access">public</span>
     <span data-ice="static">static</span>
@@ -769,7 +527,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber145">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber85">source</a></span></span>
     </span>
   </h3>
 
@@ -835,223 +593,10 @@ and store their values into private object.</p>
   
   
 </div>
-<h2 data-ice="title">Static Private Methods</h2>
-
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-delegate">
-    <span class="access" data-ice="access">private</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span class="code" data-ice="name">delegate</span><span class="code" data-ice="signature">(selector: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, handler: <span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber242">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  <div data-ice="description"><p>DOM event delegate</p>
-</div>
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">selector</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">handler</td>
-      <td data-ice="type" class="code"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span></td>
-          <td class="return-desc" data-ice="returnDescription"><p>Handler wrapper</p>
-</td>
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-findTemplate">
-    <span class="access" data-ice="access">private</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span class="code" data-ice="name">findTemplate</span><span class="code" data-ice="signature">(): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber175">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties"><div data-ice="properties">
-  <h4 data-ice="title">Return Properties:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">template</td>
-      <td data-ice="type" class="code"><span>HTMLTemplateElement</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">style</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">Array</a></span>&lt;<span>HTMLStyleElement</span>, <span>HTMLLinkElement</span>&gt;</td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">script</td>
-      <td data-ice="type" class="code"><span>HTMLScriptElement</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  <div data-ice="tests">
-    <h4>Test:</h4>
-    <ul>
-      
-    <li data-ice="test"><span><a href="test-file/test/Component/index.js.html#lineNumber41">Component mixin Build Shadow DOM</a></span></li>
-</ul>
-  </div>
-
-  
-  
-</div>
 </div>
 
 <div data-ice="memberDetails"><h2 data-ice="title">Public Members</h2>
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-member-[name]">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">[name]</span><span class="code" data-ice="signature">: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">boolean</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber114">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
 <div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-get-view">
     <span class="access" data-ice="access">public</span>
@@ -1064,7 +609,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber62">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber64">source</a></span></span>
     </span>
   </h3>
 
@@ -1111,7 +656,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber209">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber149">source</a></span></span>
     </span>
   </h3>
 
@@ -1190,7 +735,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber219">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber159">source</a></span></span>
     </span>
   </h3>
 
@@ -1258,77 +803,6 @@ and store their values into private object.</p>
   
 </div>
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-attributeChangedCallback">
-    <span class="access" data-ice="access">public</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">attributeChangedCallback</span><span class="code" data-ice="signature">(name: <span>*</span>, oldValue: <span>*</span>, newValue: <span>*</span>)</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber111">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">name</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">oldValue</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">newValue</td>
-      <td data-ice="type" class="code"><span>*</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="instance-method-bubbleOut">
     <span class="access" data-ice="access">public</span>
     
@@ -1340,7 +814,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber157">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber97">source</a></span></span>
     </span>
   </h3>
 
@@ -1419,7 +893,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber26">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber28">source</a></span></span>
     </span>
   </h3>
 
@@ -1505,7 +979,7 @@ and store their values into private object.</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber266">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/Component.js.html#lineNumber206">source</a></span></span>
     </span>
   </h3>
 

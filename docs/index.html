@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -74,6 +76,7 @@ npm install web-cell-cli -D</code>
     &lt;your-component&gt;&lt;/your-component&gt;
 &lt;/body&gt;&lt;/html&gt;</code>
 </code></pre>
+<p>(Set the directory of <code>index.html</code> into <code>directories.test</code> field of <code>package.json</code> for auto-preview during development)</p>
 <h3 id="component">Component</h3><p>Create <a href="https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js">files as shown below</a> in <code>path/to/your-component</code> directory:</p>
 <p><code>index.html</code></p>
 <pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
@@ -186,7 +189,9 @@ module.exports = {
 <h2 id="component-library">Component library</h2><ol>
 <li><p><a href="https://easywebapp.github.io/cell-router/">cell-router</a></p>
 </li>
-<li><p><a href="https://github.com/EasyWebApp/BootCell">BootCell</a> based on BootStrap v4</p>
+<li><p><a href="https://github.com/EasyWebApp/BootCell">BootCell</a> based on <strong>BootStrap v4</strong></p>
+</li>
+<li><p><a href="https://github.com/EasyWebApp/material-cell">Material Cell</a> based on <strong>Material Design lite v1.3</strong></p>
 </li>
 </ol>
 </div>

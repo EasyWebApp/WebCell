@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -97,7 +99,7 @@
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
   <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ArrayView/index.js.html#lineNumber70"><p>Scan DOM with booted View</p>
 </a></span></td>
-  <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-scan">ObjectView#scan</a></span>
+  <td data-ice="testTarget" class="test-target"><span>ObjectView#scan</span>
 <span><a href="class/source/view/View.js~View.html#instance-method-bindWith">View#bindWith</a></span></td>
 </tr>
 
@@ -123,7 +125,7 @@
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
   <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/Component/index.js.html#lineNumber41"><p>Build Shadow DOM</p>
 </a></span></td>
-  <td data-ice="testTarget" class="test-target"><span><a href="class/source/Component.js~Component.html#static-method-findTemplate">Component.findTemplate</a></span>
+  <td data-ice="testTarget" class="test-target"><span>Component.findTemplate</span>
 <span><a href="class/source/Component.js~Component.html#instance-method-buildDOM">Component#buildDOM</a></span>
 <span><a href="class/source/Component.js~Component.html#instance-method-$">Component#\$</a></span></td>
 </tr>
@@ -154,51 +156,57 @@
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="0">
-  <td data-ice="testDescription" style="padding-left: 10px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber17"><p>ObjectView()</p>
+  <td data-ice="testDescription" style="padding-left: 10px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber27"><p>ObjectView()</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber23"><p>Single view</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber33"><p>Single view</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber37"><p>Scan DOM</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber47"><p>Scan DOM</p>
 </a></span></td>
-  <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-scan">ObjectView#scan</a></span></td>
+  <td data-ice="testTarget" class="test-target"><span>ObjectView#scan</span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber48"><p>Render data</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber58"><p>Render data</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-watch">ObjectView#watch</a></span>
 <span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-render">ObjectView#render</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber74"><p>Get data</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber77"><p>Get data</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-valueOf">ObjectView#valueOf</a></span></td>
 </tr>
 
+<tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber88"><p>Async render</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-commit">ObjectView#commit</a></span>
+<span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-watch">ObjectView#watch</a></span></td>
+</tr>
+
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber82"><p>Nested view</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/ObjectView/index.js.html#lineNumber110"><p>Nested view</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber90"><p>Scan DOM</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber117"><p>Scan DOM</p>
 </a></span></td>
-  <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/View.js~View.html#static-method-parseDOM">View.parseDOM</a></span>
-<span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-scan">ObjectView#scan</a></span></td>
+  <td data-ice="testTarget" class="test-target"><span>ObjectView#scan</span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber104"><p>Associate DOM</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber131"><p>Associate DOM</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/View.js~View.html#instance-method-bindWith">View#bindWith</a></span>
 <span><a href="class/source/view/View.js~View.html#static-method-instanceOf">View.instanceOf</a></span>
@@ -206,13 +214,13 @@
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber114"><p>Render data</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber141"><p>Render data</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-render">ObjectView#render</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber145"><p>Get data</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber167"><p>Get data</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-valueOf">ObjectView#valueOf</a></span></td>
 </tr>
@@ -226,7 +234,7 @@
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
   <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/Template.js.html#lineNumber15"><p>Parsing</p>
 </a></span></td>
-  <td data-ice="testTarget" class="test-target"><span><a href="class/source/view/Template.js~Template.html#instance-method-parse">Template#parse</a></span>
+  <td data-ice="testTarget" class="test-target"><span>Template#parse</span>
 <span><a href="class/source/view/Template.js~Template.html#instance-method-clear">Template#clear</a></span></td>
 </tr>
 
@@ -249,73 +257,85 @@
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="0">
-  <td data-ice="testDescription" style="padding-left: 10px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber12"><p>Utility</p>
+  <td data-ice="testDescription" style="padding-left: 10px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber14"><p>Utility</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber16"><p>Map &amp; filter</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber18"><p>Map &amp; filter</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber18"><p>Filter <code>null</code> &amp; <code>undefined</code></p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber20"><p>Filter <code>null</code> &amp; <code>undefined</code></p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber27"><p>Merge Array elements into result</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber29"><p>Merge Array elements into result</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber36"><p>Mixin objects</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber38"><p>Mixin objects</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="function/index.html#static-function-extend">extend</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber38"><p>Ordinary objects</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber40"><p>Ordinary objects</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber52"><p>Function or Class</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber54"><p>Function or Class</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/utility.js.html#lineNumber79"><p>Filter object tree</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/utility.js.html#lineNumber81"><p>Filter object tree</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
-  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber108"><p>HTTP request</p>
+  <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/utility.js.html#lineNumber107"><p>Parse &amp; Stringify DOM</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target">-</td>
+</tr>
+
+<tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span><a href="test-file/test/utility.js.html#lineNumber122"><p>Await next tick</p>
+</a></span></td>
+  <td data-ice="testTarget" class="test-target"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></td>
+</tr>
+
+<tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="1">
+  <td data-ice="testDescription" style="padding-left: 20px"><span data-ice="testInterfaceToggle" class="toggle closed"></span><span><a href="test-file/test/utility.js.html#lineNumber136"><p>HTTP request</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target"><span><a href="function/index.html#static-function-request">request</a></span></td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber120"><p>Get Plain text</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber148"><p>Get Plain text</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber127"><p>Get JSON object</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber155"><p>Get JSON object</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>
 
 <tr class="test-interface" data-ice="testInterface" style="display: none;" data-test-depth="2">
-  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber134"><p>Get HTML document</p>
+  <td data-ice="testDescription" style="padding-left: 30px"><span><a href="test-file/test/utility.js.html#lineNumber162"><p>Get HTML document</p>
 </a></span></td>
   <td data-ice="testTarget" class="test-target">-</td>
 </tr>

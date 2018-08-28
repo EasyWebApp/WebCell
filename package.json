@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "0.9.5",
+  "version": "0.9.6",
   "description": "Light-weight Web Components engine based on ECMAScript 6+ with MVVM support",
   "keywords": [
     "WebApp",
@@ -31,11 +31,12 @@
   "scripts": {
     "lint": "eslint --fix ./source/ ./test/",
     "pack": "amd-bundle source/WebCell dist/web-cell",
-    "build": "npm run lint  &&  npm run pack  &&  esdoc",
-    "start": "web-server docs/ -o",
     "test": "mocha --exit",
     "debug": "mocha --inspect-brk",
-    "precommit": "npm test  &&  npm run build  &&  git add ."
+    "prepublishOnly": "npm run lint  &&  npm run pack  &&  npm test",
+    "build": "npm run prepublishOnly  &&  esdoc",
+    "precommit": "npm run build  &&  git add .",
+    "start": "web-server docs/ -o"
   },
   "devDependencies": {
     "amd-bundle": "^1.3.1",
@@ -56,8 +57,7 @@
     "puppeteer-browser": "^0.3.1",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^5.0.10",
-    "whatwg-url": "^7.0.0"
+    "sinon": "^5.0.10"
   },
   "babel": {
     "presets": [

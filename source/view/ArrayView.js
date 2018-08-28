@@ -68,7 +68,11 @@ export default  class ArrayView extends View {
 
                 if (! (item.index != null))
                     Object.defineProperty(item, 'index', {
-                        get:    function () {  return data.indexOf( this );  }
+                        get:         function () {
+
+                            return  data.indexOf( this );
+                        },
+                        enumerable:  true
                     });
 
                 return  view.render( item ).content;

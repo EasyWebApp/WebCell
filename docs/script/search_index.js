@@ -36,21 +36,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~delay",
+    "function/index.html#static-function-delay",
+    "<span>delay</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~extend",
     "function/index.html#static-function-extend",
     "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
-    "function"
-  ],
-  [
-    "web-cell/source/utility/dom.js~inhead",
-    "function/index.html#static-function-inHead",
-    "<span>inHead</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
-    "function"
-  ],
-  [
-    "web-cell/source/utility/dom.js~insubdom",
-    "function/index.html#static-function-inSubDOM",
-    "<span>inSubDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -72,9 +66,27 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~nexttick",
+    "function/index.html#static-function-nextTick",
+    "<span>nextTick</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~parsedom",
+    "function/index.html#static-function-parseDOM",
+    "<span>parseDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/http.js~request",
     "function/index.html#static-function-request",
     "<span>request</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~stringifydom",
+    "function/index.html#static-function-stringifyDOM",
+    "<span>stringifyDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -96,7 +108,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "objectview#scan view#bindwith source/view/objectview.js~objectview#scan,objectview#scan source/view/view.js~view#bindwith,view#bindwith",
+    "objectview#scan view#bindwith objectview#scan,objectview#scan source/view/view.js~view#bindwith,view#bindwith",
     "test-file/test/ArrayView/index.js.html#lineNumber70",
     "ArrayView() Multiple top element of item template Scan DOM with booted View",
     "test"
@@ -132,7 +144,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component.findtemplate component#builddom component#\\$ source/component.js~component.findtemplate,component.findtemplate source/component.js~component#builddom,component#builddom source/component.js~component#$,component#\\$",
+    "component.findtemplate component#builddom component#\\$ component.findtemplate,component.findtemplate source/component.js~component#builddom,component#builddom source/component.js~component#$,component#\\$",
     "test-file/test/Component/index.js.html#lineNumber41",
     "Component mixin Build Shadow DOM",
     "test"
@@ -169,61 +181,67 @@ window.esdocSearchIndex = [
   ],
   [
     "objectview source/view/objectview.js~objectview,objectview",
-    "test-file/test/ObjectView/index.js.html#lineNumber17",
+    "test-file/test/ObjectView/index.js.html#lineNumber27",
     "ObjectView()",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber82",
+    "test-file/test/ObjectView/index.js.html#lineNumber110",
     "ObjectView() Nested view",
     "test"
   ],
   [
     "view#bindwith view.instanceof objectview#watch source/view/view.js~view#bindwith,view#bindwith source/view/view.js~view.instanceof,view.instanceof source/view/objectview.js~objectview#watch,objectview#watch",
-    "test-file/test/ObjectView/index.js.html#lineNumber104",
+    "test-file/test/ObjectView/index.js.html#lineNumber131",
     "ObjectView() Nested view Associate DOM",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber145",
+    "test-file/test/ObjectView/index.js.html#lineNumber167",
     "ObjectView() Nested view Get data",
     "test"
   ],
   [
     "objectview#render source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber114",
+    "test-file/test/ObjectView/index.js.html#lineNumber141",
     "ObjectView() Nested view Render data",
     "test"
   ],
   [
-    "view.parsedom objectview#scan source/view/view.js~view.parsedom,view.parsedom source/view/objectview.js~objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber90",
+    "objectview#scan objectview#scan,objectview#scan",
+    "test-file/test/ObjectView/index.js.html#lineNumber117",
     "ObjectView() Nested view Scan DOM",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber23",
+    "test-file/test/ObjectView/index.js.html#lineNumber33",
     "ObjectView() Single view",
     "test"
   ],
   [
+    "objectview#commit objectview#watch source/view/objectview.js~objectview#commit,objectview#commit source/view/objectview.js~objectview#watch,objectview#watch",
+    "test-file/test/ObjectView/index.js.html#lineNumber88",
+    "ObjectView() Single view Async render",
+    "test"
+  ],
+  [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber74",
+    "test-file/test/ObjectView/index.js.html#lineNumber77",
     "ObjectView() Single view Get data",
     "test"
   ],
   [
     "objectview#watch objectview#render source/view/objectview.js~objectview#watch,objectview#watch source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber48",
+    "test-file/test/ObjectView/index.js.html#lineNumber58",
     "ObjectView() Single view Render data",
     "test"
   ],
   [
-    "objectview#scan source/view/objectview.js~objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber37",
+    "objectview#scan objectview#scan,objectview#scan",
+    "test-file/test/ObjectView/index.js.html#lineNumber47",
     "ObjectView() Single view Scan DOM",
     "test"
   ],
@@ -252,81 +270,93 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "template#parse template#clear source/view/template.js~template#parse,template#parse source/view/template.js~template#clear,template#clear",
+    "template#parse template#clear template#parse,template#parse source/view/template.js~template#clear,template#clear",
     "test-file/test/Template.js.html#lineNumber15",
     "Template Parsing",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber12",
+    "test-file/test/utility.js.html#lineNumber14",
     "Utility",
     "test"
   ],
   [
+    "nexttick source/utility/dom.js~nexttick,nexttick",
+    "test-file/test/utility.js.html#lineNumber122",
+    "Utility Await next tick",
+    "test"
+  ],
+  [
     "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility.js.html#lineNumber79",
+    "test-file/test/utility.js.html#lineNumber81",
     "Utility Filter object tree",
     "test"
   ],
   [
     "request source/utility/http.js~request,request",
-    "test-file/test/utility.js.html#lineNumber108",
+    "test-file/test/utility.js.html#lineNumber136",
     "Utility HTTP request",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber134",
+    "test-file/test/utility.js.html#lineNumber162",
     "Utility HTTP request Get HTML document",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber127",
+    "test-file/test/utility.js.html#lineNumber155",
     "Utility HTTP request Get JSON object",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber120",
+    "test-file/test/utility.js.html#lineNumber148",
     "Utility HTTP request Get Plain text",
     "test"
   ],
   [
     "multiplemap source/utility/object.js~multiplemap,multiplemap",
-    "test-file/test/utility.js.html#lineNumber16",
+    "test-file/test/utility.js.html#lineNumber18",
     "Utility Map & filter",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber18",
+    "test-file/test/utility.js.html#lineNumber20",
     "Utility Map & filter Filter `null` & `undefined`",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber27",
+    "test-file/test/utility.js.html#lineNumber29",
     "Utility Map & filter Merge Array elements into result",
     "test"
   ],
   [
     "extend source/utility/object.js~extend,extend",
-    "test-file/test/utility.js.html#lineNumber36",
+    "test-file/test/utility.js.html#lineNumber38",
     "Utility Mixin objects",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber52",
+    "test-file/test/utility.js.html#lineNumber54",
     "Utility Mixin objects Function or Class",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber38",
+    "test-file/test/utility.js.html#lineNumber40",
     "Utility Mixin objects Ordinary objects",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber107",
+    "Utility Parse & Stringify DOM",
     "test"
   ],
   [
@@ -678,18 +708,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/component.js~component#[name]",
-    "class/source/Component.js~Component.html#instance-member-[name]",
-    "source/Component.js~Component#[name]",
-    "member"
-  ],
-  [
-    "source/component.js~component#attributechangedcallback",
-    "class/source/Component.js~Component.html#instance-method-attributeChangedCallback",
-    "source/Component.js~Component#attributeChangedCallback",
-    "method"
-  ],
-  [
     "source/component.js~component#bubbleout",
     "class/source/Component.js~Component.html#instance-method-bubbleOut",
     "source/Component.js~Component#bubbleOut",
@@ -714,27 +732,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "source/component.js~component.delegate",
-    "class/source/Component.js~Component.html#static-method-delegate",
-    "source/Component.js~Component.delegate",
-    "method"
-  ],
-  [
-    "source/component.js~component.findtemplate",
-    "class/source/Component.js~Component.html#static-method-findTemplate",
-    "source/Component.js~Component.findTemplate",
-    "method"
-  ],
-  [
     "source/component.js~component.indexof",
     "class/source/Component.js~Component.html#static-method-indexOf",
     "source/Component.js~Component.indexOf",
-    "method"
-  ],
-  [
-    "source/component.js~component.setaccessor",
-    "class/source/Component.js~Component.html#static-method-setAccessor",
-    "source/Component.js~Component.setAccessor",
     "method"
   ],
   [
@@ -864,21 +864,15 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/view/objectview.js~objectview#addtemplate",
-    "class/source/view/ObjectView.js~ObjectView.html#instance-method-addTemplate",
-    "source/view/ObjectView.js~ObjectView#addTemplate",
-    "method"
-  ],
-  [
-    "source/view/objectview.js~objectview#addview",
-    "class/source/view/ObjectView.js~ObjectView.html#instance-method-addView",
-    "source/view/ObjectView.js~ObjectView#addView",
-    "method"
-  ],
-  [
     "source/view/objectview.js~objectview#clear",
     "class/source/view/ObjectView.js~ObjectView.html#instance-method-clear",
     "source/view/ObjectView.js~ObjectView#clear",
+    "method"
+  ],
+  [
+    "source/view/objectview.js~objectview#commit",
+    "class/source/view/ObjectView.js~ObjectView.html#instance-method-commit",
+    "source/view/ObjectView.js~ObjectView#commit",
     "method"
   ],
   [
@@ -888,21 +882,9 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/view/objectview.js~objectview#parsetag",
-    "class/source/view/ObjectView.js~ObjectView.html#instance-method-parseTag",
-    "source/view/ObjectView.js~ObjectView#parseTag",
-    "method"
-  ],
-  [
     "source/view/objectview.js~objectview#render",
     "class/source/view/ObjectView.js~ObjectView.html#instance-method-render",
     "source/view/ObjectView.js~ObjectView#render",
-    "method"
-  ],
-  [
-    "source/view/objectview.js~objectview#scan",
-    "class/source/view/ObjectView.js~ObjectView.html#instance-method-scan",
-    "source/view/ObjectView.js~ObjectView#scan",
     "method"
   ],
   [
@@ -921,12 +903,6 @@ window.esdocSearchIndex = [
     "source/view/objectview.js~objectview#watch",
     "class/source/view/ObjectView.js~ObjectView.html#instance-method-watch",
     "source/view/ObjectView.js~ObjectView#watch",
-    "method"
-  ],
-  [
-    "source/view/objectview.js~objectview.templateof",
-    "class/source/view/ObjectView.js~ObjectView.html#static-method-templateOf",
-    "source/view/ObjectView.js~ObjectView.templateOf",
     "method"
   ],
   [
@@ -954,12 +930,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/view/template.js~template#compile",
-    "class/source/view/Template.js~Template.html#instance-method-compile",
-    "source/view/Template.js~Template#compile",
-    "method"
-  ],
-  [
     "source/view/template.js~template#constructor",
     "class/source/view/Template.js~Template.html#instance-constructor-constructor",
     "source/view/Template.js~Template#constructor",
@@ -970,12 +940,6 @@ window.esdocSearchIndex = [
     "class/source/view/Template.js~Template.html#instance-member-data",
     "source/view/Template.js~Template#data",
     "member"
-  ],
-  [
-    "source/view/template.js~template#eval",
-    "class/source/view/Template.js~Template.html#instance-method-eval",
-    "source/view/Template.js~Template#eval",
-    "method"
   ],
   [
     "source/view/template.js~template#evaluate",
@@ -994,12 +958,6 @@ window.esdocSearchIndex = [
     "class/source/view/Template.js~Template.html#instance-member-onChange",
     "source/view/Template.js~Template#onChange",
     "member"
-  ],
-  [
-    "source/view/template.js~template#parse",
-    "class/source/view/Template.js~Template.html#instance-method-parse",
-    "source/view/Template.js~Template#parse",
-    "method"
   ],
   [
     "source/view/template.js~template#push",
@@ -1137,12 +1095,6 @@ window.esdocSearchIndex = [
     "source/view/view.js~view.instanceof",
     "class/source/view/View.js~View.html#static-method-instanceOf",
     "source/view/View.js~View.instanceOf",
-    "method"
-  ],
-  [
-    "source/view/view.js~view.parsedom",
-    "class/source/view/View.js~View.html#static-method-parseDOM",
-    "source/view/View.js~View.parseDOM",
     "method"
   ],
   [

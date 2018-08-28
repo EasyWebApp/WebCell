@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -52,13 +54,17 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/view/ObjectView.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import View from &apos;./View&apos;;
 
-import { mapTree, extend } from &apos;../utility/object&apos;;
-
 import Template from &apos;./Template&apos;;
+
+import { nextTick } from &apos;../utility/DOM&apos;;
+
+import { mapTree, extend } from &apos;../utility/object&apos;;
 
 import ArrayView from &apos;./ArrayView&apos;;
 
-const Array_iterator = [ ][Symbol.iterator], template_element = new WeakMap();
+const Array_iterator = [ ][Symbol.iterator],
+    template_element = new WeakMap(),
+    view_buffer = new WeakMap();
 
 
 /**
@@ -104,6 +110,32 @@ export default  class ObjectView extends View {
     }
 
     /**
+     * Async render
+     *
+     * @protected
+     *
+     * @param {string} key
+     * @param {*}      value
+     */
+    async commit(key, value) {
+
+        var buffer;
+
+        if (! (buffer = view_buffer.get( this )))
+            view_buffer.set(this,  buffer = { });
+
+        buffer[key] = value;
+
+        await nextTick();
+
+        if (! view_buffer.get( this ))  return;
+
+        this.render( buffer );
+
+        view_buffer.delete( this );
+    }
+
+    /**
      * Add a watched property to this view instance
      *
      * @param {string} key
@@ -113,18 +145,17 @@ export default  class ObjectView extends View {
      */
     watch(key, value) {
 
-        if (key in this) {
-
-            if (key  in  Object.getPrototypeOf( this ))
-                console.warn(`Don&apos;t overwrite Inset property &quot;${key}&quot; !`);
-        } else
+        if (!(key in this))
             Object.defineProperty(this,  key,  value ? {
                 value:       value,
                 enumerable:  true
             } : {
-                get:    ()  =&gt;  this.data[ key ],
-                set:    (value)  =&gt;  this.render({[key]: value})
+                get:         ()  =&gt;  this.data[ key ],
+                set:         (value)  =&gt;  this.commit(key, value),
+                enumerable:  true
             });
+        else if (key  in  Object.getPrototypeOf( this ))
+            console.warn(`Don&apos;t overwrite Inset property &quot;${key}&quot; !`);
 
         return this;
     }

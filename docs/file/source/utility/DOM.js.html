@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,8 +52,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility/DOM.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">
-/**
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @private
+ *
  * @return {boolean} Whether current script is running in a sub DOM
  */
 export function inSubDOM() {
@@ -61,6 +64,8 @@ export function inSubDOM() {
 
 
 /**
+ * @private
+ *
  * @return {boolean} Whether current script is in `&lt;head /&gt;` of a DOM
  */
 export function inHead() {
@@ -70,6 +75,72 @@ export function inHead() {
     const DOM = script.ownerDocument;
 
     return  DOM  &amp;&amp;  (script.parentNode === DOM.head);
+}
+
+
+/**
+ * @param {string} markup - Code of an markup fragment
+ *
+ * @return {DocumentFragment}
+ */
+export function parseDOM(markup) {
+
+    markup = (new DOMParser()).parseFromString(markup, &apos;text/html&apos;);
+
+    const fragment = document.createDocumentFragment();
+
+    fragment.append(
+        ... Array.from( markup.head.childNodes ).concat(
+            Array.from( markup.body.childNodes )
+        )
+    );
+
+    return fragment;
+}
+
+
+/**
+ * @param {Element|Element[]|DocumentFragment} tree
+ *
+ * @return {string} HTML/XML source code
+ */
+export function stringifyDOM(tree) {
+
+    return  (tree.nodeType === 1)  ?
+        tree.outerHTML  :  Array.from(tree.childNodes || tree,  node =&gt; {
+
+            switch ( node.nodeType ) {
+                case 1:    return node.outerHTML;
+                case 3:    return node.nodeValue;
+            }
+        }).join(&apos;&apos;);
+}
+
+
+/**
+ * @param {number} [second=0]
+ *
+ * @return {Promise} Wait seconds in Macro tasks
+ */
+export function delay(second) {
+
+    return  new Promise(resolve  =&gt;  setTimeout(resolve, (second || 0) * 1000));
+}
+
+
+var tick;
+/**
+ * @return {Promise&lt;number&gt;} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
+ */
+export function nextTick() {
+
+    return  tick || (
+        tick = new Promise(
+            resolve =&gt; window.requestAnimationFrame(
+                time  =&gt;  (tick = null, resolve( time ))
+            )
+        )
+    );
 }
 </code></pre>
 

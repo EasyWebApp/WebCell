@@ -46,6 +46,8 @@ Add **Source code folder** of your components to `directories.lib` field of `pac
     <your-component></your-component>
 </body></html>
 ```
+(Set the directory of `index.html` into `directories.test` field of `package.json` for auto-preview during development)
+
 
 ### Component
 
@@ -192,4 +194,6 @@ module.exports = {
 
  1. [cell-router](https://easywebapp.github.io/cell-router/)
 
- 2. [BootCell](https://github.com/EasyWebApp/BootCell) based on BootStrap v4
+ 2. [BootCell](https://github.com/EasyWebApp/BootCell) based on **BootStrap v4**
+
+ 3. [Material Cell](https://github.com/EasyWebApp/material-cell) based on **Material Design lite v1.3**

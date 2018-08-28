@@ -1,6 +1,8 @@
-import View from './view/View';
+import { parseDOM } from './utility/DOM';
 
 import ObjectView from './view/ObjectView';
+
+import View from './view/View';
 
 
 /**
@@ -32,7 +34,7 @@ export default  class Component {
 
         if (typeof template === 'string') {
 
-            template = View.parseDOM( template );
+            template = parseDOM( template );
 
             let element = template.querySelector('template');
 
@@ -60,68 +62,6 @@ export default  class Component {
      * @type {View}
      */
     get view() {  return  View.instanceOf( this.shadowRoot );  }
-
-    /**
-     * Define a set of Getter or Setter for DOM properties,
-     * and store their values into private object.
-     *
-     * @param {Object} map - `1` for Getter, `2` for Setter & sum for both
-     *                       in each key's value
-     * @return {string[]} Keys of `map`
-     *
-     * @example
-     *
-     *    WebCell.component(class MyInput extends HTMLElement {
-     *
-     *        constructor() {  super();  }
-     *
-     *        static get observedAttributes() {
-     *
-     *            return this.setAccessor({
-     *                value:  1,
-     *                step:   3
-     *            });
-     *        }
-     *    });
-     */
-    static setAccessor(map) {
-
-        for (let key in map) {
-
-            let config = {enumerable: true};
-
-            if (map[ key ]  &  1)
-                config.get = function () {
-
-                    return  this.view[ key ];
-                };
-
-            if (map[ key ]  &  2)
-                config.set = function (value) {
-
-                    this.view[ key ] = value;
-                };
-
-            Object.defineProperty(this.prototype, key, config);
-        }
-
-        return  Object.keys( map );
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-
-        switch ( newValue ) {
-            case '':      this[ name ] = true;      break;
-            case null:    this[ name ] = false;     break;
-            default:      try {
-                this[ name ] = JSON.parse( newValue );
-
-            } catch (error) {
-
-                this[ name ] = newValue;
-            }
-        }
-    }
 
     /**
      * @param {Element} element
@@ -278,3 +218,26 @@ export default  class Component {
 /**
  * @typedef {function(event: Event): *} DOMEventHandler
  */
+
+
+/**
+ * @private
+ *
+ * @param {string} name
+ * @param {*}      oldValue
+ * @param {*}      newValue
+ */
+export function attributeChanged(name, oldValue, newValue) {
+
+    switch ( newValue ) {
+        case '':      this[ name ] = true;      break;
+        case null:    this[ name ] = false;     break;
+        default:      try {
+            this[ name ] = JSON.parse( newValue );
+
+        } catch (error) {
+
+            this[ name ] = newValue;
+        }
+    }
+}

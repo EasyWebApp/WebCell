@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,13 +52,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import ObjectView from &apos;<span><a href="file/source/view/ObjectView.js.html#lineNumber15">web-cell/source/view/ObjectView.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import ObjectView from &apos;<span><a href="file/source/view/ObjectView.js.html#lineNumber19">web-cell/source/view/ObjectView.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/source/view/ObjectView.js.html#lineNumber15">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/source/view/ObjectView.js.html#lineNumber19">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -88,7 +90,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber17">ObjectView()</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber27">ObjectView()</a></span></li>
 </ul>
   </div>
 
@@ -96,41 +98,7 @@
 </div>
 
 
-<div data-ice="staticMethodSummary"><h2>Static Method Summary</h2><table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Static Private Methods</td></tr></thead>
-  <tbody>
-  
-  <tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#static-method-templateOf">templateOf</a></span></span><span class="code" data-ice="signature">(node: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span> | <span>Attr</span>, renderer: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><a href="class/source/view/Template.js~Template.html">Template</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-</tbody>
-</table>
-</div>
+
 <div data-ice="constructorSummary"><h2>Constructor Summary</h2><table class="summary" data-ice="summary">
   <thead><tr><td data-ice="title" colspan="3">Public Constructor</td></tr></thead>
   <tbody>
@@ -350,12 +318,12 @@
 </tbody>
 </table>
 <table class="summary" data-ice="summary">
-  <thead><tr><td data-ice="title" colspan="3">Private Methods</td></tr></thead>
+  <thead><tr><td data-ice="title" colspan="3">Protected Methods</td></tr></thead>
   <tbody>
   
   <tr data-ice="target">
     <td>
-      <span class="access" data-ice="access">private</span>
+      <span class="access" data-ice="access">protected</span>
       
       
       
@@ -365,99 +333,16 @@
       <div>
         <p>
           
+          <span data-ice="async">async</span>
           
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-addTemplate">addTemplate</a></span></span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, template: <span><a href="class/source/view/Template.js~Template.html">Template</a></span>)</span>
+          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-commit">commit</a></span></span><span class="code" data-ice="signature">(key: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, value: <span>*</span>)</span>
         </p>
       </div>
       <div>
         
         
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-addView">addView</a></span></span><span class="code" data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, view: <span><a href="class/source/view/View.js~View.html">View</a></span>)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-parseTag">parseTag</a></span></span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>)</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">private</span>
-      
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html#instance-method-scan">scan</a></span></span><span class="code" data-ice="signature">()</span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
+        <div data-ice="description"><p>Async render</p>
+</div>
       </div>
     </td>
     <td>
@@ -488,34 +373,6 @@
           
           
           <span class="code" data-ice="name"><span><a href="class/source/view/View.js~View.html#static-method-instanceOf">instanceOf</a></span></span><span class="code" data-ice="signature">(node: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span>): <span><a href="class/source/view/View.js~View.html">View</a></span></span>
-        </p>
-      </div>
-      <div>
-        
-        
-        
-      </div>
-    </td>
-    <td>
-      
-      
-    </td>
-  </tr>
-<tr data-ice="target">
-    <td>
-      <span class="access" data-ice="access">public</span>
-      <span data-ice="static">static</span>
-      
-      
-      <span class="override" data-ice="override"></span>
-    </td>
-    <td>
-      <div>
-        <p>
-          
-          
-          
-          <span class="code" data-ice="name"><span><a href="class/source/view/View.js~View.html#static-method-parseDOM">parseDOM</a></span></span><span class="code" data-ice="signature">(markup: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span></span>
         </p>
       </div>
       <div>
@@ -847,86 +704,7 @@
 </div>
 
 
-<div data-ice="staticMethodDetails"><h2 data-ice="title">Static Private Methods</h2>
 
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="static-method-templateOf">
-    <span class="access" data-ice="access">private</span>
-    <span data-ice="static">static</span>
-    
-    
-    
-    
-    <span class="code" data-ice="name">templateOf</span><span class="code" data-ice="signature">(node: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span> | <span>Attr</span>, renderer: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span>): <span><a href="class/source/view/Template.js~Template.html">Template</a></span></span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber47">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">node</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span> | <span>Attr</span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">renderer</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">function</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  <div class="return-params" data-ice="returnParams">
-    <h4>Return:</h4>
-    <table>
-      <tbody>
-        <tr>
-          <td class="return-type code" data-ice="returnType"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></td>
-          
-        </tr>
-      </tbody>
-    </table>
-    <div data-ice="returnProperties">
-</div>
-  </div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-</div>
 <div data-ice="constructorDetails"><h2 data-ice="title">Public Constructors</h2>
 
 <div class="detail" data-ice="detail">
@@ -941,7 +719,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber20">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
@@ -1009,7 +787,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber169">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber198">source</a></span></span>
     </span>
   </h3>
 
@@ -1056,7 +834,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber26">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber30">source</a></span></span>
     </span>
   </h3>
 
@@ -1111,7 +889,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber203">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber232">source</a></span></span>
     </span>
   </h3>
 
@@ -1167,7 +945,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber182">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber211">source</a></span></span>
     </span>
   </h3>
 
@@ -1226,8 +1004,8 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber48">ObjectView() Single view Render data</a></span></li>
-<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber114">ObjectView() Nested view Render data</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber58">ObjectView() Single view Render data</a></span></li>
+<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber141">ObjectView() Nested view Render data</a></span></li>
 <li data-ice="test"><span><a href="test-file/test/ArrayView/index.js.html#lineNumber84">ArrayView() Multiple top element of item template Render part of data</a></span></li>
 </ul>
   </div>
@@ -1247,7 +1025,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber28">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber32">source</a></span></span>
     </span>
   </h3>
 
@@ -1290,8 +1068,8 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber74">ObjectView() Single view Get data</a></span></li>
-<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber145">ObjectView() Nested view Get data</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber77">ObjectView() Single view Get data</a></span></li>
+<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber167">ObjectView() Nested view Get data</a></span></li>
 </ul>
   </div>
 
@@ -1310,7 +1088,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber62">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber92">source</a></span></span>
     </span>
   </h3>
 
@@ -1376,36 +1154,38 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber48">ObjectView() Single view Render data</a></span></li>
-<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber104">ObjectView() Nested view Associate DOM</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber58">ObjectView() Single view Render data</a></span></li>
+<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber88">ObjectView() Single view Async render</a></span></li>
+<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber131">ObjectView() Nested view Associate DOM</a></span></li>
 </ul>
   </div>
 
   
   
 </div>
-<h2 data-ice="title">Private Methods</h2>
+<h2 data-ice="title">Protected Methods</h2>
 
 <div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-addTemplate">
-    <span class="access" data-ice="access">private</span>
+  <h3 data-ice="anchor" id="instance-method-commit">
+    <span class="access" data-ice="access">protected</span>
     
     
     
+    <span data-ice="async">async</span>
     
-    
-    <span class="code" data-ice="name">addTemplate</span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, template: <span><a href="class/source/view/Template.js~Template.html">Template</a></span>)</span>
+    <span class="code" data-ice="name">commit</span><span class="code" data-ice="signature">(key: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, value: <span>*</span>)</span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber86">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber66">source</a></span></span>
     </span>
   </h3>
 
   
   
   
-  
+  <div data-ice="description"><p>Async render</p>
+</div>
 
   
 
@@ -1418,187 +1198,20 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">element</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">template</td>
-      <td data-ice="type" class="code"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-addView">
-    <span class="access" data-ice="access">private</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">addView</span><span class="code" data-ice="signature">(name: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, view: <span><a href="class/source/view/View.js~View.html">View</a></span>)</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber101">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">name</td>
+      <td data-ice="name" class="code" data-depth="0">key</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">view</td>
-      <td data-ice="type" class="code"><span><a href="class/source/view/View.js~View.html">View</a></span></td>
+      <td data-ice="name" class="code" data-depth="0">value</td>
+      <td data-ice="type" class="code"><span>*</span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
 </tbody>
   </table>
 </div>
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-parseTag">
-    <span class="access" data-ice="access">private</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">parseTag</span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>)</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber108">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties"><div data-ice="properties">
-  <h4 data-ice="title">Params:</h4>
-  <table class="params">
-    <thead>
-    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
-    </thead>
-    <tbody>
-    
-    <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">element</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span></td>
-      <td data-ice="appendix"></td>
-      <td data-ice="description"></td>
-    </tr>
-</tbody>
-  </table>
-</div>
-</div>
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-
-  
-  
-</div>
-<div class="detail" data-ice="detail">
-  <h3 data-ice="anchor" id="instance-method-scan">
-    <span class="access" data-ice="access">private</span>
-    
-    
-    
-    
-    
-    <span class="code" data-ice="name">scan</span><span class="code" data-ice="signature">()</span>
-    <span class="right-info">
-      
-      
-      <span data-ice="source"><span><a href="file/source/view/ObjectView.js.html#lineNumber130">source</a></span></span>
-    </span>
-  </h3>
-
-  
-  
-  
-  
-
-  
-
-  <div data-ice="properties">
 </div>
 
   
@@ -1617,9 +1230,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber37">ObjectView() Single view Scan DOM</a></span></li>
-<li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber90">ObjectView() Nested view Scan DOM</a></span></li>
-<li data-ice="test"><span><a href="test-file/test/ArrayView/index.js.html#lineNumber70">ArrayView() Multiple top element of item template Scan DOM with booted View</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/ObjectView/index.js.html#lineNumber88">ObjectView() Single view Async render</a></span></li>
 </ul>
   </div>
 

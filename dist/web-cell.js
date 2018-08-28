@@ -59,7 +59,7 @@ function outPackage(name) {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -70,37 +70,6 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var _module_ = {
-    './utility/DOM': {
-        base: './utility',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.inSubDOM = inSubDOM;
-            exports.inHead = inHead;
-
-            /**
-             * @return {boolean} Whether current script is running in a sub DOM
-             */
-            function inSubDOM() {
-
-                return (document.currentScript || '').ownerDocument !== document;
-            }
-
-            /**
-             * @return {boolean} Whether current script is in `<head />` of a DOM
-             */
-            function inHead() {
-
-                var script = document.currentScript || '';
-
-                var DOM = script.ownerDocument;
-
-                return DOM && script.parentNode === DOM.head;
-            }
-        }
-    },
     './Component': {
         base: '.',
         dependency: [],
@@ -108,14 +77,17 @@ var _module_ = {
             Object.defineProperty(exports, "__esModule", {
                 value: true
             });
+            exports.attributeChanged = attributeChanged;
 
-            var _View = require('./view/View');
-
-            var _View2 = _interopRequireDefault(_View);
+            var _DOM = require('./utility/DOM');
 
             var _ObjectView = require('./view/ObjectView');
 
             var _ObjectView2 = _interopRequireDefault(_ObjectView);
+
+            var _View = require('./view/View');
+
+            var _View2 = _interopRequireDefault(_View);
 
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : { default: obj };
@@ -149,7 +121,7 @@ var _module_ = {
 
                         if (typeof template === 'string') {
 
-                            template = _View2.default.parseDOM(template);
+                            template = (0, _DOM.parseDOM)(template);
 
                             var element = template.querySelector('template');
 
@@ -172,31 +144,6 @@ var _module_ = {
                      * Main view of this component
                      *
                      * @type {View}
-                     */
-
-                }, {
-                    key: 'attributeChangedCallback',
-                    value: function attributeChangedCallback(name, oldValue, newValue) {
-
-                        switch (newValue) {
-                            case '':
-                                this[name] = true;break;
-                            case null:
-                                this[name] = false;break;
-                            default:
-                                try {
-                                    this[name] = JSON.parse(newValue);
-                                } catch (error) {
-
-                                    this[name] = newValue;
-                                }
-                        }
-                    }
-
-                    /**
-                     * @param {Element} element
-                     *
-                     * @return {number} The index of `element` in its siblings
                      */
 
                 }, {
@@ -298,58 +245,12 @@ var _module_ = {
                     }
 
                     /**
-                     * Define a set of Getter or Setter for DOM properties,
-                     * and store their values into private object.
+                     * @param {Element} element
                      *
-                     * @param {Object} map - `1` for Getter, `2` for Setter & sum for both
-                     *                       in each key's value
-                     * @return {string[]} Keys of `map`
-                     *
-                     * @example
-                     *
-                     *    WebCell.component(class MyInput extends HTMLElement {
-                     *
-                     *        constructor() {  super();  }
-                     *
-                     *        static get observedAttributes() {
-                     *
-                     *            return this.setAccessor({
-                     *                value:  1,
-                     *                step:   3
-                     *            });
-                     *        }
-                     *    });
+                     * @return {number} The index of `element` in its siblings
                      */
 
                 }], [{
-                    key: 'setAccessor',
-                    value: function setAccessor(map) {
-                        var _this = this;
-
-                        var _loop = function _loop(key) {
-
-                            var config = { enumerable: true };
-
-                            if (map[key] & 1) config.get = function () {
-
-                                return this.view[key];
-                            };
-
-                            if (map[key] & 2) config.set = function (value) {
-
-                                this.view[key] = value;
-                            };
-
-                            Object.defineProperty(_this.prototype, key, config);
-                        };
-
-                        for (var key in map) {
-                            _loop(key);
-                        }
-
-                        return Object.keys(map);
-                    }
-                }, {
                     key: 'indexOf',
                     value: function indexOf(element) {
 
@@ -442,6 +343,31 @@ var _module_ = {
             exports.default = Component; /**
                                           * @typedef {function(event: Event): *} DOMEventHandler
                                           */
+
+            /**
+             * @private
+             *
+             * @param {string} name
+             * @param {*}      oldValue
+             * @param {*}      newValue
+             */
+
+            function attributeChanged(name, oldValue, newValue) {
+
+                switch (newValue) {
+                    case '':
+                        this[name] = true;break;
+                    case null:
+                        this[name] = false;break;
+                    default:
+                        try {
+                            this[name] = JSON.parse(newValue);
+                        } catch (error) {
+
+                            this[name] = newValue;
+                        }
+                }
+            }
         }
     },
     './view/ArrayView': {
@@ -479,15 +405,15 @@ var _module_ = {
                  * @param {View}    [parent]
                  */
                 function ArrayView(element, parent) {
-                    var _this2;
+                    var _this;
 
                     _classCallCheck(this, ArrayView);
 
-                    if (!(_this2 = _possibleConstructorReturn(this, (ArrayView.__proto__ || Object.getPrototypeOf(ArrayView)).call(this, element, 'array', [], parent)), _this2).booted) {
+                    if (!(_this = _possibleConstructorReturn(this, (ArrayView.__proto__ || Object.getPrototypeOf(ArrayView)).call(this, element, 'array', [], parent)), _this).booted) {
 
-                        _this2.template = element.innerHTML.trim();_this2.clear();
+                        _this.template = element.innerHTML.trim();_this.clear();
                     }
-                    return _possibleConstructorReturn(_this2);
+                    return _possibleConstructorReturn(_this);
                 }
 
                 _createClass(ArrayView, [{
@@ -561,7 +487,7 @@ var _module_ = {
                     value: function render(list) {
                         var _content,
                             _ref,
-                            _this3 = this;
+                            _this2 = this;
 
                         if (!list) return this.update();
 
@@ -569,14 +495,16 @@ var _module_ = {
 
                         (_content = this.content).append.apply(_content, _toConsumableArray((_ref = []).concat.apply(_ref, _toConsumableArray(Array.from(list, function (item) {
 
-                            var view = _this3[_this3.length++] = new _ObjectView2.default(_this3.template, _this3);
+                            var view = _this2[_this2.length++] = new _ObjectView2.default(_this2.template, _this2);
 
                             data[data.length] = view.data;
 
                             if (!(item.index != null)) Object.defineProperty(item, 'index', {
                                 get: function get() {
+
                                     return data.indexOf(this);
-                                }
+                                },
+                                enumerable: true
                             });
 
                             return view.render(item).content;
@@ -606,443 +534,6 @@ var _module_ = {
             exports.default = ArrayView;
         }
     },
-    './view/Template': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            var Array_iterator = [][Symbol.iterator];
-
-            /**
-             * String template
-             */
-
-            var Template = function () {
-                /**
-                 * @param {string}          raw
-                 * @param {stirng[]}        [varName]  - Name list of the Local variable
-                 * @param {ChangedCallback} [onChange] - Call with New & Old value
-                 * @param {Array}           [bindData] - The parameter bound to `onChange`
-                 */
-                function Template(raw, varName, onChange, bindData) {
-                    _classCallCheck(this, Template);
-
-                    this.length = 0;
-
-                    this.raw = raw;
-
-                    /**
-                     * Last evaluated value
-                     *
-                     * @type {*}
-                     */
-                    this.value = null;
-
-                    if (varName instanceof Function) bindData = onChange, onChange = varName, varName = null;
-
-                    this.varName = varName || [];
-
-                    /**
-                     * Reference map of contexts
-                     *
-                     * @type {Map}
-                     */
-                    this.reference = new Map();
-
-                    var _iteratorNormalCompletion2 = true;
-                    var _didIteratorError2 = false;
-                    var _iteratorError2 = undefined;
-
-                    try {
-                        for (var _iterator2 = ['this'].concat(this.varName)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                            var scope = _step2.value;
-                            this.reference.set(scope, []);
-                        }
-                    } catch (err) {
-                        _didIteratorError2 = true;
-                        _iteratorError2 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                _iterator2.return();
-                            }
-                        } finally {
-                            if (_didIteratorError2) {
-                                throw _iteratorError2;
-                            }
-                        }
-                    }
-
-                    this.onChange = onChange instanceof Function ? onChange : null;
-
-                    this.data = bindData || [];
-
-                    this.parse().clear();
-                }
-
-                _createClass(Template, [{
-                    key: Symbol.iterator,
-                    value: function value() {
-                        return Array_iterator.call(this);
-                    }
-
-                    /**
-                     * @type {RegExp}
-                     */
-
-                }, {
-                    key: 'push',
-                    value: function push() {
-                        return Array.prototype.push.apply(this, arguments);
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {string} expression
-                     *
-                     * @return {number} Index of this Evaluation function
-                     */
-
-                }, {
-                    key: 'compile',
-                    value: function compile(expression) {
-
-                        this[this.length++] = new (Function.prototype.bind.apply(Function, [null].concat(_toConsumableArray(this.varName), ['return ' + expression.trim()])))();
-
-                        return this.length - 1;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @return {Template}
-                     */
-
-                }, {
-                    key: 'parse',
-                    value: function parse() {
-                        var _this4 = this;
-
-                        var addReference = function addReference(match, context, key1, key2, key3) {
-
-                            if (_this4.reference.has(context)) _this4.reference.get(context).push(key1 || key2 || key3);
-                        };
-
-                        this.raw = this.raw.replace(Template.Expression, function (_, expression) {
-
-                            expression.replace(Template.Reference, addReference);
-
-                            return '${' + _this4.compile(expression) + '}';
-                        });
-
-                        return this;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {number}  index
-                     * @param {?object} context
-                     * @param {Array}   [parameter]
-                     *
-                     * @return {*}
-                     */
-
-                }, {
-                    key: 'eval',
-                    value: function _eval(index, context, parameter) {
-
-                        try {
-                            var value = this[index].apply(context, parameter);
-
-                            return value != null ? value : '';
-                        } catch (error) {
-
-                            if (this.value !== null) console.warn(error);
-
-                            return '';
-                        }
-                    }
-
-                    /**
-                     * Evaluate expression
-                     *
-                     * @param {?object} context     - Value of `this` in the expression
-                     * @param {...*}    [parameter] - One or more value of the Local variable
-                     *
-                     * @return {*}
-                     */
-
-                }, {
-                    key: 'evaluate',
-                    value: function evaluate(context) {
-                        var _this5 = this;
-
-                        for (var _len2 = arguments.length, parameter = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                            parameter[_key2 - 1] = arguments[_key2];
-                        }
-
-                        var value = this.raw !== '${0}' ? this.raw.replace(/\$\{(\d+)\}/g, function (_, index) {
-                            return _this5.eval(index, context, parameter);
-                        }) : this.eval(0, context, parameter);
-
-                        if (value !== this.value) {
-                            /**
-                             * Call back only on Value changed
-                             *
-                             * @typedef {function} ChangedCallback
-                             *
-                             * @param {*}    newValue
-                             * @param {*}    oldValue
-                             * @param {...*} bindData
-                             */
-                            if (this.onChange) this.onChange.apply(this, _toConsumableArray([value, this.value].concat(this.data)));
-
-                            this.value = value;
-                        }
-
-                        return value;
-                    }
-
-                    /**
-                     * @return {string} Value evaluated with empty data
-                     */
-
-                }, {
-                    key: 'clear',
-                    value: function clear() {
-
-                        return this.evaluate.apply(this, _toConsumableArray(Array.from(this.reference.entries(), function (entry) {
-
-                            var data = {};
-
-                            var _iteratorNormalCompletion3 = true;
-                            var _didIteratorError3 = false;
-                            var _iteratorError3 = undefined;
-
-                            try {
-                                for (var _iterator3 = entry[1][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                                    var key = _step3.value;
-                                    data[key] = '';
-                                }
-                            } catch (err) {
-                                _didIteratorError3 = true;
-                                _iteratorError3 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                        _iterator3.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError3) {
-                                        throw _iteratorError3;
-                                    }
-                                }
-                            }
-
-                            return data;
-                        })));
-                    }
-                }, {
-                    key: 'toString',
-                    value: function toString() {
-                        return this.value + '';
-                    }
-                }], [{
-                    key: 'Expression',
-                    get: function get() {
-                        return (/\$\{([\s\S]+?)\}/g
-                        );
-                    }
-
-                    /**
-                     * @type {RegExp}
-                     */
-
-                }, {
-                    key: 'Reference',
-                    get: function get() {
-                        return (/(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g
-                        );
-                    }
-                }]);
-
-                return Template;
-            }();
-
-            exports.default = Template;
-        }
-    },
-    './utility/object': {
-        base: './utility',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.multipleMap = multipleMap;
-            exports.extend = extend;
-            exports.mapTree = mapTree;
-
-            /**
-             * Equivalent to the integration of Array's map() & filter() methods
-             *
-             * @param {Iterable}                                           list
-             * @param {function(item: *, index: number, list:Iterable): *} filter
-             *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
-             *
-             * @return {Array}
-             */
-            function multipleMap(list, filter) {
-
-                var result = [];filter = filter instanceof Function && filter;
-
-                for (var i = 0; i < list.length; i++) {
-
-                    var item = filter ? filter(list[i], i, list) : list[i];
-
-                    if (item != null) if (item instanceof Array) result.push.apply(result, _toConsumableArray(item));else result.push(item);
-                }
-
-                return result;
-            }
-
-            /**
-             * Merge own properties of two or more objects together into the first object
-             * by their descriptor
-             *
-             * @param {Object}    target - An object that will receive the new properties
-             *                             if `source` are passed in
-             * @param {...Object} source - Additional objects containing properties to merge in
-             *                             (Value of `null` or `undefined` will be skipped)
-             *
-             * @return {Object} The `target` parameter
-             */
-            function extend(target) {
-                for (var _len3 = arguments.length, source = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-                    source[_key3 - 1] = arguments[_key3];
-                }
-
-                var _iteratorNormalCompletion4 = true;
-                var _didIteratorError4 = false;
-                var _iteratorError4 = undefined;
-
-                try {
-
-                    for (var _iterator4 = source[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                        var object = _step4.value;
-                        if (object instanceof Object) {
-
-                            var descriptor = Object.getOwnPropertyDescriptors(object);
-
-                            var _iteratorNormalCompletion5 = true;
-                            var _didIteratorError5 = false;
-                            var _iteratorError5 = undefined;
-
-                            try {
-                                for (var _iterator5 = Object.keys(descriptor)[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                                    var key = _step5.value;
-                                    if ('value' in descriptor[key] && !(descriptor[key].value != null)) delete descriptor[key];
-                                }
-                            } catch (err) {
-                                _didIteratorError5 = true;
-                                _iteratorError5 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                                        _iterator5.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError5) {
-                                        throw _iteratorError5;
-                                    }
-                                }
-                            }
-
-                            if (object instanceof Function) {
-
-                                delete descriptor.name;
-                                delete descriptor.length;
-                                delete descriptor.prototype;
-
-                                var prototype = Object.getOwnPropertyDescriptors(object.prototype);
-
-                                delete prototype.constructor;
-
-                                Object.defineProperties(target.prototype, prototype);
-                            }
-
-                            Object.defineProperties(target, descriptor);
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError4 = true;
-                    _iteratorError4 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                            _iterator4.return();
-                        }
-                    } finally {
-                        if (_didIteratorError4) {
-                            throw _iteratorError4;
-                        }
-                    }
-                }
-
-                return target;
-            }
-
-            var depth = 0;
-
-            /**
-             * Traverse Object-tree & return Node array through the filter
-             *
-             * @param {object}        node     - Object tree
-             * @param {string}        fork_key - Key of children list
-             * @param {MapTreeFilter} filter   - Map filter
-             *
-             * @return {Array}  Result list of Map filter
-             */
-            function mapTree(node, fork_key, filter) {
-
-                var children = node[fork_key],
-                    list = [];depth++;
-
-                for (var i = 0, value; i < children.length; i++) {
-                    /**
-                     * @typedef {function} MapTreeFilter
-                     *
-                     * @param {object} child
-                     * @param {number} index
-                     * @param {number} depth
-                     *
-                     * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
-                     *                    and Any other Type to Add into the Result Array.
-                     */
-                    try {
-                        value = filter.call(node, children[i], i, depth);
-                    } catch (error) {
-
-                        depth = 0;throw error;
-                    }
-
-                    if (!(value != null)) continue;
-
-                    list.push(value);
-
-                    if (children[i] != null && (children[i][fork_key] || '')[0]) list.push.apply(list, mapTree(children[i], fork_key, filter));
-                }
-
-                depth--;
-
-                return list;
-            }
-        }
-    },
     './view/ObjectView': {
         base: './view',
         dependency: [],
@@ -1055,11 +546,13 @@ var _module_ = {
 
             var _View2 = _interopRequireDefault(_View);
 
-            var _object = require('../utility/object');
-
             var _Template = require('./Template');
 
             var _Template2 = _interopRequireDefault(_Template);
+
+            var _DOM = require('../utility/DOM');
+
+            var _object = require('../utility/object');
 
             var _ArrayView = require('./ArrayView');
 
@@ -1070,7 +563,8 @@ var _module_ = {
             }
 
             var Array_iterator = [][Symbol.iterator],
-                template_element = new WeakMap();
+                template_element = new WeakMap(),
+                view_buffer = new WeakMap();
 
             /**
              * View for Object model
@@ -1084,12 +578,12 @@ var _module_ = {
                  * @param {View}                            [parent]
                  */
                 function ObjectView(template, parent) {
-                    var _this6;
+                    var _this3;
 
                     _classCallCheck(this, ObjectView);
 
-                    if (!(_this6 = _possibleConstructorReturn(this, (ObjectView.__proto__ || Object.getPrototypeOf(ObjectView)).call(this, template, 'object', {}, parent)), _this6).booted) _this6.length = 0, _this6.scan();
-                    return _possibleConstructorReturn(_this6);
+                    if (!(_this3 = _possibleConstructorReturn(this, (ObjectView.__proto__ || Object.getPrototypeOf(ObjectView)).call(this, template, 'object', {}, parent)), _this3).booted) _this3.length = 0, _this3.scan();
+                    return _possibleConstructorReturn(_this3);
                 }
 
                 _createClass(ObjectView, [{
@@ -1103,26 +597,26 @@ var _module_ = {
 
                         var data = Object.assign({}, this.data);
 
-                        var _iteratorNormalCompletion6 = true;
-                        var _didIteratorError6 = false;
-                        var _iteratorError6 = undefined;
+                        var _iteratorNormalCompletion2 = true;
+                        var _didIteratorError2 = false;
+                        var _iteratorError2 = undefined;
 
                         try {
-                            for (var _iterator6 = this[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                                var template = _step6.value;
+                            for (var _iterator2 = this[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                var template = _step2.value;
                                 if (template instanceof _View2.default) data[template.name] = template.valueOf();
                             }
                         } catch (err) {
-                            _didIteratorError6 = true;
-                            _iteratorError6 = err;
+                            _didIteratorError2 = true;
+                            _iteratorError2 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                    _iterator6.return();
+                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                    _iterator2.return();
                                 }
                             } finally {
-                                if (_didIteratorError6) {
-                                    throw _iteratorError6;
+                                if (_didIteratorError2) {
+                                    throw _iteratorError2;
                                 }
                             }
                         }
@@ -1140,8 +634,60 @@ var _module_ = {
                      */
 
                 }, {
-                    key: 'watch',
+                    key: 'commit',
 
+
+                    /**
+                     * Async render
+                     *
+                     * @protected
+                     *
+                     * @param {string} key
+                     * @param {*}      value
+                     */
+                    value: function () {
+                        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(key, value) {
+                            var buffer;
+                            return regeneratorRuntime.wrap(function _callee$(_context) {
+                                while (1) {
+                                    switch (_context.prev = _context.next) {
+                                        case 0:
+
+                                            if (!(buffer = view_buffer.get(this))) view_buffer.set(this, buffer = {});
+
+                                            buffer[key] = value;
+
+                                            _context.next = 4;
+                                            return (0, _DOM.nextTick)();
+
+                                        case 4:
+                                            if (view_buffer.get(this)) {
+                                                _context.next = 6;
+                                                break;
+                                            }
+
+                                            return _context.abrupt('return');
+
+                                        case 6:
+
+                                            this.render(buffer);
+
+                                            view_buffer.delete(this);
+
+                                        case 8:
+                                        case 'end':
+                                            return _context.stop();
+                                    }
+                                }
+                            }, _callee, this);
+                        }));
+
+                        function commit(_x, _x2) {
+                            return _ref2.apply(this, arguments);
+                        }
+
+                        return commit;
+                    }()
 
                     /**
                      * Add a watched property to this view instance
@@ -1151,23 +697,24 @@ var _module_ = {
                      *
                      * @return {ObjectView} This view
                      */
+
+                }, {
+                    key: 'watch',
                     value: function watch(key, value) {
-                        var _this7 = this;
+                        var _this4 = this;
 
-                        if (key in this) {
-
-                            if (key in Object.getPrototypeOf(this)) console.warn('Don\'t overwrite Inset property "' + key + '" !');
-                        } else Object.defineProperty(this, key, value ? {
+                        if (!(key in this)) Object.defineProperty(this, key, value ? {
                             value: value,
                             enumerable: true
                         } : {
                             get: function get() {
-                                return _this7.data[key];
+                                return _this4.data[key];
                             },
                             set: function set(value) {
-                                return _this7.render(_defineProperty({}, key, value));
-                            }
-                        });
+                                return _this4.commit(key, value);
+                            },
+                            enumerable: true
+                        });else if (key in Object.getPrototypeOf(this)) console.warn('Don\'t overwrite Inset property "' + key + '" !');
 
                         return this;
                     }
@@ -1187,26 +734,26 @@ var _module_ = {
 
                         template_element.set(this[this.length++] = template, element);
 
-                        var _iteratorNormalCompletion7 = true;
-                        var _didIteratorError7 = false;
-                        var _iteratorError7 = undefined;
+                        var _iteratorNormalCompletion3 = true;
+                        var _didIteratorError3 = false;
+                        var _iteratorError3 = undefined;
 
                         try {
-                            for (var _iterator7 = template.reference.get('view')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                                var key = _step7.value;
+                            for (var _iterator3 = template.reference.get('view')[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                                var key = _step3.value;
                                 this.watch(key);
                             }
                         } catch (err) {
-                            _didIteratorError7 = true;
-                            _iteratorError7 = err;
+                            _didIteratorError3 = true;
+                            _iteratorError3 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                    _iterator7.return();
+                                if (!_iteratorNormalCompletion3 && _iterator3.return) {
+                                    _iterator3.return();
                                 }
                             } finally {
-                                if (_didIteratorError7) {
-                                    throw _iteratorError7;
+                                if (_didIteratorError3) {
+                                    throw _iteratorError3;
                                 }
                             }
                         }
@@ -1234,9 +781,9 @@ var _module_ = {
                 }, {
                     key: 'parseTag',
                     value: function parseTag(element) {
-                        var _this8 = this;
+                        var _this5 = this;
 
-                        var _loop2 = function _loop2(attr) {
+                        var _loop = function _loop(attr) {
 
                             var name = attr.name;
 
@@ -1248,31 +795,31 @@ var _module_ = {
 
                             if (template == '') element.removeAttribute(name);
 
-                            _this8.addTemplate(element, template);
+                            _this5.addTemplate(element, template);
                         };
 
-                        var _iteratorNormalCompletion8 = true;
-                        var _didIteratorError8 = false;
-                        var _iteratorError8 = undefined;
+                        var _iteratorNormalCompletion4 = true;
+                        var _didIteratorError4 = false;
+                        var _iteratorError4 = undefined;
 
                         try {
 
-                            for (var _iterator8 = Array.from(element.attributes)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                                var attr = _step8.value;
+                            for (var _iterator4 = Array.from(element.attributes)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                                var attr = _step4.value;
 
-                                _loop2(attr);
+                                _loop(attr);
                             }
                         } catch (err) {
-                            _didIteratorError8 = true;
-                            _iteratorError8 = err;
+                            _didIteratorError4 = true;
+                            _iteratorError4 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                    _iterator8.return();
+                                if (!_iteratorNormalCompletion4 && _iterator4.return) {
+                                    _iterator4.return();
                                 }
                             } finally {
-                                if (_didIteratorError8) {
-                                    throw _iteratorError8;
+                                if (_didIteratorError4) {
+                                    throw _iteratorError4;
                                 }
                             }
                         }
@@ -1285,7 +832,7 @@ var _module_ = {
                 }, {
                     key: 'scan',
                     value: function scan() {
-                        var _this9 = this;
+                        var _this6 = this;
 
                         var root = this.content;
 
@@ -1297,10 +844,10 @@ var _module_ = {
 
                             switch (node.nodeType) {
                                 case 1:
-                                    if (node.dataset.object) _this9.addView(node.dataset.object, new ObjectView(node));else if (node.dataset.array) _this9.addView(node.dataset.array, new _ArrayView2.default(node));else _this9.parseTag(node);
+                                    if (node.dataset.object) _this6.addView(node.dataset.object, new ObjectView(node));else if (node.dataset.array) _this6.addView(node.dataset.array, new _ArrayView2.default(node));else _this6.parseTag(node);
                                     break;
                                 case 3:
-                                    _this9.addTemplate(node, ObjectView.templateOf(node, function (value) {
+                                    _this6.addTemplate(node, ObjectView.templateOf(node, function (value) {
                                         return node.nodeValue = value;
                                     }));
                             }
@@ -1332,13 +879,13 @@ var _module_ = {
 
                         for (var key in data) {
                             this.watch(key);
-                        }var _iteratorNormalCompletion9 = true;
-                        var _didIteratorError9 = false;
-                        var _iteratorError9 = undefined;
+                        }var _iteratorNormalCompletion5 = true;
+                        var _didIteratorError5 = false;
+                        var _iteratorError5 = undefined;
 
                         try {
-                            for (var _iterator9 = this[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                                var template = _step9.value;
+                            for (var _iterator5 = this[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                                var template = _step5.value;
 
 
                                 var _name = template.name;
@@ -1346,16 +893,16 @@ var _module_ = {
                                 if (template instanceof _Template2.default) template.evaluate(template_element.get(template), _data_, this.scope, this.rootHost);else if (template instanceof _View2.default) _data_[_name] = template.render(data[_name]).data;
                             }
                         } catch (err) {
-                            _didIteratorError9 = true;
-                            _iteratorError9 = err;
+                            _didIteratorError5 = true;
+                            _iteratorError5 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                                    _iterator9.return();
+                                if (!_iteratorNormalCompletion5 && _iterator5.return) {
+                                    _iterator5.return();
                                 }
                             } finally {
-                                if (_didIteratorError9) {
-                                    throw _iteratorError9;
+                                if (_didIteratorError5) {
+                                    throw _iteratorError5;
                                 }
                             }
                         }
@@ -1365,27 +912,27 @@ var _module_ = {
                 }, {
                     key: 'clear',
                     value: function clear() {
-                        var _iteratorNormalCompletion10 = true;
-                        var _didIteratorError10 = false;
-                        var _iteratorError10 = undefined;
+                        var _iteratorNormalCompletion6 = true;
+                        var _didIteratorError6 = false;
+                        var _iteratorError6 = undefined;
 
                         try {
 
-                            for (var _iterator10 = this[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                                var template = _step10.value;
+                            for (var _iterator6 = this[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                                var template = _step6.value;
                                 template.clear();
                             }
                         } catch (err) {
-                            _didIteratorError10 = true;
-                            _iteratorError10 = err;
+                            _didIteratorError6 = true;
+                            _iteratorError6 = err;
                         } finally {
                             try {
-                                if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                                    _iterator10.return();
+                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
+                                    _iterator6.return();
                                 }
                             } finally {
-                                if (_didIteratorError10) {
-                                    throw _iteratorError10;
+                                if (_didIteratorError6) {
+                                    throw _iteratorError6;
                                 }
                             }
                         }
@@ -1423,6 +970,9 @@ var _module_ = {
             Object.defineProperty(exports, "__esModule", {
                 value: true
             });
+
+            var _DOM = require('../utility/DOM');
+
             var view_DOM = new WeakMap(),
                 DOM_view = new WeakMap();
 
@@ -1453,7 +1003,7 @@ var _module_ = {
                             if (!(template.parentNode || template.host)) template = Array.from(template.childNodes);
                             break;
                         default:
-                            template = Array.from(document.importNode(View.parseDOM(template), true).childNodes);
+                            template = Array.from(document.importNode((0, _DOM.parseDOM)(template), true).childNodes);
                     }
 
                     var _this_ = this.bindWith(template);
@@ -1465,29 +1015,22 @@ var _module_ = {
                         return _this_;
                     }
 
-                    view_data.set(this, data);view_parent.set(this, parent);
+                    view_data.set(this, data), view_parent.set(this, parent);
                 }
 
                 /**
-                 * @param {string} markup - Code of an markup fragment
+                 * @protected
                  *
-                 * @return {DocumentFragment}
+                 * @param {Element|Element[]|DocumentFragment} template
+                 *
+                 * @return {View} This view or the view bound before
                  */
 
 
                 _createClass(View, [{
                     key: 'bindWith',
-
-
-                    /**
-                     * @protected
-                     *
-                     * @param {Element|Element[]|DocumentFragment} template
-                     *
-                     * @return {View} This view or the view bound before
-                     */
                     value: function bindWith(template) {
-                        var _this10 = this;
+                        var _this7 = this;
 
                         var _this_;
 
@@ -1495,7 +1038,7 @@ var _module_ = {
 
                             switch (node.nodeType) {
                                 case 1:
-                                    if (!(_this_ = DOM_view.get(node))) DOM_view.set(node, _this10);
+                                    if (!(_this_ = DOM_view.get(node))) DOM_view.set(node, _this7);
                                     break;
                                 case 3:
                                     if (!node.nodeValue.trim()) return;
@@ -1523,18 +1066,7 @@ var _module_ = {
                      * @return {string} Full markup code of this view
                      */
                     value: function toString() {
-
-                        var content = this.content;
-
-                        return content.nodeType === 1 ? content.outerHTML : Array.from(content.childNodes || content, function (node) {
-
-                            switch (node.nodeType) {
-                                case 1:
-                                    return node.outerHTML;
-                                case 3:
-                                    return node.nodeValue;
-                            }
-                        }).join('');
+                        return (0, _DOM.stringifyDOM)(this.content);
                     }
 
                     /**
@@ -1654,18 +1186,6 @@ var _module_ = {
                         }return view.content.host;
                     }
                 }], [{
-                    key: 'parseDOM',
-                    value: function parseDOM(markup) {
-
-                        markup = new window.DOMParser().parseFromString(markup, 'text/html');
-
-                        var fragment = document.createDocumentFragment();
-
-                        fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
-
-                        return fragment;
-                    }
-                }, {
                     key: 'instanceOf',
                     value: function instanceOf(node) {
                         return DOM_view.get(node);
@@ -1678,6 +1198,648 @@ var _module_ = {
             exports.default = View;
         }
     },
+    './view/Template': {
+        base: './view',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            var Array_iterator = [][Symbol.iterator];
+
+            /**
+             * String template
+             */
+
+            var Template = function () {
+                /**
+                 * @param {string}          raw
+                 * @param {stirng[]}        [varName]  - Name list of the Local variable
+                 * @param {ChangedCallback} [onChange] - Call with New & Old value
+                 * @param {Array}           [bindData] - The parameter bound to `onChange`
+                 */
+                function Template(raw, varName, onChange, bindData) {
+                    _classCallCheck(this, Template);
+
+                    this.length = 0;
+
+                    this.raw = raw;
+
+                    /**
+                     * Last evaluated value
+                     *
+                     * @type {*}
+                     */
+                    this.value = null;
+
+                    if (varName instanceof Function) bindData = onChange, onChange = varName, varName = null;
+
+                    this.varName = varName || [];
+
+                    /**
+                     * Reference map of contexts
+                     *
+                     * @type {Map}
+                     */
+                    this.reference = new Map();
+
+                    var _iteratorNormalCompletion7 = true;
+                    var _didIteratorError7 = false;
+                    var _iteratorError7 = undefined;
+
+                    try {
+                        for (var _iterator7 = ['this'].concat(this.varName)[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                            var scope = _step7.value;
+                            this.reference.set(scope, []);
+                        }
+                    } catch (err) {
+                        _didIteratorError7 = true;
+                        _iteratorError7 = err;
+                    } finally {
+                        try {
+                            if (!_iteratorNormalCompletion7 && _iterator7.return) {
+                                _iterator7.return();
+                            }
+                        } finally {
+                            if (_didIteratorError7) {
+                                throw _iteratorError7;
+                            }
+                        }
+                    }
+
+                    this.onChange = onChange instanceof Function ? onChange : null;
+
+                    this.data = bindData || [];
+
+                    this.parse().clear();
+                }
+
+                _createClass(Template, [{
+                    key: Symbol.iterator,
+                    value: function value() {
+                        return Array_iterator.call(this);
+                    }
+
+                    /**
+                     * @type {RegExp}
+                     */
+
+                }, {
+                    key: 'push',
+                    value: function push() {
+                        return Array.prototype.push.apply(this, arguments);
+                    }
+
+                    /**
+                     * @private
+                     *
+                     * @param {string} expression
+                     *
+                     * @return {number} Index of this Evaluation function
+                     */
+
+                }, {
+                    key: 'compile',
+                    value: function compile(expression) {
+
+                        this[this.length++] = new (Function.prototype.bind.apply(Function, [null].concat(_toConsumableArray(this.varName), ['return ' + expression.trim()])))();
+
+                        return this.length - 1;
+                    }
+
+                    /**
+                     * @private
+                     *
+                     * @return {Template}
+                     */
+
+                }, {
+                    key: 'parse',
+                    value: function parse() {
+                        var _this8 = this;
+
+                        var addReference = function addReference(match, context, key1, key2, key3) {
+
+                            if (_this8.reference.has(context)) _this8.reference.get(context).push(key1 || key2 || key3);
+                        };
+
+                        this.raw = this.raw.replace(Template.Expression, function (_, expression) {
+
+                            expression.replace(Template.Reference, addReference);
+
+                            return '${' + _this8.compile(expression) + '}';
+                        });
+
+                        return this;
+                    }
+
+                    /**
+                     * @private
+                     *
+                     * @param {number}  index
+                     * @param {?object} context
+                     * @param {Array}   [parameter]
+                     *
+                     * @return {*}
+                     */
+
+                }, {
+                    key: 'eval',
+                    value: function _eval(index, context, parameter) {
+
+                        try {
+                            var value = this[index].apply(context, parameter);
+
+                            return value != null ? value : '';
+                        } catch (error) {
+
+                            if (this.value !== null) console.warn(error);
+
+                            return '';
+                        }
+                    }
+
+                    /**
+                     * Evaluate expression
+                     *
+                     * @param {?object} context     - Value of `this` in the expression
+                     * @param {...*}    [parameter] - One or more value of the Local variable
+                     *
+                     * @return {*}
+                     */
+
+                }, {
+                    key: 'evaluate',
+                    value: function evaluate(context) {
+                        var _this9 = this;
+
+                        for (var _len2 = arguments.length, parameter = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+                            parameter[_key2 - 1] = arguments[_key2];
+                        }
+
+                        var value = this.raw !== '${0}' ? this.raw.replace(/\$\{(\d+)\}/g, function (_, index) {
+                            return _this9.eval(index, context, parameter);
+                        }) : this.eval(0, context, parameter);
+
+                        if (value !== this.value) {
+                            /**
+                             * Call back only on Value changed
+                             *
+                             * @typedef {function} ChangedCallback
+                             *
+                             * @param {*}    newValue
+                             * @param {*}    oldValue
+                             * @param {...*} bindData
+                             */
+                            if (this.onChange) this.onChange.apply(this, _toConsumableArray([value, this.value].concat(this.data)));
+
+                            this.value = value;
+                        }
+
+                        return value;
+                    }
+
+                    /**
+                     * @return {string} Value evaluated with empty data
+                     */
+
+                }, {
+                    key: 'clear',
+                    value: function clear() {
+
+                        return this.evaluate.apply(this, _toConsumableArray(Array.from(this.reference.entries(), function (entry) {
+
+                            var data = {};
+
+                            var _iteratorNormalCompletion8 = true;
+                            var _didIteratorError8 = false;
+                            var _iteratorError8 = undefined;
+
+                            try {
+                                for (var _iterator8 = entry[1][Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                                    var key = _step8.value;
+                                    data[key] = '';
+                                }
+                            } catch (err) {
+                                _didIteratorError8 = true;
+                                _iteratorError8 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion8 && _iterator8.return) {
+                                        _iterator8.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError8) {
+                                        throw _iteratorError8;
+                                    }
+                                }
+                            }
+
+                            return data;
+                        })));
+                    }
+                }, {
+                    key: 'toString',
+                    value: function toString() {
+                        return this.value + '';
+                    }
+                }], [{
+                    key: 'Expression',
+                    get: function get() {
+                        return (/\$\{([\s\S]+?)\}/g
+                        );
+                    }
+
+                    /**
+                     * @type {RegExp}
+                     */
+
+                }, {
+                    key: 'Reference',
+                    get: function get() {
+                        return (/(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g
+                        );
+                    }
+                }]);
+
+                return Template;
+            }();
+
+            exports.default = Template;
+        }
+    },
+    './utility/HTTP': {
+        base: './utility',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+
+            /**
+             * HTTP request
+             *
+             * @param {string} URI
+             * @param {string} [method='GET']
+             * @param {*}      [body]
+             * @param {Object} [headers]
+             * @param {Object} [option]
+             *
+             * @return {*} Parse response data automatically
+             */
+            var request = function () {
+                var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(URI) {
+                    var method = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'GET';
+                    var body = arguments[2];
+                    var headers = arguments[3];
+                    var option = arguments[4];
+                    var response, type;
+                    return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                        while (1) {
+                            switch (_context2.prev = _context2.next) {
+                                case 0:
+
+                                    if (body instanceof Object) try {
+
+                                        body = JSON.stringify(body.valueOf());
+
+                                        headers = headers || {};
+
+                                        headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+                                    } catch (error) {/* eslint-disable-line */}
+
+                                    _context2.next = 3;
+                                    return window.fetch(URI, (0, _object.extend)({
+                                        method: method, headers: headers, body: body,
+                                        mode: isXDomain(URI) ? 'cors' : 'same-origin',
+                                        credentials: 'same-origin'
+                                    }, option));
+
+                                case 3:
+                                    response = _context2.sent;
+                                    type = response.headers.get('Content-Type').split(';')[0];
+                                    _context2.t0 = type;
+                                    _context2.next = _context2.t0 === 'text/html' ? 8 : _context2.t0 === 'application/json' ? 13 : 16;
+                                    break;
+
+                                case 8:
+                                    _context2.t1 = (0, _DOM.parseDOM);
+                                    _context2.next = 11;
+                                    return response.text();
+
+                                case 11:
+                                    _context2.t2 = _context2.sent;
+                                    return _context2.abrupt('return', (0, _context2.t1)(_context2.t2));
+
+                                case 13:
+                                    _context2.next = 15;
+                                    return response.json();
+
+                                case 15:
+                                    return _context2.abrupt('return', _context2.sent);
+
+                                case 16:
+                                    _context2.next = 18;
+                                    return response[type.split('/')[0] === 'text' ? 'text' : 'blob']();
+
+                                case 18:
+                                    return _context2.abrupt('return', _context2.sent);
+
+                                case 19:
+                                case 'end':
+                                    return _context2.stop();
+                            }
+                        }
+                    }, _callee2, this);
+                }));
+
+                return function request(_x4) {
+                    return _ref3.apply(this, arguments);
+                };
+            }();
+
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            exports.isXDomain = isXDomain;
+            exports.request = request;
+
+            var _object = require('./object');
+
+            var _DOM = require('./DOM');
+
+            /**
+             * @param {string|URL} URI - Full URL of a resource
+             *
+             * @return {boolean} Whether it's cross domain to current page
+             */
+            function isXDomain(URI) {
+
+                return new URL(URI, window.location.href).origin !== window.location.origin;
+            }
+        }
+    },
+    './utility/DOM': {
+        base: './utility',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            exports.inSubDOM = inSubDOM;
+            exports.inHead = inHead;
+            exports.parseDOM = parseDOM;
+            exports.stringifyDOM = stringifyDOM;
+            exports.delay = delay;
+            exports.nextTick = nextTick;
+            /**
+             * @private
+             *
+             * @return {boolean} Whether current script is running in a sub DOM
+             */
+            function inSubDOM() {
+
+                return (document.currentScript || '').ownerDocument !== document;
+            }
+
+            /**
+             * @private
+             *
+             * @return {boolean} Whether current script is in `<head />` of a DOM
+             */
+            function inHead() {
+
+                var script = document.currentScript || '';
+
+                var DOM = script.ownerDocument;
+
+                return DOM && script.parentNode === DOM.head;
+            }
+
+            /**
+             * @param {string} markup - Code of an markup fragment
+             *
+             * @return {DocumentFragment}
+             */
+            function parseDOM(markup) {
+
+                markup = new DOMParser().parseFromString(markup, 'text/html');
+
+                var fragment = document.createDocumentFragment();
+
+                fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
+
+                return fragment;
+            }
+
+            /**
+             * @param {Element|Element[]|DocumentFragment} tree
+             *
+             * @return {string} HTML/XML source code
+             */
+            function stringifyDOM(tree) {
+
+                return tree.nodeType === 1 ? tree.outerHTML : Array.from(tree.childNodes || tree, function (node) {
+
+                    switch (node.nodeType) {
+                        case 1:
+                            return node.outerHTML;
+                        case 3:
+                            return node.nodeValue;
+                    }
+                }).join('');
+            }
+
+            /**
+             * @param {number} [second=0]
+             *
+             * @return {Promise} Wait seconds in Macro tasks
+             */
+            function delay(second) {
+
+                return new Promise(function (resolve) {
+                    return setTimeout(resolve, (second || 0) * 1000);
+                });
+            }
+
+            var tick;
+            /**
+             * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
+             */
+            function nextTick() {
+
+                return tick || (tick = new Promise(function (resolve) {
+                    return window.requestAnimationFrame(function (time) {
+                        return tick = null, resolve(time);
+                    });
+                }));
+            }
+        }
+    },
+    './utility/object': {
+        base: './utility',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, "__esModule", {
+                value: true
+            });
+            exports.multipleMap = multipleMap;
+            exports.extend = extend;
+            exports.mapTree = mapTree;
+
+            /**
+             * Equivalent to the integration of Array's map() & filter() methods
+             *
+             * @param {Iterable}                                           list
+             * @param {function(item: *, index: number, list:Iterable): *} filter
+             *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
+             *
+             * @return {Array}
+             */
+            function multipleMap(list, filter) {
+
+                var result = [];filter = filter instanceof Function && filter;
+
+                for (var i = 0; i < list.length; i++) {
+
+                    var item = filter ? filter(list[i], i, list) : list[i];
+
+                    if (item != null) if (item instanceof Array) result.push.apply(result, _toConsumableArray(item));else result.push(item);
+                }
+
+                return result;
+            }
+
+            /**
+             * Merge own properties of two or more objects together into the first object
+             * by their descriptor
+             *
+             * @param {Object}    target - An object that will receive the new properties
+             *                             if `source` are passed in
+             * @param {...Object} source - Additional objects containing properties to merge in
+             *                             (Value of `null` or `undefined` will be skipped)
+             *
+             * @return {Object} The `target` parameter
+             */
+            function extend(target) {
+                for (var _len3 = arguments.length, source = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                    source[_key3 - 1] = arguments[_key3];
+                }
+
+                var _iteratorNormalCompletion9 = true;
+                var _didIteratorError9 = false;
+                var _iteratorError9 = undefined;
+
+                try {
+
+                    for (var _iterator9 = source[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+                        var object = _step9.value;
+                        if (object instanceof Object) {
+
+                            var descriptor = Object.getOwnPropertyDescriptors(object);
+
+                            var _iteratorNormalCompletion10 = true;
+                            var _didIteratorError10 = false;
+                            var _iteratorError10 = undefined;
+
+                            try {
+                                for (var _iterator10 = Object.keys(descriptor)[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+                                    var key = _step10.value;
+                                    if ('value' in descriptor[key] && !(descriptor[key].value != null)) delete descriptor[key];
+                                }
+                            } catch (err) {
+                                _didIteratorError10 = true;
+                                _iteratorError10 = err;
+                            } finally {
+                                try {
+                                    if (!_iteratorNormalCompletion10 && _iterator10.return) {
+                                        _iterator10.return();
+                                    }
+                                } finally {
+                                    if (_didIteratorError10) {
+                                        throw _iteratorError10;
+                                    }
+                                }
+                            }
+
+                            if (object instanceof Function) {
+
+                                delete descriptor.name;
+                                delete descriptor.length;
+                                delete descriptor.prototype;
+
+                                var prototype = Object.getOwnPropertyDescriptors(object.prototype);
+
+                                delete prototype.constructor;
+
+                                Object.defineProperties(target.prototype, prototype);
+                            }
+
+                            Object.defineProperties(target, descriptor);
+                        }
+                    }
+                } catch (err) {
+                    _didIteratorError9 = true;
+                    _iteratorError9 = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion9 && _iterator9.return) {
+                            _iterator9.return();
+                        }
+                    } finally {
+                        if (_didIteratorError9) {
+                            throw _iteratorError9;
+                        }
+                    }
+                }
+
+                return target;
+            }
+
+            var depth = 0;
+
+            /**
+             * Traverse Object-tree & return Node array through the filter
+             *
+             * @param {object}        node     - Object tree
+             * @param {string}        fork_key - Key of children list
+             * @param {MapTreeFilter} filter   - Map filter
+             *
+             * @return {Array}  Result list of Map filter
+             */
+            function mapTree(node, fork_key, filter) {
+
+                var children = node[fork_key],
+                    list = [];depth++;
+
+                for (var i = 0, value; i < children.length; i++) {
+                    /**
+                     * @typedef {function} MapTreeFilter
+                     *
+                     * @param {object} child
+                     * @param {number} index
+                     * @param {number} depth
+                     *
+                     * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
+                     *                    and Any other Type to Add into the Result Array.
+                     */
+                    try {
+                        value = filter.call(node, children[i], i, depth);
+                    } catch (error) {
+
+                        depth = 0;throw error;
+                    }
+
+                    if (!(value != null)) continue;
+
+                    list.push(value);
+
+                    if (children[i] != null && (children[i][fork_key] || '')[0]) list.push.apply(list, mapTree(children[i], fork_key, filter));
+                }
+
+                depth--;
+
+                return list;
+            }
+        }
+    },
     './WebCell': {
         base: '.',
         dependency: [],
@@ -1685,8 +1847,53 @@ var _module_ = {
             Object.defineProperty(exports, "__esModule", {
                 value: true
             });
-            exports.ArrayView = exports.ObjectView = exports.View = exports.Component = undefined;
+            exports.ArrayView = exports.ObjectView = exports.View = exports.Template = exports.Component = undefined;
             exports.component = component;
+
+            var _object = require('./utility/object');
+
+            Object.keys(_object).forEach(function (key) {
+                if (key === "default" || key === "__esModule") return;
+                Object.defineProperty(exports, key, {
+                    enumerable: true,
+                    get: function get() {
+                        return _object[key];
+                    }
+                });
+            });
+
+            var _DOM = require('./utility/DOM');
+
+            Object.keys(_DOM).forEach(function (key) {
+                if (key === "default" || key === "__esModule") return;
+                Object.defineProperty(exports, key, {
+                    enumerable: true,
+                    get: function get() {
+                        return _DOM[key];
+                    }
+                });
+            });
+
+            var _HTTP = require('./utility/HTTP');
+
+            Object.keys(_HTTP).forEach(function (key) {
+                if (key === "default" || key === "__esModule") return;
+                Object.defineProperty(exports, key, {
+                    enumerable: true,
+                    get: function get() {
+                        return _HTTP[key];
+                    }
+                });
+            });
+
+            var _Template = require('./view/Template');
+
+            Object.defineProperty(exports, 'Template', {
+                enumerable: true,
+                get: function get() {
+                    return _interopRequireDefault(_Template).default;
+                }
+            });
 
             var _View = require('./view/View');
 
@@ -1719,12 +1926,67 @@ var _module_ = {
 
             var _Component2 = _interopRequireDefault(_Component);
 
-            var _object = require('./utility/object');
-
-            var _DOM = require('./utility/DOM');
-
             function _interopRequireDefault(obj) {
                 return obj && obj.__esModule ? obj : { default: obj };
+            }
+
+            function dataInject(constructor) {
+                var _Object$getOwnPropert = Object.getOwnPropertyDescriptors(constructor),
+                    observedAttributes = _Object$getOwnPropert.observedAttributes,
+                    attributeChangedCallback = _Object$getOwnPropert.attributeChangedCallback;
+
+                if (observedAttributes) Object.defineProperty(constructor, 'observedAttributes', {
+                    get: function get() {
+                        var _this10 = this;
+
+                        var attribute = observedAttributes.get.call(this);
+
+                        var _loop2 = function _loop2(key) {
+                            if (!(key in _this10.prototype)) Object.defineProperty(_this10.prototype, key, {
+                                set: function set(value) {
+
+                                    this.view.commit(key, value);
+                                },
+                                get: function get() {
+
+                                    return this.view.data[key];
+                                },
+                                enumerable: true
+                            });
+                        };
+
+                        var _iteratorNormalCompletion11 = true;
+                        var _didIteratorError11 = false;
+                        var _iteratorError11 = undefined;
+
+                        try {
+                            for (var _iterator11 = attribute[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+                                var key = _step11.value;
+
+                                _loop2(key);
+                            }
+                        } catch (err) {
+                            _didIteratorError11 = true;
+                            _iteratorError11 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion11 && _iterator11.return) {
+                                    _iterator11.return();
+                                }
+                            } finally {
+                                if (_didIteratorError11) {
+                                    throw _iteratorError11;
+                                }
+                            }
+                        }
+
+                        return attribute;
+                    }
+                });
+
+                if (!attributeChangedCallback) Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
+                    value: _Component.attributeChanged
+                });
             }
 
             /**
@@ -1750,7 +2012,7 @@ var _module_ = {
                     });
                 }
 
-                (0, _object.extend)(subClass, _Component2.default, static_member);
+                dataInject((0, _object.extend)(subClass, _Component2.default, static_member));
 
                 customElements.define(subClass.tagName, subClass);
 

@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,9 +52,11 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import View from &apos;./view/View&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM } from &apos;./utility/DOM&apos;;
 
 import ObjectView from &apos;./view/ObjectView&apos;;
+
+import View from &apos;./view/View&apos;;
 
 
 /**
@@ -84,7 +88,7 @@ export default  class Component {
 
         if (typeof template === &apos;string&apos;) {
 
-            template = View.parseDOM( template );
+            template = parseDOM( template );
 
             let element = template.querySelector(&apos;template&apos;);
 
@@ -112,68 +116,6 @@ export default  class Component {
      * @type {View}
      */
     get view() {  return  View.instanceOf( this.shadowRoot );  }
-
-    /**
-     * Define a set of Getter or Setter for DOM properties,
-     * and store their values into private object.
-     *
-     * @param {Object} map - `1` for Getter, `2` for Setter &amp; sum for both
-     *                       in each key&apos;s value
-     * @return {string[]} Keys of `map`
-     *
-     * @example
-     *
-     *    WebCell.component(class MyInput extends HTMLElement {
-     *
-     *        constructor() {  super();  }
-     *
-     *        static get observedAttributes() {
-     *
-     *            return this.setAccessor({
-     *                value:  1,
-     *                step:   3
-     *            });
-     *        }
-     *    });
-     */
-    static setAccessor(map) {
-
-        for (let key in map) {
-
-            let config = {enumerable: true};
-
-            if (map[ key ]  &amp;  1)
-                config.get = function () {
-
-                    return  this.view[ key ];
-                };
-
-            if (map[ key ]  &amp;  2)
-                config.set = function (value) {
-
-                    this.view[ key ] = value;
-                };
-
-            Object.defineProperty(this.prototype, key, config);
-        }
-
-        return  Object.keys( map );
-    }
-
-    attributeChangedCallback(name, oldValue, newValue) {
-
-        switch ( newValue ) {
-            case &apos;&apos;:      this[ name ] = true;      break;
-            case null:    this[ name ] = false;     break;
-            default:      try {
-                this[ name ] = JSON.parse( newValue );
-
-            } catch (error) {
-
-                this[ name ] = newValue;
-            }
-        }
-    }
 
     /**
      * @param {Element} element
@@ -330,6 +272,29 @@ export default  class Component {
 /**
  * @typedef {function(event: Event): *} DOMEventHandler
  */
+
+
+/**
+ * @private
+ *
+ * @param {string} name
+ * @param {*}      oldValue
+ * @param {*}      newValue
+ */
+export function attributeChanged(name, oldValue, newValue) {
+
+    switch ( newValue ) {
+        case &apos;&apos;:      this[ name ] = true;      break;
+        case null:    this[ name ] = false;     break;
+        default:      try {
+            this[ name ] = JSON.parse( newValue );
+
+        } catch (error) {
+
+            this[ name ] = newValue;
+        }
+    }
+}
 </code></pre>
 
 </div>

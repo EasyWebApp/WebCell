@@ -8,7 +8,17 @@ import View from '../../source/view/View';
 
 import ObjectView from '../../source/view/ObjectView';
 
-var HTML;
+import Sinon from 'sinon';
+
+import { nextTick } from '../../source/utility/DOM';
+
+var HTML, fragment = `
+    <fieldset>
+        <legend title="Test field">
+            Test
+            <input type="checkbox">
+        </legend>
+    </fieldset>`.trim();
 
 
 /**
@@ -56,14 +66,7 @@ describe('ObjectView()',  () => {
 
             view.extra.should.be.equal('test');
 
-            view.toString().should.be.equal(`
-    <fieldset>
-        <legend title="Test field">
-            Test
-            <input type="checkbox">
-        </legend>
-    </fieldset>`.trim()
-            );
+            view.toString().should.be.equal( fragment );
 
             view.content.querySelector('input').checked.should.be.true();
         });
@@ -77,6 +80,31 @@ describe('ObjectView()',  () => {
 
             view.valueOf().should.not.be.equal( view.data );
         });
+
+        /**
+         * @test {ObjectView#commit}
+         * @test {ObjectView#watch}
+         */
+        it('Async render',  async () => {
+
+            view.render = Sinon.spy( view.render );
+
+            view.commit('name', 'Example');
+
+            view.title = 'Example field';
+
+            view.render.should.not.be.called();
+
+            view.toString().should.be.equal( fragment );
+
+            await nextTick();
+
+            view.render.should.be.calledOnce();
+
+            view.toString().should.be.equal(
+                fragment.replace(/Test/g, 'Example')
+            );
+        });
     });
 
     describe('Nested view',  () => {
@@ -84,7 +112,6 @@ describe('ObjectView()',  () => {
         var view;
 
         /**
-         * @test {View.parseDOM}
          * @test {ObjectView#scan}
          */
         it('Scan DOM',  () => {
@@ -125,12 +152,7 @@ describe('ObjectView()',  () => {
 
             view.toString().trim().should.be.equal(`
 <form>
-    <fieldset>
-        <legend title="Test field">
-            Test
-            <input type="checkbox">
-        </legend>
-    </fieldset>
+    ${fragment}
     <dl data-object="tips">
         <dt>Test tips</dt>
         <dd>Test content</dd>

@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,15 +52,17 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/utility.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { multipleMap, extend, mapTree } from &apos;../source/utility/object&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;../source/utility/DOM-polyfill&apos;;
 
-import { request } from &apos;../source/utility/HTTP&apos;;
-
-import &apos;../source/utility/DOM-polyfill&apos;;
+import { multipleMap, extend, mapTree } from &apos;../source/utility/object&apos;;
 
 import { readFileSync } from &apos;fs&apos;;
 
+import { parseDOM, stringifyDOM, delay, nextTick } from &apos;../source/utility/DOM&apos;;
+
 import WebServer from &apos;koapache&apos;;
+
+import { request } from &apos;../source/utility/HTTP&apos;;
 
 
 describe(&apos;Utility&apos;,  () =&gt; {
@@ -154,6 +158,32 @@ describe(&apos;Utility&apos;,  () =&gt; {
         }).should.be.eql([1, 2]);
     });
 
+    it(&apos;Parse &amp; Stringify DOM&apos;,  () =&gt; {
+
+        const HTML = (readFileSync(&apos;test/ObjectView/index.html&apos;) + &apos;&apos;)
+            .replace(/\r\n/g, &apos;\n&apos;).replace(/\r/g, &apos;\n&apos;);
+
+        const fragment = parseDOM( HTML );
+
+        fragment.should.be.class(&apos;DocumentFragment&apos;);
+
+        stringifyDOM( fragment ).should.be.equal( HTML );
+    });
+
+    /**
+     * @test {nextTick}
+     */
+    it(&apos;Await next tick&apos;,  async () =&gt; {
+
+        const tick = nextTick();
+
+        tick.should.be.equal( nextTick() );
+
+        await delay(0.1);
+
+        tick.should.not.be.equal( nextTick() );
+    });
+
     /**
      * @test {request}
      */
@@ -170,9 +200,9 @@ describe(&apos;Utility&apos;,  () =&gt; {
 
 
         it(&apos;Get Plain text&apos;,  () =&gt; request(
-            `${server}/ReadMe.markdown`,
+            `${server}/ReadMe.md`,
         ).should.be.fulfilledWith(
-            readFileSync(&apos;ReadMe.markdown&apos;) + &apos;&apos;
+            readFileSync(&apos;ReadMe.md&apos;) + &apos;&apos;
         ));
 
 

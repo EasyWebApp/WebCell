@@ -1,6 +1,6 @@
 import { extend } from './object';
 
-import View from '../view/View';
+import { parseDOM } from './DOM';
 
 
 /**
@@ -10,7 +10,9 @@ import View from '../view/View';
  */
 export function isXDomain(URI) {
 
-    return  ((new URL( URI )).origin  !==  window.location.origin);
+    return (
+        (new URL(URI, window.location.href)).origin  !==  window.location.origin
+    );
 }
 
 
@@ -50,7 +52,7 @@ export async function request(URI, method = 'GET', body, headers, option) {
 
     switch ( type ) {
         case 'text/html':
-            return  View.parseDOM(await response.text());
+            return  parseDOM(await response.text());
         case 'application/json':
             return  await response.json();
         default:

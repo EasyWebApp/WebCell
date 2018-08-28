@@ -1,3 +1,5 @@
+import { parseDOM, stringifyDOM } from '../utility/DOM';
+
 const view_DOM = new WeakMap(), DOM_view = new WeakMap();
 
 const view_data = new WeakMap(), view_parent = new WeakMap();
@@ -28,7 +30,7 @@ export default  class View {
                 break;
             default:
                 template = Array.from(
-                    document.importNode(View.parseDOM( template ),  true).childNodes
+                    document.importNode(parseDOM( template ),  true).childNodes
                 );
         }
 
@@ -41,27 +43,7 @@ export default  class View {
             return _this_;
         }
 
-        view_data.set(this, data);  view_parent.set(this, parent);
-    }
-
-    /**
-     * @param {string} markup - Code of an markup fragment
-     *
-     * @return {DocumentFragment}
-     */
-    static parseDOM(markup) {
-
-        markup = (new window.DOMParser()).parseFromString(markup, 'text/html');
-
-        const fragment = document.createDocumentFragment();
-
-        fragment.append(
-            ... Array.from( markup.head.childNodes ).concat(
-                Array.from( markup.body.childNodes )
-            )
-        );
-
-        return fragment;
+        view_data.set(this, data),  view_parent.set(this, parent);
     }
 
     /**
@@ -112,20 +94,7 @@ export default  class View {
     /**
      * @return {string} Full markup code of this view
      */
-    toString() {
-
-        const content = this.content;
-
-        return  (content.nodeType === 1)  ?
-            content.outerHTML  :
-            Array.from(content.childNodes || content,  node => {
-
-                switch ( node.nodeType ) {
-                    case 1:    return node.outerHTML;
-                    case 3:    return node.nodeValue;
-                }
-            }).join('');
-    }
+    toString() {  return stringifyDOM( this.content );  }
 
     /**
      * @protected

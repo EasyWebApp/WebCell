@@ -32,8 +32,10 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inHead">inHead</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inSubDOM">inSubDOM</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
@@ -50,11 +52,46 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./Component&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
+
+import Component, { attributeChanged } from &apos;./Component&apos;;
 
 import { extend } from &apos;./utility/object&apos;;
 
-import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
+
+function dataInject(constructor) {
+
+    const { observedAttributes, attributeChangedCallback } =
+        Object.getOwnPropertyDescriptors( constructor );
+
+    if ( observedAttributes )
+        Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
+            get:  function () {
+
+                const attribute = observedAttributes.get.call( this );
+
+                for (let key of attribute)  if (! (key in this.prototype))
+                    Object.defineProperty(this.prototype, key, {
+                        set:         function (value) {
+
+                            this.view.commit(key, value);
+                        },
+                        get:         function () {
+
+                            return  this.view.data[ key ];
+                        },
+                        enumerable:  true
+                    });
+
+                return attribute;
+            }
+        });
+
+    if (! attributeChangedCallback)
+        Object.defineProperty(constructor.prototype, &apos;attributeChangedCallback&apos;, {
+            value:  attributeChanged
+        });
+}
 
 
 /**
@@ -78,7 +115,7 @@ export function component(subClass) {
         });
     }
 
-    extend(subClass,  Component,  static_member);
+    dataInject( extend(subClass,  Component,  static_member) );
 
     customElements.define(subClass.tagName, subClass);
 
@@ -87,6 +124,14 @@ export function component(subClass) {
 
 
 export { Component };
+
+export * from &apos;./utility/object&apos;;
+
+export * from &apos;./utility/DOM&apos;;
+
+export * from &apos;./utility/HTTP&apos;;
+
+export {default as Template} from &apos;./view/Template&apos;;
 
 export {default as View} from &apos;./view/View&apos;;
 

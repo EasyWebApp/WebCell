@@ -1,12 +1,16 @@
 import View from './View';
 
-import { mapTree, extend } from '../utility/object';
-
 import Template from './Template';
+
+import { nextTick } from '../utility/DOM';
+
+import { mapTree, extend } from '../utility/object';
 
 import ArrayView from './ArrayView';
 
-const Array_iterator = [ ][Symbol.iterator], template_element = new WeakMap();
+const Array_iterator = [ ][Symbol.iterator],
+    template_element = new WeakMap(),
+    view_buffer = new WeakMap();
 
 
 /**
@@ -52,6 +56,32 @@ export default  class ObjectView extends View {
     }
 
     /**
+     * Async render
+     *
+     * @protected
+     *
+     * @param {string} key
+     * @param {*}      value
+     */
+    async commit(key, value) {
+
+        var buffer;
+
+        if (! (buffer = view_buffer.get( this )))
+            view_buffer.set(this,  buffer = { });
+
+        buffer[key] = value;
+
+        await nextTick();
+
+        if (! view_buffer.get( this ))  return;
+
+        this.render( buffer );
+
+        view_buffer.delete( this );
+    }
+
+    /**
      * Add a watched property to this view instance
      *
      * @param {string} key
@@ -61,18 +91,17 @@ export default  class ObjectView extends View {
      */
     watch(key, value) {
 
-        if (key in this) {
-
-            if (key  in  Object.getPrototypeOf( this ))
-                console.warn(`Don't overwrite Inset property "${key}" !`);
-        } else
+        if (!(key in this))
             Object.defineProperty(this,  key,  value ? {
                 value:       value,
                 enumerable:  true
             } : {
-                get:    ()  =>  this.data[ key ],
-                set:    (value)  =>  this.render({[key]: value})
+                get:         ()  =>  this.data[ key ],
+                set:         (value)  =>  this.commit(key, value),
+                enumerable:  true
             });
+        else if (key  in  Object.getPrototypeOf( this ))
+            console.warn(`Don't overwrite Inset property "${key}" !`);
 
         return this;
     }

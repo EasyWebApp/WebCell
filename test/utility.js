@@ -1,12 +1,14 @@
-import { multipleMap, extend, mapTree } from '../source/utility/object';
-
-import { request } from '../source/utility/HTTP';
-
 import '../source/utility/DOM-polyfill';
+
+import { multipleMap, extend, mapTree } from '../source/utility/object';
 
 import { readFileSync } from 'fs';
 
+import { parseDOM, stringifyDOM, delay, nextTick } from '../source/utility/DOM';
+
 import WebServer from 'koapache';
+
+import { request } from '../source/utility/HTTP';
 
 
 describe('Utility',  () => {
@@ -102,6 +104,32 @@ describe('Utility',  () => {
         }).should.be.eql([1, 2]);
     });
 
+    it('Parse & Stringify DOM',  () => {
+
+        const HTML = (readFileSync('test/ObjectView/index.html') + '')
+            .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+
+        const fragment = parseDOM( HTML );
+
+        fragment.should.be.class('DocumentFragment');
+
+        stringifyDOM( fragment ).should.be.equal( HTML );
+    });
+
+    /**
+     * @test {nextTick}
+     */
+    it('Await next tick',  async () => {
+
+        const tick = nextTick();
+
+        tick.should.be.equal( nextTick() );
+
+        await delay(0.1);
+
+        tick.should.not.be.equal( nextTick() );
+    });
+
     /**
      * @test {request}
      */
@@ -118,9 +146,9 @@ describe('Utility',  () => {
 
 
         it('Get Plain text',  () => request(
-            `${server}/ReadMe.markdown`,
+            `${server}/ReadMe.md`,
         ).should.be.fulfilledWith(
-            readFileSync('ReadMe.markdown') + ''
+            readFileSync('ReadMe.md') + ''
         ));
 
 

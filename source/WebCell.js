@@ -1,8 +1,43 @@
-import Component from './Component';
+import { inSubDOM, inHead } from './utility/DOM';
+
+import Component, { attributeChanged } from './Component';
 
 import { extend } from './utility/object';
 
-import { inSubDOM, inHead } from './utility/DOM';
+
+function dataInject(constructor) {
+
+    const { observedAttributes, attributeChangedCallback } =
+        Object.getOwnPropertyDescriptors( constructor );
+
+    if ( observedAttributes )
+        Object.defineProperty(constructor, 'observedAttributes', {
+            get:  function () {
+
+                const attribute = observedAttributes.get.call( this );
+
+                for (let key of attribute)  if (! (key in this.prototype))
+                    Object.defineProperty(this.prototype, key, {
+                        set:         function (value) {
+
+                            this.view.commit(key, value);
+                        },
+                        get:         function () {
+
+                            return  this.view.data[ key ];
+                        },
+                        enumerable:  true
+                    });
+
+                return attribute;
+            }
+        });
+
+    if (! attributeChangedCallback)
+        Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
+            value:  attributeChanged
+        });
+}
 
 
 /**
@@ -26,7 +61,7 @@ export function component(subClass) {
         });
     }
 
-    extend(subClass,  Component,  static_member);
+    dataInject( extend(subClass,  Component,  static_member) );
 
     customElements.define(subClass.tagName, subClass);
 
@@ -35,6 +70,14 @@ export function component(subClass) {
 
 
 export { Component };
+
+export * from './utility/object';
+
+export * from './utility/DOM';
+
+export * from './utility/HTTP';
+
+export {default as Template} from './view/Template';
 
 export {default as View} from './view/View';
 
