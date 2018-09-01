@@ -1,3 +1,29 @@
+/**
+ * @param {*} object
+ *
+ * @return {string}
+ */
+export function classNameOf(object) {
+
+    return  Object.prototype.toString.call( object ).slice(8, -1);
+}
+
+
+/**
+ * @param {*}      object
+ * @param {string} key    - Property name
+ *
+ * @return {?Object} https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description
+ */
+export function getPropertyDescriptor(object, key) {
+
+    var descriptor;  object = Object.create( object );
+
+    while (object = Object.getPrototypeOf( object ))
+        if (descriptor = Object.getOwnPropertyDescriptor(object, key))
+            return descriptor;
+}
+
 
 /**
  * Equivalent to the integration of Array's map() & filter() methods

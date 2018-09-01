@@ -6,9 +6,15 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
-    "web-cell/source/component.js~component",
-    "class/source/Component.js~Component.html",
-    "<span>Component</span> <span class=\"search-result-import-path\">web-cell/source/Component.js</span>",
+    "web-cell/source/component/component.js~component",
+    "class/source/component/Component.js~Component.html",
+    "<span>Component</span> <span class=\"search-result-import-path\">web-cell/source/component/Component.js</span>",
+    "class"
+  ],
+  [
+    "web-cell/source/component/inputcomponent.js~inputcomponent",
+    "class/source/component/InputComponent.js~InputComponent.html",
+    "<span>InputComponent</span> <span class=\"search-result-import-path\">web-cell/source/component/InputComponent.js</span>",
     "class"
   ],
   [
@@ -30,6 +36,18 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "web-cell/source/component/component.js~attributechanged",
+    "function/index.html#static-function-attributeChanged",
+    "<span>attributeChanged</span> <span class=\"search-result-import-path\">web-cell/source/component/Component.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/object.js~classnameof",
+    "function/index.html#static-function-classNameOf",
+    "<span>classNameOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/webcell.js~component",
     "function/index.html#static-function-component",
     "<span>component</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
@@ -45,6 +63,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/object.js~extend",
     "function/index.html#static-function-extend",
     "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/object.js~getpropertydescriptor",
+    "function/index.html#static-function-getPropertyDescriptor",
+    "<span>getPropertyDescriptor</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
     "function"
   ],
   [
@@ -138,43 +162,49 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component source/component.js~component,component",
+    "component source/component/component.js~component,component",
     "test-file/test/Component/index.js.html#lineNumber16",
     "Component mixin",
     "test"
   ],
   [
-    "component.findtemplate component#builddom component#\\$ component.findtemplate,component.findtemplate source/component.js~component#builddom,component#builddom source/component.js~component#$,component#\\$",
+    "component.findtemplate component#builddom component#\\$ component.findtemplate,component.findtemplate source/component/component.js~component#builddom,component#builddom source/component/component.js~component#$,component#\\$",
     "test-file/test/Component/index.js.html#lineNumber41",
     "Component mixin Build Shadow DOM",
     "test"
   ],
   [
-    "component component.tagname source/webcell.js~component,component source/component.js~component.tagname,component.tagname",
+    "component component.tagname source/webcell.js~component,component source/component/component.js~component.tagname,component.tagname",
     "test-file/test/Component/index.js.html#lineNumber26",
     "Component mixin Define Custom element",
     "test"
   ],
   [
-    "component#on source/component.js~component#on,component#on",
+    "component#on source/component/component.js~component#on,component#on",
     "test-file/test/Component/index.js.html#lineNumber99",
     "Component mixin Delegate DOM events",
     "test"
   ],
   [
-    "component#bubbleout source/component.js~component#bubbleout,component#bubbleout",
+    "component#bubbleout source/component/component.js~component#bubbleout,component#bubbleout",
     "test-file/test/Component/index.js.html#lineNumber77",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
   ],
   [
-    "component.targetof component.indexof source/component.js~component.targetof,component.targetof source/component.js~component.indexof,component.indexof",
+    "inputcomponent source/component/inputcomponent.js~inputcomponent,inputcomponent",
+    "test-file/test/Component/index.js.html#lineNumber121",
+    "Component mixin Form field components",
+    "test"
+  ],
+  [
+    "component.targetof component.indexof source/component/component.js~component.targetof,component.targetof source/component/component.js~component.indexof,component.indexof",
     "test-file/test/Component/index.js.html#lineNumber61",
     "Component mixin Get the event target in Shadow DOM",
     "test"
   ],
   [
-    "component#\\$up source/component.js~component#$up,component#\\$up",
+    "component#\\$up source/component/component.js~component#$up,component#\\$up",
     "test-file/test/Component/index.js.html#lineNumber89",
     "Component mixin should find a parent element matched a CSS selector",
     "test"
@@ -277,85 +307,103 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber14",
+    "test-file/test/utility.js.html#lineNumber16",
     "Utility",
     "test"
   ],
   [
     "nexttick source/utility/dom.js~nexttick,nexttick",
-    "test-file/test/utility.js.html#lineNumber122",
+    "test-file/test/utility.js.html#lineNumber151",
     "Utility Await next tick",
     "test"
   ],
   [
     "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility.js.html#lineNumber81",
+    "test-file/test/utility.js.html#lineNumber110",
     "Utility Filter object tree",
     "test"
   ],
   [
+    "getpropertydescriptor source/utility/object.js~getpropertydescriptor,getpropertydescriptor",
+    "test-file/test/utility.js.html#lineNumber20",
+    "Utility Get the property descriptor",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber30",
+    "Utility Get the property descriptor Own property",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility.js.html#lineNumber36",
+    "Utility Get the property descriptor Property on the prototype chain",
+    "test"
+  ],
+  [
     "request source/utility/http.js~request,request",
-    "test-file/test/utility.js.html#lineNumber136",
+    "test-file/test/utility.js.html#lineNumber165",
     "Utility HTTP request",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber162",
+    "test-file/test/utility.js.html#lineNumber191",
     "Utility HTTP request Get HTML document",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber155",
+    "test-file/test/utility.js.html#lineNumber184",
     "Utility HTTP request Get JSON object",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber148",
+    "test-file/test/utility.js.html#lineNumber177",
     "Utility HTTP request Get Plain text",
     "test"
   ],
   [
     "multiplemap source/utility/object.js~multiplemap,multiplemap",
-    "test-file/test/utility.js.html#lineNumber18",
+    "test-file/test/utility.js.html#lineNumber47",
     "Utility Map & filter",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber20",
+    "test-file/test/utility.js.html#lineNumber49",
     "Utility Map & filter Filter `null` & `undefined`",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber29",
+    "test-file/test/utility.js.html#lineNumber58",
     "Utility Map & filter Merge Array elements into result",
     "test"
   ],
   [
     "extend source/utility/object.js~extend,extend",
-    "test-file/test/utility.js.html#lineNumber38",
+    "test-file/test/utility.js.html#lineNumber67",
     "Utility Mixin objects",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber54",
+    "test-file/test/utility.js.html#lineNumber83",
     "Utility Mixin objects Function or Class",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber40",
+    "test-file/test/utility.js.html#lineNumber69",
     "Utility Mixin objects Ordinary objects",
     "test"
   ],
   [
     "",
-    "test-file/test/utility.js.html#lineNumber107",
+    "test-file/test/utility.js.html#lineNumber136",
     "Utility Parse & Stringify DOM",
     "test"
   ],
@@ -690,76 +738,106 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
-    "source/component.js",
-    "file/source/Component.js.html",
-    "source/Component.js",
-    "file"
-  ],
-  [
-    "source/component.js~component#$",
-    "class/source/Component.js~Component.html#instance-method-$",
-    "source/Component.js~Component#$",
-    "method"
-  ],
-  [
-    "source/component.js~component#$up",
-    "class/source/Component.js~Component.html#instance-method-$up",
-    "source/Component.js~Component#$up",
-    "method"
-  ],
-  [
-    "source/component.js~component#bubbleout",
-    "class/source/Component.js~Component.html#instance-method-bubbleOut",
-    "source/Component.js~Component#bubbleOut",
-    "method"
-  ],
-  [
-    "source/component.js~component#builddom",
-    "class/source/Component.js~Component.html#instance-method-buildDOM",
-    "source/Component.js~Component#buildDOM",
-    "method"
-  ],
-  [
-    "source/component.js~component#on",
-    "class/source/Component.js~Component.html#instance-method-on",
-    "source/Component.js~Component#on",
-    "method"
-  ],
-  [
-    "source/component.js~component#view",
-    "class/source/Component.js~Component.html#instance-get-view",
-    "source/Component.js~Component#view",
-    "member"
-  ],
-  [
-    "source/component.js~component.indexof",
-    "class/source/Component.js~Component.html#static-method-indexOf",
-    "source/Component.js~Component.indexOf",
-    "method"
-  ],
-  [
-    "source/component.js~component.tagname",
-    "class/source/Component.js~Component.html#static-get-tagName",
-    "source/Component.js~Component.tagName",
-    "member"
-  ],
-  [
-    "source/component.js~component.targetof",
-    "class/source/Component.js~Component.html#static-method-targetOf",
-    "source/Component.js~Component.targetOf",
-    "method"
-  ],
-  [
-    "source/component.js~domeventhandler",
-    "typedef/index.html#static-typedef-DOMEventHandler",
-    "source/Component.js~DOMEventHandler",
-    "typedef"
-  ],
-  [
     "source/webcell.js",
     "file/source/WebCell.js.html",
     "source/WebCell.js",
     "file"
+  ],
+  [
+    "source/component/component.js",
+    "file/source/component/Component.js.html",
+    "source/component/Component.js",
+    "file"
+  ],
+  [
+    "source/component/component.js~component#$",
+    "class/source/component/Component.js~Component.html#instance-method-$",
+    "source/component/Component.js~Component#$",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#$up",
+    "class/source/component/Component.js~Component.html#instance-method-$up",
+    "source/component/Component.js~Component#$up",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#bubbleout",
+    "class/source/component/Component.js~Component.html#instance-method-bubbleOut",
+    "source/component/Component.js~Component#bubbleOut",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#builddom",
+    "class/source/component/Component.js~Component.html#instance-method-buildDOM",
+    "source/component/Component.js~Component#buildDOM",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#on",
+    "class/source/component/Component.js~Component.html#instance-method-on",
+    "source/component/Component.js~Component#on",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#view",
+    "class/source/component/Component.js~Component.html#instance-get-view",
+    "source/component/Component.js~Component#view",
+    "member"
+  ],
+  [
+    "source/component/component.js~component.indexof",
+    "class/source/component/Component.js~Component.html#static-method-indexOf",
+    "source/component/Component.js~Component.indexOf",
+    "method"
+  ],
+  [
+    "source/component/component.js~component.tagname",
+    "class/source/component/Component.js~Component.html#static-get-tagName",
+    "source/component/Component.js~Component.tagName",
+    "member"
+  ],
+  [
+    "source/component/component.js~component.targetof",
+    "class/source/component/Component.js~Component.html#static-method-targetOf",
+    "source/component/Component.js~Component.targetOf",
+    "method"
+  ],
+  [
+    "source/component/component.js~domeventhandler",
+    "typedef/index.html#static-typedef-DOMEventHandler",
+    "source/component/Component.js~DOMEventHandler",
+    "typedef"
+  ],
+  [
+    "source/component/inputcomponent.js",
+    "file/source/component/InputComponent.js.html",
+    "source/component/InputComponent.js",
+    "file"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent#attributechangedcallback",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-method-attributeChangedCallback",
+    "source/component/InputComponent.js~InputComponent#attributeChangedCallback",
+    "method"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent#constructor",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-constructor-constructor",
+    "source/component/InputComponent.js~InputComponent#constructor",
+    "method"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent#defaultvalue",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-get-defaultValue",
+    "source/component/InputComponent.js~InputComponent#defaultValue",
+    "member"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent.observedattributes",
+    "class/source/component/InputComponent.js~InputComponent.html#static-get-observedAttributes",
+    "source/component/InputComponent.js~InputComponent.observedAttributes",
+    "member"
   ],
   [
     "source/utility/dom-polyfill.js",

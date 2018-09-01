@@ -6,8 +6,11 @@
     <script src="../../dist/web-cell.js"></script>
 
     <link rel="import" href="cell-test.html" />
+    <link rel="import" href="cell-input.html" />
 </head><body>
     <cell-test oninput="this.testInput( event )"
         onchange="console.log( this.value )">
     </cell-test>
+
+    <cell-input value="1" readonly placeholder="test"></cell-input>
 </body></html>

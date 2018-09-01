@@ -29,8 +29,10 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -38,7 +40,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
@@ -54,38 +58,29 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
 
-import Component, { attributeChanged } from &apos;./Component&apos;;
+import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
 
-import { extend } from &apos;./utility/object&apos;;
+import { getPropertyDescriptor, extend } from &apos;./utility/object&apos;;
 
 
 function dataInject(constructor) {
 
-    const { observedAttributes, attributeChangedCallback } =
-        Object.getOwnPropertyDescriptors( constructor );
+    const observedAttributes = getPropertyDescriptor(
+        constructor, &apos;observedAttributes&apos;
+    );
 
-    if ( observedAttributes )
-        Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
-            get:  function () {
+    if (! observedAttributes)  return;
 
-                const attribute = observedAttributes.get.call( this );
+    Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
+        get:  function () {
 
-                for (let key of attribute)  if (! (key in this.prototype))
-                    Object.defineProperty(this.prototype, key, {
-                        set:         function (value) {
+            return  linkDataOf.call(this, observedAttributes.get.call( this ));
+        }
+    });
 
-                            this.view.commit(key, value);
-                        },
-                        get:         function () {
-
-                            return  this.view.data[ key ];
-                        },
-                        enumerable:  true
-                    });
-
-                return attribute;
-            }
-        });
+    const attributeChangedCallback = getPropertyDescriptor(
+        constructor.prototype, &apos;attributeChangedCallback&apos;
+    );
 
     if (! attributeChangedCallback)
         Object.defineProperty(constructor.prototype, &apos;attributeChangedCallback&apos;, {
@@ -98,10 +93,11 @@ function dataInject(constructor) {
  * Register a component
  *
  * @param {function} subClass
+ * @param {string}   [baseTag] - Name of an HTML original tag to extend
  *
  * @return {function} `subClass`
  */
-export function component(subClass) {
+export function component(subClass, baseTag) {
 
     const static_member = { };
 
@@ -117,13 +113,17 @@ export function component(subClass) {
 
     dataInject( extend(subClass,  Component,  static_member) );
 
-    customElements.define(subClass.tagName, subClass);
+    customElements.define(
+        subClass.tagName,  subClass,  baseTag &amp;&amp; {extends: baseTag}
+    );
 
     return subClass;
 }
 
 
-export { Component };
+export { Component, attributeChanged };
+
+export {default as InputComponent} from &apos;./component/InputComponent&apos;;
 
 export * from &apos;./utility/object&apos;;
 

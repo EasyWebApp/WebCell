@@ -114,4 +114,33 @@ describe('Component mixin',  () => {
 
         (await input).should.be.equal('TEXTAREA focusin');
     });
+
+    /**
+     * @test {InputComponent}
+     */
+    it('Form field components',  async () => {
+
+        const property = await page.$eval('cell-input',  input => {
+
+            const cursor = input.style.getPropertyValue('--input-cursor');
+
+            input = input.shadowRoot.children[0];
+
+            return {
+                type:         input.type,
+                value:        input.value,
+                readOnly:     input.readOnly,
+                placeholder:  input.placeholder,
+                cursor
+            };
+        });
+
+        property.should.be.eql({
+            type:         'text',
+            value:        '1',
+            readOnly:     true,
+            placeholder:  'test',
+            cursor:       'default'
+        });
+    });
 });

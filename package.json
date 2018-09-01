@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "0.9.6",
+  "version": "0.9.7",
   "description": "Light-weight Web Components engine based on ECMAScript 6+ with MVVM support",
   "keywords": [
     "WebApp",
@@ -39,6 +39,7 @@
     "start": "web-server docs/ -o"
   },
   "devDependencies": {
+    "@webcomponents/webcomponentsjs": "^2.1.1",
     "amd-bundle": "^1.3.1",
     "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",

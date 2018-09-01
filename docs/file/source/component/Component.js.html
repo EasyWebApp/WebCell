@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/Component.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/component/Component.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -29,8 +29,10 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/Component.js~Component.html">Component</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -40,9 +42,9 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-superOf">superOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
@@ -53,12 +55,12 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM } from &apos;./utility/DOM&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">source/component/Component.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM } from &apos;../utility/DOM&apos;;
 
-import ObjectView from &apos;./view/ObjectView&apos;;
+import ObjectView from &apos;../view/ObjectView&apos;;
 
-import View from &apos;./view/View&apos;;
+import View from &apos;../view/View&apos;;
 
 
 /**
@@ -78,15 +80,19 @@ export default  class Component {
     /**
      * @param {?(string|Node)} template - HTML source or sub DOM tree
      * @param {string}         [style]  - CSS source
+     * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      *
      * @return {HTMLElement} This custom element
      */
-    buildDOM(template, style) {
+    buildDOM(template, style, option) {
 
-        const shadow = this.attachShadow({
-            mode:              &apos;open&apos;,
-            delegatesFocus:    true
-        });
+        const shadow = this.attachShadow(Object.assign(
+            {
+                mode:              &apos;open&apos;,
+                delegatesFocus:    true
+            },
+            option
+        ));
 
         if (typeof template === &apos;string&apos;) {
 
@@ -276,24 +282,68 @@ export default  class Component {
  */
 
 
+const attr_prop = {
+    class:     &apos;className&apos;,
+    for:       &apos;htmlFor&apos;,
+    readonly:  &apos;readOnly&apos;
+};
+
 /**
+ * Set the getter &amp; setter of the DOM property
+ *
  * @private
  *
- * @param {string} name
- * @param {*}      oldValue
- * @param {*}      newValue
+ * @param {string[]} attributes - Names of HTML attributes
+ *
+ * @return {string[]} `attributes`
+ */
+export function linkDataOf(attributes) {
+
+    for (let key of attributes) {
+
+        key = attr_prop[key] || key;
+
+        if (! (key in this.prototype))
+            Object.defineProperty(this.prototype, key, {
+                set:         function (value) {
+
+                    this.view.commit(key, value);
+                },
+                get:         function () {
+
+                    return  this.view.data[ key ];
+                },
+                enumerable:  true
+            });
+    }
+
+    return attributes;
+}
+
+
+/**
+ * Assign the new value to the DOM property
+ * which has the same name of the changed attribute
+ *
+ * @param {string}  name
+ * @param {?string} oldValue
+ * @param {?string} newValue
+ *
+ * @return {*} DOM property value of `newValue`
  */
 export function attributeChanged(name, oldValue, newValue) {
 
+    name = attr_prop[name] || name;
+
     switch ( newValue ) {
-        case &apos;&apos;:      this[ name ] = true;      break;
-        case null:    this[ name ] = false;     break;
+        case &apos;&apos;:      return  this[ name ] = true;
+        case null:    return  this[ name ] = false;
         default:      try {
-            this[ name ] = JSON.parse( newValue );
+            return  this[ name ] = JSON.parse( newValue );
 
         } catch (error) {
 
-            this[ name ] = newValue;
+            return  this[ name ] = newValue;
         }
     }
 }

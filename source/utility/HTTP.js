@@ -19,13 +19,13 @@ export function isXDomain(URI) {
 /**
  * HTTP request
  *
- * @param {string} URI
- * @param {string} [method='GET']
- * @param {*}      [body]
- * @param {Object} [headers]
- * @param {Object} [option]
+ * @param {string}        URI            - HTTP URL
+ * @param {string}        [method='GET']
+ * @param {string|Object} [body]         - Data to send
+ * @param {Object}        [headers]
+ * @param {Object}        [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
  *
- * @return {*} Parse response data automatically
+ * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
  */
 export async function request(URI, method = 'GET', body, headers, option) {
 

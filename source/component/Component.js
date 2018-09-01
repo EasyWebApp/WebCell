@@ -1,8 +1,8 @@
-import { parseDOM } from './utility/DOM';
+import { parseDOM } from '../utility/DOM';
 
-import ObjectView from './view/ObjectView';
+import ObjectView from '../view/ObjectView';
 
-import View from './view/View';
+import View from '../view/View';
 
 
 /**
@@ -22,15 +22,19 @@ export default  class Component {
     /**
      * @param {?(string|Node)} template - HTML source or sub DOM tree
      * @param {string}         [style]  - CSS source
+     * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      *
      * @return {HTMLElement} This custom element
      */
-    buildDOM(template, style) {
+    buildDOM(template, style, option) {
 
-        const shadow = this.attachShadow({
-            mode:              'open',
-            delegatesFocus:    true
-        });
+        const shadow = this.attachShadow(Object.assign(
+            {
+                mode:              'open',
+                delegatesFocus:    true
+            },
+            option
+        ));
 
         if (typeof template === 'string') {
 
@@ -220,24 +224,68 @@ export default  class Component {
  */
 
 
+const attr_prop = {
+    class:     'className',
+    for:       'htmlFor',
+    readonly:  'readOnly'
+};
+
 /**
+ * Set the getter & setter of the DOM property
+ *
  * @private
  *
- * @param {string} name
- * @param {*}      oldValue
- * @param {*}      newValue
+ * @param {string[]} attributes - Names of HTML attributes
+ *
+ * @return {string[]} `attributes`
+ */
+export function linkDataOf(attributes) {
+
+    for (let key of attributes) {
+
+        key = attr_prop[key] || key;
+
+        if (! (key in this.prototype))
+            Object.defineProperty(this.prototype, key, {
+                set:         function (value) {
+
+                    this.view.commit(key, value);
+                },
+                get:         function () {
+
+                    return  this.view.data[ key ];
+                },
+                enumerable:  true
+            });
+    }
+
+    return attributes;
+}
+
+
+/**
+ * Assign the new value to the DOM property
+ * which has the same name of the changed attribute
+ *
+ * @param {string}  name
+ * @param {?string} oldValue
+ * @param {?string} newValue
+ *
+ * @return {*} DOM property value of `newValue`
  */
 export function attributeChanged(name, oldValue, newValue) {
 
+    name = attr_prop[name] || name;
+
     switch ( newValue ) {
-        case '':      this[ name ] = true;      break;
-        case null:    this[ name ] = false;     break;
+        case '':      return  this[ name ] = true;
+        case null:    return  this[ name ] = false;
         default:      try {
-            this[ name ] = JSON.parse( newValue );
+            return  this[ name ] = JSON.parse( newValue );
 
         } catch (error) {
 
-            this[ name ] = newValue;
+            return  this[ name ] = newValue;
         }
     }
 }

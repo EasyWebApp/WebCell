@@ -1,6 +1,8 @@
 import '../source/utility/DOM-polyfill';
 
-import { multipleMap, extend, mapTree } from '../source/utility/object';
+import {
+    getPropertyDescriptor, multipleMap, extend, mapTree
+} from '../source/utility/object';
 
 import { readFileSync } from 'fs';
 
@@ -12,6 +14,33 @@ import { request } from '../source/utility/HTTP';
 
 
 describe('Utility',  () => {
+    /**
+     * @test {getPropertyDescriptor}
+     */
+    describe('Get the property descriptor',  () => {
+
+        const object = {test: 1},
+            descriptor = {
+                value:         1,
+                writable:      true,
+                enumerable:    true,
+                configurable:  true
+            };
+
+        it(
+            'Own property',
+            ()  =>  getPropertyDescriptor(object,  'test')
+                .should.be.eql( descriptor )
+        );
+
+        it(
+            'Property on the prototype chain',
+            ()  =>  getPropertyDescriptor(
+                Object.create( object ),  'test'
+            ).should.be.eql( descriptor )
+        );
+    });
+
     /**
      * @test {multipleMap}
      */

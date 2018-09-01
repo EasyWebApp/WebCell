@@ -1,0 +1,14 @@
+<template>
+    <input type="${view.type}" value="${view.value}"
+        readOnly="${view.readOnly}" disabled="${view.disabled}"
+        placeholder="${view.placeholder}">
+</template>
+
+<script>
+    const { component, InputComponent } = self['web-cell'];
+
+    component(class CellInput extends InputComponent {
+
+        constructor() {  super();  }
+    });
+</script>

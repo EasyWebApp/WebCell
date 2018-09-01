@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">source/view/ObjectView.js | web-cell</title>
+  <title data-ice="title">source/component/InputComponent.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -55,244 +55,59 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/view/ObjectView.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import View from &apos;./View&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">source/component/InputComponent.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { attributeChanged } from &apos;./Component&apos;;
 
-import Template from &apos;./Template&apos;;
 
-import { nextTick } from &apos;../utility/DOM&apos;;
-
-import { mapTree, extend } from &apos;../utility/object&apos;;
-
-import ArrayView from &apos;./ArrayView&apos;;
-
-const Array_iterator = [ ][Symbol.iterator],
-    template_element = new WeakMap(),
-    view_buffer = new WeakMap();
-
+const cursor_map = {
+    readonly:  &apos;default&apos;,
+    disabled:  &apos;not-allowed&apos;
+};
 
 /**
- * View for Object model
+ * Base class for Form field components
  */
-export default  class ObjectView extends View {
+export default  class InputComponent extends HTMLElement {
     /**
-     * @param {string|Element|DocumentFragment} template
-     * @param {View}                            [parent]
+     * @param {string} template - HTML source code with template expressions
+     * @param {string} [style]  - CSS source code
      */
-    constructor(template, parent) {
+    constructor(template, style) {  super().buildDOM(template, style);  }
 
-        if (! super(template,  &apos;object&apos;,  { },  parent).booted)
-            this.length = 0, this.scan();
-    }
+    /**
+     * @type {string[]} Common attributes of Form fields
+     */
+    static get observedAttributes() {
 
-    [Symbol.iterator]() {  return  Array_iterator.call( this );  }
-
-    valueOf() {
-
-        const data = Object.assign({ },  this.data);
-
-        for (let template of this)
-            if (template instanceof View)
-                data[ template.name ] = template.valueOf();
-
-        return data;
+        return [
+            &apos;type&apos;, &apos;value&apos;, &apos;readonly&apos;, &apos;disabled&apos;, &apos;checked&apos;, &apos;placeholder&apos;
+        ];
     }
 
     /**
-     * @private
+     * Common behavior of Form field attributes
      *
-     * @param {Node|Attr} node
-     * @param {function}  renderer
-     *
-     * @return {Template}
+     * @param {string}  name
+     * @param {?string} oldValue
+     * @param {?string} newValue
      */
-    static templateOf(node, renderer) {
+    attributeChangedCallback(name, oldValue, newValue) {
 
-        return  new Template(
-            node.value || node.nodeValue,  [&apos;view&apos;, &apos;scope&apos;, &apos;host&apos;],  renderer
-        );
+        if ((name === &apos;type&apos;)  &amp;&amp;  !newValue)  newValue = &apos;text&apos;;
+
+        newValue = attributeChanged.call(this, name, oldValue, newValue);
+
+        if (cursor_map[ name ])
+            if ( newValue )
+                this.style.setProperty(&apos;--input-cursor&apos;,  cursor_map[name]);
+            else
+                this.style.removeProperty(&apos;--input-cursor&apos;);
     }
 
     /**
-     * Async render
-     *
-     * @protected
-     *
-     * @param {string} key
-     * @param {*}      value
+     * @type {string}
      */
-    async commit(key, value) {
-
-        var buffer;
-
-        if (! (buffer = view_buffer.get( this )))
-            view_buffer.set(this,  buffer = { });
-
-        buffer[key] = value;
-
-        await nextTick();
-
-        if (! view_buffer.get( this ))  return;
-
-        this.render( buffer );
-
-        view_buffer.delete( this );
-    }
-
-    /**
-     * Add a watched property to this view instance
-     *
-     * @param {string} key
-     * @param {*}      [value]
-     *
-     * @return {ObjectView} This view
-     */
-    watch(key, value) {
-
-        if (!(key in this))
-            Object.defineProperty(this,  key,  value ? {
-                value:       value,
-                enumerable:  true
-            } : {
-                get:         ()  =&gt;  this.data[ key ],
-                set:         (value)  =&gt;  this.commit(key, value),
-                enumerable:  true
-            });
-        else if (key  in  Object.getPrototypeOf( this ))
-            console.warn(`Don&apos;t overwrite Inset property &quot;${key}&quot; !`);
-
-        return this;
-    }
-
-    /**
-     * @private
-     *
-     * @param {Element}  element
-     * @param {Template} template
-     */
-    addTemplate(element, template) {
-
-        if (! template[0])  return;
-
-        template_element.set(this[ this.length++ ] = template,  element);
-
-        for (let key of template.reference.get(&apos;view&apos;))  this.watch( key );
-    }
-
-    /**
-     * @private
-     *
-     * @param {string} name
-     * @param {View}   view
-     */
-    addView(name, view) {  this.watch(name, view)[ this.length++ ] = view;  }
-
-    /**
-     * @private
-     *
-     * @param {Element} element
-     */
-    parseTag(element) {
-
-        for (let attr  of  Array.from( element.attributes )) {
-
-            let name = attr.name;
-
-            let template = ObjectView.templateOf(
-                attr,
-                (name in element)  ?
-                    (value  =&gt;  element[ name ] = value)  :
-                    (value  =&gt;  element.setAttribute(name, value))
-            );
-
-            if (template == &apos;&apos;)  element.removeAttribute( name );
-
-            this.addTemplate(element, template);
-        }
-    }
-
-    /**
-     * @private
-     */
-    scan() {
-
-        var root = this.content;
-
-        root = root.parentNode ? root : {
-            childNodes:    (root instanceof Array)  ?  root  :  [ root ]
-        };
-
-        mapTree(root,  &apos;childNodes&apos;,  (node) =&gt; {
-
-            switch ( node.nodeType ) {
-                case 1:
-                    if ( node.dataset.object )
-                        this.addView(node.dataset.object,  new ObjectView( node ));
-                    else if ( node.dataset.array )
-                        this.addView(node.dataset.array,  new ArrayView( node ));
-                    else
-                        this.parseTag( node );
-                    break;
-                case 3:
-                    this.addTemplate(
-                        node,
-                        ObjectView.templateOf(
-                            node,  value =&gt; node.nodeValue = value
-                        )
-                    );
-            }
-
-            return node;
-        });
-    }
-
-    /**
-     * First ancestor scope which isn&apos;t `Array`
-     *
-     * @protected
-     *
-     * @type {?Object}
-     */
-    get scope() {
-
-        var view = this;
-
-        while (view = view.parent)
-            if (! (view instanceof ArrayView))  return view.data;
-    }
-
-    /**
-     * @param {Object} [data]
-     *
-     * @return {ObjectView}
-     */
-    render(data) {
-
-        const _data_ = extend(this.data, data);
-
-        for (let key in data)  this.watch( key );
-
-        for (let template of this) {
-
-            let name = template.name;
-
-            if (template instanceof Template)
-                template.evaluate(
-                    template_element.get( template ),  _data_,  this.scope,  this.rootHost
-                );
-            else if (template instanceof View)
-                _data_[name] = template.render( data[ name ] ).data;
-        }
-
-        return this;
-    }
-
-    clear() {
-
-        for (let template of this)  template.clear();
-
-        return this;
-    }
+    get defaultValue() {  return this.getAttribute(&apos;value&apos;);  }
 }
 </code></pre>
 
