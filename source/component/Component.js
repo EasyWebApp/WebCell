@@ -1,4 +1,4 @@
-import { parseDOM } from '../utility/DOM';
+import { parseDOM,  $ as $_,  $up as $_up,  delegate } from '../utility/DOM';
 
 import ObjectView from '../view/ObjectView';
 
@@ -68,32 +68,6 @@ export default  class Component {
     get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
-     * @param {Element} element
-     *
-     * @return {number} The index of `element` in its siblings
-     */
-    static indexOf(element) {
-
-        var index = 0;
-
-        while (element = element.previousElementSibling)  index++;
-
-        return index;
-    }
-
-    /**
-     * @param {Event} event
-     *
-     * @return {Element} The target of `event` object (**Shadow DOM** is in account)
-     */
-    static targetOf(event) {
-
-        const target = event.composedPath ? event.composedPath() : event.path;
-
-        return  (target || '')[0]  ||  event.target;
-    }
-
-    /**
      * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
      *
      * @return {boolean} Default behavior of this event can be executed or not
@@ -150,52 +124,27 @@ export default  class Component {
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
      */
-    $(selector) {
-
-        return  [... this.shadowRoot.querySelectorAll( selector )];
-    }
+    $(selector) {  return  $_(selector, this.shadowRoot);  }
 
     /**
      * @param {string} selector - CSS selector
      *
      * @return {?Element} Matched parent
      */
-    $up(selector) {
-
-        var element = this;
-
-        while ( element.parentNode ) {
-
-            element = element.parentNode;
-
-            if (element.matches  &&  element.matches( selector ))
-                return element;
-        }
-    }
+    $up(selector) {  return  $_up(selector, this);  }
 
     /**
-     * DOM event delegate
+     * @param {string} selector - CSS selector
      *
-     * @private
-     *
-     * @param {string}          selector
-     * @param {DOMEventHandler} handler
-     *
-     * @return {Function} Handler wrapper
+     * @return {Element[]} Matched elements which assigned to slots
      */
-    static delegate(selector, handler) {
+    $slot(selector) {
 
-        const $up = Component.prototype.$up;
-
-        return  function (event) {
-
-            var target = Component.targetOf( event );
-
-            if (! target.matches( selector ))
-                target = $up.call(target, selector);
-
-            if ( target )  return handler.call(target, event);
-        };
+        return  [ ].concat(
+            ... this.$('slot').map(slot => slot.assignedNodes())
+        ).filter(
+            node  =>  node.matches && node.matches( selector )
+        );
     }
 
     /**
@@ -212,7 +161,7 @@ export default  class Component {
         if (selector instanceof Function)  callback = selector, selector = '';
 
         this.addEventListener(
-            type,  selector ? Component.delegate(selector, callback) : callback
+            type,  selector ? delegate(selector, callback) : callback
         );
 
         return this;

@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "Light-weight Web Components engine based on ECMAScript 6+ with MVVM support",
   "keywords": [
     "WebApp",
@@ -11,12 +11,7 @@
   ],
   "author": "shiy007@qq.com",
   "license": "LGPL-3.0",
-  "browser": "dist/web-cell.js",
-  "directories": {
-    "lib": "source",
-    "doc": "docs",
-    "test": "test"
-  },
+  "homepage": "https://web-cell.tk/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EasyWebApp/WebCell.git"
@@ -24,7 +19,12 @@
   "bugs": {
     "url": "https://github.com/EasyWebApp/WebCell/issues"
   },
-  "homepage": "https://web-cell.tk/",
+  "browser": "dist/web-cell.js",
+  "directories": {
+    "lib": "source",
+    "doc": "docs",
+    "test": "test"
+  },
   "engines": {
     "node": "^6.5.0"
   },
@@ -33,45 +33,35 @@
     "pack": "amd-bundle source/WebCell dist/web-cell",
     "test": "mocha --exit",
     "debug": "mocha --inspect-brk",
-    "prepublishOnly": "npm run lint  &&  npm run pack  &&  npm test",
-    "build": "npm run prepublishOnly  &&  esdoc",
-    "precommit": "npm run build  &&  git add .",
+    "build": "npm run lint  &&  npm run pack  &&  npm test",
+    "prepublishOnly": "npm run build",
+    "precommit": "npm run build  &&  esdoc  &&  git add .",
     "start": "web-server docs/ -o"
   },
   "devDependencies": {
-    "@webcomponents/webcomponentsjs": "^2.1.1",
-    "amd-bundle": "^1.3.1",
-    "babel-plugin-transform-runtime": "^6.23.0",
-    "babel-polyfill": "^6.26.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-register": "^6.26.0",
-    "babel-runtime": "^6.26.0",
+    "@babel/core": "^7.1.0",
+    "@babel/polyfill": "^7.0.0",
+    "@babel/preset-env": "^7.1.0",
+    "@babel/register": "^7.0.0",
+    "@webcomponents/webcomponentsjs": "^2.1.3",
+    "amd-bundle": "^1.6.0",
     "esdoc": "^1.1.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^4.19.1",
+    "eslint": "^5.6.0",
     "husky": "^0.14.3",
-    "jsdom": "^11.12.0",
-    "koapache": "^1.0.2",
+    "jsdom": "^12.0.0",
+    "koapache": "^1.0.4",
     "mocha": "^5.2.0",
     "node-fetch": "^2.2.0",
-    "puppeteer-browser": "^0.3.1",
+    "puppeteer-browser": "^0.3.4",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^5.0.10"
+    "sinon": "^6.3.4"
   },
   "babel": {
     "presets": [
-      "env"
-    ],
-    "plugins": [
-      [
-        "transform-runtime",
-        {
-          "polyfill": false
-        }
-      ],
-      "transform-es2015-modules-commonjs"
+      "@babel/preset-env"
     ]
   }
 }

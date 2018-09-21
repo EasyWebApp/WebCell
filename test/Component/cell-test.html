@@ -7,7 +7,9 @@
 <link rel="stylesheet" href="cell-test.css">
 
 <script>
-    self['web-cell'].component(class CellTest extends HTMLElement {
+    var { component, targetOf, indexOf } = self['web-cell'];
+
+    component(class CellTest extends HTMLElement {
 
         constructor() {  super().buildDOM();  }
 
@@ -19,12 +21,12 @@
 
         testInput(event) {
 
-            const innerTarget = CellTest.targetOf( event );
+            const innerTarget = targetOf( event );
 
             console.log(
                 event.target.tagName,
                 innerTarget.tagName,
-                CellTest.indexOf( innerTarget )
+                indexOf( innerTarget )
             );
         }
     });

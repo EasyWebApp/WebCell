@@ -34,10 +34,15 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -45,6 +50,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
@@ -56,7 +62,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/component/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM } from &apos;../utility/DOM&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM,  $ as $_,  $up as $_up,  delegate } from &apos;../utility/DOM&apos;;
 
 import ObjectView from &apos;../view/ObjectView&apos;;
 
@@ -126,32 +132,6 @@ export default  class Component {
     get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
-     * @param {Element} element
-     *
-     * @return {number} The index of `element` in its siblings
-     */
-    static indexOf(element) {
-
-        var index = 0;
-
-        while (element = element.previousElementSibling)  index++;
-
-        return index;
-    }
-
-    /**
-     * @param {Event} event
-     *
-     * @return {Element} The target of `event` object (**Shadow DOM** is in account)
-     */
-    static targetOf(event) {
-
-        const target = event.composedPath ? event.composedPath() : event.path;
-
-        return  (target || &apos;&apos;)[0]  ||  event.target;
-    }
-
-    /**
      * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
      *
      * @return {boolean} Default behavior of this event can be executed or not
@@ -208,52 +188,27 @@ export default  class Component {
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
      */
-    $(selector) {
-
-        return  [... this.shadowRoot.querySelectorAll( selector )];
-    }
+    $(selector) {  return  $_(selector, this.shadowRoot);  }
 
     /**
      * @param {string} selector - CSS selector
      *
      * @return {?Element} Matched parent
      */
-    $up(selector) {
-
-        var element = this;
-
-        while ( element.parentNode ) {
-
-            element = element.parentNode;
-
-            if (element.matches  &amp;&amp;  element.matches( selector ))
-                return element;
-        }
-    }
+    $up(selector) {  return  $_up(selector, this);  }
 
     /**
-     * DOM event delegate
+     * @param {string} selector - CSS selector
      *
-     * @private
-     *
-     * @param {string}          selector
-     * @param {DOMEventHandler} handler
-     *
-     * @return {Function} Handler wrapper
+     * @return {Element[]} Matched elements which assigned to slots
      */
-    static delegate(selector, handler) {
+    $slot(selector) {
 
-        const $up = Component.prototype.$up;
-
-        return  function (event) {
-
-            var target = Component.targetOf( event );
-
-            if (! target.matches( selector ))
-                target = $up.call(target, selector);
-
-            if ( target )  return handler.call(target, event);
-        };
+        return  [ ].concat(
+            ... this.$(&apos;slot&apos;).map(slot =&gt; slot.assignedNodes())
+        ).filter(
+            node  =&gt;  node.matches &amp;&amp; node.matches( selector )
+        );
     }
 
     /**
@@ -270,7 +225,7 @@ export default  class Component {
         if (selector instanceof Function)  callback = selector, selector = &apos;&apos;;
 
         this.addEventListener(
-            type,  selector ? Component.delegate(selector, callback) : callback
+            type,  selector ? delegate(selector, callback) : callback
         );
 
         return this;

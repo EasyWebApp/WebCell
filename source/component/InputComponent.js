@@ -1,9 +1,16 @@
+import { watchAttributes } from '../utility/DOM';
+
 import { attributeChanged } from './Component';
 
 
-const cursor_map = {
-    readonly:  'default',
-    disabled:  'not-allowed'
+const CSS_map = {
+    readonly:  {
+        cursor:  'default'
+    },
+    disabled:  {
+        cursor:          'not-allowed',
+        'point-events':  'none'
+    }
 };
 
 /**
@@ -16,34 +23,52 @@ export default  class InputComponent extends HTMLElement {
      */
     constructor(template, style) {  super().buildDOM(template, style);  }
 
-    /**
-     * @type {string[]} Common attributes of Form fields
-     */
-    static get observedAttributes() {
+    connectedCallback() {
 
-        return [
-            'type', 'value', 'readonly', 'disabled', 'checked', 'placeholder'
-        ];
+        const origin = this.$slot('input')[0], proxy = this.$('input')[0];
+
+        origin.style.setProperty('display', 'none', 'important');
+
+        watchAttributes.call(
+            this,
+            origin,
+            [
+                'type', 'name', 'value',
+                'readonly', 'disabled', 'checked', 'placeholder'
+            ],
+            this.changedPropertyOf
+        );
+
+        this.on.call(proxy,  'input',  () => origin.value = proxy.value);
+
+        this.on.call(proxy,  'change',  event => this.bubbleOut( event ));
     }
 
     /**
      * Common behavior of Form field attributes
      *
-     * @param {string}  name
+     * @param {string}  attribute
      * @param {?string} oldValue
      * @param {?string} newValue
      */
-    attributeChangedCallback(name, oldValue, newValue) {
+    changedPropertyOf(attribute, oldValue, newValue) {
 
-        if ((name === 'type')  &&  !newValue)  newValue = 'text';
+        if ((attribute === 'type')  &&  !newValue)  newValue = 'text';
 
-        newValue = attributeChanged.call(this, name, oldValue, newValue);
+        newValue = attributeChanged.call(
+            this.view, attribute, oldValue, newValue
+        );
 
-        if (cursor_map[ name ])
-            if ( newValue )
-                this.style.setProperty('--input-cursor',  cursor_map[name]);
-            else
-                this.style.removeProperty('--input-cursor');
+        const style = CSS_map[ attribute ];
+
+        if (! style)  return;
+
+        if ( newValue )
+            for (let name in style)
+                this.style.setProperty(`--input-${name}`,  style[ name ]);
+        else
+            for (let name in style)
+                this.style.removeProperty(`--input-${name}`);
     }
 
     /**

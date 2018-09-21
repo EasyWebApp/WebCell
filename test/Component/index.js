@@ -36,7 +36,7 @@ describe('Component mixin',  () => {
     /**
      * @test {Component.findTemplate}
      * @test {Component#buildDOM}
-     * @test {Component#\$}
+     * @test {\$}
      */
     it('Build Shadow DOM',  () =>
 
@@ -55,8 +55,8 @@ describe('Component mixin',  () => {
     );
 
     /**
-     * @test {Component.targetOf}
-     * @test {Component.indexOf}
+     * @test {targetOf}
+     * @test {indexOf}
      */
     it('Get the event target in Shadow DOM',  async () => {
 
@@ -84,7 +84,7 @@ describe('Component mixin',  () => {
     });
 
     /**
-     * @test {Component#\$up}
+     * @test {\$up}
      */
     it(
         'should find a parent element matched a CSS selector',
@@ -94,7 +94,7 @@ describe('Component mixin',  () => {
     );
 
     /**
-     * @test {Component#on}
+     * @test {delegate}
      */
     it('Delegate DOM events',  async () => {
 
@@ -114,11 +114,15 @@ describe('Component mixin',  () => {
 
         (await input).should.be.equal('TEXTAREA focusin');
     });
+});
 
+
+describe('Form field components',  () => {
     /**
-     * @test {InputComponent}
+     * @test {InputComponent#changedPropertyOf}
+     * @test {watchAttributes}
      */
-    it('Form field components',  async () => {
+    it('Render inner field',  async () => {
 
         const property = await page.$eval('cell-input',  input => {
 
@@ -143,4 +147,19 @@ describe('Component mixin',  () => {
             cursor:       'default'
         });
     });
+
+/*
+    it('Update outer field while typing',  async () => {
+
+        var proxy = await page.$('cell-input');
+
+        proxy = await proxy.getProperty('shadowRoot');
+
+        proxy = await proxy.$('input');
+
+        await proxy.type('Hello, WebCell !');
+
+        (await page.$eval('cell-input input',  input => input.value))
+            .should.be.equal('Hello, WebCell !');
+    });*/
 });

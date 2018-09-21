@@ -34,10 +34,15 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
-<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -45,6 +50,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
@@ -94,7 +100,7 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
     /**
      * @test {Component.findTemplate}
      * @test {Component#buildDOM}
-     * @test {Component#\$}
+     * @test {\$}
      */
     it(&apos;Build Shadow DOM&apos;,  () =&gt;
 
@@ -113,8 +119,8 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
     );
 
     /**
-     * @test {Component.targetOf}
-     * @test {Component.indexOf}
+     * @test {targetOf}
+     * @test {indexOf}
      */
     it(&apos;Get the event target in Shadow DOM&apos;,  async () =&gt; {
 
@@ -142,7 +148,7 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
     });
 
     /**
-     * @test {Component#\$up}
+     * @test {\$up}
      */
     it(
         &apos;should find a parent element matched a CSS selector&apos;,
@@ -152,7 +158,7 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
     );
 
     /**
-     * @test {Component#on}
+     * @test {delegate}
      */
     it(&apos;Delegate DOM events&apos;,  async () =&gt; {
 
@@ -172,11 +178,15 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
 
         (await input).should.be.equal(&apos;TEXTAREA focusin&apos;);
     });
+});
 
+
+describe(&apos;Form field components&apos;,  () =&gt; {
     /**
-     * @test {InputComponent}
+     * @test {InputComponent#changedPropertyOf}
+     * @test {watchAttributes}
      */
-    it(&apos;Form field components&apos;,  async () =&gt; {
+    it(&apos;Render inner field&apos;,  async () =&gt; {
 
         const property = await page.$eval(&apos;cell-input&apos;,  input =&gt; {
 
@@ -201,6 +211,21 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
             cursor:       &apos;default&apos;
         });
     });
+
+/*
+    it(&apos;Update outer field while typing&apos;,  async () =&gt; {
+
+        var proxy = await page.$(&apos;cell-input&apos;);
+
+        proxy = await proxy.getProperty(&apos;shadowRoot&apos;);
+
+        proxy = await proxy.$(&apos;input&apos;);
+
+        await proxy.type(&apos;Hello, WebCell !&apos;);
+
+        (await page.$eval(&apos;cell-input input&apos;,  input =&gt; input.value))
+            .should.be.equal(&apos;Hello, WebCell !&apos;);
+    });*/
 });
 </code></pre>
 

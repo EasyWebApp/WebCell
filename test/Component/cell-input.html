@@ -2,10 +2,11 @@
     <input type="${view.type}" value="${view.value}"
         readOnly="${view.readOnly}" disabled="${view.disabled}"
         placeholder="${view.placeholder}">
+    <slot></slot>
 </template>
 
 <script>
-    const { component, InputComponent } = self['web-cell'];
+    var { component, InputComponent } = self['web-cell'];
 
     component(class CellInput extends InputComponent {
 

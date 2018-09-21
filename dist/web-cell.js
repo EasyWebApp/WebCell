@@ -13,16 +13,13 @@
 })(function () {
 
 function merge(base, path) {
-
-    return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
-
-        return input[index - 1] === '.' ? match : '';
-    });
+  return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
+    return input[index - 1] === '.' ? match : '';
+  });
 }
 
 function outPackage(name) {
-    return (/^[^./]/.test(name)
-    );
+  return /^[^./]/.test(name);
 }
 
     var require = _require_.bind(null, './');
@@ -57,2123 +54,2150 @@ function outPackage(name) {
         return module.exports;
     }
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
+
+function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
+
+function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
+
+function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 var _module_ = {
-    './utility/HTTP': {
-        base: './utility',
-        dependency: [],
-        factory: function factory(require, exports, module) {
+  './utility/HTTP': {
+    base: './utility',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.isXDomain = isXDomain;
+      exports.request = request;
 
-            /**
-             * HTTP request
-             *
-             * @param {string}        URI            - HTTP URL
-             * @param {string}        [method='GET']
-             * @param {string|Object} [body]         - Data to send
-             * @param {Object}        [headers]
-             * @param {Object}        [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
-             *
-             * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
-             */
-            var request = function () {
-                var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(URI) {
-                    var method = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'GET';
-                    var body = arguments[2];
-                    var headers = arguments[3];
-                    var option = arguments[4];
-                    var response, type;
-                    return regeneratorRuntime.wrap(function _callee$(_context) {
-                        while (1) {
-                            switch (_context.prev = _context.next) {
-                                case 0:
+      var _object = require('./object');
 
-                                    if (body instanceof Object) try {
+      var _DOM = require('./DOM');
+      /**
+       * @param {string|URL} URI - Full URL of a resource
+       *
+       * @return {boolean} Whether it's cross domain to current page
+       */
 
-                                        body = JSON.stringify(body.valueOf());
 
-                                        headers = headers || {};
+      function isXDomain(URI) {
+        return new URL(URI, window.location.href).origin !== window.location.origin;
+      }
+      /**
+       * HTTP request
+       *
+       * @param {string}        URI            - HTTP URL
+       * @param {string}        [method='GET']
+       * @param {string|Object} [body]         - Data to send
+       * @param {Object}        [headers]
+       * @param {Object}        [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
+       *
+       * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
+       */
 
-                                        headers['Content-Type'] = headers['Content-Type'] || 'application/json';
-                                    } catch (error) {/* eslint-disable-line */}
 
-                                    _context.next = 3;
-                                    return window.fetch(URI, (0, _object.extend)({
-                                        method: method, headers: headers, body: body,
-                                        mode: isXDomain(URI) ? 'cors' : 'same-origin',
-                                        credentials: 'same-origin'
-                                    }, option));
+      function request(_x) {
+        return _request.apply(this, arguments);
+      }
 
-                                case 3:
-                                    response = _context.sent;
-                                    type = response.headers.get('Content-Type').split(';')[0];
-                                    _context.t0 = type;
-                                    _context.next = _context.t0 === 'text/html' ? 8 : _context.t0 === 'application/json' ? 13 : 16;
-                                    break;
+      function _request() {
+        _request = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee(URI) {
+          var method,
+              body,
+              headers,
+              option,
+              response,
+              type,
+              _args = arguments;
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  method = _args.length > 1 && _args[1] !== undefined ? _args[1] : 'GET';
+                  body = _args.length > 2 ? _args[2] : undefined;
+                  headers = _args.length > 3 ? _args[3] : undefined;
+                  option = _args.length > 4 ? _args[4] : undefined;
+                  if (body instanceof Object) try {
+                    body = JSON.stringify(body.valueOf());
+                    headers = headers || {};
+                    headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+                  } catch (error) {
+                    /* eslint-disable-line */
+                  }
+                  _context.next = 7;
+                  return window.fetch(URI, (0, _object.extend)({
+                    method: method,
+                    headers: headers,
+                    body: body,
+                    mode: isXDomain(URI) ? 'cors' : 'same-origin',
+                    credentials: 'same-origin'
+                  }, option));
 
-                                case 8:
-                                    _context.t1 = (0, _DOM.parseDOM);
-                                    _context.next = 11;
-                                    return response.text();
+                case 7:
+                  response = _context.sent;
+                  type = response.headers.get('Content-Type').split(';')[0];
+                  _context.t0 = type;
+                  _context.next = _context.t0 === 'text/html' ? 12 : _context.t0 === 'application/json' ? 17 : 20;
+                  break;
 
-                                case 11:
-                                    _context.t2 = _context.sent;
-                                    return _context.abrupt('return', (0, _context.t1)(_context.t2));
+                case 12:
+                  _context.t1 = (0, _DOM.parseDOM);
+                  _context.next = 15;
+                  return response.text();
 
-                                case 13:
-                                    _context.next = 15;
-                                    return response.json();
+                case 15:
+                  _context.t2 = _context.sent;
+                  return _context.abrupt("return", (0, _context.t1)(_context.t2));
 
-                                case 15:
-                                    return _context.abrupt('return', _context.sent);
+                case 17:
+                  _context.next = 19;
+                  return response.json();
 
-                                case 16:
-                                    _context.next = 18;
-                                    return response[type.split('/')[0] === 'text' ? 'text' : 'blob']();
+                case 19:
+                  return _context.abrupt("return", _context.sent);
 
-                                case 18:
-                                    return _context.abrupt('return', _context.sent);
+                case 20:
+                  _context.next = 22;
+                  return response[type.split('/')[0] === 'text' ? 'text' : 'blob']();
 
-                                case 19:
-                                case 'end':
-                                    return _context.stop();
-                            }
-                        }
-                    }, _callee, this);
-                }));
+                case 22:
+                  return _context.abrupt("return", _context.sent);
 
-                return function request(_x2) {
-                    return _ref.apply(this, arguments);
-                };
-            }();
-
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.isXDomain = isXDomain;
-            exports.request = request;
-
-            var _object = require('./object');
-
-            var _DOM = require('./DOM');
-
-            /**
-             * @param {string|URL} URI - Full URL of a resource
-             *
-             * @return {boolean} Whether it's cross domain to current page
-             */
-            function isXDomain(URI) {
-
-                return new URL(URI, window.location.href).origin !== window.location.origin;
+                case 23:
+                case "end":
+                  return _context.stop();
+              }
             }
-        }
-    },
-    './view/ArrayView': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-
-            var _View = require('./View');
-
-            var _View2 = _interopRequireDefault(_View);
-
-            var _ObjectView = require('./ObjectView');
-
-            var _ObjectView2 = _interopRequireDefault(_ObjectView);
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : { default: obj };
-            }
-
-            var Array_iterator = [][Symbol.iterator],
-                Array_indexOf = [].indexOf;
-
-            /**
-             * View for Array model
-             */
-
-            var ArrayView = function (_View2$default) {
-                _inherits(ArrayView, _View2$default);
-
-                /**
-                 * @param {Element} element
-                 * @param {View}    [parent]
-                 */
-                function ArrayView(element, parent) {
-                    var _this;
-
-                    _classCallCheck(this, ArrayView);
-
-                    if (!(_this = _possibleConstructorReturn(this, (ArrayView.__proto__ || Object.getPrototypeOf(ArrayView)).call(this, element, 'array', [], parent)), _this).booted) {
-
-                        _this.template = element.innerHTML.trim();_this.clear();
-                    }
-                    return _possibleConstructorReturn(_this);
-                }
-
-                _createClass(ArrayView, [{
-                    key: Symbol.iterator,
-                    value: function value() {
-                        return Array_iterator.call(this);
-                    }
-                }, {
-                    key: 'clear',
-                    value: function clear() {
-
-                        Array.prototype.splice.call(this, 0, Infinity);
-
-                        this.content.innerHTML = '';
-
-                        return this;
-                    }
-                }, {
-                    key: 'valueOf',
-                    value: function valueOf() {
-                        return Array.from(this, function (view) {
-                            return view.valueOf();
-                        });
-                    }
-
-                    /**
-                     * @protected
-                     *
-                     * @return {ArrayView}
-                     */
-
-                }, {
-                    key: 'update',
-                    value: function update() {
-                        var _iteratorNormalCompletion = true;
-                        var _didIteratorError = false;
-                        var _iteratorError = undefined;
-
-                        try {
-
-                            for (var _iterator = this[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                                var view = _step.value;
-                                view.render();
-                            }
-                        } catch (err) {
-                            _didIteratorError = true;
-                            _iteratorError = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion && _iterator.return) {
-                                    _iterator.return();
-                                }
-                            } finally {
-                                if (_didIteratorError) {
-                                    throw _iteratorError;
-                                }
-                            }
-                        }
-
-                        return this;
-                    }
-
-                    /**
-                     * @param {Iterable} [list]
-                     *
-                     * @return {ArrayView}
-                     */
-
-                }, {
-                    key: 'render',
-                    value: function render(list) {
-                        var _content,
-                            _ref2,
-                            _this2 = this;
-
-                        if (!list) return this.update();
-
-                        var data = this.data;
-
-                        (_content = this.content).append.apply(_content, _toConsumableArray((_ref2 = []).concat.apply(_ref2, _toConsumableArray(Array.from(list, function (item) {
-
-                            var view = _this2[_this2.length++] = new _ObjectView2.default(_this2.template, _this2);
-
-                            data[data.length] = view.data;
-
-                            if (!(item.index != null)) Object.defineProperty(item, 'index', {
-                                get: function get() {
-
-                                    return data.indexOf(this);
-                                },
-                                enumerable: true
-                            });
-
-                            return view.render(item).content;
-                        })))));
-
-                        return this;
-                    }
-                }, {
-                    key: 'push',
-                    value: function push() {
-                        for (var _len = arguments.length, item = Array(_len), _key = 0; _key < _len; _key++) {
-                            item[_key] = arguments[_key];
-                        }
-
-                        return this.render(item).length;
-                    }
-                }, {
-                    key: 'indexOf',
-                    value: function indexOf(view, start) {
-                        return Array_indexOf.call(this, view, start);
-                    }
-                }]);
-
-                return ArrayView;
-            }(_View2.default);
-
-            exports.default = ArrayView;
-        }
-    },
-    './utility/object': {
-        base: './utility',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.classNameOf = classNameOf;
-            exports.getPropertyDescriptor = getPropertyDescriptor;
-            exports.multipleMap = multipleMap;
-            exports.extend = extend;
-            exports.mapTree = mapTree;
-            /**
-             * @param {*} object
-             *
-             * @return {string}
-             */
-            function classNameOf(object) {
-
-                return Object.prototype.toString.call(object).slice(8, -1);
-            }
-
-            /**
-             * @param {*}      object
-             * @param {string} key    - Property name
-             *
-             * @return {?Object} https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description
-             */
-            function getPropertyDescriptor(object, key) {
-
-                var descriptor;object = Object.create(object);
-
-                while (object = Object.getPrototypeOf(object)) {
-                    if (descriptor = Object.getOwnPropertyDescriptor(object, key)) return descriptor;
-                }
-            }
-
-            /**
-             * Equivalent to the integration of Array's map() & filter() methods
-             *
-             * @param {Iterable}                                           list
-             * @param {function(item: *, index: number, list:Iterable): *} filter
-             *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
-             *
-             * @return {Array}
-             */
-            function multipleMap(list, filter) {
-
-                var result = [];filter = filter instanceof Function && filter;
-
-                for (var i = 0; i < list.length; i++) {
-
-                    var item = filter ? filter(list[i], i, list) : list[i];
-
-                    if (item != null) if (item instanceof Array) result.push.apply(result, _toConsumableArray(item));else result.push(item);
-                }
-
-                return result;
-            }
-
-            /**
-             * Merge own properties of two or more objects together into the first object
-             * by their descriptor
-             *
-             * @param {Object}    target - An object that will receive the new properties
-             *                             if `source` are passed in
-             * @param {...Object} source - Additional objects containing properties to merge in
-             *                             (Value of `null` or `undefined` will be skipped)
-             *
-             * @return {Object} The `target` parameter
-             */
-            function extend(target) {
-                for (var _len2 = arguments.length, source = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-                    source[_key2 - 1] = arguments[_key2];
-                }
-
-                var _iteratorNormalCompletion2 = true;
-                var _didIteratorError2 = false;
-                var _iteratorError2 = undefined;
-
-                try {
-
-                    for (var _iterator2 = source[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                        var object = _step2.value;
-                        if (object instanceof Object) {
-
-                            var descriptor = Object.getOwnPropertyDescriptors(object);
-
-                            var _iteratorNormalCompletion3 = true;
-                            var _didIteratorError3 = false;
-                            var _iteratorError3 = undefined;
-
-                            try {
-                                for (var _iterator3 = Object.keys(descriptor)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                                    var key = _step3.value;
-                                    if ('value' in descriptor[key] && !(descriptor[key].value != null)) delete descriptor[key];
-                                }
-                            } catch (err) {
-                                _didIteratorError3 = true;
-                                _iteratorError3 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                                        _iterator3.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError3) {
-                                        throw _iteratorError3;
-                                    }
-                                }
-                            }
-
-                            if (object instanceof Function) {
-
-                                delete descriptor.name;
-                                delete descriptor.length;
-                                delete descriptor.prototype;
-
-                                var prototype = Object.getOwnPropertyDescriptors(object.prototype);
-
-                                delete prototype.constructor;
-
-                                Object.defineProperties(target.prototype, prototype);
-                            }
-
-                            Object.defineProperties(target, descriptor);
-                        }
-                    }
-                } catch (err) {
-                    _didIteratorError2 = true;
-                    _iteratorError2 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                            _iterator2.return();
-                        }
-                    } finally {
-                        if (_didIteratorError2) {
-                            throw _iteratorError2;
-                        }
-                    }
-                }
-
-                return target;
-            }
-
-            var depth = 0;
-
-            /**
-             * Traverse Object-tree & return Node array through the filter
-             *
-             * @param {object}        node     - Object tree
-             * @param {string}        fork_key - Key of children list
-             * @param {MapTreeFilter} filter   - Map filter
-             *
-             * @return {Array}  Result list of Map filter
-             */
-            function mapTree(node, fork_key, filter) {
-
-                var children = node[fork_key],
-                    list = [];depth++;
-
-                for (var i = 0, value; i < children.length; i++) {
-                    /**
-                     * @typedef {function} MapTreeFilter
-                     *
-                     * @param {object} child
-                     * @param {number} index
-                     * @param {number} depth
-                     *
-                     * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
-                     *                    and Any other Type to Add into the Result Array.
-                     */
-                    try {
-                        value = filter.call(node, children[i], i, depth);
-                    } catch (error) {
-
-                        depth = 0;throw error;
-                    }
-
-                    if (!(value != null)) continue;
-
-                    list.push(value);
-
-                    if (children[i] != null && (children[i][fork_key] || '')[0]) list.push.apply(list, mapTree(children[i], fork_key, filter));
-                }
-
-                depth--;
-
-                return list;
-            }
-        }
-    },
-    './view/Template': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            var Array_iterator = [][Symbol.iterator];
-
-            /**
-             * String template
-             */
-
-            var Template = function () {
-                /**
-                 * @param {string}          raw
-                 * @param {stirng[]}        [varName]  - Name list of the Local variable
-                 * @param {ChangedCallback} [onChange] - Call with New & Old value
-                 * @param {Array}           [bindData] - The parameter bound to `onChange`
-                 */
-                function Template(raw, varName, onChange, bindData) {
-                    _classCallCheck(this, Template);
-
-                    this.length = 0;
-
-                    this.raw = raw;
-
-                    /**
-                     * Last evaluated value
-                     *
-                     * @type {*}
-                     */
-                    this.value = null;
-
-                    if (varName instanceof Function) bindData = onChange, onChange = varName, varName = null;
-
-                    this.varName = varName || [];
-
-                    /**
-                     * Reference map of contexts
-                     *
-                     * @type {Map}
-                     */
-                    this.reference = new Map();
-
-                    var _iteratorNormalCompletion4 = true;
-                    var _didIteratorError4 = false;
-                    var _iteratorError4 = undefined;
-
-                    try {
-                        for (var _iterator4 = ['this'].concat(this.varName)[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                            var scope = _step4.value;
-                            this.reference.set(scope, []);
-                        }
-                    } catch (err) {
-                        _didIteratorError4 = true;
-                        _iteratorError4 = err;
-                    } finally {
-                        try {
-                            if (!_iteratorNormalCompletion4 && _iterator4.return) {
-                                _iterator4.return();
-                            }
-                        } finally {
-                            if (_didIteratorError4) {
-                                throw _iteratorError4;
-                            }
-                        }
-                    }
-
-                    this.onChange = onChange instanceof Function ? onChange : null;
-
-                    this.data = bindData || [];
-
-                    this.parse().clear();
-                }
-
-                _createClass(Template, [{
-                    key: Symbol.iterator,
-                    value: function value() {
-                        return Array_iterator.call(this);
-                    }
-
-                    /**
-                     * @type {RegExp}
-                     */
-
-                }, {
-                    key: 'push',
-                    value: function push() {
-                        return Array.prototype.push.apply(this, arguments);
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {string} expression
-                     *
-                     * @return {number} Index of this Evaluation function
-                     */
-
-                }, {
-                    key: 'compile',
-                    value: function compile(expression) {
-
-                        this[this.length++] = new (Function.prototype.bind.apply(Function, [null].concat(_toConsumableArray(this.varName), ['return ' + expression.trim()])))();
-
-                        return this.length - 1;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @return {Template}
-                     */
-
-                }, {
-                    key: 'parse',
-                    value: function parse() {
-                        var _this3 = this;
-
-                        var addReference = function addReference(match, context, key1, key2, key3) {
-
-                            if (_this3.reference.has(context)) _this3.reference.get(context).push(key1 || key2 || key3);
-                        };
-
-                        this.raw = this.raw.replace(Template.Expression, function (_, expression) {
-
-                            expression.replace(Template.Reference, addReference);
-
-                            return '${' + _this3.compile(expression) + '}';
-                        });
-
-                        return this;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {number}  index
-                     * @param {?object} context
-                     * @param {Array}   [parameter]
-                     *
-                     * @return {*}
-                     */
-
-                }, {
-                    key: 'eval',
-                    value: function _eval(index, context, parameter) {
-
-                        try {
-                            var value = this[index].apply(context, parameter);
-
-                            return value != null ? value : '';
-                        } catch (error) {
-
-                            if (this.value !== null) console.warn(error);
-
-                            return '';
-                        }
-                    }
-
-                    /**
-                     * Evaluate expression
-                     *
-                     * @param {?object} context     - Value of `this` in the expression
-                     * @param {...*}    [parameter] - One or more value of the Local variable
-                     *
-                     * @return {*}
-                     */
-
-                }, {
-                    key: 'evaluate',
-                    value: function evaluate(context) {
-                        var _this4 = this;
-
-                        for (var _len3 = arguments.length, parameter = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
-                            parameter[_key3 - 1] = arguments[_key3];
-                        }
-
-                        var value = this.raw !== '${0}' ? this.raw.replace(/\$\{(\d+)\}/g, function (_, index) {
-                            return _this4.eval(index, context, parameter);
-                        }) : this.eval(0, context, parameter);
-
-                        if (value !== this.value) {
-                            /**
-                             * Call back only on Value changed
-                             *
-                             * @typedef {function} ChangedCallback
-                             *
-                             * @param {*}    newValue
-                             * @param {*}    oldValue
-                             * @param {...*} bindData
-                             */
-                            if (this.onChange) this.onChange.apply(this, _toConsumableArray([value, this.value].concat(this.data)));
-
-                            this.value = value;
-                        }
-
-                        return value;
-                    }
-
-                    /**
-                     * @return {string} Value evaluated with empty data
-                     */
-
-                }, {
-                    key: 'clear',
-                    value: function clear() {
-
-                        return this.evaluate.apply(this, _toConsumableArray(Array.from(this.reference.entries(), function (entry) {
-
-                            var data = {};
-
-                            var _iteratorNormalCompletion5 = true;
-                            var _didIteratorError5 = false;
-                            var _iteratorError5 = undefined;
-
-                            try {
-                                for (var _iterator5 = entry[1][Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                                    var key = _step5.value;
-                                    data[key] = '';
-                                }
-                            } catch (err) {
-                                _didIteratorError5 = true;
-                                _iteratorError5 = err;
-                            } finally {
-                                try {
-                                    if (!_iteratorNormalCompletion5 && _iterator5.return) {
-                                        _iterator5.return();
-                                    }
-                                } finally {
-                                    if (_didIteratorError5) {
-                                        throw _iteratorError5;
-                                    }
-                                }
-                            }
-
-                            return data;
-                        })));
-                    }
-                }, {
-                    key: 'toString',
-                    value: function toString() {
-                        return this.value + '';
-                    }
-                }], [{
-                    key: 'Expression',
-                    get: function get() {
-                        return (/\$\{([\s\S]+?)\}/g
-                        );
-                    }
-
-                    /**
-                     * @type {RegExp}
-                     */
-
-                }, {
-                    key: 'Reference',
-                    get: function get() {
-                        return (/(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g
-                        );
-                    }
-                }]);
-
-                return Template;
-            }();
-
-            exports.default = Template;
-        }
-    },
-    './view/View': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-
-            var _DOM = require('../utility/DOM');
-
-            var view_DOM = new WeakMap(),
-                DOM_view = new WeakMap();
-
-            var view_data = new WeakMap(),
-                view_parent = new WeakMap();
-
-            /**
-             * Abstract View
-             */
-
-            var View = function () {
-                /**
-                 * @param {string|Element|DocumentFragment} template
-                 * @param {string}                          nameKey  - Key (littleCamelCase) of HTML `data-*`
-                 *                                                     to get name of bound data
-                 * @param {Object}                          data     - Empty Model for this view
-                 * @param {View}                            [parent] - Parent view in the DOM tree
-                 */
-                function View(template, nameKey, data, parent) {
-                    _classCallCheck(this, View);
-
-                    if (this.constructor === View) throw TypeError('"View" is an abstract class');
-
-                    switch (template.nodeType) {
-                        case 1:
-                            this.name = template.dataset[nameKey];break;
-                        case 11:
-                            if (!(template.parentNode || template.host)) template = Array.from(template.childNodes);
-                            break;
-                        default:
-                            template = Array.from(document.importNode((0, _DOM.parseDOM)(template), true).childNodes);
-                    }
-
-                    var _this_ = this.bindWith(template);
-
-                    if (_this_ !== this) {
-
-                        _this_.booted = true;
-
-                        return _this_;
-                    }
-
-                    view_data.set(this, data), view_parent.set(this, parent);
-                }
-
-                /**
-                 * @protected
-                 *
-                 * @param {Element|Element[]|DocumentFragment} template
-                 *
-                 * @return {View} This view or the view bound before
-                 */
-
-
-                _createClass(View, [{
-                    key: 'bindWith',
-                    value: function bindWith(template) {
-                        var _this5 = this;
-
-                        var _this_;
-
-                        if (template instanceof Array) template = template.filter(function (node) {
-
-                            switch (node.nodeType) {
-                                case 1:
-                                    if (!(_this_ = DOM_view.get(node))) DOM_view.set(node, _this5);
-                                    break;
-                                case 3:
-                                    if (!node.nodeValue.trim()) return;
-                            }
-
-                            return true;
-                        });else if (!(_this_ = DOM_view.get(template))) DOM_view.set(template, this);
-
-                        view_DOM.set(this, template);
-
-                        return _this_ || this;
-                    }
-
-                    /**
-                     * @param {Element|DocumentFragment} node
-                     *
-                     * @return {View} View instance bound with `node`
-                     */
-
-                }, {
-                    key: 'toString',
-
-
-                    /**
-                     * @return {string} Full markup code of this view
-                     */
-                    value: function toString() {
-                        return (0, _DOM.stringifyDOM)(this.content);
-                    }
-
-                    /**
-                     * @protected
-                     *
-                     * @type {Object}
-                     */
-
-                }, {
-                    key: 'valueOf',
-
-
-                    /**
-                     * Get original data of this view
-                     *
-                     * @abstract
-                     *
-                     * @return {Object}
-                     */
-                    value: function valueOf() {
-
-                        throw TypeError('View.prototype.valueOf() must be overwriten');
-                    }
-
-                    /**
-                     * Render this view with data or Update without data
-                     *
-                     * @abstract
-                     *
-                     * @return {View}
-                     */
-
-                }, {
-                    key: 'render',
-                    value: function render() {
-
-                        throw TypeError('View.prototype.render() must be overwriten');
-                    }
-
-                    /**
-                     * Reset this view to empty data
-                     *
-                     * @abstract
-                     *
-                     * @return {View}
-                     */
-
-                }, {
-                    key: 'clear',
-                    value: function clear() {
-
-                        throw TypeError('View.prototype.clear() must be overwriten');
-                    }
-                }, {
-                    key: 'content',
-
-
-                    /**
-                     * @type {Element|Element[]|DocumentFragment}
-                     */
-                    get: function get() {
-                        return view_DOM.get(this);
-                    }
-                }, {
-                    key: 'data',
-                    get: function get() {
-                        return view_data.get(this);
-                    }
-
-                    /**
-                     * Parent view in current DOM tree
-                     *
-                     * @type {?View}
-                     */
-
-                }, {
-                    key: 'parent',
-                    get: function get() {
-
-                        var view = view_parent.get(this);
-
-                        if (view instanceof View) return view;
-
-                        var node = this.content[0] || this.content;
-
-                        while (node = node.parentNode) {
-                            if (view = View.instanceOf(node)) return view_parent.set(this, view) && view;
-                        }
-                    }
-
-                    /**
-                     * @protected
-                     *
-                     * @type {?Object}
-                     */
-
-                }, {
-                    key: 'scope',
-                    get: function get() {
-                        return (this.parent || '').data;
-                    }
-
-                    /**
-                     * Host element of a view in a Shadow DOM tree
-                     *
-                     * @type {?Element}
-                     */
-
-                }, {
-                    key: 'rootHost',
-                    get: function get() {
-
-                        var view = this;
-
-                        while (view.parent) {
-                            view = view.parent;
-                        }return view.content.host;
-                    }
-                }], [{
-                    key: 'instanceOf',
-                    value: function instanceOf(node) {
-                        return DOM_view.get(node);
-                    }
-                }]);
-
-                return View;
-            }();
-
-            exports.default = View;
-        }
-    },
-    './view/ObjectView': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-
-            var _View = require('./View');
-
-            var _View2 = _interopRequireDefault(_View);
-
-            var _Template = require('./Template');
-
-            var _Template2 = _interopRequireDefault(_Template);
-
-            var _DOM = require('../utility/DOM');
-
-            var _object = require('../utility/object');
-
-            var _ArrayView = require('./ArrayView');
-
-            var _ArrayView2 = _interopRequireDefault(_ArrayView);
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : { default: obj };
-            }
-
-            var Array_iterator = [][Symbol.iterator],
-                template_element = new WeakMap(),
-                view_buffer = new WeakMap();
-
-            /**
-             * View for Object model
-             */
-
-            var ObjectView = function (_View2$default2) {
-                _inherits(ObjectView, _View2$default2);
-
-                /**
-                 * @param {string|Element|DocumentFragment} template
-                 * @param {View}                            [parent]
-                 */
-                function ObjectView(template, parent) {
-                    var _this6;
-
-                    _classCallCheck(this, ObjectView);
-
-                    if (!(_this6 = _possibleConstructorReturn(this, (ObjectView.__proto__ || Object.getPrototypeOf(ObjectView)).call(this, template, 'object', {}, parent)), _this6).booted) _this6.length = 0, _this6.scan();
-                    return _possibleConstructorReturn(_this6);
-                }
-
-                _createClass(ObjectView, [{
-                    key: Symbol.iterator,
-                    value: function value() {
-                        return Array_iterator.call(this);
-                    }
-                }, {
-                    key: 'valueOf',
-                    value: function valueOf() {
-
-                        var data = Object.assign({}, this.data);
-
-                        var _iteratorNormalCompletion6 = true;
-                        var _didIteratorError6 = false;
-                        var _iteratorError6 = undefined;
-
-                        try {
-                            for (var _iterator6 = this[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                                var template = _step6.value;
-                                if (template instanceof _View2.default) data[template.name] = template.valueOf();
-                            }
-                        } catch (err) {
-                            _didIteratorError6 = true;
-                            _iteratorError6 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion6 && _iterator6.return) {
-                                    _iterator6.return();
-                                }
-                            } finally {
-                                if (_didIteratorError6) {
-                                    throw _iteratorError6;
-                                }
-                            }
-                        }
-
-                        return data;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {Node|Attr} node
-                     * @param {function}  renderer
-                     *
-                     * @return {Template}
-                     */
-
-                }, {
-                    key: 'commit',
-
-
-                    /**
-                     * Async render
-                     *
-                     * @protected
-                     *
-                     * @param {string} key
-                     * @param {*}      value
-                     */
-                    value: function () {
-                        var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(key, value) {
-                            var buffer;
-                            return regeneratorRuntime.wrap(function _callee2$(_context2) {
-                                while (1) {
-                                    switch (_context2.prev = _context2.next) {
-                                        case 0:
-
-                                            if (!(buffer = view_buffer.get(this))) view_buffer.set(this, buffer = {});
-
-                                            buffer[key] = value;
-
-                                            _context2.next = 4;
-                                            return (0, _DOM.nextTick)();
-
-                                        case 4:
-                                            if (view_buffer.get(this)) {
-                                                _context2.next = 6;
-                                                break;
-                                            }
-
-                                            return _context2.abrupt('return');
-
-                                        case 6:
-
-                                            this.render(buffer);
-
-                                            view_buffer.delete(this);
-
-                                        case 8:
-                                        case 'end':
-                                            return _context2.stop();
-                                    }
-                                }
-                            }, _callee2, this);
-                        }));
-
-                        function commit(_x3, _x4) {
-                            return _ref3.apply(this, arguments);
-                        }
-
-                        return commit;
-                    }()
-
-                    /**
-                     * Add a watched property to this view instance
-                     *
-                     * @param {string} key
-                     * @param {*}      [value]
-                     *
-                     * @return {ObjectView} This view
-                     */
-
-                }, {
-                    key: 'watch',
-                    value: function watch(key, value) {
-                        var _this7 = this;
-
-                        if (!(key in this)) Object.defineProperty(this, key, value ? {
-                            value: value,
-                            enumerable: true
-                        } : {
-                            get: function get() {
-                                return _this7.data[key];
-                            },
-                            set: function set(value) {
-                                return _this7.commit(key, value);
-                            },
-                            enumerable: true
-                        });else if (key in Object.getPrototypeOf(this)) console.warn('Don\'t overwrite Inset property "' + key + '" !');
-
-                        return this;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {Element}  element
-                     * @param {Template} template
-                     */
-
-                }, {
-                    key: 'addTemplate',
-                    value: function addTemplate(element, template) {
-
-                        if (!template[0]) return;
-
-                        template_element.set(this[this.length++] = template, element);
-
-                        var _iteratorNormalCompletion7 = true;
-                        var _didIteratorError7 = false;
-                        var _iteratorError7 = undefined;
-
-                        try {
-                            for (var _iterator7 = template.reference.get('view')[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
-                                var key = _step7.value;
-                                this.watch(key);
-                            }
-                        } catch (err) {
-                            _didIteratorError7 = true;
-                            _iteratorError7 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion7 && _iterator7.return) {
-                                    _iterator7.return();
-                                }
-                            } finally {
-                                if (_didIteratorError7) {
-                                    throw _iteratorError7;
-                                }
-                            }
-                        }
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {string} name
-                     * @param {View}   view
-                     */
-
-                }, {
-                    key: 'addView',
-                    value: function addView(name, view) {
-                        this.watch(name, view)[this.length++] = view;
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @param {Element} element
-                     */
-
-                }, {
-                    key: 'parseTag',
-                    value: function parseTag(element) {
-                        var _this8 = this;
-
-                        var _loop = function _loop(attr) {
-
-                            var name = attr.name;
-
-                            var template = ObjectView.templateOf(attr, name in element ? function (value) {
-                                return element[name] = value;
-                            } : function (value) {
-                                return element.setAttribute(name, value);
-                            });
-
-                            if (template == '') element.removeAttribute(name);
-
-                            _this8.addTemplate(element, template);
-                        };
-
-                        var _iteratorNormalCompletion8 = true;
-                        var _didIteratorError8 = false;
-                        var _iteratorError8 = undefined;
-
-                        try {
-
-                            for (var _iterator8 = Array.from(element.attributes)[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
-                                var attr = _step8.value;
-
-                                _loop(attr);
-                            }
-                        } catch (err) {
-                            _didIteratorError8 = true;
-                            _iteratorError8 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion8 && _iterator8.return) {
-                                    _iterator8.return();
-                                }
-                            } finally {
-                                if (_didIteratorError8) {
-                                    throw _iteratorError8;
-                                }
-                            }
-                        }
-                    }
-
-                    /**
-                     * @private
-                     */
-
-                }, {
-                    key: 'scan',
-                    value: function scan() {
-                        var _this9 = this;
-
-                        var root = this.content;
-
-                        root = root.parentNode ? root : {
-                            childNodes: root instanceof Array ? root : [root]
-                        };
-
-                        (0, _object.mapTree)(root, 'childNodes', function (node) {
-
-                            switch (node.nodeType) {
-                                case 1:
-                                    if (node.dataset.object) _this9.addView(node.dataset.object, new ObjectView(node));else if (node.dataset.array) _this9.addView(node.dataset.array, new _ArrayView2.default(node));else _this9.parseTag(node);
-                                    break;
-                                case 3:
-                                    _this9.addTemplate(node, ObjectView.templateOf(node, function (value) {
-                                        return node.nodeValue = value;
-                                    }));
-                            }
-
-                            return node;
-                        });
-                    }
-
-                    /**
-                     * First ancestor scope which isn't `Array`
-                     *
-                     * @protected
-                     *
-                     * @type {?Object}
-                     */
-
-                }, {
-                    key: 'render',
-
-
-                    /**
-                     * @param {Object} [data]
-                     *
-                     * @return {ObjectView}
-                     */
-                    value: function render(data) {
-
-                        var _data_ = (0, _object.extend)(this.data, data);
-
-                        for (var key in data) {
-                            this.watch(key);
-                        }var _iteratorNormalCompletion9 = true;
-                        var _didIteratorError9 = false;
-                        var _iteratorError9 = undefined;
-
-                        try {
-                            for (var _iterator9 = this[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-                                var template = _step9.value;
-
-
-                                var _name = template.name;
-
-                                if (template instanceof _Template2.default) template.evaluate(template_element.get(template), _data_, this.scope, this.rootHost);else if (template instanceof _View2.default) _data_[_name] = template.render(data[_name]).data;
-                            }
-                        } catch (err) {
-                            _didIteratorError9 = true;
-                            _iteratorError9 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion9 && _iterator9.return) {
-                                    _iterator9.return();
-                                }
-                            } finally {
-                                if (_didIteratorError9) {
-                                    throw _iteratorError9;
-                                }
-                            }
-                        }
-
-                        return this;
-                    }
-                }, {
-                    key: 'clear',
-                    value: function clear() {
-                        var _iteratorNormalCompletion10 = true;
-                        var _didIteratorError10 = false;
-                        var _iteratorError10 = undefined;
-
-                        try {
-
-                            for (var _iterator10 = this[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-                                var template = _step10.value;
-                                template.clear();
-                            }
-                        } catch (err) {
-                            _didIteratorError10 = true;
-                            _iteratorError10 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion10 && _iterator10.return) {
-                                    _iterator10.return();
-                                }
-                            } finally {
-                                if (_didIteratorError10) {
-                                    throw _iteratorError10;
-                                }
-                            }
-                        }
-
-                        return this;
-                    }
-                }, {
-                    key: 'scope',
-                    get: function get() {
-
-                        var view = this;
-
-                        while (view = view.parent) {
-                            if (!(view instanceof _ArrayView2.default)) return view.data;
-                        }
-                    }
-                }], [{
-                    key: 'templateOf',
-                    value: function templateOf(node, renderer) {
-
-                        return new _Template2.default(node.value || node.nodeValue, ['view', 'scope', 'host'], renderer);
-                    }
-                }]);
-
-                return ObjectView;
-            }(_View2.default);
-
-            exports.default = ObjectView;
-        }
-    },
-    './utility/DOM': {
-        base: './utility',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.inSubDOM = inSubDOM;
-            exports.inHead = inHead;
-            exports.parseDOM = parseDOM;
-            exports.stringifyDOM = stringifyDOM;
-            exports.delay = delay;
-            exports.nextTick = nextTick;
-            /**
-             * @private
-             *
-             * @return {boolean} Whether current script is running in a sub DOM
-             */
-            function inSubDOM() {
-
-                return (document.currentScript || '').ownerDocument !== document;
-            }
-
-            /**
-             * @private
-             *
-             * @return {boolean} Whether current script is in `<head />` of a DOM
-             */
-            function inHead() {
-
-                var script = document.currentScript || '';
-
-                var DOM = script.ownerDocument;
-
-                return DOM && script.parentNode === DOM.head;
-            }
-
-            /**
-             * @param {string} markup - Code of an markup fragment
-             *
-             * @return {DocumentFragment}
-             */
-            function parseDOM(markup) {
-
-                markup = new DOMParser().parseFromString(markup, 'text/html');
-
-                var fragment = document.createDocumentFragment();
-
-                fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
-
-                return fragment;
-            }
-
-            /**
-             * @param {Element|Element[]|DocumentFragment} tree
-             *
-             * @return {string} HTML/XML source code
-             */
-            function stringifyDOM(tree) {
-
-                return tree.nodeType === 1 ? tree.outerHTML : Array.from(tree.childNodes || tree, function (node) {
-
-                    switch (node.nodeType) {
-                        case 1:
-                            return node.outerHTML;
-                        case 3:
-                            return node.nodeValue;
-                    }
-                }).join('');
-            }
-
-            /**
-             * @param {number} [second=0]
-             *
-             * @return {Promise} Wait seconds in Macro tasks
-             */
-            function delay(second) {
-
-                return new Promise(function (resolve) {
-                    return setTimeout(resolve, (second || 0) * 1000);
-                });
-            }
-
-            var tick;
-            /**
-             * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
-             */
-            function nextTick() {
-
-                return tick || (tick = new Promise(function (resolve) {
-                    return window.requestAnimationFrame(function (time) {
-                        return tick = null, resolve(time);
-                    });
-                }));
-            }
-        }
-    },
-    './component/Component': {
-        base: './component',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.linkDataOf = linkDataOf;
-            exports.attributeChanged = attributeChanged;
-
-            var _DOM = require('../utility/DOM');
-
-            var _ObjectView = require('../view/ObjectView');
-
-            var _ObjectView2 = _interopRequireDefault(_ObjectView);
-
-            var _View = require('../view/View');
-
-            var _View2 = _interopRequireDefault(_View);
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : { default: obj };
-            }
-
-            /**
-             * Utility methods of Web Component
-             */
-
-            var Component = function () {
-                function Component() {
-                    _classCallCheck(this, Component);
-                }
-
-                _createClass(Component, [{
-                    key: 'buildDOM',
-
-
-                    /**
-                     * @param {?(string|Node)} template - HTML source or sub DOM tree
-                     * @param {string}         [style]  - CSS source
-                     * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
-                     *
-                     * @return {HTMLElement} This custom element
-                     */
-                    value: function buildDOM(template, style, option) {
-
-                        var shadow = this.attachShadow(Object.assign({
-                            mode: 'open',
-                            delegatesFocus: true
-                        }, option));
-
-                        if (typeof template === 'string') {
-
-                            template = (0, _DOM.parseDOM)(template);
-
-                            var element = template.querySelector('template');
-
-                            template = element ? element.content : template;
-                        } else template = template || this.constructor.template;
-
-                        if (template) shadow.append(document.importNode(template, true));
-
-                        if (style) shadow.prepend(Object.assign(document.createElement('style'), { textContent: style }));
-
-                        var view = new _ObjectView2.default(shadow),
-                            data = this.constructor.data;
-
-                        if (data) view.render(data);
-
-                        return this;
-                    }
-
-                    /**
-                     * Main view of this component
-                     *
-                     * @type {View}
-                     */
-
-                }, {
-                    key: 'bubbleOut',
-
-
-                    /**
-                     * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
-                     *
-                     * @return {boolean} Default behavior of this event can be executed or not
-                     */
-                    value: function bubbleOut(event) {
-
-                        return this.shadowRoot.host.dispatchEvent(new event.constructor(event.type, {
-                            bubbles: event.bubbles,
-                            cancelable: event.cancelable
-                        }));
-                    }
-
-                    /**
-                     * @private
-                     *
-                     * @return   {Object}
-                     * @property {HTMLTemplateElement}                      template
-                     * @property {Array<HTMLStyleElement, HTMLLinkElement>} style
-                     * @property {HTMLScriptElement}                        script
-                     */
-
-                }, {
-                    key: '$',
-
-
-                    /**
-                     * @param {string} selector - CSS selector
-                     *
-                     * @return {Element[]} Element set which matches `selector` in this Shadow DOM
-                     */
-                    value: function $(selector) {
-
-                        return [].concat(_toConsumableArray(this.shadowRoot.querySelectorAll(selector)));
-                    }
-
-                    /**
-                     * @param {string} selector - CSS selector
-                     *
-                     * @return {?Element} Matched parent
-                     */
-
-                }, {
-                    key: '$up',
-                    value: function $up(selector) {
-
-                        var element = this;
-
-                        while (element.parentNode) {
-
-                            element = element.parentNode;
-
-                            if (element.matches && element.matches(selector)) return element;
-                        }
-                    }
-
-                    /**
-                     * DOM event delegate
-                     *
-                     * @private
-                     *
-                     * @param {string}          selector
-                     * @param {DOMEventHandler} handler
-                     *
-                     * @return {Function} Handler wrapper
-                     */
-
-                }, {
-                    key: 'on',
-
-
-                    /**
-                     * Delegate listener for DOM events
-                     *
-                     * @param {string}          type       - Name of a DOM event
-                     * @param {string}          [selector] - CSS selector of delegate elements
-                     * @param {DOMEventHandler} callback
-                     *
-                     * @return {Element} This element
-                     */
-                    value: function on(type, selector, callback) {
-
-                        if (selector instanceof Function) callback = selector, selector = '';
-
-                        this.addEventListener(type, selector ? Component.delegate(selector, callback) : callback);
-
-                        return this;
-                    }
-                }, {
-                    key: 'view',
-                    get: function get() {
-                        return _View2.default.instanceOf(this.shadowRoot);
-                    }
-
-                    /**
-                     * @param {Element} element
-                     *
-                     * @return {number} The index of `element` in its siblings
-                     */
-
-                }], [{
-                    key: 'indexOf',
-                    value: function indexOf(element) {
-
-                        var index = 0;
-
-                        while (element = element.previousElementSibling) {
-                            index++;
-                        }return index;
-                    }
-
-                    /**
-                     * @param {Event} event
-                     *
-                     * @return {Element} The target of `event` object (**Shadow DOM** is in account)
-                     */
-
-                }, {
-                    key: 'targetOf',
-                    value: function targetOf(event) {
-
-                        var target = event.composedPath ? event.composedPath() : event.path;
-
-                        return (target || '')[0] || event.target;
-                    }
-                }, {
-                    key: 'findTemplate',
-                    value: function findTemplate() {
-                        var _template;
-
-                        var script = document.currentScript,
-                            template,
-                            style = [];
-
-                        var element = script,
-                            stop;
-
-                        while (!stop && (element = element.previousElementSibling)) {
-                            switch (element.tagName.toLowerCase()) {
-                                case 'template':
-                                    template = element.content;break;
-                                case 'style':
-                                    style.unshift(element);break;
-                                case 'link':
-                                    if (element.rel === 'stylesheet') {
-
-                                        element.setAttribute('href', element.href);
-
-                                        style.unshift(element);
-                                    }
-                                    break;
-                                case 'script':
-                                    stop = true;
-                            }
-                        }if (style[0]) (_template = template).prepend.apply(_template, style);
-
-                        return { template: template, style: style, script: script };
-                    }
-                }, {
-                    key: 'delegate',
-                    value: function delegate(selector, handler) {
-
-                        var $up = Component.prototype.$up;
-
-                        return function (event) {
-
-                            var target = Component.targetOf(event);
-
-                            if (!target.matches(selector)) target = $up.call(target, selector);
-
-                            if (target) return handler.call(target, event);
-                        };
-                    }
-                }, {
-                    key: 'tagName',
-
-                    /**
-                     * @type {string} - `tagName` of a Custom Element
-                     */
-                    get: function get() {
-
-                        return this.name.replace(/[A-Z]/g, function (char) {
-                            return '-' + char.toLowerCase();
-                        }).slice(1);
-                    }
-                }]);
-
-                return Component;
-            }();
-
-            exports.default = Component; /**
-                                          * @typedef {function(event: Event): *} DOMEventHandler
-                                          */
-
-            var attr_prop = {
-                class: 'className',
-                for: 'htmlFor',
-                readonly: 'readOnly'
-            };
-
-            /**
-             * Set the getter & setter of the DOM property
-             *
-             * @private
-             *
-             * @param {string[]} attributes - Names of HTML attributes
-             *
-             * @return {string[]} `attributes`
-             */
-            function linkDataOf(attributes) {
-                var _this10 = this;
-
-                var _loop2 = function _loop2(_key4) {
-
-                    _key4 = attr_prop[_key4] || _key4;
-
-                    if (!(_key4 in _this10.prototype)) Object.defineProperty(_this10.prototype, _key4, {
-                        set: function set(value) {
-
-                            this.view.commit(_key4, value);
-                        },
-                        get: function get() {
-
-                            return this.view.data[_key4];
-                        },
-                        enumerable: true
-                    });
-                    key = _key4;
-                };
-
-                var _iteratorNormalCompletion11 = true;
-                var _didIteratorError11 = false;
-                var _iteratorError11 = undefined;
-
-                try {
-
-                    for (var _iterator11 = attributes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-                        var key = _step11.value;
-
-                        _loop2(key);
-                    }
-                } catch (err) {
-                    _didIteratorError11 = true;
-                    _iteratorError11 = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion11 && _iterator11.return) {
-                            _iterator11.return();
-                        }
-                    } finally {
-                        if (_didIteratorError11) {
-                            throw _iteratorError11;
-                        }
-                    }
-                }
-
-                return attributes;
-            }
-
-            /**
-             * Assign the new value to the DOM property
-             * which has the same name of the changed attribute
-             *
-             * @param {string}  name
-             * @param {?string} oldValue
-             * @param {?string} newValue
-             *
-             * @return {*} DOM property value of `newValue`
-             */
-            function attributeChanged(name, oldValue, newValue) {
-
-                name = attr_prop[name] || name;
-
-                switch (newValue) {
-                    case '':
-                        return this[name] = true;
-                    case null:
-                        return this[name] = false;
-                    default:
-                        try {
-                            return this[name] = JSON.parse(newValue);
-                        } catch (error) {
-
-                            return this[name] = newValue;
-                        }
-                }
-            }
-        }
-    },
-    './component/InputComponent': {
-        base: './component',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-
-            var _Component = require('./Component');
-
-            var cursor_map = {
-                readonly: 'default',
-                disabled: 'not-allowed'
-            };
-
-            /**
-             * Base class for Form field components
-             */
-
-            var InputComponent = function (_HTMLElement) {
-                _inherits(InputComponent, _HTMLElement);
-
-                /**
-                 * @param {string} template - HTML source code with template expressions
-                 * @param {string} [style]  - CSS source code
-                 */
-                function InputComponent(template, style) {
-                    var _this11;
-
-                    _classCallCheck(this, InputComponent);
-
-                    (_this11 = _possibleConstructorReturn(this, (InputComponent.__proto__ || Object.getPrototypeOf(InputComponent)).call(this)), _this11).buildDOM(template, style);
-                    return _this11;
-                }
-
-                /**
-                 * @type {string[]} Common attributes of Form fields
-                 */
-
-
-                _createClass(InputComponent, [{
-                    key: 'attributeChangedCallback',
-
-
-                    /**
-                     * Common behavior of Form field attributes
-                     *
-                     * @param {string}  name
-                     * @param {?string} oldValue
-                     * @param {?string} newValue
-                     */
-                    value: function attributeChangedCallback(name, oldValue, newValue) {
-
-                        if (name === 'type' && !newValue) newValue = 'text';
-
-                        newValue = _Component.attributeChanged.call(this, name, oldValue, newValue);
-
-                        if (cursor_map[name]) if (newValue) this.style.setProperty('--input-cursor', cursor_map[name]);else this.style.removeProperty('--input-cursor');
-                    }
-
-                    /**
-                     * @type {string}
-                     */
-
-                }, {
-                    key: 'defaultValue',
-                    get: function get() {
-                        return this.getAttribute('value');
-                    }
-                }], [{
-                    key: 'observedAttributes',
-                    get: function get() {
-
-                        return ['type', 'value', 'readonly', 'disabled', 'checked', 'placeholder'];
-                    }
-                }]);
-
-                return InputComponent;
-            }(HTMLElement);
-
-            exports.default = InputComponent;
-        }
-    },
-    './WebCell': {
-        base: '.',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, "__esModule", {
-                value: true
-            });
-            exports.ArrayView = exports.ObjectView = exports.View = exports.Template = exports.InputComponent = exports.attributeChanged = exports.Component = undefined;
-            exports.component = component;
-
-            var _InputComponent = require('./component/InputComponent');
-
-            Object.defineProperty(exports, 'InputComponent', {
-                enumerable: true,
-                get: function get() {
-                    return _interopRequireDefault(_InputComponent).default;
-                }
-            });
-
-            var _object = require('./utility/object');
-
-            Object.keys(_object).forEach(function (key) {
-                if (key === "default" || key === "__esModule") return;
-                Object.defineProperty(exports, key, {
-                    enumerable: true,
-                    get: function get() {
-                        return _object[key];
-                    }
-                });
-            });
-
-            var _DOM = require('./utility/DOM');
-
-            Object.keys(_DOM).forEach(function (key) {
-                if (key === "default" || key === "__esModule") return;
-                Object.defineProperty(exports, key, {
-                    enumerable: true,
-                    get: function get() {
-                        return _DOM[key];
-                    }
-                });
-            });
-
-            var _HTTP = require('./utility/HTTP');
-
-            Object.keys(_HTTP).forEach(function (key) {
-                if (key === "default" || key === "__esModule") return;
-                Object.defineProperty(exports, key, {
-                    enumerable: true,
-                    get: function get() {
-                        return _HTTP[key];
-                    }
-                });
-            });
-
-            var _Template = require('./view/Template');
-
-            Object.defineProperty(exports, 'Template', {
-                enumerable: true,
-                get: function get() {
-                    return _interopRequireDefault(_Template).default;
-                }
-            });
-
-            var _View = require('./view/View');
-
-            Object.defineProperty(exports, 'View', {
-                enumerable: true,
-                get: function get() {
-                    return _interopRequireDefault(_View).default;
-                }
-            });
-
-            var _ObjectView = require('./view/ObjectView');
-
-            Object.defineProperty(exports, 'ObjectView', {
-                enumerable: true,
-                get: function get() {
-                    return _interopRequireDefault(_ObjectView).default;
-                }
-            });
-
-            var _ArrayView = require('./view/ArrayView');
-
-            Object.defineProperty(exports, 'ArrayView', {
-                enumerable: true,
-                get: function get() {
-                    return _interopRequireDefault(_ArrayView).default;
-                }
-            });
-
-            var _Component = require('./component/Component');
-
-            var _Component2 = _interopRequireDefault(_Component);
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule ? obj : { default: obj };
-            }
-
-            function dataInject(constructor) {
-
-                var observedAttributes = (0, _object.getPropertyDescriptor)(constructor, 'observedAttributes');
-
-                if (!observedAttributes) return;
-
-                Object.defineProperty(constructor, 'observedAttributes', {
-                    get: function get() {
-
-                        return _Component.linkDataOf.call(this, observedAttributes.get.call(this));
-                    }
-                });
-
-                var attributeChangedCallback = (0, _object.getPropertyDescriptor)(constructor.prototype, 'attributeChangedCallback');
-
-                if (!attributeChangedCallback) Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
-                    value: _Component.attributeChanged
-                });
-            }
-
-            /**
-             * Register a component
-             *
-             * @param {function} subClass
-             * @param {string}   [baseTag] - Name of an HTML original tag to extend
-             *
-             * @return {function} `subClass`
-             */
-            function component(subClass, baseTag) {
-
-                var static_member = {};
-
-                if ((0, _DOM.inSubDOM)() || !(0, _DOM.inHead)()) {
-                    var _Component2$default$f = _Component2.default.findTemplate(),
-                        template = _Component2$default$f.template;
-
-                    Object.defineProperty(static_member, 'template', {
-                        get: function get() {
-                            return template;
-                        },
-                        enumerable: true
-                    });
-                }
-
-                dataInject((0, _object.extend)(subClass, _Component2.default, static_member));
-
-                customElements.define(subClass.tagName, subClass, baseTag && { extends: baseTag });
-
-                return subClass;
-            }
-
-            exports.Component = _Component2.default;
-            exports.attributeChanged = _Component.attributeChanged;
-        }
+          }, _callee, this);
+        }));
+        return _request.apply(this, arguments);
+      }
     }
+  },
+  './component/InputComponent': {
+    base: './component',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+
+      var _DOM = require('../utility/DOM');
+
+      var _Component = require('./Component');
+
+      var CSS_map = {
+        readonly: {
+          cursor: 'default'
+        },
+        disabled: {
+          cursor: 'not-allowed',
+          'point-events': 'none'
+        }
+      };
+      /**
+       * Base class for Form field components
+       */
+
+      var InputComponent =
+      /*#__PURE__*/
+      function (_HTMLElement) {
+        _inherits(InputComponent, _HTMLElement);
+
+        /**
+         * @param {string} template - HTML source code with template expressions
+         * @param {string} [style]  - CSS source code
+         */
+        function InputComponent(template, style) {
+          var _this;
+
+          _classCallCheck(this, InputComponent);
+
+          (_this = _possibleConstructorReturn(this, _getPrototypeOf(InputComponent).call(this))).buildDOM(template, style);
+
+          return _this;
+        }
+
+        _createClass(InputComponent, [{
+          key: "connectedCallback",
+          value: function connectedCallback() {
+            var _this2 = this;
+
+            var origin = this.$slot('input')[0],
+                proxy = this.$('input')[0];
+            origin.style.setProperty('display', 'none', 'important');
+
+            _DOM.watchAttributes.call(this, origin, ['type', 'name', 'value', 'readonly', 'disabled', 'checked', 'placeholder'], this.changedPropertyOf);
+
+            this.on.call(proxy, 'input', function () {
+              return origin.value = proxy.value;
+            });
+            this.on.call(proxy, 'change', function (event) {
+              return _this2.bubbleOut(event);
+            });
+          }
+          /**
+           * Common behavior of Form field attributes
+           *
+           * @param {string}  attribute
+           * @param {?string} oldValue
+           * @param {?string} newValue
+           */
+
+        }, {
+          key: "changedPropertyOf",
+          value: function changedPropertyOf(attribute, oldValue, newValue) {
+            if (attribute === 'type' && !newValue) newValue = 'text';
+            newValue = _Component.attributeChanged.call(this.view, attribute, oldValue, newValue);
+            var style = CSS_map[attribute];
+            if (!style) return;
+            if (newValue) for (var name in style) {
+              this.style.setProperty("--input-".concat(name), style[name]);
+            } else for (var _name in style) {
+              this.style.removeProperty("--input-".concat(_name));
+            }
+          }
+          /**
+           * @type {string}
+           */
+
+        }, {
+          key: "defaultValue",
+          get: function get() {
+            return this.getAttribute('value');
+          }
+        }]);
+
+        return InputComponent;
+      }(_wrapNativeSuper(HTMLElement));
+
+      exports.default = InputComponent;
+    }
+  },
+  './view/ArrayView': {
+    base: './view',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+
+      var _View = _interopRequireDefault(require('./View'));
+
+      var _ObjectView = _interopRequireDefault(require('./ObjectView'));
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+
+      var Array_iterator = [][Symbol.iterator],
+          Array_indexOf = [].indexOf;
+      /**
+       * View for Array model
+       */
+
+      var ArrayView =
+      /*#__PURE__*/
+      function (_View$default) {
+        _inherits(ArrayView, _View$default);
+
+        /**
+         * @param {Element} element
+         * @param {View}    [parent]
+         */
+        function ArrayView(element, parent) {
+          var _this3;
+
+          _classCallCheck(this, ArrayView);
+
+          if (!(_this3 = _possibleConstructorReturn(this, _getPrototypeOf(ArrayView).call(this, element, 'array', [], parent))).booted) {
+            _this3.template = element.innerHTML.trim();
+
+            _this3.clear();
+          }
+
+          return _possibleConstructorReturn(_this3);
+        }
+
+        _createClass(ArrayView, [{
+          key: Symbol.iterator,
+          value: function value() {
+            return Array_iterator.call(this);
+          }
+        }, {
+          key: "clear",
+          value: function clear() {
+            Array.prototype.splice.call(this, 0, Infinity);
+            this.content.innerHTML = '';
+            return this;
+          }
+        }, {
+          key: "valueOf",
+          value: function valueOf() {
+            return Array.from(this, function (view) {
+              return view.valueOf();
+            });
+          }
+          /**
+           * @protected
+           *
+           * @return {ArrayView}
+           */
+
+        }, {
+          key: "update",
+          value: function update() {
+            var _iteratorNormalCompletion = true;
+            var _didIteratorError = false;
+            var _iteratorError = undefined;
+
+            try {
+              for (var _iterator = this[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                var view = _step.value;
+                view.render();
+              }
+            } catch (err) {
+              _didIteratorError = true;
+              _iteratorError = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion && _iterator.return != null) {
+                  _iterator.return();
+                }
+              } finally {
+                if (_didIteratorError) {
+                  throw _iteratorError;
+                }
+              }
+            }
+
+            return this;
+          }
+          /**
+           * @param {Iterable} [list]
+           *
+           * @return {ArrayView}
+           */
+
+        }, {
+          key: "render",
+          value: function render(list) {
+            var _this$content,
+                _ref,
+                _this4 = this;
+
+            if (!list) return this.update();
+            var data = this.data;
+
+            (_this$content = this.content).append.apply(_this$content, _toConsumableArray((_ref = []).concat.apply(_ref, _toConsumableArray(Array.from(list, function (item) {
+              var view = _this4[_this4.length++] = new _ObjectView.default(_this4.template, _this4);
+              data[data.length] = view.data;
+              if (!(item.index != null)) Object.defineProperty(item, 'index', {
+                get: function get() {
+                  return data.indexOf(this);
+                },
+                enumerable: true
+              });
+              return view.render(item).content;
+            })))));
+
+            return this;
+          }
+        }, {
+          key: "push",
+          value: function push() {
+            for (var _len = arguments.length, item = new Array(_len), _key = 0; _key < _len; _key++) {
+              item[_key] = arguments[_key];
+            }
+
+            return this.render(item).length;
+          }
+        }, {
+          key: "indexOf",
+          value: function indexOf(view, start) {
+            return Array_indexOf.call(this, view, start);
+          }
+        }]);
+
+        return ArrayView;
+      }(_View.default);
+
+      exports.default = ArrayView;
+    }
+  },
+  './utility/object': {
+    base: './utility',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.classNameOf = classNameOf;
+      exports.getPropertyDescriptor = getPropertyDescriptor;
+      exports.multipleMap = multipleMap;
+      exports.extend = extend;
+      exports.mapTree = mapTree;
+      /**
+       * @param {*} object
+       *
+       * @return {string}
+       */
+
+      function classNameOf(object) {
+        return Object.prototype.toString.call(object).slice(8, -1);
+      }
+      /**
+       * @param {*}      object
+       * @param {string} key    - Property name
+       *
+       * @return {?Object} https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description
+       */
+
+
+      function getPropertyDescriptor(object, key) {
+        var descriptor;
+        object = Object.create(object);
+
+        while (object = Object.getPrototypeOf(object)) {
+          if (descriptor = Object.getOwnPropertyDescriptor(object, key)) return descriptor;
+        }
+      }
+      /**
+       * Equivalent to the integration of Array's map() & filter() methods
+       *
+       * @param {Iterable}                                           list
+       * @param {function(item: *, index: number, list:Iterable): *} filter
+       *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
+       *
+       * @return {Array}
+       */
+
+
+      function multipleMap(list, filter) {
+        var result = [];
+        filter = filter instanceof Function && filter;
+
+        for (var i = 0; i < list.length; i++) {
+          var item = filter ? filter(list[i], i, list) : list[i];
+          if (item != null) if (item instanceof Array) result.push.apply(result, _toConsumableArray(item));else result.push(item);
+        }
+
+        return result;
+      }
+      /**
+       * Merge own properties of two or more objects together into the first object
+       * by their descriptor
+       *
+       * @param {Object}    target - An object that will receive the new properties
+       *                             if `source` are passed in
+       * @param {...Object} source - Additional objects containing properties to merge in
+       *                             (Value of `null` or `undefined` will be skipped)
+       *
+       * @return {Object} The `target` parameter
+       */
+
+
+      function extend(target) {
+        for (var _len2 = arguments.length, source = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+          source[_key2 - 1] = arguments[_key2];
+        }
+
+        for (var _i = 0; _i < source.length; _i++) {
+          var object = source[_i];
+
+          if (object instanceof Object) {
+            var descriptor = Object.getOwnPropertyDescriptors(object);
+
+            var _arr = Object.keys(descriptor);
+
+            for (var _i2 = 0; _i2 < _arr.length; _i2++) {
+              var key = _arr[_i2];
+              if ('value' in descriptor[key] && !(descriptor[key].value != null)) delete descriptor[key];
+            }
+
+            if (object instanceof Function) {
+              delete descriptor.name;
+              delete descriptor.length;
+              delete descriptor.prototype;
+              var prototype = Object.getOwnPropertyDescriptors(object.prototype);
+              delete prototype.constructor;
+              Object.defineProperties(target.prototype, prototype);
+            }
+
+            Object.defineProperties(target, descriptor);
+          }
+        }
+
+        return target;
+      }
+
+      var depth = 0;
+      /**
+       * Traverse Object-tree & return Node array through the filter
+       *
+       * @param {object}        node     - Object tree
+       * @param {string}        fork_key - Key of children list
+       * @param {MapTreeFilter} filter   - Map filter
+       *
+       * @return {Array}  Result list of Map filter
+       */
+
+      function mapTree(node, fork_key, filter) {
+        var children = node[fork_key],
+            list = [];
+        depth++;
+
+        for (var i = 0, value; i < children.length; i++) {
+          /**
+           * @typedef {function} MapTreeFilter
+           *
+           * @param {object} child
+           * @param {number} index
+           * @param {number} depth
+           *
+           * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
+           *                    and Any other Type to Add into the Result Array.
+           */
+          try {
+            value = filter.call(node, children[i], i, depth);
+          } catch (error) {
+            depth = 0;
+            throw error;
+          }
+
+          if (!(value != null)) continue;
+          list.push(value);
+          if (children[i] != null && (children[i][fork_key] || '')[0]) list.push.apply(list, mapTree(children[i], fork_key, filter));
+        }
+
+        depth--;
+        return list;
+      }
+    }
+  },
+  './view/Template': {
+    base: './view',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var Array_iterator = [][Symbol.iterator];
+      /**
+       * String template
+       */
+
+      var Template =
+      /*#__PURE__*/
+      function () {
+        /**
+         * @param {string}          raw
+         * @param {stirng[]}        [varName]  - Name list of the Local variable
+         * @param {ChangedCallback} [onChange] - Call with New & Old value
+         * @param {Array}           [bindData] - The parameter bound to `onChange`
+         */
+        function Template(raw, varName, onChange, bindData) {
+          _classCallCheck(this, Template);
+
+          this.length = 0;
+          this.raw = raw;
+          /**
+           * Last evaluated value
+           *
+           * @type {*}
+           */
+
+          this.value = null;
+          if (varName instanceof Function) bindData = onChange, onChange = varName, varName = null;
+          this.varName = varName || [];
+          /**
+           * Reference map of contexts
+           *
+           * @type {Map}
+           */
+
+          this.reference = new Map();
+          var _iteratorNormalCompletion2 = true;
+          var _didIteratorError2 = false;
+          var _iteratorError2 = undefined;
+
+          try {
+            for (var _iterator2 = ['this'].concat(this.varName)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+              var scope = _step2.value;
+              this.reference.set(scope, []);
+            }
+          } catch (err) {
+            _didIteratorError2 = true;
+            _iteratorError2 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                _iterator2.return();
+              }
+            } finally {
+              if (_didIteratorError2) {
+                throw _iteratorError2;
+              }
+            }
+          }
+
+          this.onChange = onChange instanceof Function ? onChange : null;
+          this.data = bindData || [];
+          this.parse().clear();
+        }
+
+        _createClass(Template, [{
+          key: Symbol.iterator,
+          value: function value() {
+            return Array_iterator.call(this);
+          }
+          /**
+           * @type {RegExp}
+           */
+
+        }, {
+          key: "push",
+          value: function push() {
+            return Array.prototype.push.apply(this, arguments);
+          }
+          /**
+           * @private
+           *
+           * @param {string} expression
+           *
+           * @return {number} Index of this Evaluation function
+           */
+
+        }, {
+          key: "compile",
+          value: function compile(expression) {
+            this[this.length++] = _construct(Function, _toConsumableArray(this.varName).concat(['return ' + expression.trim()]));
+            return this.length - 1;
+          }
+          /**
+           * @private
+           *
+           * @return {Template}
+           */
+
+        }, {
+          key: "parse",
+          value: function parse() {
+            var _this5 = this;
+
+            var addReference = function addReference(match, context, key1, key2, key3) {
+              if (_this5.reference.has(context)) _this5.reference.get(context).push(key1 || key2 || key3);
+            };
+
+            this.raw = this.raw.replace(Template.Expression, function (_, expression) {
+              expression.replace(Template.Reference, addReference);
+              return '${' + _this5.compile(expression) + '}';
+            });
+            return this;
+          }
+          /**
+           * @private
+           *
+           * @param {number}  index
+           * @param {?object} context
+           * @param {Array}   [parameter]
+           *
+           * @return {*}
+           */
+
+        }, {
+          key: "eval",
+          value: function _eval(index, context, parameter) {
+            try {
+              var value = this[index].apply(context, parameter);
+              return value != null ? value : '';
+            } catch (error) {
+              if (this.value !== null) console.warn(error);
+              return '';
+            }
+          }
+          /**
+           * Evaluate expression
+           *
+           * @param {?object} context     - Value of `this` in the expression
+           * @param {...*}    [parameter] - One or more value of the Local variable
+           *
+           * @return {*}
+           */
+
+        }, {
+          key: "evaluate",
+          value: function evaluate(context) {
+            var _this6 = this;
+
+            for (var _len3 = arguments.length, parameter = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+              parameter[_key3 - 1] = arguments[_key3];
+            }
+
+            var value = this.raw !== '${0}' ? this.raw.replace(/\$\{(\d+)\}/g, function (_, index) {
+              return _this6.eval(index, context, parameter);
+            }) : this.eval(0, context, parameter);
+
+            if (value !== this.value) {
+              /**
+               * Call back only on Value changed
+               *
+               * @typedef {function} ChangedCallback
+               *
+               * @param {*}    newValue
+               * @param {*}    oldValue
+               * @param {...*} bindData
+               */
+              if (this.onChange) this.onChange.apply(this, _toConsumableArray([value, this.value].concat(this.data)));
+              this.value = value;
+            }
+
+            return value;
+          }
+          /**
+           * @return {string} Value evaluated with empty data
+           */
+
+        }, {
+          key: "clear",
+          value: function clear() {
+            return this.evaluate.apply(this, _toConsumableArray(Array.from(this.reference.entries(), function (entry) {
+              var data = {};
+              var _iteratorNormalCompletion3 = true;
+              var _didIteratorError3 = false;
+              var _iteratorError3 = undefined;
+
+              try {
+                for (var _iterator3 = entry[1][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+                  var key = _step3.value;
+                  data[key] = '';
+                }
+              } catch (err) {
+                _didIteratorError3 = true;
+                _iteratorError3 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+                    _iterator3.return();
+                  }
+                } finally {
+                  if (_didIteratorError3) {
+                    throw _iteratorError3;
+                  }
+                }
+              }
+
+              return data;
+            })));
+          }
+        }, {
+          key: "toString",
+          value: function toString() {
+            return this.value + '';
+          }
+        }], [{
+          key: "Expression",
+          get: function get() {
+            return /\$\{([\s\S]+?)\}/g;
+          }
+          /**
+           * @type {RegExp}
+           */
+
+        }, {
+          key: "Reference",
+          get: function get() {
+            return /(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g;
+          }
+        }]);
+
+        return Template;
+      }();
+
+      exports.default = Template;
+    }
+  },
+  './view/View': {
+    base: './view',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+
+      var _DOM = require('../utility/DOM');
+
+      var view_DOM = new WeakMap(),
+          DOM_view = new WeakMap();
+      var view_data = new WeakMap(),
+          view_parent = new WeakMap();
+      /**
+       * Abstract View
+       */
+
+      var View =
+      /*#__PURE__*/
+      function () {
+        /**
+         * @param {string|Element|DocumentFragment} template
+         * @param {string}                          nameKey  - Key (littleCamelCase) of HTML `data-*`
+         *                                                     to get name of bound data
+         * @param {Object}                          data     - Empty Model for this view
+         * @param {View}                            [parent] - Parent view in the DOM tree
+         */
+        function View(template, nameKey, data, parent) {
+          _classCallCheck(this, View);
+
+          if (this.constructor === View) throw TypeError('"View" is an abstract class');
+
+          switch (template.nodeType) {
+            case 1:
+              this.name = template.dataset[nameKey];
+              break;
+
+            case 11:
+              if (!(template.parentNode || template.host)) template = Array.from(template.childNodes);
+              break;
+
+            default:
+              template = Array.from(document.importNode((0, _DOM.parseDOM)(template), true).childNodes);
+          }
+
+          var _this_ = this.bindWith(template);
+
+          if (_this_ !== this) {
+            _this_.booted = true;
+            return _this_;
+          }
+
+          view_data.set(this, data), view_parent.set(this, parent);
+        }
+        /**
+         * @protected
+         *
+         * @param {Element|Element[]|DocumentFragment} template
+         *
+         * @return {View} This view or the view bound before
+         */
+
+
+        _createClass(View, [{
+          key: "bindWith",
+          value: function bindWith(template) {
+            var _this7 = this;
+
+            var _this_;
+
+            if (template instanceof Array) template = template.filter(function (node) {
+              switch (node.nodeType) {
+                case 1:
+                  if (!(_this_ = DOM_view.get(node))) DOM_view.set(node, _this7);
+                  break;
+
+                case 3:
+                  if (!node.nodeValue.trim()) return;
+              }
+
+              return true;
+            });else if (!(_this_ = DOM_view.get(template))) DOM_view.set(template, this);
+            view_DOM.set(this, template);
+            return _this_ || this;
+          }
+          /**
+           * @param {Element|DocumentFragment} node
+           *
+           * @return {View} View instance bound with `node`
+           */
+
+        }, {
+          key: "toString",
+
+          /**
+           * @return {string} Full markup code of this view
+           */
+          value: function toString() {
+            return (0, _DOM.stringifyDOM)(this.content);
+          }
+          /**
+           * @protected
+           *
+           * @type {Object}
+           */
+
+        }, {
+          key: "valueOf",
+
+          /**
+           * Get original data of this view
+           *
+           * @abstract
+           *
+           * @return {Object}
+           */
+          value: function valueOf() {
+            throw TypeError('View.prototype.valueOf() must be overwriten');
+          }
+          /**
+           * Render this view with data or Update without data
+           *
+           * @abstract
+           *
+           * @return {View}
+           */
+
+        }, {
+          key: "render",
+          value: function render() {
+            throw TypeError('View.prototype.render() must be overwriten');
+          }
+          /**
+           * Reset this view to empty data
+           *
+           * @abstract
+           *
+           * @return {View}
+           */
+
+        }, {
+          key: "clear",
+          value: function clear() {
+            throw TypeError('View.prototype.clear() must be overwriten');
+          }
+        }, {
+          key: "content",
+
+          /**
+           * @type {Element|Element[]|DocumentFragment}
+           */
+          get: function get() {
+            return view_DOM.get(this);
+          }
+        }, {
+          key: "data",
+          get: function get() {
+            return view_data.get(this);
+          }
+          /**
+           * Parent view in current DOM tree
+           *
+           * @type {?View}
+           */
+
+        }, {
+          key: "parent",
+          get: function get() {
+            var view = view_parent.get(this);
+            if (view instanceof View) return view;
+            var node = this.content[0] || this.content;
+
+            while (node = node.parentNode) {
+              if (view = View.instanceOf(node)) return view_parent.set(this, view) && view;
+            }
+          }
+          /**
+           * @protected
+           *
+           * @type {?Object}
+           */
+
+        }, {
+          key: "scope",
+          get: function get() {
+            return (this.parent || '').data;
+          }
+          /**
+           * Host element of a view in a Shadow DOM tree
+           *
+           * @type {?Element}
+           */
+
+        }, {
+          key: "rootHost",
+          get: function get() {
+            var view = this;
+
+            while (view.parent) {
+              view = view.parent;
+            }
+
+            return view.content.host;
+          }
+        }], [{
+          key: "instanceOf",
+          value: function instanceOf(node) {
+            return DOM_view.get(node);
+          }
+        }]);
+
+        return View;
+      }();
+
+      exports.default = View;
+    }
+  },
+  './view/ObjectView': {
+    base: './view',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+
+      var _View = _interopRequireDefault(require('./View'));
+
+      var _Template = _interopRequireDefault(require('./Template'));
+
+      var _DOM = require('../utility/DOM');
+
+      var _object = require('../utility/object');
+
+      var _ArrayView = _interopRequireDefault(require('./ArrayView'));
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+
+      var Array_iterator = [][Symbol.iterator],
+          template_element = new WeakMap(),
+          view_buffer = new WeakMap();
+      /**
+       * View for Object model
+       */
+
+      var ObjectView =
+      /*#__PURE__*/
+      function (_View$default2) {
+        _inherits(ObjectView, _View$default2);
+
+        /**
+         * @param {string|Element|DocumentFragment} template
+         * @param {View}                            [parent]
+         */
+        function ObjectView(template, parent) {
+          var _this8;
+
+          _classCallCheck(this, ObjectView);
+
+          if (!(_this8 = _possibleConstructorReturn(this, _getPrototypeOf(ObjectView).call(this, template, 'object', {}, parent))).booted) _this8.length = 0, _this8.scan();
+          return _possibleConstructorReturn(_this8);
+        }
+
+        _createClass(ObjectView, [{
+          key: Symbol.iterator,
+          value: function value() {
+            return Array_iterator.call(this);
+          }
+        }, {
+          key: "valueOf",
+          value: function valueOf() {
+            var data = Object.assign({}, this.data);
+            var _iteratorNormalCompletion4 = true;
+            var _didIteratorError4 = false;
+            var _iteratorError4 = undefined;
+
+            try {
+              for (var _iterator4 = this[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                var template = _step4.value;
+                if (template instanceof _View.default) data[template.name] = template.valueOf();
+              }
+            } catch (err) {
+              _didIteratorError4 = true;
+              _iteratorError4 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                  _iterator4.return();
+                }
+              } finally {
+                if (_didIteratorError4) {
+                  throw _iteratorError4;
+                }
+              }
+            }
+
+            return data;
+          }
+          /**
+           * @private
+           *
+           * @param {Node|Attr} node
+           * @param {function}  renderer
+           *
+           * @return {Template}
+           */
+
+        }, {
+          key: "commit",
+
+          /**
+           * Async render
+           *
+           * @protected
+           *
+           * @param {string} key
+           * @param {*}      value
+           */
+          value: function () {
+            var _commit = _asyncToGenerator(
+            /*#__PURE__*/
+            regeneratorRuntime.mark(function _callee2(key, value) {
+              var buffer;
+              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+                while (1) {
+                  switch (_context2.prev = _context2.next) {
+                    case 0:
+                      if (!(buffer = view_buffer.get(this))) view_buffer.set(this, buffer = {});
+                      buffer[key] = value;
+                      _context2.next = 4;
+                      return (0, _DOM.nextTick)();
+
+                    case 4:
+                      if (view_buffer.get(this)) {
+                        _context2.next = 6;
+                        break;
+                      }
+
+                      return _context2.abrupt("return");
+
+                    case 6:
+                      this.render(buffer);
+                      view_buffer.delete(this);
+
+                    case 8:
+                    case "end":
+                      return _context2.stop();
+                  }
+                }
+              }, _callee2, this);
+            }));
+
+            return function commit(_x2, _x3) {
+              return _commit.apply(this, arguments);
+            };
+          }()
+          /**
+           * Add a watched property to this view instance
+           *
+           * @param {string} key
+           * @param {*}      [value]
+           *
+           * @return {ObjectView} This view
+           */
+
+        }, {
+          key: "watch",
+          value: function watch(key, value) {
+            var _this9 = this;
+
+            if (!(key in this)) Object.defineProperty(this, key, value ? {
+              value: value,
+              enumerable: true
+            } : {
+              get: function get() {
+                return _this9.data[key];
+              },
+              set: function set(value) {
+                return _this9.commit(key, value);
+              },
+              enumerable: true
+            });else if (key in Object.getPrototypeOf(this)) console.warn("Don't overwrite Inset property \"".concat(key, "\" !"));
+            return this;
+          }
+          /**
+           * @private
+           *
+           * @param {Element}  element
+           * @param {Template} template
+           */
+
+        }, {
+          key: "addTemplate",
+          value: function addTemplate(element, template) {
+            if (!template[0]) return;
+            template_element.set(this[this.length++] = template, element);
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
+
+            try {
+              for (var _iterator5 = template.reference.get('view')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var key = _step5.value;
+                this.watch(key);
+              }
+            } catch (err) {
+              _didIteratorError5 = true;
+              _iteratorError5 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+                  _iterator5.return();
+                }
+              } finally {
+                if (_didIteratorError5) {
+                  throw _iteratorError5;
+                }
+              }
+            }
+          }
+          /**
+           * @private
+           *
+           * @param {string} name
+           * @param {View}   view
+           */
+
+        }, {
+          key: "addView",
+          value: function addView(name, view) {
+            this.watch(name, view)[this.length++] = view;
+          }
+          /**
+           * @private
+           *
+           * @param {Element} element
+           */
+
+        }, {
+          key: "parseTag",
+          value: function parseTag(element) {
+            var _this10 = this;
+
+            var _arr2 = Array.from(element.attributes);
+
+            var _loop = function _loop() {
+              var attr = _arr2[_i3];
+              var name = attr.name;
+              var template = ObjectView.templateOf(attr, name in element ? function (value) {
+                return element[name] = value;
+              } : function (value) {
+                return element.setAttribute(name, value);
+              });
+              if (template == '') element.removeAttribute(name);
+
+              _this10.addTemplate(element, template);
+            };
+
+            for (var _i3 = 0; _i3 < _arr2.length; _i3++) {
+              _loop();
+            }
+          }
+          /**
+           * @private
+           */
+
+        }, {
+          key: "scan",
+          value: function scan() {
+            var _this11 = this;
+
+            var root = this.content;
+            root = root.parentNode ? root : {
+              childNodes: root instanceof Array ? root : [root]
+            };
+            (0, _object.mapTree)(root, 'childNodes', function (node) {
+              switch (node.nodeType) {
+                case 1:
+                  if (node.dataset.object) _this11.addView(node.dataset.object, new ObjectView(node));else if (node.dataset.array) _this11.addView(node.dataset.array, new _ArrayView.default(node));else _this11.parseTag(node);
+                  break;
+
+                case 3:
+                  _this11.addTemplate(node, ObjectView.templateOf(node, function (value) {
+                    return node.nodeValue = value;
+                  }));
+
+              }
+
+              return node;
+            });
+          }
+          /**
+           * First ancestor scope which isn't `Array`
+           *
+           * @protected
+           *
+           * @type {?Object}
+           */
+
+        }, {
+          key: "render",
+
+          /**
+           * @param {Object} [data]
+           *
+           * @return {ObjectView}
+           */
+          value: function render(data) {
+            var _data_ = (0, _object.extend)(this.data, data);
+
+            for (var key in data) {
+              this.watch(key);
+            }
+
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
+
+            try {
+              for (var _iterator6 = this[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                var template = _step6.value;
+                var name = template.name;
+                if (template instanceof _Template.default) template.evaluate(template_element.get(template), _data_, this.scope, this.rootHost);else if (template instanceof _View.default) _data_[name] = template.render(data[name]).data;
+              }
+            } catch (err) {
+              _didIteratorError6 = true;
+              _iteratorError6 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+                  _iterator6.return();
+                }
+              } finally {
+                if (_didIteratorError6) {
+                  throw _iteratorError6;
+                }
+              }
+            }
+
+            return this;
+          }
+        }, {
+          key: "clear",
+          value: function clear() {
+            var _iteratorNormalCompletion7 = true;
+            var _didIteratorError7 = false;
+            var _iteratorError7 = undefined;
+
+            try {
+              for (var _iterator7 = this[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
+                var template = _step7.value;
+                template.clear();
+              }
+            } catch (err) {
+              _didIteratorError7 = true;
+              _iteratorError7 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion7 && _iterator7.return != null) {
+                  _iterator7.return();
+                }
+              } finally {
+                if (_didIteratorError7) {
+                  throw _iteratorError7;
+                }
+              }
+            }
+
+            return this;
+          }
+        }, {
+          key: "scope",
+          get: function get() {
+            var view = this;
+
+            while (view = view.parent) {
+              if (!(view instanceof _ArrayView.default)) return view.data;
+            }
+          }
+        }], [{
+          key: "templateOf",
+          value: function templateOf(node, renderer) {
+            return new _Template.default(node.value || node.nodeValue, ['view', 'scope', 'host'], renderer);
+          }
+        }]);
+
+        return ObjectView;
+      }(_View.default);
+
+      exports.default = ObjectView;
+    }
+  },
+  './component/Component': {
+    base: './component',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.linkDataOf = linkDataOf;
+      exports.attributeChanged = attributeChanged;
+      exports.default = void 0;
+
+      var _DOM = require('../utility/DOM');
+
+      var _ObjectView = _interopRequireDefault(require('../view/ObjectView'));
+
+      var _View = _interopRequireDefault(require('../view/View'));
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+      /**
+       * Utility methods of Web Component
+       */
+
+
+      var Component =
+      /*#__PURE__*/
+      function () {
+        function Component() {
+          _classCallCheck(this, Component);
+        }
+
+        _createClass(Component, [{
+          key: "buildDOM",
+
+          /**
+           * @param {?(string|Node)} template - HTML source or sub DOM tree
+           * @param {string}         [style]  - CSS source
+           * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
+           *
+           * @return {HTMLElement} This custom element
+           */
+          value: function buildDOM(template, style, option) {
+            var shadow = this.attachShadow(Object.assign({
+              mode: 'open',
+              delegatesFocus: true
+            }, option));
+
+            if (typeof template === 'string') {
+              template = (0, _DOM.parseDOM)(template);
+              var element = template.querySelector('template');
+              template = element ? element.content : template;
+            } else template = template || this.constructor.template;
+
+            if (template) shadow.append(document.importNode(template, true));
+            if (style) shadow.prepend(Object.assign(document.createElement('style'), {
+              textContent: style
+            }));
+            var view = new _ObjectView.default(shadow),
+                data = this.constructor.data;
+            if (data) view.render(data);
+            return this;
+          }
+          /**
+           * Main view of this component
+           *
+           * @type {View}
+           */
+
+        }, {
+          key: "bubbleOut",
+
+          /**
+           * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
+           *
+           * @return {boolean} Default behavior of this event can be executed or not
+           */
+          value: function bubbleOut(event) {
+            return this.shadowRoot.host.dispatchEvent(new event.constructor(event.type, {
+              bubbles: event.bubbles,
+              cancelable: event.cancelable
+            }));
+          }
+          /**
+           * @private
+           *
+           * @return   {Object}
+           * @property {HTMLTemplateElement}                      template
+           * @property {Array<HTMLStyleElement, HTMLLinkElement>} style
+           * @property {HTMLScriptElement}                        script
+           */
+
+        }, {
+          key: "$",
+
+          /**
+           * @param {string} selector - CSS selector
+           *
+           * @return {Element[]} Element set which matches `selector` in this Shadow DOM
+           */
+          value: function $(selector) {
+            return (0, _DOM.$)(selector, this.shadowRoot);
+          }
+          /**
+           * @param {string} selector - CSS selector
+           *
+           * @return {?Element} Matched parent
+           */
+
+        }, {
+          key: "$up",
+          value: function $up(selector) {
+            return (0, _DOM.$up)(selector, this);
+          }
+          /**
+           * @param {string} selector - CSS selector
+           *
+           * @return {Element[]} Matched elements which assigned to slots
+           */
+
+        }, {
+          key: "$slot",
+          value: function $slot(selector) {
+            var _ref2;
+
+            return (_ref2 = []).concat.apply(_ref2, _toConsumableArray(this.$('slot').map(function (slot) {
+              return slot.assignedNodes();
+            }))).filter(function (node) {
+              return node.matches && node.matches(selector);
+            });
+          }
+          /**
+           * Delegate listener for DOM events
+           *
+           * @param {string}          type       - Name of a DOM event
+           * @param {string}          [selector] - CSS selector of delegate elements
+           * @param {DOMEventHandler} callback
+           *
+           * @return {Element} This element
+           */
+
+        }, {
+          key: "on",
+          value: function on(type, selector, callback) {
+            if (selector instanceof Function) callback = selector, selector = '';
+            this.addEventListener(type, selector ? (0, _DOM.delegate)(selector, callback) : callback);
+            return this;
+          }
+        }, {
+          key: "view",
+          get: function get() {
+            return _View.default.instanceOf(this.shadowRoot);
+          }
+        }], [{
+          key: "findTemplate",
+          value: function findTemplate() {
+            var _template;
+
+            var script = document.currentScript,
+                template,
+                style = [];
+            var element = script,
+                stop;
+
+            while (!stop && (element = element.previousElementSibling)) {
+              switch (element.tagName.toLowerCase()) {
+                case 'template':
+                  template = element.content;
+                  break;
+
+                case 'style':
+                  style.unshift(element);
+                  break;
+
+                case 'link':
+                  if (element.rel === 'stylesheet') {
+                    element.setAttribute('href', element.href);
+                    style.unshift(element);
+                  }
+
+                  break;
+
+                case 'script':
+                  stop = true;
+              }
+            }
+
+            if (style[0]) (_template = template).prepend.apply(_template, style);
+            return {
+              template: template,
+              style: style,
+              script: script
+            };
+          }
+        }, {
+          key: "tagName",
+
+          /**
+           * @type {string} - `tagName` of a Custom Element
+           */
+          get: function get() {
+            return this.name.replace(/[A-Z]/g, function (char) {
+              return '-' + char.toLowerCase();
+            }).slice(1);
+          }
+        }]);
+
+        return Component;
+      }();
+      /**
+       * @typedef {function(event: Event): *} DOMEventHandler
+       */
+
+
+      exports.default = Component;
+      var attr_prop = {
+        class: 'className',
+        for: 'htmlFor',
+        readonly: 'readOnly'
+      };
+      /**
+       * Set the getter & setter of the DOM property
+       *
+       * @private
+       *
+       * @param {string[]} attributes - Names of HTML attributes
+       *
+       * @return {string[]} `attributes`
+       */
+
+      function linkDataOf(attributes) {
+        var _this12 = this;
+
+        var _iteratorNormalCompletion8 = true;
+        var _didIteratorError8 = false;
+        var _iteratorError8 = undefined;
+
+        try {
+          var _loop2 = function _loop2() {
+            var key = _step8.value;
+            key = attr_prop[key] || key;
+            if (!(key in _this12.prototype)) Object.defineProperty(_this12.prototype, key, {
+              set: function set(value) {
+                this.view.commit(key, value);
+              },
+              get: function get() {
+                return this.view.data[key];
+              },
+              enumerable: true
+            });
+          };
+
+          for (var _iterator8 = attributes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+            _loop2();
+          }
+        } catch (err) {
+          _didIteratorError8 = true;
+          _iteratorError8 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion8 && _iterator8.return != null) {
+              _iterator8.return();
+            }
+          } finally {
+            if (_didIteratorError8) {
+              throw _iteratorError8;
+            }
+          }
+        }
+
+        return attributes;
+      }
+      /**
+       * Assign the new value to the DOM property
+       * which has the same name of the changed attribute
+       *
+       * @param {string}  name
+       * @param {?string} oldValue
+       * @param {?string} newValue
+       *
+       * @return {*} DOM property value of `newValue`
+       */
+
+
+      function attributeChanged(name, oldValue, newValue) {
+        name = attr_prop[name] || name;
+
+        switch (newValue) {
+          case '':
+            return this[name] = true;
+
+          case null:
+            return this[name] = false;
+
+          default:
+            try {
+              return this[name] = JSON.parse(newValue);
+            } catch (error) {
+              return this[name] = newValue;
+            }
+
+        }
+      }
+    }
+  },
+  './utility/DOM': {
+    base: './utility',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.inSubDOM = inSubDOM;
+      exports.inHead = inHead;
+      exports.$ = $;
+      exports.$up = $up;
+      exports.indexOf = indexOf;
+      exports.targetOf = targetOf;
+      exports.delegate = delegate;
+      exports.parseDOM = parseDOM;
+      exports.stringifyDOM = stringifyDOM;
+      exports.watchAttributes = watchAttributes;
+      exports.delay = delay;
+      exports.nextTick = nextTick;
+      /**
+       * @private
+       *
+       * @return {boolean} Whether current script is running in a sub DOM
+       */
+
+      function inSubDOM() {
+        return (document.currentScript || '').ownerDocument !== document;
+      }
+      /**
+       * @private
+       *
+       * @return {boolean} Whether current script is in `<head />` of a DOM
+       */
+
+
+      function inHead() {
+        var script = document.currentScript || '';
+        var DOM = script.ownerDocument;
+        return DOM && script.parentNode === DOM.head;
+      }
+      /**
+       * jQuery-like selector
+       *
+       * @param {string}                            selector
+       * @param {Element|Document|DocumentFragment} [context=document]
+       *
+       * @return {Element[]}
+       */
+
+
+      function $(selector, context) {
+        return _toConsumableArray((context || document).querySelectorAll(selector));
+      }
+      /**
+       * @param {string} selector - CSS selector
+       * @param {Node}   context
+       *
+       * @return {?Element} Matched parent
+       */
+
+
+      function $up(selector, context) {
+        while (context.parentNode) {
+          context = context.parentNode;
+          if (context.matches && context.matches(selector)) return context;
+        }
+      }
+      /**
+       * @param {Element} element
+       *
+       * @return {number} The index of `element` in its siblings
+       */
+
+
+      function indexOf(element) {
+        var index = 0;
+
+        while (element = element.previousElementSibling) {
+          index++;
+        }
+
+        return index;
+      }
+      /**
+       * @param {Event} event
+       *
+       * @return {Element} The target of `event` object (**Shadow DOM** is in account)
+       */
+
+
+      function targetOf(event) {
+        var target = event.composedPath ? event.composedPath() : event.path;
+        return (target || '')[0] || event.target;
+      }
+      /**
+       * DOM event delegate
+       *
+       * @private
+       *
+       * @param {string}          selector
+       * @param {DOMEventHandler} handler
+       *
+       * @return {Function} Handler wrapper
+       */
+
+
+      function delegate(selector, handler) {
+        return function (event) {
+          var target = targetOf(event);
+          if (!target.matches(selector)) target = $up(selector, target);
+          if (target) return handler.call(target, event);
+        };
+      }
+      /**
+       * @param {string} markup - Code of an markup fragment
+       *
+       * @return {DocumentFragment}
+       */
+
+
+      function parseDOM(markup) {
+        markup = new DOMParser().parseFromString(markup, 'text/html');
+        var fragment = document.createDocumentFragment();
+        fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
+        return fragment;
+      }
+      /**
+       * @param {Element|Element[]|DocumentFragment} tree
+       *
+       * @return {string} HTML/XML source code
+       */
+
+
+      function stringifyDOM(tree) {
+        return tree.nodeType === 1 ? tree.outerHTML : Array.from(tree.childNodes || tree, function (node) {
+          switch (node.nodeType) {
+            case 1:
+              return node.outerHTML;
+
+            case 3:
+              return node.nodeValue;
+          }
+        }).join('');
+      }
+      /**
+       * @typedef {Function} AttributeWatcher
+       *
+       * @param {string}  name
+       * @param {?string} oldValue
+       * @param {?string} newValue
+       */
+
+      /**
+       * @param {Element}          element
+       * @param {string[]}         names
+       * @param {AttributeWatcher} callback
+       *
+       * @return {MutationObserver}
+       */
+
+
+      function watchAttributes(element, names, callback) {
+        var _this13 = this;
+
+        var observer = new MutationObserver(function (list) {
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
+
+          try {
+            for (var _iterator9 = list[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var mutation = _step9.value;
+              callback.call(_this13, mutation.attributeName, mutation.oldValue, element.getAttribute(mutation.attributeName));
+            }
+          } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion9 && _iterator9.return != null) {
+                _iterator9.return();
+              }
+            } finally {
+              if (_didIteratorError9) {
+                throw _iteratorError9;
+              }
+            }
+          }
+        });
+        observer.observe(element, {
+          attributes: true,
+          attributeOldValue: true,
+          attributeFilter: names
+        });
+        var _iteratorNormalCompletion10 = true;
+        var _didIteratorError10 = false;
+        var _iteratorError10 = undefined;
+
+        try {
+          for (var _iterator10 = element.attributes[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+            var attribute = _step10.value;
+            callback.call(this, attribute.name, null, attribute.value);
+          }
+        } catch (err) {
+          _didIteratorError10 = true;
+          _iteratorError10 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion10 && _iterator10.return != null) {
+              _iterator10.return();
+            }
+          } finally {
+            if (_didIteratorError10) {
+              throw _iteratorError10;
+            }
+          }
+        }
+
+        return observer;
+      }
+      /**
+       * @param {number} [second=0]
+       *
+       * @return {Promise} Wait seconds in Macro tasks
+       */
+
+
+      function delay(second) {
+        return new Promise(function (resolve) {
+          return setTimeout(resolve, (second || 0) * 1000);
+        });
+      }
+
+      var tick;
+      /**
+       * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
+       */
+
+      function nextTick() {
+        return tick || (tick = new Promise(function (resolve) {
+          return window.requestAnimationFrame(function (time) {
+            return tick = null, resolve(time);
+          });
+        }));
+      }
+    }
+  },
+  './WebCell': {
+    base: '.',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      var _exportNames = {
+        component: true,
+        Component: true,
+        attributeChanged: true,
+        InputComponent: true,
+        Template: true,
+        View: true,
+        ObjectView: true,
+        ArrayView: true
+      };
+      exports.component = component;
+      Object.defineProperty(exports, "Component", {
+        enumerable: true,
+        get: function get() {
+          return _Component.default;
+        }
+      });
+      Object.defineProperty(exports, "attributeChanged", {
+        enumerable: true,
+        get: function get() {
+          return _Component.attributeChanged;
+        }
+      });
+      Object.defineProperty(exports, "InputComponent", {
+        enumerable: true,
+        get: function get() {
+          return _InputComponent.default;
+        }
+      });
+      Object.defineProperty(exports, "Template", {
+        enumerable: true,
+        get: function get() {
+          return _Template.default;
+        }
+      });
+      Object.defineProperty(exports, "View", {
+        enumerable: true,
+        get: function get() {
+          return _View.default;
+        }
+      });
+      Object.defineProperty(exports, "ObjectView", {
+        enumerable: true,
+        get: function get() {
+          return _ObjectView.default;
+        }
+      });
+      Object.defineProperty(exports, "ArrayView", {
+        enumerable: true,
+        get: function get() {
+          return _ArrayView.default;
+        }
+      });
+
+      var _DOM = require('./utility/DOM');
+
+      Object.keys(_DOM).forEach(function (key) {
+        if (key === "default" || key === "__esModule") return;
+        if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+        Object.defineProperty(exports, key, {
+          enumerable: true,
+          get: function get() {
+            return _DOM[key];
+          }
+        });
+      });
+
+      var _Component = _interopRequireWildcard(require('./component/Component'));
+
+      var _object = require('./utility/object');
+
+      Object.keys(_object).forEach(function (key) {
+        if (key === "default" || key === "__esModule") return;
+        if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+        Object.defineProperty(exports, key, {
+          enumerable: true,
+          get: function get() {
+            return _object[key];
+          }
+        });
+      });
+
+      var _InputComponent = _interopRequireDefault(require('./component/InputComponent'));
+
+      var _HTTP = require('./utility/HTTP');
+
+      Object.keys(_HTTP).forEach(function (key) {
+        if (key === "default" || key === "__esModule") return;
+        if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+        Object.defineProperty(exports, key, {
+          enumerable: true,
+          get: function get() {
+            return _HTTP[key];
+          }
+        });
+      });
+
+      var _Template = _interopRequireDefault(require('./view/Template'));
+
+      var _View = _interopRequireDefault(require('./view/View'));
+
+      var _ObjectView = _interopRequireDefault(require('./view/ObjectView'));
+
+      var _ArrayView = _interopRequireDefault(require('./view/ArrayView'));
+
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : {
+          default: obj
+        };
+      }
+
+      function _interopRequireWildcard(obj) {
+        if (obj && obj.__esModule) {
+          return obj;
+        } else {
+          var newObj = {};
+
+          if (obj != null) {
+            for (var key in obj) {
+              if (Object.prototype.hasOwnProperty.call(obj, key)) {
+                var desc = Object.defineProperty && Object.getOwnPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : {};
+
+                if (desc.get || desc.set) {
+                  Object.defineProperty(newObj, key, desc);
+                } else {
+                  newObj[key] = obj[key];
+                }
+              }
+            }
+          }
+
+          newObj.default = obj;
+          return newObj;
+        }
+      }
+
+      function dataInject(constructor) {
+        var observedAttributes = (0, _object.getPropertyDescriptor)(constructor, 'observedAttributes');
+        if (!observedAttributes) return;
+        Object.defineProperty(constructor, 'observedAttributes', {
+          get: function get() {
+            return _Component.linkDataOf.call(this, observedAttributes.get.call(this));
+          }
+        });
+        var attributeChangedCallback = (0, _object.getPropertyDescriptor)(constructor.prototype, 'attributeChangedCallback');
+        if (!attributeChangedCallback) Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
+          value: _Component.attributeChanged
+        });
+      }
+      /**
+       * Register a component
+       *
+       * @param {function} subClass
+       * @param {string}   [baseTag] - Name of an HTML original tag to extend
+       *
+       * @return {function} `subClass`
+       */
+
+
+      function component(subClass, baseTag) {
+        var static_member = {};
+
+        if ((0, _DOM.inSubDOM)() || !(0, _DOM.inHead)()) {
+          var _Component$default$fi = _Component.default.findTemplate(),
+              template = _Component$default$fi.template;
+
+          Object.defineProperty(static_member, 'template', {
+            get: function get() {
+              return template;
+            },
+            enumerable: true
+          });
+        }
+
+        dataInject((0, _object.extend)(subClass, _Component.default, static_member));
+        customElements.define(subClass.tagName, subClass, baseTag && {
+          extends: baseTag
+        });
+        return subClass;
+      }
+    }
+  }
 };
 
     return require('./WebCell');

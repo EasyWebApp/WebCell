@@ -1,5 +1,17 @@
 window.esdocSearchIndex = [
   [
+    "web-cell/source/utility/dom.js~$",
+    "function/index.html#static-function-$",
+    "<span>$</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~$up",
+    "function/index.html#static-function-$up",
+    "<span>$up</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/view/arrayview.js~arrayview",
     "class/source/view/ArrayView.js~ArrayView.html",
     "<span>ArrayView</span> <span class=\"search-result-import-path\">web-cell/source/view/ArrayView.js</span>",
@@ -72,6 +84,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~indexof",
+    "function/index.html#static-function-indexOf",
+    "<span>indexOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/http.js~isxdomain",
     "function/index.html#static-function-isXDomain",
     "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
@@ -111,6 +129,18 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~stringifydom",
     "function/index.html#static-function-stringifyDOM",
     "<span>stringifyDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~targetof",
+    "function/index.html#static-function-targetOf",
+    "<span>targetOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~watchattributes",
+    "function/index.html#static-function-watchAttributes",
+    "<span>watchAttributes</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -168,7 +198,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component.findtemplate component#builddom component#\\$ component.findtemplate,component.findtemplate source/component/component.js~component#builddom,component#builddom source/component/component.js~component#$,component#\\$",
+    "component.findtemplate component#builddom \\$ component.findtemplate,component.findtemplate source/component/component.js~component#builddom,component#builddom source/utility/dom.js~$,\\$",
     "test-file/test/Component/index.js.html#lineNumber41",
     "Component mixin Build Shadow DOM",
     "test"
@@ -180,7 +210,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component#on source/component/component.js~component#on,component#on",
+    "delegate delegate,delegate",
     "test-file/test/Component/index.js.html#lineNumber99",
     "Component mixin Delegate DOM events",
     "test"
@@ -192,21 +222,27 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "inputcomponent source/component/inputcomponent.js~inputcomponent,inputcomponent",
-    "test-file/test/Component/index.js.html#lineNumber121",
-    "Component mixin Form field components",
-    "test"
-  ],
-  [
-    "component.targetof component.indexof source/component/component.js~component.targetof,component.targetof source/component/component.js~component.indexof,component.indexof",
+    "targetof indexof source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
     "test-file/test/Component/index.js.html#lineNumber61",
     "Component mixin Get the event target in Shadow DOM",
     "test"
   ],
   [
-    "component#\\$up source/component/component.js~component#$up,component#\\$up",
+    "\\$up source/utility/dom.js~$up,\\$up",
     "test-file/test/Component/index.js.html#lineNumber89",
     "Component mixin should find a parent element matched a CSS selector",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/Component/index.js.html#lineNumber120",
+    "Form field components",
+    "test"
+  ],
+  [
+    "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
+    "test-file/test/Component/index.js.html#lineNumber125",
+    "Form field components Render inner field",
     "test"
   ],
   [
@@ -756,6 +792,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "source/component/component.js~component#$slot",
+    "class/source/component/Component.js~Component.html#instance-method-$slot",
+    "source/component/Component.js~Component#$slot",
+    "method"
+  ],
+  [
     "source/component/component.js~component#$up",
     "class/source/component/Component.js~Component.html#instance-method-$up",
     "source/component/Component.js~Component#$up",
@@ -786,22 +828,10 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "source/component/component.js~component.indexof",
-    "class/source/component/Component.js~Component.html#static-method-indexOf",
-    "source/component/Component.js~Component.indexOf",
-    "method"
-  ],
-  [
     "source/component/component.js~component.tagname",
     "class/source/component/Component.js~Component.html#static-get-tagName",
     "source/component/Component.js~Component.tagName",
     "member"
-  ],
-  [
-    "source/component/component.js~component.targetof",
-    "class/source/component/Component.js~Component.html#static-method-targetOf",
-    "source/component/Component.js~Component.targetOf",
-    "method"
   ],
   [
     "source/component/component.js~domeventhandler",
@@ -816,9 +846,15 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "source/component/inputcomponent.js~inputcomponent#attributechangedcallback",
-    "class/source/component/InputComponent.js~InputComponent.html#instance-method-attributeChangedCallback",
-    "source/component/InputComponent.js~InputComponent#attributeChangedCallback",
+    "source/component/inputcomponent.js~inputcomponent#changedpropertyof",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-method-changedPropertyOf",
+    "source/component/InputComponent.js~InputComponent#changedPropertyOf",
+    "method"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent#connectedcallback",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-method-connectedCallback",
+    "source/component/InputComponent.js~InputComponent#connectedCallback",
     "method"
   ],
   [
@@ -834,12 +870,6 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "source/component/inputcomponent.js~inputcomponent.observedattributes",
-    "class/source/component/InputComponent.js~InputComponent.html#static-get-observedAttributes",
-    "source/component/InputComponent.js~InputComponent.observedAttributes",
-    "member"
-  ],
-  [
     "source/utility/dom-polyfill.js",
     "file/source/utility/DOM-polyfill.js.html",
     "source/utility/DOM-polyfill.js",
@@ -850,6 +880,12 @@ window.esdocSearchIndex = [
     "file/source/utility/DOM.js.html",
     "source/utility/DOM.js",
     "file"
+  ],
+  [
+    "source/utility/dom.js~attributewatcher",
+    "typedef/index.html#static-typedef-AttributeWatcher",
+    "source/utility/DOM.js~AttributeWatcher",
+    "typedef"
   ],
   [
     "source/utility/http.js",

@@ -10,6 +10,20 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** based o
 
 
 
+## Basic knowledge
+
+ 1. [Web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
+
+ 2. [Custom elements](https://developers.google.com/web/fundamentals/web-components/customelements)
+
+ 3. [Shadow DOM](https://developers.google.com/web/fundamentals/web-components/shadowdom)
+
+ 4. [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
+
+ 5. [ECMAScript 6+](http://es6-features.org/)
+
+
+
 ## Basic Usage
 
 
@@ -18,7 +32,7 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** based o
 ```Shell
 npm init
 
-npm install web-cell babel-polyfill @webcomponents/webcomponentsjs
+npm install web-cell @babel/polyfill @webcomponents/webcomponentsjs whatwg-fetch
 
 npm install web-cell-cli -D
 ```
@@ -35,7 +49,7 @@ Add **Source code folder** of your components to `directories.lib` field of `pac
 ```HTML
 <!DocType HTML>
 <html><head>
-    <script src="node_modules/babel-polyfill/dist/polyfill.min.js"></script>
+    <script src="node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
     <script src="node_modules/web-cell/dist/web-cell.js"></script>
@@ -197,3 +211,15 @@ module.exports = {
  2. [BootCell](https://github.com/EasyWebApp/BootCell) based on **BootStrap v4**
 
  3. [Material Cell](https://github.com/EasyWebApp/material-cell) based on **Material Design lite v1.3**
+
+
+
+## Standard specification
+
+ 1. [HTML 5.3](https://www.w3.org/TR/html53/)
+
+ 2. [DOM 4.1](https://www.w3.org/TR/dom41/)
+
+ 3. [CSS variables](https://www.w3.org/TR/css-variables-1/)
+
+ 4. [ECMAScript 2015+](https://www.ecma-international.org/publications/standards/Ecma-262.htm)
