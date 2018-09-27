@@ -72,9 +72,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
 function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
 
@@ -92,8 +92,16 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
 var _module_ = {
-  './utility/HTTP': {
+  './utility/resource': {
     base: './utility',
     dependency: [],
     factory: function factory(require, exports, module) {
@@ -101,7 +109,11 @@ var _module_ = {
         value: true
       });
       exports.isXDomain = isXDomain;
+      exports.serialize = serialize;
       exports.request = request;
+      exports.blobOf = blobOf;
+      exports.fileTypeOf = fileTypeOf;
+      exports.blobFrom = blobFrom;
 
       var _object = require('./object');
 
@@ -117,13 +129,56 @@ var _module_ = {
         return new URL(URI, window.location.href).origin !== window.location.origin;
       }
       /**
+       * @param {Element} form - `<form />` or `<fieldset />`
+       *
+       * @return {String|FormData|Object}
+       */
+
+
+      function serialize(form) {
+        if ((0, _DOM.$)('input[type="file"][name]', form)[0]) return new FormData(form);
+        var data = Array.from(form.elements, function (field) {
+          return field.name && [field.name, field.value];
+        }).filter(Boolean);
+        if ((form.form || form).getAttribute('enctype') !== 'application/json') return '' + new URLSearchParams(data);
+        form = {};
+        var _iteratorNormalCompletion = true;
+        var _didIteratorError = false;
+        var _iteratorError = undefined;
+
+        try {
+          for (var _iterator = data[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _step$value = _slicedToArray(_step.value, 2),
+                key = _step$value[0],
+                value = _step$value[1];
+
+            form[key] = value;
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+
+        return form;
+      }
+      /**
        * HTTP request
        *
-       * @param {string}        URI            - HTTP URL
-       * @param {string}        [method='GET']
-       * @param {string|Object} [body]         - Data to send
-       * @param {Object}        [headers]
-       * @param {Object}        [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
+       * @param {string}                URI            - HTTP URL
+       * @param {string}                [method='GET']
+       * @param {string|Object|Element} [body]         - Data to send
+       * @param {Object}                [headers]
+       * @param {Object}                [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
        *
        * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
        */
@@ -132,6 +187,12 @@ var _module_ = {
       function request(_x) {
         return _request.apply(this, arguments);
       }
+      /**
+       * @param {String} URI - Returned by `URL.createObjectURL()`
+       *
+       * @return {Promise<Blob>}
+       */
+
 
       function _request() {
         _request = _asyncToGenerator(
@@ -152,6 +213,7 @@ var _module_ = {
                   body = _args.length > 2 ? _args[2] : undefined;
                   headers = _args.length > 3 ? _args[3] : undefined;
                   option = _args.length > 4 ? _args[4] : undefined;
+                  if (body instanceof Element) body = serialize(body);
                   if (body instanceof Object) try {
                     body = JSON.stringify(body.valueOf());
                     headers = headers || {};
@@ -159,7 +221,7 @@ var _module_ = {
                   } catch (error) {
                     /* eslint-disable-line */
                   }
-                  _context.next = 7;
+                  _context.next = 8;
                   return window.fetch(URI, (0, _object.extend)({
                     method: method,
                     headers: headers,
@@ -168,37 +230,37 @@ var _module_ = {
                     credentials: 'same-origin'
                   }, option));
 
-                case 7:
+                case 8:
                   response = _context.sent;
                   type = response.headers.get('Content-Type').split(';')[0];
                   _context.t0 = type;
-                  _context.next = _context.t0 === 'text/html' ? 12 : _context.t0 === 'application/json' ? 17 : 20;
+                  _context.next = _context.t0 === 'text/html' ? 13 : _context.t0 === 'application/json' ? 18 : 21;
                   break;
 
-                case 12:
+                case 13:
                   _context.t1 = (0, _DOM.parseDOM);
-                  _context.next = 15;
+                  _context.next = 16;
                   return response.text();
 
-                case 15:
+                case 16:
                   _context.t2 = _context.sent;
                   return _context.abrupt("return", (0, _context.t1)(_context.t2));
 
-                case 17:
-                  _context.next = 19;
+                case 18:
+                  _context.next = 20;
                   return response.json();
 
-                case 19:
+                case 20:
                   return _context.abrupt("return", _context.sent);
 
-                case 20:
-                  _context.next = 22;
+                case 21:
+                  _context.next = 23;
                   return response[type.split('/')[0] === 'text' ? 'text' : 'blob']();
 
-                case 22:
+                case 23:
                   return _context.abrupt("return", _context.sent);
 
-                case 23:
+                case 24:
                 case "end":
                   return _context.stop();
               }
@@ -206,6 +268,112 @@ var _module_ = {
           }, _callee, this);
         }));
         return _request.apply(this, arguments);
+      }
+
+      function blobOf(URI) {
+        var XHR = new XMLHttpRequest();
+        XHR.responseType = 'blob';
+        XHR.open('GET', URI);
+        return new Promise(function (resolve, reject) {
+          XHR.onload = function () {
+            return resolve(XHR.response);
+          };
+
+          XHR.onerror = reject;
+          XHR.send();
+        });
+      }
+
+      var schema_type = /^(?:(\w+):)?.+?(?:\.(\w+))?$/,
+          DataURI = /^data:(.+?\/(.+?))?(;base64)?,(\S+)/;
+      /**
+       * @param {String} URI - HTTP(S) URL, Data URI or Object URL
+       *
+       * @return   {Object}
+       * @property {String} schema - URI schema (`http`, `https`, `data` or `blob`)
+       * @property {String} type   - File type (same as the Extension name of a file)
+       */
+
+      function fileTypeOf(_x2) {
+        return _fileTypeOf.apply(this, arguments);
+      }
+      /**
+       * @param {String} URI - Data URI
+       *
+       * @return {Blob}
+       */
+
+
+      function _fileTypeOf() {
+        _fileTypeOf = _asyncToGenerator(
+        /*#__PURE__*/
+        regeneratorRuntime.mark(function _callee2(URI) {
+          var _ref3, _ref4, _, schema, type, blob;
+
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
+            while (1) {
+              switch (_context2.prev = _context2.next) {
+                case 0:
+                  _ref3 = schema_type.exec(URI) || [], _ref4 = _slicedToArray(_ref3, 3), _ = _ref4[0], schema = _ref4[1], type = _ref4[2]; // eslint-disable-line
+
+                  _context2.t0 = schema;
+                  _context2.next = _context2.t0 === 'data' ? 4 : _context2.t0 === 'blob' ? 5 : 9;
+                  break;
+
+                case 4:
+                  return _context2.abrupt("return", {
+                    schema: 'data',
+                    type: DataURI.exec(URI)[2]
+                  });
+
+                case 5:
+                  _context2.next = 7;
+                  return blobOf(URI);
+
+                case 7:
+                  blob = _context2.sent;
+                  return _context2.abrupt("return", {
+                    schema: 'blob',
+                    type: blob.type
+                  });
+
+                case 9:
+                  return _context2.abrupt("return", {
+                    schema: schema,
+                    type: type
+                  });
+
+                case 10:
+                case "end":
+                  return _context2.stop();
+              }
+            }
+          }, _callee2, this);
+        }));
+        return _fileTypeOf.apply(this, arguments);
+      }
+
+      function blobFrom(URI) {
+        var _ref = DataURI.exec(URI) || [],
+            _ref2 = _slicedToArray(_ref, 5),
+            _ = _ref2[0],
+            type = _ref2[1],
+            __ = _ref2[2],
+            base64 = _ref2[3],
+            data = _ref2[4]; // eslint-disable-line
+
+
+        data = base64 ? window.atob(data) : data;
+        var aBuffer = new ArrayBuffer(data.length);
+        var uBuffer = new Uint8Array(aBuffer);
+
+        for (var i = 0; data[i]; i++) {
+          uBuffer[i] = data.charCodeAt(i);
+        }
+
+        return new Blob([aBuffer], {
+          type: type
+        });
       }
     }
   },
@@ -251,12 +419,18 @@ var _module_ = {
 
           (_this = _possibleConstructorReturn(this, _getPrototypeOf(InputComponent).call(this))).buildDOM(template, style);
 
+          _this.on.call(_this.$('slot')[0], 'slotchange', _this.linkSlot.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+
           return _this;
         }
+        /**
+         * @private
+         */
+
 
         _createClass(InputComponent, [{
-          key: "connectedCallback",
-          value: function connectedCallback() {
+          key: "linkSlot",
+          value: function linkSlot() {
             var _this2 = this;
 
             var origin = this.$slot('input')[0],
@@ -386,26 +560,26 @@ var _module_ = {
         }, {
           key: "update",
           value: function update() {
-            var _iteratorNormalCompletion = true;
-            var _didIteratorError = false;
-            var _iteratorError = undefined;
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
 
             try {
-              for (var _iterator = this[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var view = _step.value;
+              for (var _iterator2 = this[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                var view = _step2.value;
                 view.render();
               }
             } catch (err) {
-              _didIteratorError = true;
-              _iteratorError = err;
+              _didIteratorError2 = true;
+              _iteratorError2 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion && _iterator.return != null) {
-                  _iterator.return();
+                if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                  _iterator2.return();
                 }
               } finally {
-                if (_didIteratorError) {
-                  throw _iteratorError;
+                if (_didIteratorError2) {
+                  throw _iteratorError2;
                 }
               }
             }
@@ -422,13 +596,13 @@ var _module_ = {
           key: "render",
           value: function render(list) {
             var _this$content,
-                _ref,
+                _ref5,
                 _this4 = this;
 
             if (!list) return this.update();
             var data = this.data;
 
-            (_this$content = this.content).append.apply(_this$content, _toConsumableArray((_ref = []).concat.apply(_ref, _toConsumableArray(Array.from(list, function (item) {
+            (_this$content = this.content).append.apply(_this$content, _toConsumableArray((_ref5 = []).concat.apply(_ref5, _toConsumableArray(Array.from(list, function (item) {
               var view = _this4[_this4.length++] = new _ObjectView.default(_this4.template, _this4);
               data[data.length] = view.data;
               if (!(item.index != null)) Object.defineProperty(item, 'index', {
@@ -541,16 +715,16 @@ var _module_ = {
           source[_key2 - 1] = arguments[_key2];
         }
 
-        for (var _i = 0; _i < source.length; _i++) {
-          var object = source[_i];
+        for (var _i2 = 0; _i2 < source.length; _i2++) {
+          var object = source[_i2];
 
           if (object instanceof Object) {
             var descriptor = Object.getOwnPropertyDescriptors(object);
 
-            var _arr = Object.keys(descriptor);
+            var _arr2 = Object.keys(descriptor);
 
-            for (var _i2 = 0; _i2 < _arr.length; _i2++) {
-              var key = _arr[_i2];
+            for (var _i3 = 0; _i3 < _arr2.length; _i3++) {
+              var key = _arr2[_i3];
               if ('value' in descriptor[key] && !(descriptor[key].value != null)) delete descriptor[key];
             }
 
@@ -657,26 +831,26 @@ var _module_ = {
            */
 
           this.reference = new Map();
-          var _iteratorNormalCompletion2 = true;
-          var _didIteratorError2 = false;
-          var _iteratorError2 = undefined;
+          var _iteratorNormalCompletion3 = true;
+          var _didIteratorError3 = false;
+          var _iteratorError3 = undefined;
 
           try {
-            for (var _iterator2 = ['this'].concat(this.varName)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-              var scope = _step2.value;
+            for (var _iterator3 = ['this'].concat(this.varName)[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
+              var scope = _step3.value;
               this.reference.set(scope, []);
             }
           } catch (err) {
-            _didIteratorError2 = true;
-            _iteratorError2 = err;
+            _didIteratorError3 = true;
+            _iteratorError3 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
-                _iterator2.return();
+              if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
+                _iterator3.return();
               }
             } finally {
-              if (_didIteratorError2) {
-                throw _iteratorError2;
+              if (_didIteratorError3) {
+                throw _iteratorError3;
               }
             }
           }
@@ -803,26 +977,26 @@ var _module_ = {
           value: function clear() {
             return this.evaluate.apply(this, _toConsumableArray(Array.from(this.reference.entries(), function (entry) {
               var data = {};
-              var _iteratorNormalCompletion3 = true;
-              var _didIteratorError3 = false;
-              var _iteratorError3 = undefined;
+              var _iteratorNormalCompletion4 = true;
+              var _didIteratorError4 = false;
+              var _iteratorError4 = undefined;
 
               try {
-                for (var _iterator3 = entry[1][Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                  var key = _step3.value;
+                for (var _iterator4 = entry[1][Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
+                  var key = _step4.value;
                   data[key] = '';
                 }
               } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
+                _didIteratorError4 = true;
+                _iteratorError4 = err;
               } finally {
                 try {
-                  if (!_iteratorNormalCompletion3 && _iterator3.return != null) {
-                    _iterator3.return();
+                  if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
+                    _iterator4.return();
                   }
                 } finally {
-                  if (_didIteratorError3) {
-                    throw _iteratorError3;
+                  if (_didIteratorError4) {
+                    throw _iteratorError4;
                   }
                 }
               }
@@ -1135,26 +1309,26 @@ var _module_ = {
           key: "valueOf",
           value: function valueOf() {
             var data = Object.assign({}, this.data);
-            var _iteratorNormalCompletion4 = true;
-            var _didIteratorError4 = false;
-            var _iteratorError4 = undefined;
+            var _iteratorNormalCompletion5 = true;
+            var _didIteratorError5 = false;
+            var _iteratorError5 = undefined;
 
             try {
-              for (var _iterator4 = this[Symbol.iterator](), _step4; !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next()).done); _iteratorNormalCompletion4 = true) {
-                var template = _step4.value;
+              for (var _iterator5 = this[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
+                var template = _step5.value;
                 if (template instanceof _View.default) data[template.name] = template.valueOf();
               }
             } catch (err) {
-              _didIteratorError4 = true;
-              _iteratorError4 = err;
+              _didIteratorError5 = true;
+              _iteratorError5 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion4 && _iterator4.return != null) {
-                  _iterator4.return();
+                if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
+                  _iterator5.return();
                 }
               } finally {
-                if (_didIteratorError4) {
-                  throw _iteratorError4;
+                if (_didIteratorError5) {
+                  throw _iteratorError5;
                 }
               }
             }
@@ -1184,24 +1358,24 @@ var _module_ = {
           value: function () {
             var _commit = _asyncToGenerator(
             /*#__PURE__*/
-            regeneratorRuntime.mark(function _callee2(key, value) {
+            regeneratorRuntime.mark(function _callee3(key, value) {
               var buffer;
-              return regeneratorRuntime.wrap(function _callee2$(_context2) {
+              return regeneratorRuntime.wrap(function _callee3$(_context3) {
                 while (1) {
-                  switch (_context2.prev = _context2.next) {
+                  switch (_context3.prev = _context3.next) {
                     case 0:
                       if (!(buffer = view_buffer.get(this))) view_buffer.set(this, buffer = {});
                       buffer[key] = value;
-                      _context2.next = 4;
+                      _context3.next = 4;
                       return (0, _DOM.nextTick)();
 
                     case 4:
                       if (view_buffer.get(this)) {
-                        _context2.next = 6;
+                        _context3.next = 6;
                         break;
                       }
 
-                      return _context2.abrupt("return");
+                      return _context3.abrupt("return");
 
                     case 6:
                       this.render(buffer);
@@ -1209,13 +1383,13 @@ var _module_ = {
 
                     case 8:
                     case "end":
-                      return _context2.stop();
+                      return _context3.stop();
                   }
                 }
-              }, _callee2, this);
+              }, _callee3, this);
             }));
 
-            return function commit(_x2, _x3) {
+            return function commit(_x3, _x4) {
               return _commit.apply(this, arguments);
             };
           }()
@@ -1259,26 +1433,26 @@ var _module_ = {
           value: function addTemplate(element, template) {
             if (!template[0]) return;
             template_element.set(this[this.length++] = template, element);
-            var _iteratorNormalCompletion5 = true;
-            var _didIteratorError5 = false;
-            var _iteratorError5 = undefined;
+            var _iteratorNormalCompletion6 = true;
+            var _didIteratorError6 = false;
+            var _iteratorError6 = undefined;
 
             try {
-              for (var _iterator5 = template.reference.get('view')[Symbol.iterator](), _step5; !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next()).done); _iteratorNormalCompletion5 = true) {
-                var key = _step5.value;
+              for (var _iterator6 = template.reference.get('view')[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
+                var key = _step6.value;
                 this.watch(key);
               }
             } catch (err) {
-              _didIteratorError5 = true;
-              _iteratorError5 = err;
+              _didIteratorError6 = true;
+              _iteratorError6 = err;
             } finally {
               try {
-                if (!_iteratorNormalCompletion5 && _iterator5.return != null) {
-                  _iterator5.return();
+                if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
+                  _iterator6.return();
                 }
               } finally {
-                if (_didIteratorError5) {
-                  throw _iteratorError5;
+                if (_didIteratorError6) {
+                  throw _iteratorError6;
                 }
               }
             }
@@ -1306,10 +1480,10 @@ var _module_ = {
           value: function parseTag(element) {
             var _this10 = this;
 
-            var _arr2 = Array.from(element.attributes);
+            var _arr3 = Array.from(element.attributes);
 
             var _loop = function _loop() {
-              var attr = _arr2[_i3];
+              var attr = _arr3[_i4];
               var name = attr.name;
               var template = ObjectView.templateOf(attr, name in element ? function (value) {
                 return element[name] = value;
@@ -1321,7 +1495,7 @@ var _module_ = {
               _this10.addTemplate(element, template);
             };
 
-            for (var _i3 = 0; _i3 < _arr2.length; _i3++) {
+            for (var _i4 = 0; _i4 < _arr3.length; _i4++) {
               _loop();
             }
           }
@@ -1377,36 +1551,6 @@ var _module_ = {
               this.watch(key);
             }
 
-            var _iteratorNormalCompletion6 = true;
-            var _didIteratorError6 = false;
-            var _iteratorError6 = undefined;
-
-            try {
-              for (var _iterator6 = this[Symbol.iterator](), _step6; !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next()).done); _iteratorNormalCompletion6 = true) {
-                var template = _step6.value;
-                var name = template.name;
-                if (template instanceof _Template.default) template.evaluate(template_element.get(template), _data_, this.scope, this.rootHost);else if (template instanceof _View.default) _data_[name] = template.render(data[name]).data;
-              }
-            } catch (err) {
-              _didIteratorError6 = true;
-              _iteratorError6 = err;
-            } finally {
-              try {
-                if (!_iteratorNormalCompletion6 && _iterator6.return != null) {
-                  _iterator6.return();
-                }
-              } finally {
-                if (_didIteratorError6) {
-                  throw _iteratorError6;
-                }
-              }
-            }
-
-            return this;
-          }
-        }, {
-          key: "clear",
-          value: function clear() {
             var _iteratorNormalCompletion7 = true;
             var _didIteratorError7 = false;
             var _iteratorError7 = undefined;
@@ -1414,7 +1558,8 @@ var _module_ = {
             try {
               for (var _iterator7 = this[Symbol.iterator](), _step7; !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next()).done); _iteratorNormalCompletion7 = true) {
                 var template = _step7.value;
-                template.clear();
+                var name = template.name;
+                if (template instanceof _Template.default) template.evaluate(template_element.get(template), _data_, this.scope, this.rootHost);else if (template instanceof _View.default) _data_[name] = template.render(data[name]).data;
               }
             } catch (err) {
               _didIteratorError7 = true;
@@ -1427,6 +1572,35 @@ var _module_ = {
               } finally {
                 if (_didIteratorError7) {
                   throw _iteratorError7;
+                }
+              }
+            }
+
+            return this;
+          }
+        }, {
+          key: "clear",
+          value: function clear() {
+            var _iteratorNormalCompletion8 = true;
+            var _didIteratorError8 = false;
+            var _iteratorError8 = undefined;
+
+            try {
+              for (var _iterator8 = this[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+                var template = _step8.value;
+                template.clear();
+              }
+            } catch (err) {
+              _didIteratorError8 = true;
+              _iteratorError8 = err;
+            } finally {
+              try {
+                if (!_iteratorNormalCompletion8 && _iterator8.return != null) {
+                  _iterator8.return();
+                }
+              } finally {
+                if (_didIteratorError8) {
+                  throw _iteratorError8;
                 }
               }
             }
@@ -1580,9 +1754,9 @@ var _module_ = {
         }, {
           key: "$slot",
           value: function $slot(selector) {
-            var _ref2;
+            var _ref6;
 
-            return (_ref2 = []).concat.apply(_ref2, _toConsumableArray(this.$('slot').map(function (slot) {
+            return (_ref6 = []).concat.apply(_ref6, _toConsumableArray(this.$('slot').map(function (slot) {
               return slot.assignedNodes();
             }))).filter(function (node) {
               return node.matches && node.matches(selector);
@@ -1690,13 +1864,13 @@ var _module_ = {
       function linkDataOf(attributes) {
         var _this12 = this;
 
-        var _iteratorNormalCompletion8 = true;
-        var _didIteratorError8 = false;
-        var _iteratorError8 = undefined;
+        var _iteratorNormalCompletion9 = true;
+        var _didIteratorError9 = false;
+        var _iteratorError9 = undefined;
 
         try {
           var _loop2 = function _loop2() {
-            var key = _step8.value;
+            var key = _step9.value;
             key = attr_prop[key] || key;
             if (!(key in _this12.prototype)) Object.defineProperty(_this12.prototype, key, {
               set: function set(value) {
@@ -1709,20 +1883,20 @@ var _module_ = {
             });
           };
 
-          for (var _iterator8 = attributes[Symbol.iterator](), _step8; !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next()).done); _iteratorNormalCompletion8 = true) {
+          for (var _iterator9 = attributes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
             _loop2();
           }
         } catch (err) {
-          _didIteratorError8 = true;
-          _iteratorError8 = err;
+          _didIteratorError9 = true;
+          _iteratorError9 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion8 && _iterator8.return != null) {
-              _iterator8.return();
+            if (!_iteratorNormalCompletion9 && _iterator9.return != null) {
+              _iterator9.return();
             }
           } finally {
-            if (_didIteratorError8) {
-              throw _iteratorError8;
+            if (_didIteratorError9) {
+              throw _iteratorError9;
             }
           }
         }
@@ -1927,26 +2101,26 @@ var _module_ = {
         var _this13 = this;
 
         var observer = new MutationObserver(function (list) {
-          var _iteratorNormalCompletion9 = true;
-          var _didIteratorError9 = false;
-          var _iteratorError9 = undefined;
+          var _iteratorNormalCompletion10 = true;
+          var _didIteratorError10 = false;
+          var _iteratorError10 = undefined;
 
           try {
-            for (var _iterator9 = list[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
-              var mutation = _step9.value;
+            for (var _iterator10 = list[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+              var mutation = _step10.value;
               callback.call(_this13, mutation.attributeName, mutation.oldValue, element.getAttribute(mutation.attributeName));
             }
           } catch (err) {
-            _didIteratorError9 = true;
-            _iteratorError9 = err;
+            _didIteratorError10 = true;
+            _iteratorError10 = err;
           } finally {
             try {
-              if (!_iteratorNormalCompletion9 && _iterator9.return != null) {
-                _iterator9.return();
+              if (!_iteratorNormalCompletion10 && _iterator10.return != null) {
+                _iterator10.return();
               }
             } finally {
-              if (_didIteratorError9) {
-                throw _iteratorError9;
+              if (_didIteratorError10) {
+                throw _iteratorError10;
               }
             }
           }
@@ -1956,26 +2130,26 @@ var _module_ = {
           attributeOldValue: true,
           attributeFilter: names
         });
-        var _iteratorNormalCompletion10 = true;
-        var _didIteratorError10 = false;
-        var _iteratorError10 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
-          for (var _iterator10 = element.attributes[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-            var attribute = _step10.value;
+          for (var _iterator11 = element.attributes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
+            var attribute = _step11.value;
             callback.call(this, attribute.name, null, attribute.value);
           }
         } catch (err) {
-          _didIteratorError10 = true;
-          _iteratorError10 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion10 && _iterator10.return != null) {
-              _iterator10.return();
+            if (!_iteratorNormalCompletion11 && _iterator11.return != null) {
+              _iterator11.return();
             }
           } finally {
-            if (_didIteratorError10) {
-              throw _iteratorError10;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }
@@ -2100,15 +2274,15 @@ var _module_ = {
 
       var _InputComponent = _interopRequireDefault(require('./component/InputComponent'));
 
-      var _HTTP = require('./utility/HTTP');
+      var _resource = require('./utility/resource');
 
-      Object.keys(_HTTP).forEach(function (key) {
+      Object.keys(_resource).forEach(function (key) {
         if (key === "default" || key === "__esModule") return;
         if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
         Object.defineProperty(exports, key, {
           enumerable: true,
           get: function get() {
-            return _HTTP[key];
+            return _resource[key];
           }
         });
       });

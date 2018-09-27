@@ -1,7 +1,7 @@
 {
-  "coverage": "72.81%",
-  "expectCount": 103,
-  "actualCount": 75,
+  "coverage": "73.39%",
+  "expectCount": 109,
+  "actualCount": 80,
   "files": {
     "source/component/Component.js": {
       "expectCount": 12,
@@ -10,10 +10,16 @@
     },
     "source/component/InputComponent.js": {
       "expectCount": 6,
-      "actualCount": 4,
+      "actualCount": 5,
       "undocumentLines": [
-        6,
-        26
+        6
+      ]
+    },
+    "source/utility/DOM-polyfill.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        8
       ]
     },
     "source/utility/DOM.js": {
@@ -21,16 +27,18 @@
       "actualCount": 12,
       "undocumentLines": []
     },
-    "source/utility/HTTP.js": {
-      "expectCount": 2,
-      "actualCount": 2,
-      "undocumentLines": []
-    },
     "source/utility/object.js": {
       "expectCount": 6,
       "actualCount": 5,
       "undocumentLines": [
         100
+      ]
+    },
+    "source/utility/resource.js": {
+      "expectCount": 7,
+      "actualCount": 6,
+      "undocumentLines": [
+        116
       ]
     },
     "source/view/ArrayView.js": {

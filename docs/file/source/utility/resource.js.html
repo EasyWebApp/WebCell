@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">test/utility.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">source/utility/resource.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -43,13 +43,17 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -61,207 +65,167 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">test/utility.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;../source/utility/DOM-polyfill&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">source/utility/resource.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { extend } from &apos;./object&apos;;
 
-import {
-    getPropertyDescriptor, multipleMap, extend, mapTree
-} from &apos;../source/utility/object&apos;;
-
-import { readFileSync } from &apos;fs&apos;;
-
-import { parseDOM, stringifyDOM, delay, nextTick } from &apos;../source/utility/DOM&apos;;
-
-import WebServer from &apos;koapache&apos;;
-
-import { request } from &apos;../source/utility/HTTP&apos;;
+import { $, parseDOM } from &apos;./DOM&apos;;
 
 
-describe(&apos;Utility&apos;,  () =&gt; {
-    /**
-     * @test {getPropertyDescriptor}
-     */
-    describe(&apos;Get the property descriptor&apos;,  () =&gt; {
+/**
+ * @param {string|URL} URI - Full URL of a resource
+ *
+ * @return {boolean} Whether it&apos;s cross domain to current page
+ */
+export function isXDomain(URI) {
 
-        const object = {test: 1},
-            descriptor = {
-                value:         1,
-                writable:      true,
-                enumerable:    true,
-                configurable:  true
-            };
+    return (
+        (new URL(URI, window.location.href)).origin  !==  window.location.origin
+    );
+}
 
-        it(
-            &apos;Own property&apos;,
-            ()  =&gt;  getPropertyDescriptor(object,  &apos;test&apos;)
-                .should.be.eql( descriptor )
-        );
+/**
+ * @param {Element} form - `&lt;form /&gt;` or `&lt;fieldset /&gt;`
+ *
+ * @return {String|FormData|Object}
+ */
+export function serialize(form) {
 
-        it(
-            &apos;Property on the prototype chain&apos;,
-            ()  =&gt;  getPropertyDescriptor(
-                Object.create( object ),  &apos;test&apos;
-            ).should.be.eql( descriptor )
-        );
+    if ( $(&apos;input[type=&quot;file&quot;][name]&apos;, form)[0] )  return new FormData( form );
+
+    const data = Array.from(
+        form.elements,
+        field  =&gt;  (field.name &amp;&amp; [field.name, field.value])
+    ).filter( Boolean );
+
+    if (
+        (form.form || form).getAttribute(&apos;enctype&apos;) !== &apos;application/json&apos;
+    )
+        return  &apos;&apos; + new URLSearchParams( data );
+
+    form = { };
+
+    for (let [key, value]  of  data)  form[key] = value;
+
+    return form;
+}
+
+/**
+ * HTTP request
+ *
+ * @param {string}                URI            - HTTP URL
+ * @param {string}                [method=&apos;GET&apos;]
+ * @param {string|Object|Element} [body]         - Data to send
+ * @param {Object}                [headers]
+ * @param {Object}                [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
+ *
+ * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
+ */
+export async function request(URI, method = &apos;GET&apos;, body, headers, option) {
+
+    if (body instanceof Element)  body = serialize( body );
+
+    if (body instanceof Object)  try {
+
+        body = JSON.stringify( body.valueOf() );
+
+        headers = headers || { };
+
+        headers[&apos;Content-Type&apos;] = headers[&apos;Content-Type&apos;] || &apos;application/json&apos;;
+
+    } catch (error) {/* eslint-disable-line */}
+
+    const response = await window.fetch(URI, extend(
+        {
+            method,  headers,  body,
+            mode:         isXDomain( URI ) ? &apos;cors&apos; : &apos;same-origin&apos;,
+            credentials:  &apos;same-origin&apos;
+        },
+        option
+    ));
+
+    const type = response.headers.get(&apos;Content-Type&apos;).split(&apos;;&apos;)[0];
+
+    switch ( type ) {
+        case &apos;text/html&apos;:
+            return  parseDOM(await response.text());
+        case &apos;application/json&apos;:
+            return  await response.json();
+        default:
+            return  await response[
+                (type.split(&apos;/&apos;)[0] === &apos;text&apos;)  ?  &apos;text&apos;  :  &apos;blob&apos;
+            ]();
+    }
+}
+
+/**
+ * @param {String} URI - Returned by `URL.createObjectURL()`
+ *
+ * @return {Promise&lt;Blob&gt;}
+ */
+export function blobOf(URI) {
+
+    const XHR = new XMLHttpRequest();
+
+    XHR.responseType = &apos;blob&apos;;
+
+    XHR.open(&apos;GET&apos;, URI);
+
+    return  new Promise((resolve, reject) =&gt; {
+
+        XHR.onload = () =&gt; resolve( XHR.response );
+
+        XHR.onerror = reject;
+
+        XHR.send();
     });
-
-    /**
-     * @test {multipleMap}
-     */
-    describe(&apos;Map &amp; filter&apos;,  () =&gt; {
-
-        it(&apos;Filter `null` &amp; `undefined`&apos;,  () =&gt; {
-
-            multipleMap(
-                [null, undefined, NaN, false, 0, 1],  item =&gt; item
-            ).should.be.eql([
-                NaN, false, 0, 1
-            ]);
-        });
-
-        it(&apos;Merge Array elements into result&apos;,  () =&gt; {
-
-            multipleMap([[1], [2, 3]],  item =&gt; item).should.be.eql([1, 2, 3]);
-        });
-    });
-
-    /**
-     * @test {extend}
-     */
-    describe(&apos;Mixin objects&apos;,  () =&gt; {
-
-        it(&apos;Ordinary objects&apos;,  () =&gt; {
-
-            Object.keys(extend(
-                { },  null,  {
-                    example:   1,
-                    get test() { },
-                    null:       null,
-                    undefined:  undefined
-                }
-            )).should.be.eql([
-                &apos;example&apos;, &apos;test&apos;
-            ]);
-        });
-
-        it(&apos;Function or Class&apos;,  () =&gt; {
-
-            function Test() { }
-
-            class Example {
-                constructor(test) {  test;  }
-
-                static test() { }
-
-                test() { }
-            }
-
-            extend(Test, Example).should.have.properties({
-                name:    &apos;Test&apos;,
-                length:  0,
-                test:    Example.test
-            });
-
-            Test.prototype.should.not.be.equal( Example );
-
-            Test.prototype.should.have.property(&apos;test&apos;, Example.prototype.test);
-        });
-    });
-
-    /**
-     *  @test {mapTree}
-     */
-    it(&apos;Filter object tree&apos;,  () =&gt; {
-
-        mapTree({
-            id:        0,
-            children:  [
-                {
-                    id:        1,
-                    children:  [
-                        {
-                            id:        3,
-                            children:  []
-                        }
-                    ]
-                },
-                {
-                    id:        2,
-                    children:  []
-                }
-            ]
-        },  &apos;children&apos;,  function (child, index, depth) {
-
-            if (depth &lt; 2)  return child.id;
-
-        }).should.be.eql([1, 2]);
-    });
-
-    it(&apos;Parse &amp; Stringify DOM&apos;,  () =&gt; {
-
-        const HTML = (readFileSync(&apos;test/ObjectView/index.html&apos;) + &apos;&apos;)
-            .replace(/\r\n/g, &apos;\n&apos;).replace(/\r/g, &apos;\n&apos;);
-
-        const fragment = parseDOM( HTML );
-
-        fragment.should.be.class(&apos;DocumentFragment&apos;);
-
-        stringifyDOM( fragment ).should.be.equal( HTML );
-    });
-
-    /**
-     * @test {nextTick}
-     */
-    it(&apos;Await next tick&apos;,  async () =&gt; {
-
-        const tick = nextTick();
-
-        tick.should.be.equal( nextTick() );
-
-        await delay(0.1);
-
-        tick.should.not.be.equal( nextTick() );
-    });
-
-    /**
-     * @test {request}
-     */
-    describe(&apos;HTTP request&apos;,  () =&gt; {
-
-        var server;
-
-        before(async () =&gt; {
-
-            server = await (new WebServer()).workerHost();
-
-            server = `http://${server.address}:${server.port}`;
-        });
+}
 
 
-        it(&apos;Get Plain text&apos;,  () =&gt; request(
-            `${server}/ReadMe.md`,
-        ).should.be.fulfilledWith(
-            readFileSync(&apos;ReadMe.md&apos;) + &apos;&apos;
-        ));
+const schema_type = /^(?:(\w+):)?.+?(?:\.(\w+))?$/,
+    DataURI = /^data:(.+?\/(.+?))?(;base64)?,(\S+)/;
+/**
+ * @param {String} URI - HTTP(S) URL, Data URI or Object URL
+ *
+ * @return   {Object}
+ * @property {String} schema - URI schema (`http`, `https`, `data` or `blob`)
+ * @property {String} type   - File type (same as the Extension name of a file)
+ */
+export async function fileTypeOf(URI) {
 
+    const [_, schema, type] = schema_type.exec( URI )  ||  [ ];  // eslint-disable-line
 
-        it(&apos;Get JSON object&apos;,  () =&gt; request(
-            `${server}/package.json`,
-        ).should.be.fulfilledWith(
-            JSON.parse( readFileSync(&apos;package.json&apos;) )
-        ));
+    switch ( schema ) {
+        case &apos;data&apos;:  return {
+            schema: &apos;data&apos;,  type: DataURI.exec( URI )[2]
+        };
+        case &apos;blob&apos;:  {
+            const blob = await blobOf( URI );
 
+            return  {schema: &apos;blob&apos;,  type: blob.type};
+        }
+        default:      return {schema, type};
+    }
+}
 
-        it(&apos;Get HTML document&apos;,  async () =&gt; {
+/**
+ * @param {String} URI - Data URI
+ *
+ * @return {Blob}
+ */
+export function blobFrom(URI) {
 
-            (await request(
-                `${server}/test/ObjectView/index.html`,
-            )).should.be.class(
-                &apos;DocumentFragment&apos;
-            );
-        });
-    });
-});
+    var [_, type, __, base64, data] = DataURI.exec( URI )  ||  [ ];  // eslint-disable-line
+
+    data = base64  ?  window.atob( data )  :  data;
+
+    const aBuffer = new ArrayBuffer( data.length );
+
+    const uBuffer = new Uint8Array( aBuffer );
+
+    for (let i = 0;  data[i];  i++)  uBuffer[i] = data.charCodeAt( i );
+
+    return new Blob([aBuffer],  { type });
+}
 </code></pre>
 
 </div>

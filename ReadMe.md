@@ -1,4 +1,6 @@
-# Web Cell
+![WebCell logo](https://web-cell.tk/image/WebCell.svg)
+
+# WebCell
 
 Light-weight **[Web Components](https://www.webcomponents.org/) engine** based on ECMAScript 6+, powered by the practice & experience from developing [EWA v1.0 ~ 4.0](https://gitee.com/Tech_Query/EasyWebApp/).
 

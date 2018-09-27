@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/WebCell.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">test/utility/object.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -65,89 +65,132 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
-
-import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
-
-import { getPropertyDescriptor, extend } from &apos;./utility/object&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/utility/object.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {
+    getPropertyDescriptor, multipleMap, extend, mapTree
+} from &apos;../../source/utility/object&apos;;
 
 
-function dataInject(constructor) {
+describe(&apos;Object utility&apos;,  () =&gt; {
+    /**
+     * @test {getPropertyDescriptor}
+     */
+    describe(&apos;Get the property descriptor&apos;,  () =&gt; {
 
-    const observedAttributes = getPropertyDescriptor(
-        constructor, &apos;observedAttributes&apos;
-    );
+        const object = {test: 1},
+            descriptor = {
+                value:         1,
+                writable:      true,
+                enumerable:    true,
+                configurable:  true
+            };
 
-    if (! observedAttributes)  return;
+        it(
+            &apos;Own property&apos;,
+            ()  =&gt;  getPropertyDescriptor(object,  &apos;test&apos;)
+                .should.be.eql( descriptor )
+        );
 
-    Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
-        get:  function () {
-
-            return  linkDataOf.call(this, observedAttributes.get.call( this ));
-        }
+        it(
+            &apos;Property on the prototype chain&apos;,
+            ()  =&gt;  getPropertyDescriptor(
+                Object.create( object ),  &apos;test&apos;
+            ).should.be.eql( descriptor )
+        );
     });
 
-    const attributeChangedCallback = getPropertyDescriptor(
-        constructor.prototype, &apos;attributeChangedCallback&apos;
-    );
+    /**
+     * @test {multipleMap}
+     */
+    describe(&apos;Map &amp; filter&apos;,  () =&gt; {
 
-    if (! attributeChangedCallback)
-        Object.defineProperty(constructor.prototype, &apos;attributeChangedCallback&apos;, {
-            value:  attributeChanged
+        it(&apos;Filter `null` &amp; `undefined`&apos;,  () =&gt; {
+
+            multipleMap(
+                [null, undefined, NaN, false, 0, 1],  item =&gt; item
+            ).should.be.eql([
+                NaN, false, 0, 1
+            ]);
         });
-}
 
+        it(&apos;Merge Array elements into result&apos;,  () =&gt; {
 
-/**
- * Register a component
- *
- * @param {function} subClass
- * @param {string}   [baseTag] - Name of an HTML original tag to extend
- *
- * @return {function} `subClass`
- */
-export function component(subClass, baseTag) {
-
-    const static_member = { };
-
-    if (inSubDOM()  ||  (! inHead())) {
-
-        let { template } = Component.findTemplate();
-
-        Object.defineProperty(static_member,  &apos;template&apos;,  {
-            get:         () =&gt; template,
-            enumerable:  true
+            multipleMap([[1], [2, 3]],  item =&gt; item).should.be.eql([1, 2, 3]);
         });
-    }
+    });
 
-    dataInject( extend(subClass,  Component,  static_member) );
+    /**
+     * @test {extend}
+     */
+    describe(&apos;Mixin objects&apos;,  () =&gt; {
 
-    customElements.define(
-        subClass.tagName,  subClass,  baseTag &amp;&amp; {extends: baseTag}
-    );
+        it(&apos;Ordinary objects&apos;,  () =&gt; {
 
-    return subClass;
-}
+            Object.keys(extend(
+                { },  null,  {
+                    example:   1,
+                    get test() { },
+                    null:       null,
+                    undefined:  undefined
+                }
+            )).should.be.eql([
+                &apos;example&apos;, &apos;test&apos;
+            ]);
+        });
 
+        it(&apos;Function or Class&apos;,  () =&gt; {
 
-export { Component, attributeChanged };
+            function Test() { }
 
-export {default as InputComponent} from &apos;./component/InputComponent&apos;;
+            class Example {
+                constructor(test) {  test;  }
 
-export * from &apos;./utility/object&apos;;
+                static test() { }
 
-export * from &apos;./utility/DOM&apos;;
+                test() { }
+            }
 
-export * from &apos;./utility/resource&apos;;
+            extend(Test, Example).should.have.properties({
+                name:    &apos;Test&apos;,
+                length:  0,
+                test:    Example.test
+            });
 
-export {default as Template} from &apos;./view/Template&apos;;
+            Test.prototype.should.not.be.equal( Example );
 
-export {default as View} from &apos;./view/View&apos;;
+            Test.prototype.should.have.property(&apos;test&apos;, Example.prototype.test);
+        });
+    });
 
-export {default as ObjectView} from &apos;./view/ObjectView&apos;;
+    /**
+     *  @test {mapTree}
+     */
+    it(&apos;Filter object tree&apos;,  () =&gt; {
 
-export {default as ArrayView} from &apos;./view/ArrayView&apos;;
+        mapTree({
+            id:        0,
+            children:  [
+                {
+                    id:        1,
+                    children:  [
+                        {
+                            id:        3,
+                            children:  []
+                        }
+                    ]
+                },
+                {
+                    id:        2,
+                    children:  []
+                }
+            ]
+        },  &apos;children&apos;,  function (child, index, depth) {
+
+            if (depth &lt; 2)  return child.id;
+
+        }).should.be.eql([1, 2]);
+    });
+});
 </code></pre>
 
 </div>

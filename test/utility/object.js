@@ -1,19 +1,9 @@
-import '../source/utility/DOM-polyfill';
-
 import {
     getPropertyDescriptor, multipleMap, extend, mapTree
-} from '../source/utility/object';
-
-import { readFileSync } from 'fs';
-
-import { parseDOM, stringifyDOM, delay, nextTick } from '../source/utility/DOM';
-
-import WebServer from 'koapache';
-
-import { request } from '../source/utility/HTTP';
+} from '../../source/utility/object';
 
 
-describe('Utility',  () => {
+describe('Object utility',  () => {
     /**
      * @test {getPropertyDescriptor}
      */
@@ -131,70 +121,5 @@ describe('Utility',  () => {
             if (depth < 2)  return child.id;
 
         }).should.be.eql([1, 2]);
-    });
-
-    it('Parse & Stringify DOM',  () => {
-
-        const HTML = (readFileSync('test/ObjectView/index.html') + '')
-            .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-
-        const fragment = parseDOM( HTML );
-
-        fragment.should.be.class('DocumentFragment');
-
-        stringifyDOM( fragment ).should.be.equal( HTML );
-    });
-
-    /**
-     * @test {nextTick}
-     */
-    it('Await next tick',  async () => {
-
-        const tick = nextTick();
-
-        tick.should.be.equal( nextTick() );
-
-        await delay(0.1);
-
-        tick.should.not.be.equal( nextTick() );
-    });
-
-    /**
-     * @test {request}
-     */
-    describe('HTTP request',  () => {
-
-        var server;
-
-        before(async () => {
-
-            server = await (new WebServer()).workerHost();
-
-            server = `http://${server.address}:${server.port}`;
-        });
-
-
-        it('Get Plain text',  () => request(
-            `${server}/ReadMe.md`,
-        ).should.be.fulfilledWith(
-            readFileSync('ReadMe.md') + ''
-        ));
-
-
-        it('Get JSON object',  () => request(
-            `${server}/package.json`,
-        ).should.be.fulfilledWith(
-            JSON.parse( readFileSync('package.json') )
-        ));
-
-
-        it('Get HTML document',  async () => {
-
-            (await request(
-                `${server}/test/ObjectView/index.html`,
-            )).should.be.class(
-                'DocumentFragment'
-            );
-        });
     });
 });

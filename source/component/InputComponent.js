@@ -21,9 +21,19 @@ export default  class InputComponent extends HTMLElement {
      * @param {string} template - HTML source code with template expressions
      * @param {string} [style]  - CSS source code
      */
-    constructor(template, style) {  super().buildDOM(template, style);  }
+    constructor(template, style) {
 
-    connectedCallback() {
+        super().buildDOM(template, style);
+
+        this.on.call(
+            this.$('slot')[0],  'slotchange',  this.linkSlot.bind( this )
+        );
+    }
+
+    /**
+     * @private
+     */
+    linkSlot() {
 
         const origin = this.$slot('input')[0], proxy = this.$('input')[0];
 

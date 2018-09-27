@@ -54,6 +54,18 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~blobfrom",
+    "function/index.html#static-function-blobFrom",
+    "<span>blobFrom</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/resource.js~blobof",
+    "function/index.html#static-function-blobOf",
+    "<span>blobOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~classnameof",
     "function/index.html#static-function-classNameOf",
     "<span>classNameOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -78,6 +90,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~filetypeof",
+    "function/index.html#static-function-fileTypeOf",
+    "<span>fileTypeOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~getpropertydescriptor",
     "function/index.html#static-function-getPropertyDescriptor",
     "<span>getPropertyDescriptor</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -90,9 +108,9 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell/source/utility/http.js~isxdomain",
+    "web-cell/source/utility/resource.js~isxdomain",
     "function/index.html#static-function-isXDomain",
-    "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
+    "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
     "function"
   ],
   [
@@ -120,9 +138,15 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell/source/utility/http.js~request",
+    "web-cell/source/utility/resource.js~request",
     "function/index.html#static-function-request",
-    "<span>request</span> <span class=\"search-result-import-path\">web-cell/source/utility/HTTP.js</span>",
+    "<span>request</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/resource.js~serialize",
+    "function/index.html#static-function-serialize",
+    "<span>serialize</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
     "function"
   ],
   [
@@ -235,6 +259,24 @@ window.esdocSearchIndex = [
   ],
   [
     "",
+    "test-file/test/utility/DOM.js.html#lineNumber8",
+    "DOM utility",
+    "test"
+  ],
+  [
+    "delay nexttick source/utility/dom.js~delay,delay source/utility/dom.js~nexttick,nexttick",
+    "test-file/test/utility/DOM.js.html#lineNumber29",
+    "DOM utility Await next tick",
+    "test"
+  ],
+  [
+    "parsedom stringifydom source/utility/dom.js~parsedom,parsedom source/utility/dom.js~stringifydom,stringifydom",
+    "test-file/test/utility/DOM.js.html#lineNumber13",
+    "DOM utility Parse & Stringify DOM",
+    "test"
+  ],
+  [
+    "",
     "test-file/test/Component/index.js.html#lineNumber120",
     "Form field components",
     "test"
@@ -243,6 +285,72 @@ window.esdocSearchIndex = [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
     "test-file/test/Component/index.js.html#lineNumber125",
     "Form field components Render inner field",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber6",
+    "Object utility",
+    "test"
+  ],
+  [
+    "maptree source/utility/object.js~maptree,maptree",
+    "test-file/test/utility/object.js.html#lineNumber100",
+    "Object utility Filter object tree",
+    "test"
+  ],
+  [
+    "getpropertydescriptor source/utility/object.js~getpropertydescriptor,getpropertydescriptor",
+    "test-file/test/utility/object.js.html#lineNumber10",
+    "Object utility Get the property descriptor",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber20",
+    "Object utility Get the property descriptor Own property",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber26",
+    "Object utility Get the property descriptor Property on the prototype chain",
+    "test"
+  ],
+  [
+    "multiplemap source/utility/object.js~multiplemap,multiplemap",
+    "test-file/test/utility/object.js.html#lineNumber37",
+    "Object utility Map & filter",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber39",
+    "Object utility Map & filter Filter `null` & `undefined`",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber48",
+    "Object utility Map & filter Merge Array elements into result",
+    "test"
+  ],
+  [
+    "extend source/utility/object.js~extend,extend",
+    "test-file/test/utility/object.js.html#lineNumber57",
+    "Object utility Mixin objects",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber73",
+    "Object utility Mixin objects Function or Class",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.js.html#lineNumber59",
+    "Object utility Mixin objects Ordinary objects",
     "test"
   ],
   [
@@ -312,6 +420,84 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber12",
+    "Resource utility",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber92",
+    "Resource utility Binary",
+    "test"
+  ],
+  [
+    "blobfrom source/utility/resource.js~blobfrom,blobfrom",
+    "test-file/test/utility/resource.js.html#lineNumber112",
+    "Resource utility Binary Convert DataURI to Blob",
+    "test"
+  ],
+  [
+    "filetypeof source/utility/resource.js~filetypeof,filetypeof",
+    "test-file/test/utility/resource.js.html#lineNumber101",
+    "Resource utility Binary Parse Data URI",
+    "test"
+  ],
+  [
+    "request source/utility/resource.js~request,request",
+    "test-file/test/utility/resource.js.html#lineNumber53",
+    "Resource utility HTTP request",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber85",
+    "Resource utility HTTP request Get Binary file",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber76",
+    "Resource utility HTTP request Get HTML document",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber70",
+    "Resource utility HTTP request Get JSON object",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber64",
+    "Resource utility HTTP request Get Plain text",
+    "test"
+  ],
+  [
+    "serialize source/utility/resource.js~serialize,serialize",
+    "test-file/test/utility/resource.js.html#lineNumber16",
+    "Resource utility Serialize <form /> or <fieldset />",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber32",
+    "Resource utility Serialize <form /> or <fieldset /> JSON",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber27",
+    "Resource utility Serialize <form /> or <fieldset /> Multiple part data",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.js.html#lineNumber42",
+    "Resource utility Serialize <form /> or <fieldset /> URL encode",
+    "test"
+  ],
+  [
     "template source/view/template.js~template,template",
     "test-file/test/Template.js.html#lineNumber9",
     "Template",
@@ -339,108 +525,6 @@ window.esdocSearchIndex = [
     "template#parse template#clear template#parse,template#parse source/view/template.js~template#clear,template#clear",
     "test-file/test/Template.js.html#lineNumber15",
     "Template Parsing",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber16",
-    "Utility",
-    "test"
-  ],
-  [
-    "nexttick source/utility/dom.js~nexttick,nexttick",
-    "test-file/test/utility.js.html#lineNumber151",
-    "Utility Await next tick",
-    "test"
-  ],
-  [
-    "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility.js.html#lineNumber110",
-    "Utility Filter object tree",
-    "test"
-  ],
-  [
-    "getpropertydescriptor source/utility/object.js~getpropertydescriptor,getpropertydescriptor",
-    "test-file/test/utility.js.html#lineNumber20",
-    "Utility Get the property descriptor",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber30",
-    "Utility Get the property descriptor Own property",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber36",
-    "Utility Get the property descriptor Property on the prototype chain",
-    "test"
-  ],
-  [
-    "request source/utility/http.js~request,request",
-    "test-file/test/utility.js.html#lineNumber165",
-    "Utility HTTP request",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber191",
-    "Utility HTTP request Get HTML document",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber184",
-    "Utility HTTP request Get JSON object",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber177",
-    "Utility HTTP request Get Plain text",
-    "test"
-  ],
-  [
-    "multiplemap source/utility/object.js~multiplemap,multiplemap",
-    "test-file/test/utility.js.html#lineNumber47",
-    "Utility Map & filter",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber49",
-    "Utility Map & filter Filter `null` & `undefined`",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber58",
-    "Utility Map & filter Merge Array elements into result",
-    "test"
-  ],
-  [
-    "extend source/utility/object.js~extend,extend",
-    "test-file/test/utility.js.html#lineNumber67",
-    "Utility Mixin objects",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber83",
-    "Utility Mixin objects Function or Class",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber69",
-    "Utility Mixin objects Ordinary objects",
-    "test"
-  ],
-  [
-    "",
-    "test-file/test/utility.js.html#lineNumber136",
-    "Utility Parse & Stringify DOM",
     "test"
   ],
   [
@@ -852,12 +936,6 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "source/component/inputcomponent.js~inputcomponent#connectedcallback",
-    "class/source/component/InputComponent.js~InputComponent.html#instance-method-connectedCallback",
-    "source/component/InputComponent.js~InputComponent#connectedCallback",
-    "method"
-  ],
-  [
     "source/component/inputcomponent.js~inputcomponent#constructor",
     "class/source/component/InputComponent.js~InputComponent.html#instance-constructor-constructor",
     "source/component/InputComponent.js~InputComponent#constructor",
@@ -888,12 +966,6 @@ window.esdocSearchIndex = [
     "typedef"
   ],
   [
-    "source/utility/http.js",
-    "file/source/utility/HTTP.js.html",
-    "source/utility/HTTP.js",
-    "file"
-  ],
-  [
     "source/utility/object.js",
     "file/source/utility/object.js.html",
     "source/utility/object.js",
@@ -904,6 +976,12 @@ window.esdocSearchIndex = [
     "typedef/index.html#static-typedef-MapTreeFilter",
     "source/utility/object.js~MapTreeFilter",
     "typedef"
+  ],
+  [
+    "source/utility/resource.js",
+    "file/source/utility/resource.js.html",
+    "source/utility/resource.js",
+    "file"
   ],
   [
     "source/view/arrayview.js",
@@ -1236,9 +1314,21 @@ window.esdocSearchIndex = [
     "testFile"
   ],
   [
-    "test/utility.js",
-    "test-file/test/utility.js.html",
-    "test/utility.js",
+    "test/utility/dom.js",
+    "test-file/test/utility/DOM.js.html",
+    "test/utility/DOM.js",
+    "testFile"
+  ],
+  [
+    "test/utility/object.js",
+    "test-file/test/utility/object.js.html",
+    "test/utility/object.js",
+    "testFile"
+  ],
+  [
+    "test/utility/resource.js",
+    "test-file/test/utility/resource.js.html",
+    "test/utility/resource.js",
     "testFile"
   ]
 ]

@@ -71,7 +71,7 @@ export * from './utility/object';
 
 export * from './utility/DOM';
 
-export * from './utility/HTTP';
+export * from './utility/resource';
 
 export {default as Template} from './view/Template';
 

@@ -5,15 +5,17 @@ import { JSDOM } from 'jsdom';
 export default JSDOM;
 
 
-global.window = (new JSDOM('', {
+const { window } = (new JSDOM('', {
     url:                'http://test.com/',
     pretendToBeVisual:  true
-})).window;
+}));
 
-global.document = window.document;
+global.window = window;
 
-global.DOMParser = window.DOMParser;
-
-global.URL = window.URL;
+for (let key of [
+    'Blob', 'document', 'Element', 'DOMParser',
+    'URL', 'URLSearchParams', 'FormData'
+])
+    global[key] = window[key];
 
 window.fetch = fetch;

@@ -2,8 +2,8 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../">
-  <title data-ice="title">source/WebCell.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../../">
+  <title data-ice="title">test/utility/resource.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
@@ -65,89 +65,124 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/utility/resource.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import JSDOM from &apos;../../source/utility/DOM-polyfill&apos;;
 
-import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
+import {
+    serialize, request, fileTypeOf, blobFrom
+} from &apos;../../source/utility/resource&apos;;
 
-import { getPropertyDescriptor, extend } from &apos;./utility/object&apos;;
+import WebServer from &apos;koapache&apos;;
+
+import { readFileSync } from &apos;fs&apos;;
 
 
-function dataInject(constructor) {
+describe(&apos;Resource utility&apos;,  () =&gt; {
+    /**
+     * @test {serialize}
+     */
+    describe(&apos;Serialize &lt;form /&gt; or &lt;fieldset /&gt;&apos;,  () =&gt; {
 
-    const observedAttributes = getPropertyDescriptor(
-        constructor, &apos;observedAttributes&apos;
-    );
+        const form = JSDOM.fragment(`
+&lt;form enctype=&quot;application/json&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;text&quot; value=&quot;example&quot;&gt;
+    &lt;textarea name=&quot;content&quot;&gt;sample&lt;/textarea&gt;
+    &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;
+    &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;`
+        ).children[0];
 
-    if (! observedAttributes)  return;
+        it(
+            &apos;Multiple part data&apos;,
+            ()  =&gt;  serialize( form ).should.be.instanceOf( FormData )
+        );
 
-    Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
-        get:  function () {
+        it(&apos;JSON&apos;,  () =&gt; {
 
-            return  linkDataOf.call(this, observedAttributes.get.call( this ));
-        }
+            form.elements.file.remove();
+
+            serialize( form ).should.be.eql({
+                text:     &apos;example&apos;,
+                content:  &apos;sample&apos;
+            });
+        });
+
+        it(&apos;URL encode&apos;,  () =&gt; {
+
+            form.removeAttribute(&apos;enctype&apos;);
+
+            serialize( form ).should.be.equal(&apos;text=example&amp;content=sample&apos;);
+        });
     });
 
-    const attributeChangedCallback = getPropertyDescriptor(
-        constructor.prototype, &apos;attributeChangedCallback&apos;
-    );
+    /**
+     * @test {request}
+     */
+    describe(&apos;HTTP request&apos;,  () =&gt; {
 
-    if (! attributeChangedCallback)
-        Object.defineProperty(constructor.prototype, &apos;attributeChangedCallback&apos;, {
-            value:  attributeChanged
+        var server;
+
+        before(async () =&gt; {
+
+            server = await (new WebServer()).workerHost();
+
+            server = `http://${server.address}:${server.port}`;
         });
-}
 
+        it(&apos;Get Plain text&apos;,  () =&gt; request(
+            `${server}/ReadMe.md`,
+        ).should.be.fulfilledWith(
+            readFileSync(&apos;ReadMe.md&apos;) + &apos;&apos;
+        ));
 
-/**
- * Register a component
- *
- * @param {function} subClass
- * @param {string}   [baseTag] - Name of an HTML original tag to extend
- *
- * @return {function} `subClass`
- */
-export function component(subClass, baseTag) {
+        it(&apos;Get JSON object&apos;,  () =&gt; request(
+            `${server}/package.json`,
+        ).should.be.fulfilledWith(
+            JSON.parse( readFileSync(&apos;package.json&apos;) )
+        ));
 
-    const static_member = { };
+        it(
+            &apos;Get HTML document&apos;,
+            async ()  =&gt;  (await request(
+                `${server}/test/ObjectView/index.html`,
+            )).should.be.class(
+                &apos;DocumentFragment&apos;
+            )
+        );
 
-    if (inSubDOM()  ||  (! inHead())) {
+        it(
+            &apos;Get Binary file&apos;,
+            async ()  =&gt;  (await request(`${server}/docs/image/github.png`))
+                .should.be.class(&apos;Blob&apos;)
+        );
+    });
 
-        let { template } = Component.findTemplate();
+    describe(&apos;Binary&apos;,  () =&gt; {
 
-        Object.defineProperty(static_member,  &apos;template&apos;,  {
-            get:         () =&gt; template,
-            enumerable:  true
-        });
-    }
+        const data = `data:image/png;base64,${
+            readFileSync(&apos;docs/image/github.png&apos;).toString(&apos;base64&apos;)
+        }`;
 
-    dataInject( extend(subClass,  Component,  static_member) );
+        /**
+         * @test {fileTypeOf}
+         */
+        it(
+            &apos;Parse Data URI&apos;,
+            ()  =&gt;  fileTypeOf( data ).should.be.fulfilledWith({
+                schema:  &apos;data&apos;,
+                type:    &apos;png&apos;
+            })
+        );
 
-    customElements.define(
-        subClass.tagName,  subClass,  baseTag &amp;&amp; {extends: baseTag}
-    );
-
-    return subClass;
-}
-
-
-export { Component, attributeChanged };
-
-export {default as InputComponent} from &apos;./component/InputComponent&apos;;
-
-export * from &apos;./utility/object&apos;;
-
-export * from &apos;./utility/DOM&apos;;
-
-export * from &apos;./utility/resource&apos;;
-
-export {default as Template} from &apos;./view/Template&apos;;
-
-export {default as View} from &apos;./view/View&apos;;
-
-export {default as ObjectView} from &apos;./view/ObjectView&apos;;
-
-export {default as ArrayView} from &apos;./view/ArrayView&apos;;
+        /**
+         * @test {blobFrom}
+         */
+        it(
+            &apos;Convert DataURI to Blob&apos;,
+            ()  =&gt;  blobFrom( data ).should.be.class(&apos;Blob&apos;)
+        );
+    });
+});
 </code></pre>
 
 </div>
