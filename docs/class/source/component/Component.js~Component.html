@@ -8,7 +8,7 @@
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -104,7 +107,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/Component/index.js.html#lineNumber16">Component mixin</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber16">Component mixin</a></span></li>
 </ul>
   </div>
 
@@ -314,7 +317,7 @@
           
           
           
-          <span class="code" data-ice="name"><span><a href="class/source/component/Component.js~Component.html#instance-method-buildDOM">buildDOM</a></span></span><span class="code" data-ice="signature">(template: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span>, style: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, option: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>HTMLElement</span></span>
+          <span class="code" data-ice="name"><span><a href="class/source/component/Component.js~Component.html#instance-method-buildDOM">buildDOM</a></span></span><span class="code" data-ice="signature">(option: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>HTMLElement</span></span>
         </p>
       </div>
       <div>
@@ -407,7 +410,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/Component/index.js.html#lineNumber26">Component mixin Define Custom element</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber26">Component mixin Define Custom element</a></span></li>
 </ul>
   </div>
 
@@ -431,7 +434,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber68">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber52">source</a></span></span>
     </span>
   </h3>
 
@@ -478,7 +481,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber127">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber111">source</a></span></span>
     </span>
   </h3>
 
@@ -551,7 +554,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber141">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber125">source</a></span></span>
     </span>
   </h3>
 
@@ -624,7 +627,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber134">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber118">source</a></span></span>
     </span>
   </h3>
 
@@ -697,7 +700,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber75">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber59">source</a></span></span>
     </span>
   </h3>
 
@@ -757,7 +760,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/Component/index.js.html#lineNumber77">Component mixin Dispatch events out of Shadow DOM</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber77">Component mixin Dispatch events out of Shadow DOM</a></span></li>
 </ul>
   </div>
 
@@ -772,11 +775,11 @@
     
     
     
-    <span class="code" data-ice="name">buildDOM</span><span class="code" data-ice="signature">(template: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span>, style: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, option: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>HTMLElement</span></span>
+    <span class="code" data-ice="name">buildDOM</span><span class="code" data-ice="signature">(option: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span>HTMLElement</span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber29">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber27">source</a></span></span>
     </span>
   </h3>
 
@@ -796,23 +799,9 @@
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">template</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span></td>
-      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
-      <td data-ice="description"><p>HTML source or sub DOM tree</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">style</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
-      <td data-ice="description"><p>CSS source</p>
-</td>
-    </tr>
-<tr data-ice="property" data-depth="0">
       <td data-ice="name" class="code" data-depth="0">option</td>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span></td>
-      <td data-ice="appendix"><ul><li>optional</li></ul></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
       <td data-ice="description"><p><a href="https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters">https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters</a></p>
 </td>
     </tr>
@@ -850,7 +839,7 @@
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/Component/index.js.html#lineNumber41">Component mixin Build Shadow DOM</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber41">Component mixin Build Shadow DOM</a></span></li>
 </ul>
   </div>
 
@@ -869,7 +858,7 @@
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber159">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber143">source</a></span></span>
     </span>
   </h3>
 

@@ -1,67 +1,126 @@
-import { inSubDOM, inHead } from './utility/DOM';
-
 import Component, { linkDataOf, attributeChanged } from './component/Component';
 
-import { getPropertyDescriptor, extend } from './utility/object';
+import { getPropertyDescriptor, decoratorOf } from './utility/object';
+
+import { parseDOM } from './utility/DOM';
 
 
-function dataInject(constructor) {
+/**
+ * @typedef {Object} DecoratorDescriptor
+ *
+ * @property {String} kind       - `class`, `field` or `method`
+ * @property {String} key        - Member name
+ * @property {String} placement  - `static` or `prototype`
+ * @property {Object} descriptor - Last parameter of `Object.defineProperty()`
+ */
 
-    const observedAttributes = getPropertyDescriptor(
-        constructor, 'observedAttributes'
-    );
 
-    if (! observedAttributes)  return;
+/**
+ * Decorator for `observedAttributes()`
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function mapProperty(meta) {
 
-    Object.defineProperty(constructor, 'observedAttributes', {
-        get:  function () {
+    const observer = meta.descriptor.get;
 
-            return  linkDataOf.call(this, observedAttributes.get.call( this ));
-        }
-    });
+    meta.descriptor.get = function () {
 
-    const attributeChangedCallback = getPropertyDescriptor(
-        constructor.prototype, 'attributeChangedCallback'
-    );
+        const onChange = getPropertyDescriptor(
+            this.prototype, 'attributeChangedCallback'
+        );
 
-    if (! attributeChangedCallback)
-        Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
-            value:  attributeChanged
-        });
+        if (! onChange)
+            Object.defineProperty(this.prototype, 'attributeChangedCallback', {
+                value:  attributeChanged
+            });
+
+        return  linkDataOf.call(this, observer.call( this ));
+    };
+}
+
+
+const skip_key = {
+    name:       1,
+    length:     1,
+    prototype:  1,
+    caller:     1,
+    arguments:  1,
+    call:       1,
+    apply:      1,
+    bind:       1
+};
+
+function decoratorMix(member, mixin) {
+
+    const skip = mixin instanceof Function,
+        property = Object.getOwnPropertyDescriptors( mixin );
+
+    for (let key in property)
+        if (!(skip  ?  (key in skip_key)  :  (
+            (key === 'constructor')  &&  (property[key].value instanceof Function)
+        )))
+            member.push(
+                decoratorOf(mixin,  key,  property[key].value || property[key])
+            );
 }
 
 
 /**
  * Register a component
  *
- * @param {function} subClass
- * @param {string}   [baseTag] - Name of an HTML original tag to extend
+ * @param {Object}         option
+ * @param {String|Node}    [option.template] - HTML template source or sub DOM tree
+ * @param {String|Element} [option.style]    - CSS source or `<style />`
+ * @param {Object}         [option.data]     - Initial data
+ * @param {String}         [option.tagName]  - Name of an HTML original tag to extend
  *
- * @return {function} `subClass`
+ * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator
  */
-export function component(subClass, baseTag) {
+export function component({template, style, data, tagName}) {
 
-    const static_member = { };
+    return  ({elements}) => {
 
-    if (inSubDOM()  ||  (! inHead())) {
+        if ( template ) {
 
-        let { template } = Component.findTemplate();
+            if (!(template instanceof Node)) {
 
-        Object.defineProperty(static_member,  'template',  {
-            get:         () => template,
-            enumerable:  true
-        });
-    }
+                template = parseDOM( (template + '').trim() );
 
-    dataInject( extend(subClass,  Component,  static_member) );
+                if (template.firstChild.tagName === 'TEMPLATE')
+                    template = template.firstChild.content;
+            }
 
-    customElements.define(
-        subClass.tagName,  subClass,  baseTag && {extends: baseTag}
-    );
+            elements.push( decoratorOf(Component, 'template', template) );
+        }
 
-    return subClass;
+        if ( style )
+            elements.push(decoratorOf(
+                Component,
+                'style',
+                (style instanceof Node)  ?  style  :  Object.assign(
+                    document.createElement('style'),  {textContent: style}
+                )
+            ));
+
+        if ( data )  elements.push( decoratorOf(Component, 'data', data) );
+
+        decoratorMix(elements, Component);
+
+        decoratorMix(elements, Component.prototype);
+
+        return {
+            kind:  'class',
+            elements,
+            finisher(Class) {
+
+                window.customElements.define(
+                    Class.tagName,  Class,  tagName && {extends: tagName}
+                );
+            }
+        };
+    };
 }
-
 
 export { Component, attributeChanged };
 

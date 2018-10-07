@@ -60,3 +60,6 @@ typings/
 # Editor & IDE configuration
 .vscode/
 .idea/
+
+# Test build
+test/**/dist/

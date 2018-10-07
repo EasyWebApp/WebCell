@@ -145,3 +145,32 @@ export function mapTree(node, fork_key, filter) {
 
     return list;
 }
+
+
+/**
+ * @param {Function|Object}   target                          - Class or its prototype
+ * @param {String}            key                             - Member name
+ * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
+ * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
+ *
+ * @return {Object} Decorator descriptor
+ */
+export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
+
+    descriptor = {
+        key, descriptor,
+        placement:  (target instanceof Function) ? 'static' : 'prototype'
+    };
+
+    if (value instanceof Function)
+        descriptor.kind = 'method',  descriptor.descriptor.value = value;
+    else if (
+        (value.constructor === Object)  &&
+        ((value.set || value.get) instanceof Function)
+    )
+        descriptor.kind = 'method',  Object.assign(descriptor.descriptor, value);
+    else
+        descriptor.kind = 'field',  descriptor.initializer = () => value;
+
+    return descriptor;
+}

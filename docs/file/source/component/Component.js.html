@@ -8,7 +8,7 @@
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -66,7 +69,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/component/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { parseDOM,  $ as $_,  $up as $_up,  delegate } from &apos;../utility/DOM&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { $ as $_,  $up as $_up,  delegate } from &apos;../utility/DOM&apos;;
 
 import ObjectView from &apos;../view/ObjectView&apos;;
 
@@ -88,40 +91,24 @@ export default  class Component {
     }
 
     /**
-     * @param {?(string|Node)} template - HTML source or sub DOM tree
-     * @param {string}         [style]  - CSS source
-     * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
+     * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      *
      * @return {HTMLElement} This custom element
      */
-    buildDOM(template, style, option) {
+    buildDOM(option) {
 
-        const shadow = this.attachShadow(Object.assign(
-            {
-                mode:              &apos;open&apos;,
-                delegatesFocus:    true
-            },
-            option
-        ));
-
-        if (typeof template === &apos;string&apos;) {
-
-            template = parseDOM( template );
-
-            let element = template.querySelector(&apos;template&apos;);
-
-            template = element ? element.content : template;
-        } else
-            template = template || this.constructor.template;
+        const shadow = this.attachShadow({
+                mode:            &apos;open&apos;,
+                delegatesFocus:  true,
+                ...option
+            }),
+            {template, style, data} = this.constructor;
 
         if ( template )  shadow.append( document.importNode(template, true) );
 
-        if ( style )
-            shadow.prepend(Object.assign(
-                document.createElement(&apos;style&apos;),  {textContent: style}
-            ));
+        if ( style )  shadow.prepend( style );
 
-        const view = new ObjectView( shadow ), data = this.constructor.data;
+        const view = new ObjectView( shadow );
 
         if ( data )  view.render( data );
 

@@ -1,5 +1,5 @@
 import {
-    getPropertyDescriptor, multipleMap, extend, mapTree
+    getPropertyDescriptor, multipleMap, extend, mapTree, decoratorOf
 } from '../../source/utility/object';
 
 
@@ -121,5 +121,79 @@ describe('Object utility',  () => {
             if (depth < 2)  return child.id;
 
         }).should.be.eql([1, 2]);
+    });
+
+    /**
+     * @test {decoratorOf}
+     */
+    describe('Create decorator descriptor',  () => {
+
+        it('Static fields',  () => {
+
+            const descriptor = {
+                kind:        'field',
+                key:         'example',
+                placement:   'static'
+            };
+
+            const meta = decoratorOf(class Test { },  'example',  'sample');
+
+            meta.should.containEql( descriptor );
+
+            meta.descriptor.enumerable.should.be.true();
+
+            meta.initializer().should.be.equal('sample');
+        });
+
+        it('Static methods',  () => {
+
+            const descriptor = {
+                kind:        'method',
+                key:         'example',
+                placement:   'static'
+            };
+
+            const meta = decoratorOf(class Test { },  'example',  () => 'sample',  {
+                enumerable:  false
+            });
+
+            meta.should.containEql( descriptor );
+
+            meta.descriptor.enumerable.should.be.false();
+
+            meta.descriptor.value().should.be.equal('sample');
+        });
+
+        it('Static accessors',  () => {
+
+            const descriptor = {
+                kind:        'method',
+                key:         'example',
+                placement:   'static'
+            };
+
+            const meta = decoratorOf(class Test { },  'example',  {get: () => 'sample'});
+
+            meta.should.containEql( descriptor );
+
+            meta.descriptor.get().should.be.equal('sample');
+        });
+
+        it('Prototype methods',  () => {
+
+            const descriptor = {
+                kind:        'method',
+                key:         'example',
+                placement:   'prototype'
+            };
+
+            const meta = decoratorOf(
+                (class Test { }).prototype,  'example',  () => 'sample'
+            );
+
+            meta.should.containEql( descriptor );
+
+            meta.descriptor.value().should.be.equal('sample');
+        });
     });
 });

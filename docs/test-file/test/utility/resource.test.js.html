@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">test/utility/DOM.js | web-cell</title>
+  <title data-ice="title">test/utility/resource.test.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -65,44 +68,122 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">test/utility/DOM.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;../../source/utility/DOM-polyfill&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/utility/resource.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import JSDOM from &apos;../../source/utility/DOM-polyfill&apos;;
+
+import {
+    serialize, request, fileTypeOf, blobFrom
+} from &apos;../../source/utility/resource&apos;;
+
+import WebServer from &apos;koapache&apos;;
 
 import { readFileSync } from &apos;fs&apos;;
 
-import { parseDOM, stringifyDOM, delay, nextTick } from &apos;../../source/utility/DOM&apos;;
 
-
-describe(&apos;DOM utility&apos;,  () =&gt; {
+describe(&apos;Resource utility&apos;,  () =&gt; {
     /**
-     * @test {parseDOM}
-     * @test {stringifyDOM}
+     * @test {serialize}
      */
-    it(&apos;Parse &amp; Stringify DOM&apos;,  () =&gt; {
+    describe(&apos;Serialize &lt;form /&gt; or &lt;fieldset /&gt;&apos;,  () =&gt; {
 
-        const HTML = (readFileSync(&apos;test/ObjectView/index.html&apos;) + &apos;&apos;)
-            .replace(/\r\n/g, &apos;\n&apos;).replace(/\r/g, &apos;\n&apos;);
+        const form = JSDOM.fragment(`
+&lt;form enctype=&quot;application/json&quot;&gt;
+    &lt;input type=&quot;text&quot; name=&quot;text&quot; value=&quot;example&quot;&gt;
+    &lt;textarea name=&quot;content&quot;&gt;sample&lt;/textarea&gt;
+    &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;
+    &lt;input type=&quot;submit&quot;&gt;
+&lt;/form&gt;`
+        ).children[0];
 
-        const fragment = parseDOM( HTML );
+        it(
+            &apos;Multiple part data&apos;,
+            ()  =&gt;  serialize( form ).should.be.instanceOf( FormData )
+        );
 
-        fragment.should.be.class(&apos;DocumentFragment&apos;);
+        it(&apos;JSON&apos;,  () =&gt; {
 
-        stringifyDOM( fragment ).should.be.equal( HTML );
+            form.elements.file.remove();
+
+            serialize( form ).should.be.eql({
+                text:     &apos;example&apos;,
+                content:  &apos;sample&apos;
+            });
+        });
+
+        it(&apos;URL encode&apos;,  () =&gt; {
+
+            form.removeAttribute(&apos;enctype&apos;);
+
+            serialize( form ).should.be.equal(&apos;text=example&amp;content=sample&apos;);
+        });
     });
 
     /**
-     * @test {delay}
-     * @test {nextTick}
+     * @test {request}
      */
-    it(&apos;Await next tick&apos;,  async () =&gt; {
+    describe(&apos;HTTP request&apos;,  () =&gt; {
 
-        const tick = nextTick();
+        var server;
 
-        tick.should.be.equal( nextTick() );
+        before(async () =&gt; {
 
-        await delay(0.1);
+            server = await (new WebServer()).workerHost();
 
-        tick.should.not.be.equal( nextTick() );
+            server = `http://${server.address}:${server.port}`;
+        });
+
+        it(&apos;Get Plain text&apos;,  () =&gt; request(
+            `${server}/ReadMe.md`,
+        ).should.be.fulfilledWith(
+            readFileSync(&apos;ReadMe.md&apos;) + &apos;&apos;
+        ));
+
+        it(&apos;Get JSON object&apos;,  () =&gt; request(
+            `${server}/package.json`,
+        ).should.be.fulfilledWith(
+            JSON.parse( readFileSync(&apos;package.json&apos;) )
+        ));
+
+        it(
+            &apos;Get HTML document&apos;,
+            async ()  =&gt;  (await request(
+                `${server}/test/ObjectView/index.html`,
+            )).should.be.class(
+                &apos;DocumentFragment&apos;
+            )
+        );
+
+        it(
+            &apos;Get Binary file&apos;,
+            async ()  =&gt;  (await request(`${server}/docs/image/github.png`))
+                .should.be.class(&apos;Blob&apos;)
+        );
+    });
+
+    describe(&apos;Binary&apos;,  () =&gt; {
+
+        const data = `data:image/png;base64,${
+            readFileSync(&apos;docs/image/github.png&apos;).toString(&apos;base64&apos;)
+        }`;
+
+        /**
+         * @test {fileTypeOf}
+         */
+        it(
+            &apos;Parse Data URI&apos;,
+            ()  =&gt;  fileTypeOf( data ).should.be.fulfilledWith({
+                schema:  &apos;data&apos;,
+                type:    &apos;png&apos;
+            })
+        );
+
+        /**
+         * @test {blobFrom}
+         */
+        it(
+            &apos;Convert DataURI to Blob&apos;,
+            ()  =&gt;  blobFrom( data ).should.be.class(&apos;Blob&apos;)
+        );
     });
 });
 </code></pre>

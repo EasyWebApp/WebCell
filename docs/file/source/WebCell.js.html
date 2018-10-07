@@ -8,7 +8,7 @@
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -66,70 +69,129 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { inSubDOM, inHead } from &apos;./utility/DOM&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
 
-import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
+import { getPropertyDescriptor, decoratorOf } from &apos;./utility/object&apos;;
 
-import { getPropertyDescriptor, extend } from &apos;./utility/object&apos;;
+import { parseDOM } from &apos;./utility/DOM&apos;;
 
 
-function dataInject(constructor) {
+/**
+ * @typedef {Object} DecoratorDescriptor
+ *
+ * @property {String} kind       - `class`, `field` or `method`
+ * @property {String} key        - Member name
+ * @property {String} placement  - `static` or `prototype`
+ * @property {Object} descriptor - Last parameter of `Object.defineProperty()`
+ */
 
-    const observedAttributes = getPropertyDescriptor(
-        constructor, &apos;observedAttributes&apos;
-    );
 
-    if (! observedAttributes)  return;
+/**
+ * Decorator for `observedAttributes()`
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function mapProperty(meta) {
 
-    Object.defineProperty(constructor, &apos;observedAttributes&apos;, {
-        get:  function () {
+    const observer = meta.descriptor.get;
 
-            return  linkDataOf.call(this, observedAttributes.get.call( this ));
-        }
-    });
+    meta.descriptor.get = function () {
 
-    const attributeChangedCallback = getPropertyDescriptor(
-        constructor.prototype, &apos;attributeChangedCallback&apos;
-    );
+        const onChange = getPropertyDescriptor(
+            this.prototype, &apos;attributeChangedCallback&apos;
+        );
 
-    if (! attributeChangedCallback)
-        Object.defineProperty(constructor.prototype, &apos;attributeChangedCallback&apos;, {
-            value:  attributeChanged
-        });
+        if (! onChange)
+            Object.defineProperty(this.prototype, &apos;attributeChangedCallback&apos;, {
+                value:  attributeChanged
+            });
+
+        return  linkDataOf.call(this, observer.call( this ));
+    };
+}
+
+
+const skip_key = {
+    name:       1,
+    length:     1,
+    prototype:  1,
+    caller:     1,
+    arguments:  1,
+    call:       1,
+    apply:      1,
+    bind:       1
+};
+
+function decoratorMix(member, mixin) {
+
+    const skip = mixin instanceof Function,
+        property = Object.getOwnPropertyDescriptors( mixin );
+
+    for (let key in property)
+        if (!(skip  ?  (key in skip_key)  :  (
+            (key === &apos;constructor&apos;)  &amp;&amp;  (property[key].value instanceof Function)
+        )))
+            member.push(
+                decoratorOf(mixin,  key,  property[key].value || property[key])
+            );
 }
 
 
 /**
  * Register a component
  *
- * @param {function} subClass
- * @param {string}   [baseTag] - Name of an HTML original tag to extend
+ * @param {Object}         option
+ * @param {String|Node}    [option.template] - HTML template source or sub DOM tree
+ * @param {String|Element} [option.style]    - CSS source or `&lt;style /&gt;`
+ * @param {Object}         [option.data]     - Initial data
+ * @param {String}         [option.tagName]  - Name of an HTML original tag to extend
  *
- * @return {function} `subClass`
+ * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator
  */
-export function component(subClass, baseTag) {
+export function component({template, style, data, tagName}) {
 
-    const static_member = { };
+    return  ({elements}) =&gt; {
 
-    if (inSubDOM()  ||  (! inHead())) {
+        if ( template ) {
 
-        let { template } = Component.findTemplate();
+            if (!(template instanceof Node)) {
 
-        Object.defineProperty(static_member,  &apos;template&apos;,  {
-            get:         () =&gt; template,
-            enumerable:  true
-        });
-    }
+                template = parseDOM( (template + &apos;&apos;).trim() );
 
-    dataInject( extend(subClass,  Component,  static_member) );
+                if (template.firstChild.tagName === &apos;TEMPLATE&apos;)
+                    template = template.firstChild.content;
+            }
 
-    customElements.define(
-        subClass.tagName,  subClass,  baseTag &amp;&amp; {extends: baseTag}
-    );
+            elements.push( decoratorOf(Component, &apos;template&apos;, template) );
+        }
 
-    return subClass;
+        if ( style )
+            elements.push(decoratorOf(
+                Component,
+                &apos;style&apos;,
+                (style instanceof Node)  ?  style  :  Object.assign(
+                    document.createElement(&apos;style&apos;),  {textContent: style}
+                )
+            ));
+
+        if ( data )  elements.push( decoratorOf(Component, &apos;data&apos;, data) );
+
+        decoratorMix(elements, Component);
+
+        decoratorMix(elements, Component.prototype);
+
+        return {
+            kind:  &apos;class&apos;,
+            elements,
+            finisher(Class) {
+
+                window.customElements.define(
+                    Class.tagName,  Class,  tagName &amp;&amp; {extends: tagName}
+                );
+            }
+        };
+    };
 }
-
 
 export { Component, attributeChanged };
 

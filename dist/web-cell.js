@@ -22,14 +22,15 @@ function outPackage(name) {
   return /^[^./]/.test(name);
 }
 
-    var require = _require_.bind(null, './');
+    var _include_ = include.bind(null, './');
 
-    function _require_(base, path) {
+    function include(base, path) {
 
-        var module = _module_[
-                outPackage( path )  ?  path  :  ('./' + merge(base, path))
-            ],
-            exports;
+        path = outPackage( path )  ?  path  :  ('./' + merge(base, path));
+
+        var module = _module_[path], exports;
+
+        if (! module)  return require(path);
 
         if (! module.exports) {
 
@@ -38,11 +39,11 @@ function outPackage(name) {
             var dependency = module.dependency;
 
             for (var i = 0;  dependency[i];  i++)
-                module.dependency[i] = require( dependency[i] );
+                module.dependency[i] = _include_( dependency[i] );
 
             exports = module.factory.apply(
                 null,  module.dependency.concat(
-                    _require_.bind(null, module.base),  module.exports,  module
+                    include.bind(null, module.base),  module.exports,  module
                 )
             );
 
@@ -55,6 +56,10 @@ function outPackage(name) {
     }
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; var ownKeys = Object.keys(source); if (typeof Object.getOwnPropertySymbols === 'function') { ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) { return Object.getOwnPropertyDescriptor(source, sym).enumerable; })); } ownKeys.forEach(function (key) { _defineProperty(target, key, source[key]); }); } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
@@ -409,17 +414,16 @@ var _module_ = {
         _inherits(InputComponent, _HTMLElement);
 
         /**
-         * @param {string} template - HTML source code with template expressions
-         * @param {string} [style]  - CSS source code
+         * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
          */
-        function InputComponent(template, style) {
+        function InputComponent(option) {
           var _this;
 
           _classCallCheck(this, InputComponent);
 
-          (_this = _possibleConstructorReturn(this, _getPrototypeOf(InputComponent).call(this))).buildDOM(template, style);
+          _this = _possibleConstructorReturn(this, _getPrototypeOf(InputComponent).call(this));
 
-          _this.on.call(_this.$('slot')[0], 'slotchange', _this.linkSlot.bind(_assertThisInitialized(_assertThisInitialized(_this))));
+          _this.buildDOM(option).on.call(_this.$('slot')[0], 'slotchange', _this.linkSlot.bind(_assertThisInitialized(_assertThisInitialized(_this))));
 
           return _this;
         }
@@ -650,6 +654,7 @@ var _module_ = {
       exports.multipleMap = multipleMap;
       exports.extend = extend;
       exports.mapTree = mapTree;
+      exports.decoratorOf = decoratorOf;
       /**
        * @param {*} object
        *
@@ -785,6 +790,30 @@ var _module_ = {
 
         depth--;
         return list;
+      }
+      /**
+       * @param {Function|Object}   target                          - Class or its prototype
+       * @param {String}            key                             - Member name
+       * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
+       * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
+       *
+       * @return {Object} Decorator descriptor
+       */
+
+
+      function decoratorOf(target, key, value) {
+        var descriptor = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {
+          enumerable: true
+        };
+        descriptor = {
+          key: key,
+          descriptor: descriptor,
+          placement: target instanceof Function ? 'static' : 'prototype'
+        };
+        if (value instanceof Function) descriptor.kind = 'method', descriptor.descriptor.value = value;else if (value.constructor === Object && (value.set || value.get) instanceof Function) descriptor.kind = 'method', Object.assign(descriptor.descriptor, value);else descriptor.kind = 'field', descriptor.initializer = function () {
+          return value;
+        };
+        return descriptor;
       }
     }
   },
@@ -1629,6 +1658,229 @@ var _module_ = {
       exports.default = ObjectView;
     }
   },
+  './utility/DOM': {
+    base: './utility',
+    dependency: [],
+    factory: function factory(require, exports, module) {
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.$ = $;
+      exports.$up = $up;
+      exports.indexOf = indexOf;
+      exports.targetOf = targetOf;
+      exports.delegate = delegate;
+      exports.parseDOM = parseDOM;
+      exports.stringifyDOM = stringifyDOM;
+      exports.watchAttributes = watchAttributes;
+      exports.delay = delay;
+      exports.nextTick = nextTick;
+      /**
+       * jQuery-like selector
+       *
+       * @param {string}                            selector
+       * @param {Element|Document|DocumentFragment} [context=document]
+       *
+       * @return {Element[]}
+       */
+
+      function $(selector, context) {
+        return _toConsumableArray((context || document).querySelectorAll(selector));
+      }
+      /**
+       * @param {string} selector - CSS selector
+       * @param {Node}   context
+       *
+       * @return {?Element} Matched parent
+       */
+
+
+      function $up(selector, context) {
+        while (context.parentNode) {
+          context = context.parentNode;
+          if (context.matches && context.matches(selector)) return context;
+        }
+      }
+      /**
+       * @param {Element} element
+       *
+       * @return {number} The index of `element` in its siblings
+       */
+
+
+      function indexOf(element) {
+        var index = 0;
+
+        while (element = element.previousElementSibling) {
+          index++;
+        }
+
+        return index;
+      }
+      /**
+       * @param {Event} event
+       *
+       * @return {Element} The target of `event` object (**Shadow DOM** is in account)
+       */
+
+
+      function targetOf(event) {
+        var target = event.composedPath ? event.composedPath() : event.path;
+        return (target || '')[0] || event.target;
+      }
+      /**
+       * DOM event delegate
+       *
+       * @private
+       *
+       * @param {string}          selector
+       * @param {DOMEventHandler} handler
+       *
+       * @return {Function} Handler wrapper
+       */
+
+
+      function delegate(selector, handler) {
+        return function (event) {
+          var target = targetOf(event);
+          if (!target.matches(selector)) target = $up(selector, target);
+          if (target) return handler.call(target, event);
+        };
+      }
+      /**
+       * @param {string} markup - Code of an markup fragment
+       *
+       * @return {DocumentFragment}
+       */
+
+
+      function parseDOM(markup) {
+        markup = new DOMParser().parseFromString(markup, 'text/html');
+        var fragment = document.createDocumentFragment();
+        fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
+        return fragment;
+      }
+      /**
+       * @param {Element|Element[]|DocumentFragment} tree
+       *
+       * @return {string} HTML/XML source code
+       */
+
+
+      function stringifyDOM(tree) {
+        return tree.nodeType === 1 ? tree.outerHTML : Array.from(tree.childNodes || tree, function (node) {
+          switch (node.nodeType) {
+            case 1:
+              return node.outerHTML;
+
+            case 3:
+              return node.nodeValue;
+          }
+        }).join('');
+      }
+      /**
+       * @typedef {Function} AttributeWatcher
+       *
+       * @param {string}  name
+       * @param {?string} oldValue
+       * @param {?string} newValue
+       */
+
+      /**
+       * @param {Element}          element
+       * @param {string[]}         names
+       * @param {AttributeWatcher} callback
+       *
+       * @return {MutationObserver}
+       */
+
+
+      function watchAttributes(element, names, callback) {
+        var _this12 = this;
+
+        var observer = new MutationObserver(function (list) {
+          var _iteratorNormalCompletion9 = true;
+          var _didIteratorError9 = false;
+          var _iteratorError9 = undefined;
+
+          try {
+            for (var _iterator9 = list[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+              var mutation = _step9.value;
+              callback.call(_this12, mutation.attributeName, mutation.oldValue, element.getAttribute(mutation.attributeName));
+            }
+          } catch (err) {
+            _didIteratorError9 = true;
+            _iteratorError9 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion9 && _iterator9.return != null) {
+                _iterator9.return();
+              }
+            } finally {
+              if (_didIteratorError9) {
+                throw _iteratorError9;
+              }
+            }
+          }
+        });
+        observer.observe(element, {
+          attributes: true,
+          attributeOldValue: true,
+          attributeFilter: names
+        });
+        var _iteratorNormalCompletion10 = true;
+        var _didIteratorError10 = false;
+        var _iteratorError10 = undefined;
+
+        try {
+          for (var _iterator10 = element.attributes[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
+            var attribute = _step10.value;
+            callback.call(this, attribute.name, null, attribute.value);
+          }
+        } catch (err) {
+          _didIteratorError10 = true;
+          _iteratorError10 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion10 && _iterator10.return != null) {
+              _iterator10.return();
+            }
+          } finally {
+            if (_didIteratorError10) {
+              throw _iteratorError10;
+            }
+          }
+        }
+
+        return observer;
+      }
+      /**
+       * @param {number} [second=0]
+       *
+       * @return {Promise} Wait seconds in Macro tasks
+       */
+
+
+      function delay(second) {
+        return new Promise(function (resolve) {
+          return setTimeout(resolve, (second || 0) * 1000);
+        });
+      }
+
+      var tick;
+      /**
+       * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
+       */
+
+      function nextTick() {
+        return tick || (tick = new Promise(function (resolve) {
+          return window.requestAnimationFrame(function (time) {
+            return tick = null, resolve(time);
+          });
+        }));
+      }
+    }
+  },
   './component/Component': {
     base: './component',
     dependency: [],
@@ -1667,30 +1919,22 @@ var _module_ = {
           key: "buildDOM",
 
           /**
-           * @param {?(string|Node)} template - HTML source or sub DOM tree
-           * @param {string}         [style]  - CSS source
-           * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
+           * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
            *
            * @return {HTMLElement} This custom element
            */
-          value: function buildDOM(template, style, option) {
-            var shadow = this.attachShadow(Object.assign({
+          value: function buildDOM(option) {
+            var shadow = this.attachShadow(_objectSpread({
               mode: 'open',
               delegatesFocus: true
-            }, option));
-
-            if (typeof template === 'string') {
-              template = (0, _DOM.parseDOM)(template);
-              var element = template.querySelector('template');
-              template = element ? element.content : template;
-            } else template = template || this.constructor.template;
-
+            }, option)),
+                _this$constructor = this.constructor,
+                template = _this$constructor.template,
+                style = _this$constructor.style,
+                data = _this$constructor.data;
             if (template) shadow.append(document.importNode(template, true));
-            if (style) shadow.prepend(Object.assign(document.createElement('style'), {
-              textContent: style
-            }));
-            var view = new _ObjectView.default(shadow),
-                data = this.constructor.data;
+            if (style) shadow.prepend(style);
+            var view = new _ObjectView.default(shadow);
             if (data) view.render(data);
             return this;
           }
@@ -1862,17 +2106,17 @@ var _module_ = {
        */
 
       function linkDataOf(attributes) {
-        var _this12 = this;
+        var _this13 = this;
 
-        var _iteratorNormalCompletion9 = true;
-        var _didIteratorError9 = false;
-        var _iteratorError9 = undefined;
+        var _iteratorNormalCompletion11 = true;
+        var _didIteratorError11 = false;
+        var _iteratorError11 = undefined;
 
         try {
           var _loop2 = function _loop2() {
-            var key = _step9.value;
+            var key = _step11.value;
             key = attr_prop[key] || key;
-            if (!(key in _this12.prototype)) Object.defineProperty(_this12.prototype, key, {
+            if (!(key in _this13.prototype)) Object.defineProperty(_this13.prototype, key, {
               set: function set(value) {
                 this.view.commit(key, value);
               },
@@ -1883,20 +2127,20 @@ var _module_ = {
             });
           };
 
-          for (var _iterator9 = attributes[Symbol.iterator](), _step9; !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next()).done); _iteratorNormalCompletion9 = true) {
+          for (var _iterator11 = attributes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
             _loop2();
           }
         } catch (err) {
-          _didIteratorError9 = true;
-          _iteratorError9 = err;
+          _didIteratorError11 = true;
+          _iteratorError11 = err;
         } finally {
           try {
-            if (!_iteratorNormalCompletion9 && _iterator9.return != null) {
-              _iterator9.return();
+            if (!_iteratorNormalCompletion11 && _iterator11.return != null) {
+              _iterator11.return();
             }
           } finally {
-            if (_didIteratorError9) {
-              throw _iteratorError9;
+            if (_didIteratorError11) {
+              throw _iteratorError11;
             }
           }
         }
@@ -1936,253 +2180,6 @@ var _module_ = {
       }
     }
   },
-  './utility/DOM': {
-    base: './utility',
-    dependency: [],
-    factory: function factory(require, exports, module) {
-      Object.defineProperty(exports, "__esModule", {
-        value: true
-      });
-      exports.inSubDOM = inSubDOM;
-      exports.inHead = inHead;
-      exports.$ = $;
-      exports.$up = $up;
-      exports.indexOf = indexOf;
-      exports.targetOf = targetOf;
-      exports.delegate = delegate;
-      exports.parseDOM = parseDOM;
-      exports.stringifyDOM = stringifyDOM;
-      exports.watchAttributes = watchAttributes;
-      exports.delay = delay;
-      exports.nextTick = nextTick;
-      /**
-       * @private
-       *
-       * @return {boolean} Whether current script is running in a sub DOM
-       */
-
-      function inSubDOM() {
-        return (document.currentScript || '').ownerDocument !== document;
-      }
-      /**
-       * @private
-       *
-       * @return {boolean} Whether current script is in `<head />` of a DOM
-       */
-
-
-      function inHead() {
-        var script = document.currentScript || '';
-        var DOM = script.ownerDocument;
-        return DOM && script.parentNode === DOM.head;
-      }
-      /**
-       * jQuery-like selector
-       *
-       * @param {string}                            selector
-       * @param {Element|Document|DocumentFragment} [context=document]
-       *
-       * @return {Element[]}
-       */
-
-
-      function $(selector, context) {
-        return _toConsumableArray((context || document).querySelectorAll(selector));
-      }
-      /**
-       * @param {string} selector - CSS selector
-       * @param {Node}   context
-       *
-       * @return {?Element} Matched parent
-       */
-
-
-      function $up(selector, context) {
-        while (context.parentNode) {
-          context = context.parentNode;
-          if (context.matches && context.matches(selector)) return context;
-        }
-      }
-      /**
-       * @param {Element} element
-       *
-       * @return {number} The index of `element` in its siblings
-       */
-
-
-      function indexOf(element) {
-        var index = 0;
-
-        while (element = element.previousElementSibling) {
-          index++;
-        }
-
-        return index;
-      }
-      /**
-       * @param {Event} event
-       *
-       * @return {Element} The target of `event` object (**Shadow DOM** is in account)
-       */
-
-
-      function targetOf(event) {
-        var target = event.composedPath ? event.composedPath() : event.path;
-        return (target || '')[0] || event.target;
-      }
-      /**
-       * DOM event delegate
-       *
-       * @private
-       *
-       * @param {string}          selector
-       * @param {DOMEventHandler} handler
-       *
-       * @return {Function} Handler wrapper
-       */
-
-
-      function delegate(selector, handler) {
-        return function (event) {
-          var target = targetOf(event);
-          if (!target.matches(selector)) target = $up(selector, target);
-          if (target) return handler.call(target, event);
-        };
-      }
-      /**
-       * @param {string} markup - Code of an markup fragment
-       *
-       * @return {DocumentFragment}
-       */
-
-
-      function parseDOM(markup) {
-        markup = new DOMParser().parseFromString(markup, 'text/html');
-        var fragment = document.createDocumentFragment();
-        fragment.append.apply(fragment, _toConsumableArray(Array.from(markup.head.childNodes).concat(Array.from(markup.body.childNodes))));
-        return fragment;
-      }
-      /**
-       * @param {Element|Element[]|DocumentFragment} tree
-       *
-       * @return {string} HTML/XML source code
-       */
-
-
-      function stringifyDOM(tree) {
-        return tree.nodeType === 1 ? tree.outerHTML : Array.from(tree.childNodes || tree, function (node) {
-          switch (node.nodeType) {
-            case 1:
-              return node.outerHTML;
-
-            case 3:
-              return node.nodeValue;
-          }
-        }).join('');
-      }
-      /**
-       * @typedef {Function} AttributeWatcher
-       *
-       * @param {string}  name
-       * @param {?string} oldValue
-       * @param {?string} newValue
-       */
-
-      /**
-       * @param {Element}          element
-       * @param {string[]}         names
-       * @param {AttributeWatcher} callback
-       *
-       * @return {MutationObserver}
-       */
-
-
-      function watchAttributes(element, names, callback) {
-        var _this13 = this;
-
-        var observer = new MutationObserver(function (list) {
-          var _iteratorNormalCompletion10 = true;
-          var _didIteratorError10 = false;
-          var _iteratorError10 = undefined;
-
-          try {
-            for (var _iterator10 = list[Symbol.iterator](), _step10; !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next()).done); _iteratorNormalCompletion10 = true) {
-              var mutation = _step10.value;
-              callback.call(_this13, mutation.attributeName, mutation.oldValue, element.getAttribute(mutation.attributeName));
-            }
-          } catch (err) {
-            _didIteratorError10 = true;
-            _iteratorError10 = err;
-          } finally {
-            try {
-              if (!_iteratorNormalCompletion10 && _iterator10.return != null) {
-                _iterator10.return();
-              }
-            } finally {
-              if (_didIteratorError10) {
-                throw _iteratorError10;
-              }
-            }
-          }
-        });
-        observer.observe(element, {
-          attributes: true,
-          attributeOldValue: true,
-          attributeFilter: names
-        });
-        var _iteratorNormalCompletion11 = true;
-        var _didIteratorError11 = false;
-        var _iteratorError11 = undefined;
-
-        try {
-          for (var _iterator11 = element.attributes[Symbol.iterator](), _step11; !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next()).done); _iteratorNormalCompletion11 = true) {
-            var attribute = _step11.value;
-            callback.call(this, attribute.name, null, attribute.value);
-          }
-        } catch (err) {
-          _didIteratorError11 = true;
-          _iteratorError11 = err;
-        } finally {
-          try {
-            if (!_iteratorNormalCompletion11 && _iterator11.return != null) {
-              _iterator11.return();
-            }
-          } finally {
-            if (_didIteratorError11) {
-              throw _iteratorError11;
-            }
-          }
-        }
-
-        return observer;
-      }
-      /**
-       * @param {number} [second=0]
-       *
-       * @return {Promise} Wait seconds in Macro tasks
-       */
-
-
-      function delay(second) {
-        return new Promise(function (resolve) {
-          return setTimeout(resolve, (second || 0) * 1000);
-        });
-      }
-
-      var tick;
-      /**
-       * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
-       */
-
-      function nextTick() {
-        return tick || (tick = new Promise(function (resolve) {
-          return window.requestAnimationFrame(function (time) {
-            return tick = null, resolve(time);
-          });
-        }));
-      }
-    }
-  },
   './WebCell': {
     base: '.',
     dependency: [],
@@ -2191,6 +2188,7 @@ var _module_ = {
         value: true
       });
       var _exportNames = {
+        mapProperty: true,
         component: true,
         Component: true,
         attributeChanged: true,
@@ -2200,6 +2198,7 @@ var _module_ = {
         ObjectView: true,
         ArrayView: true
       };
+      exports.mapProperty = mapProperty;
       exports.component = component;
       Object.defineProperty(exports, "Component", {
         enumerable: true,
@@ -2244,19 +2243,6 @@ var _module_ = {
         }
       });
 
-      var _DOM = require('./utility/DOM');
-
-      Object.keys(_DOM).forEach(function (key) {
-        if (key === "default" || key === "__esModule") return;
-        if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
-        Object.defineProperty(exports, key, {
-          enumerable: true,
-          get: function get() {
-            return _DOM[key];
-          }
-        });
-      });
-
       var _Component = _interopRequireWildcard(require('./component/Component'));
 
       var _object = require('./utility/object');
@@ -2268,6 +2254,19 @@ var _module_ = {
           enumerable: true,
           get: function get() {
             return _object[key];
+          }
+        });
+      });
+
+      var _DOM = require('./utility/DOM');
+
+      Object.keys(_DOM).forEach(function (key) {
+        if (key === "default" || key === "__esModule") return;
+        if (Object.prototype.hasOwnProperty.call(_exportNames, key)) return;
+        Object.defineProperty(exports, key, {
+          enumerable: true,
+          get: function get() {
+            return _DOM[key];
           }
         });
       });
@@ -2325,54 +2324,103 @@ var _module_ = {
           return newObj;
         }
       }
+      /**
+       * @typedef {Object} DecoratorDescriptor
+       *
+       * @property {String} kind       - `class`, `field` or `method`
+       * @property {String} key        - Member name
+       * @property {String} placement  - `static` or `prototype`
+       * @property {Object} descriptor - Last parameter of `Object.defineProperty()`
+       */
 
-      function dataInject(constructor) {
-        var observedAttributes = (0, _object.getPropertyDescriptor)(constructor, 'observedAttributes');
-        if (!observedAttributes) return;
-        Object.defineProperty(constructor, 'observedAttributes', {
-          get: function get() {
-            return _Component.linkDataOf.call(this, observedAttributes.get.call(this));
-          }
-        });
-        var attributeChangedCallback = (0, _object.getPropertyDescriptor)(constructor.prototype, 'attributeChangedCallback');
-        if (!attributeChangedCallback) Object.defineProperty(constructor.prototype, 'attributeChangedCallback', {
-          value: _Component.attributeChanged
-        });
+      /**
+       * Decorator for `observedAttributes()`
+       *
+       * @param {DecoratorDescriptor} meta
+       */
+
+
+      function mapProperty(meta) {
+        var observer = meta.descriptor.get;
+
+        meta.descriptor.get = function () {
+          var onChange = (0, _object.getPropertyDescriptor)(this.prototype, 'attributeChangedCallback');
+          if (!onChange) Object.defineProperty(this.prototype, 'attributeChangedCallback', {
+            value: _Component.attributeChanged
+          });
+          return _Component.linkDataOf.call(this, observer.call(this));
+        };
+      }
+
+      var skip_key = {
+        name: 1,
+        length: 1,
+        prototype: 1,
+        caller: 1,
+        arguments: 1,
+        call: 1,
+        apply: 1,
+        bind: 1
+      };
+
+      function decoratorMix(member, mixin) {
+        var skip = mixin instanceof Function,
+            property = Object.getOwnPropertyDescriptors(mixin);
+
+        for (var key in property) {
+          if (!(skip ? key in skip_key : key === 'constructor' && property[key].value instanceof Function)) member.push((0, _object.decoratorOf)(mixin, key, property[key].value || property[key]));
+        }
       }
       /**
        * Register a component
        *
-       * @param {function} subClass
-       * @param {string}   [baseTag] - Name of an HTML original tag to extend
+       * @param {Object}         option
+       * @param {String|Node}    [option.template] - HTML template source or sub DOM tree
+       * @param {String|Element} [option.style]    - CSS source or `<style />`
+       * @param {Object}         [option.data]     - Initial data
+       * @param {String}         [option.tagName]  - Name of an HTML original tag to extend
        *
-       * @return {function} `subClass`
+       * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator
        */
 
 
-      function component(subClass, baseTag) {
-        var static_member = {};
+      function component(_ref7) {
+        var template = _ref7.template,
+            style = _ref7.style,
+            data = _ref7.data,
+            tagName = _ref7.tagName;
+        return function (_ref8) {
+          var elements = _ref8.elements;
 
-        if ((0, _DOM.inSubDOM)() || !(0, _DOM.inHead)()) {
-          var _Component$default$fi = _Component.default.findTemplate(),
-              template = _Component$default$fi.template;
+          if (template) {
+            if (!(template instanceof Node)) {
+              template = (0, _DOM.parseDOM)((template + '').trim());
+              if (template.firstChild.tagName === 'TEMPLATE') template = template.firstChild.content;
+            }
 
-          Object.defineProperty(static_member, 'template', {
-            get: function get() {
-              return template;
-            },
-            enumerable: true
-          });
-        }
+            elements.push((0, _object.decoratorOf)(_Component.default, 'template', template));
+          }
 
-        dataInject((0, _object.extend)(subClass, _Component.default, static_member));
-        customElements.define(subClass.tagName, subClass, baseTag && {
-          extends: baseTag
-        });
-        return subClass;
+          if (style) elements.push((0, _object.decoratorOf)(_Component.default, 'style', style instanceof Node ? style : Object.assign(document.createElement('style'), {
+            textContent: style
+          })));
+          if (data) elements.push((0, _object.decoratorOf)(_Component.default, 'data', data));
+          decoratorMix(elements, _Component.default);
+          decoratorMix(elements, _Component.default.prototype);
+          return {
+            kind: 'class',
+            elements: elements,
+            finisher: function finisher(Class) {
+              window.customElements.define(Class.tagName, Class, tagName && {
+                extends: tagName
+              });
+            }
+          };
+        };
       }
     }
   }
 };
 
-    return require('./WebCell');
+    return _include_('./WebCell');
 });

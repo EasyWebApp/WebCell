@@ -1,4 +1,4 @@
-import { parseDOM,  $ as $_,  $up as $_up,  delegate } from '../utility/DOM';
+import { $ as $_,  $up as $_up,  delegate } from '../utility/DOM';
 
 import ObjectView from '../view/ObjectView';
 
@@ -20,40 +20,24 @@ export default  class Component {
     }
 
     /**
-     * @param {?(string|Node)} template - HTML source or sub DOM tree
-     * @param {string}         [style]  - CSS source
-     * @param {Object}         [option] - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
+     * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      *
      * @return {HTMLElement} This custom element
      */
-    buildDOM(template, style, option) {
+    buildDOM(option) {
 
-        const shadow = this.attachShadow(Object.assign(
-            {
-                mode:              'open',
-                delegatesFocus:    true
-            },
-            option
-        ));
-
-        if (typeof template === 'string') {
-
-            template = parseDOM( template );
-
-            let element = template.querySelector('template');
-
-            template = element ? element.content : template;
-        } else
-            template = template || this.constructor.template;
+        const shadow = this.attachShadow({
+                mode:            'open',
+                delegatesFocus:  true,
+                ...option
+            }),
+            {template, style, data} = this.constructor;
 
         if ( template )  shadow.append( document.importNode(template, true) );
 
-        if ( style )
-            shadow.prepend(Object.assign(
-                document.createElement('style'),  {textContent: style}
-            ));
+        if ( style )  shadow.prepend( style );
 
-        const view = new ObjectView( shadow ), data = this.constructor.data;
+        const view = new ObjectView( shadow );
 
         if ( data )  view.render( data );
 

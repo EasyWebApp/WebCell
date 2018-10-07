@@ -50,7 +50,7 @@ describe('Component mixin',  () => {
                 box.value.trim(),  getComputedStyle( box ).fontStyle
             );
         }).should.be.fulfilledWith([
-            'LINK',  'TEXTAREA',  'Hello, Web components!', 'italic'
+            'STYLE',  'TEXTAREA',  'Hello, Web components!', 'italic'
         ])
     );
 

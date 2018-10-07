@@ -78,6 +78,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/object.js~decoratorof",
+    "function/index.html#static-function-decoratorOf",
+    "<span>decoratorOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~delay",
     "function/index.html#static-function-delay",
     "<span>delay</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -111,6 +117,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/resource.js~isxdomain",
     "function/index.html#static-function-isXDomain",
     "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/webcell.js~mapproperty",
+    "function/index.html#static-function-mapProperty",
+    "<span>mapProperty</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
     "function"
   ],
   [
@@ -169,361 +181,391 @@ window.esdocSearchIndex = [
   ],
   [
     "arrayview source/view/arrayview.js~arrayview,arrayview",
-    "test-file/test/ArrayView/index.js.html#lineNumber22",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber22",
     "ArrayView()",
     "test"
   ],
   [
     "",
-    "test-file/test/ArrayView/index.js.html#lineNumber65",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber65",
     "ArrayView() Multiple top element of item template",
     "test"
   ],
   [
     "objectview#render source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ArrayView/index.js.html#lineNumber84",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber84",
     "ArrayView() Multiple top element of item template Render part of data",
     "test"
   ],
   [
     "objectview#scan view#bindwith objectview#scan,objectview#scan source/view/view.js~view#bindwith,view#bindwith",
-    "test-file/test/ArrayView/index.js.html#lineNumber70",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber70",
     "ArrayView() Multiple top element of item template Scan DOM with booted View",
     "test"
   ],
   [
     "",
-    "test-file/test/ArrayView/index.js.html#lineNumber24",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber24",
     "ArrayView() Single top element of item template",
     "test"
   ],
   [
     "arrayview#valueof source/view/arrayview.js~arrayview#valueof,arrayview#valueof",
-    "test-file/test/ArrayView/index.js.html#lineNumber55",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber55",
     "ArrayView() Single top element of item template Get data",
     "test"
   ],
   [
     "arrayview#render source/view/arrayview.js~arrayview#render,arrayview#render",
-    "test-file/test/ArrayView/index.js.html#lineNumber41",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber41",
     "ArrayView() Single top element of item template Render data",
     "test"
   ],
   [
     "arrayview#constructor source/view/arrayview.js~arrayview#constructor,arrayview#constructor",
-    "test-file/test/ArrayView/index.js.html#lineNumber31",
+    "test-file/test/ArrayView/index.test.js.html#lineNumber31",
     "ArrayView() Single top element of item template Scan DOM",
     "test"
   ],
   [
     "component source/component/component.js~component,component",
-    "test-file/test/Component/index.js.html#lineNumber16",
+    "test-file/test/Component/index.test.js.html#lineNumber16",
     "Component mixin",
     "test"
   ],
   [
     "component.findtemplate component#builddom \\$ component.findtemplate,component.findtemplate source/component/component.js~component#builddom,component#builddom source/utility/dom.js~$,\\$",
-    "test-file/test/Component/index.js.html#lineNumber41",
+    "test-file/test/Component/index.test.js.html#lineNumber41",
     "Component mixin Build Shadow DOM",
     "test"
   ],
   [
     "component component.tagname source/webcell.js~component,component source/component/component.js~component.tagname,component.tagname",
-    "test-file/test/Component/index.js.html#lineNumber26",
+    "test-file/test/Component/index.test.js.html#lineNumber26",
     "Component mixin Define Custom element",
     "test"
   ],
   [
     "delegate delegate,delegate",
-    "test-file/test/Component/index.js.html#lineNumber99",
+    "test-file/test/Component/index.test.js.html#lineNumber99",
     "Component mixin Delegate DOM events",
     "test"
   ],
   [
     "component#bubbleout source/component/component.js~component#bubbleout,component#bubbleout",
-    "test-file/test/Component/index.js.html#lineNumber77",
+    "test-file/test/Component/index.test.js.html#lineNumber77",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
   ],
   [
     "targetof indexof source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
-    "test-file/test/Component/index.js.html#lineNumber61",
+    "test-file/test/Component/index.test.js.html#lineNumber61",
     "Component mixin Get the event target in Shadow DOM",
     "test"
   ],
   [
     "\\$up source/utility/dom.js~$up,\\$up",
-    "test-file/test/Component/index.js.html#lineNumber89",
+    "test-file/test/Component/index.test.js.html#lineNumber89",
     "Component mixin should find a parent element matched a CSS selector",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/DOM.js.html#lineNumber8",
+    "test-file/test/utility/DOM.test.js.html#lineNumber8",
     "DOM utility",
     "test"
   ],
   [
     "delay nexttick source/utility/dom.js~delay,delay source/utility/dom.js~nexttick,nexttick",
-    "test-file/test/utility/DOM.js.html#lineNumber29",
+    "test-file/test/utility/DOM.test.js.html#lineNumber29",
     "DOM utility Await next tick",
     "test"
   ],
   [
     "parsedom stringifydom source/utility/dom.js~parsedom,parsedom source/utility/dom.js~stringifydom,stringifydom",
-    "test-file/test/utility/DOM.js.html#lineNumber13",
+    "test-file/test/utility/DOM.test.js.html#lineNumber13",
     "DOM utility Parse & Stringify DOM",
     "test"
   ],
   [
     "",
-    "test-file/test/Component/index.js.html#lineNumber120",
+    "test-file/test/Component/index.test.js.html#lineNumber120",
     "Form field components",
     "test"
   ],
   [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
-    "test-file/test/Component/index.js.html#lineNumber125",
+    "test-file/test/Component/index.test.js.html#lineNumber125",
     "Form field components Render inner field",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber6",
+    "test-file/test/utility/object.test.js.html#lineNumber6",
     "Object utility",
     "test"
   ],
   [
+    "decoratorof source/utility/object.js~decoratorof,decoratorof",
+    "test-file/test/utility/object.test.js.html#lineNumber129",
+    "Object utility Create decorator descriptor",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber182",
+    "Object utility Create decorator descriptor Prototype methods",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber167",
+    "Object utility Create decorator descriptor Static accessors",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber131",
+    "Object utility Create decorator descriptor Static fields",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber148",
+    "Object utility Create decorator descriptor Static methods",
+    "test"
+  ],
+  [
     "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility/object.js.html#lineNumber100",
+    "test-file/test/utility/object.test.js.html#lineNumber100",
     "Object utility Filter object tree",
     "test"
   ],
   [
     "getpropertydescriptor source/utility/object.js~getpropertydescriptor,getpropertydescriptor",
-    "test-file/test/utility/object.js.html#lineNumber10",
+    "test-file/test/utility/object.test.js.html#lineNumber10",
     "Object utility Get the property descriptor",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber20",
+    "test-file/test/utility/object.test.js.html#lineNumber20",
     "Object utility Get the property descriptor Own property",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber26",
+    "test-file/test/utility/object.test.js.html#lineNumber26",
     "Object utility Get the property descriptor Property on the prototype chain",
     "test"
   ],
   [
     "multiplemap source/utility/object.js~multiplemap,multiplemap",
-    "test-file/test/utility/object.js.html#lineNumber37",
+    "test-file/test/utility/object.test.js.html#lineNumber37",
     "Object utility Map & filter",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber39",
+    "test-file/test/utility/object.test.js.html#lineNumber39",
     "Object utility Map & filter Filter `null` & `undefined`",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber48",
+    "test-file/test/utility/object.test.js.html#lineNumber48",
     "Object utility Map & filter Merge Array elements into result",
     "test"
   ],
   [
     "extend source/utility/object.js~extend,extend",
-    "test-file/test/utility/object.js.html#lineNumber57",
+    "test-file/test/utility/object.test.js.html#lineNumber57",
     "Object utility Mixin objects",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber73",
+    "test-file/test/utility/object.test.js.html#lineNumber73",
     "Object utility Mixin objects Function or Class",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.js.html#lineNumber59",
+    "test-file/test/utility/object.test.js.html#lineNumber59",
     "Object utility Mixin objects Ordinary objects",
     "test"
   ],
   [
     "objectview source/view/objectview.js~objectview,objectview",
-    "test-file/test/ObjectView/index.js.html#lineNumber27",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber27",
     "ObjectView()",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber110",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber110",
     "ObjectView() Nested view",
     "test"
   ],
   [
     "view#bindwith view.instanceof objectview#watch source/view/view.js~view#bindwith,view#bindwith source/view/view.js~view.instanceof,view.instanceof source/view/objectview.js~objectview#watch,objectview#watch",
-    "test-file/test/ObjectView/index.js.html#lineNumber131",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber131",
     "ObjectView() Nested view Associate DOM",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber167",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber167",
     "ObjectView() Nested view Get data",
     "test"
   ],
   [
     "objectview#render source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber141",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber141",
     "ObjectView() Nested view Render data",
     "test"
   ],
   [
     "objectview#scan objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber117",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber117",
     "ObjectView() Nested view Scan DOM",
     "test"
   ],
   [
     "",
-    "test-file/test/ObjectView/index.js.html#lineNumber33",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber33",
     "ObjectView() Single view",
     "test"
   ],
   [
     "objectview#commit objectview#watch source/view/objectview.js~objectview#commit,objectview#commit source/view/objectview.js~objectview#watch,objectview#watch",
-    "test-file/test/ObjectView/index.js.html#lineNumber88",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber88",
     "ObjectView() Single view Async render",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.js.html#lineNumber77",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber77",
     "ObjectView() Single view Get data",
     "test"
   ],
   [
     "objectview#watch objectview#render source/view/objectview.js~objectview#watch,objectview#watch source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.js.html#lineNumber58",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber58",
     "ObjectView() Single view Render data",
     "test"
   ],
   [
     "objectview#scan objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.js.html#lineNumber47",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber47",
     "ObjectView() Single view Scan DOM",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber12",
+    "test-file/test/utility/resource.test.js.html#lineNumber12",
     "Resource utility",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber92",
+    "test-file/test/utility/resource.test.js.html#lineNumber92",
     "Resource utility Binary",
     "test"
   ],
   [
     "blobfrom source/utility/resource.js~blobfrom,blobfrom",
-    "test-file/test/utility/resource.js.html#lineNumber112",
+    "test-file/test/utility/resource.test.js.html#lineNumber112",
     "Resource utility Binary Convert DataURI to Blob",
     "test"
   ],
   [
     "filetypeof source/utility/resource.js~filetypeof,filetypeof",
-    "test-file/test/utility/resource.js.html#lineNumber101",
+    "test-file/test/utility/resource.test.js.html#lineNumber101",
     "Resource utility Binary Parse Data URI",
     "test"
   ],
   [
     "request source/utility/resource.js~request,request",
-    "test-file/test/utility/resource.js.html#lineNumber53",
+    "test-file/test/utility/resource.test.js.html#lineNumber53",
     "Resource utility HTTP request",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber85",
+    "test-file/test/utility/resource.test.js.html#lineNumber85",
     "Resource utility HTTP request Get Binary file",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber76",
+    "test-file/test/utility/resource.test.js.html#lineNumber76",
     "Resource utility HTTP request Get HTML document",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber70",
+    "test-file/test/utility/resource.test.js.html#lineNumber70",
     "Resource utility HTTP request Get JSON object",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber64",
+    "test-file/test/utility/resource.test.js.html#lineNumber64",
     "Resource utility HTTP request Get Plain text",
     "test"
   ],
   [
     "serialize source/utility/resource.js~serialize,serialize",
-    "test-file/test/utility/resource.js.html#lineNumber16",
+    "test-file/test/utility/resource.test.js.html#lineNumber16",
     "Resource utility Serialize <form /> or <fieldset />",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber32",
+    "test-file/test/utility/resource.test.js.html#lineNumber32",
     "Resource utility Serialize <form /> or <fieldset /> JSON",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber27",
+    "test-file/test/utility/resource.test.js.html#lineNumber27",
     "Resource utility Serialize <form /> or <fieldset /> Multiple part data",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.js.html#lineNumber42",
+    "test-file/test/utility/resource.test.js.html#lineNumber42",
     "Resource utility Serialize <form /> or <fieldset /> URL encode",
     "test"
   ],
   [
     "template source/view/template.js~template,template",
-    "test-file/test/Template.js.html#lineNumber9",
+    "test-file/test/Template.test.js.html#lineNumber9",
     "Template",
     "test"
   ],
   [
     "template#onchange source/view/template.js~template#onchange,template#onchange",
-    "test-file/test/Template.js.html#lineNumber65",
+    "test-file/test/Template.test.js.html#lineNumber65",
     "Template Changed callback",
     "test"
   ],
   [
     "template#evaluate source/view/template.js~template#evaluate,template#evaluate",
-    "test-file/test/Template.js.html#lineNumber54",
+    "test-file/test/Template.test.js.html#lineNumber54",
     "Template Evaluate non-text",
     "test"
   ],
   [
     "template#evaluate source/view/template.js~template#evaluate,template#evaluate",
-    "test-file/test/Template.js.html#lineNumber33",
+    "test-file/test/Template.test.js.html#lineNumber33",
     "Template Evaluate text",
     "test"
   ],
   [
     "template#parse template#clear template#parse,template#parse source/view/template.js~template#clear,template#clear",
-    "test-file/test/Template.js.html#lineNumber15",
+    "test-file/test/Template.test.js.html#lineNumber15",
     "Template Parsing",
     "test"
   ],
@@ -862,6 +904,12 @@ window.esdocSearchIndex = [
     "file/source/WebCell.js.html",
     "source/WebCell.js",
     "file"
+  ],
+  [
+    "source/webcell.js~decoratordescriptor",
+    "typedef/index.html#static-typedef-DecoratorDescriptor",
+    "source/WebCell.js~DecoratorDescriptor",
+    "typedef"
   ],
   [
     "source/component/component.js",
@@ -1290,45 +1338,45 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
-    "test/arrayview/index.js",
-    "test-file/test/ArrayView/index.js.html",
-    "test/ArrayView/index.js",
+    "test/arrayview/index.test.js",
+    "test-file/test/ArrayView/index.test.js.html",
+    "test/ArrayView/index.test.js",
     "testFile"
   ],
   [
-    "test/component/index.js",
-    "test-file/test/Component/index.js.html",
-    "test/Component/index.js",
+    "test/component/index.test.js",
+    "test-file/test/Component/index.test.js.html",
+    "test/Component/index.test.js",
     "testFile"
   ],
   [
-    "test/objectview/index.js",
-    "test-file/test/ObjectView/index.js.html",
-    "test/ObjectView/index.js",
+    "test/objectview/index.test.js",
+    "test-file/test/ObjectView/index.test.js.html",
+    "test/ObjectView/index.test.js",
     "testFile"
   ],
   [
-    "test/template.js",
-    "test-file/test/Template.js.html",
-    "test/Template.js",
+    "test/template.test.js",
+    "test-file/test/Template.test.js.html",
+    "test/Template.test.js",
     "testFile"
   ],
   [
-    "test/utility/dom.js",
-    "test-file/test/utility/DOM.js.html",
-    "test/utility/DOM.js",
+    "test/utility/dom.test.js",
+    "test-file/test/utility/DOM.test.js.html",
+    "test/utility/DOM.test.js",
     "testFile"
   ],
   [
-    "test/utility/object.js",
-    "test-file/test/utility/object.js.html",
-    "test/utility/object.js",
+    "test/utility/object.test.js",
+    "test-file/test/utility/object.test.js.html",
+    "test/utility/object.test.js",
     "testFile"
   ],
   [
-    "test/utility/resource.js",
-    "test-file/test/utility/resource.js.html",
-    "test/utility/resource.js",
+    "test/utility/resource.test.js",
+    "test-file/test/utility/resource.test.js.html",
+    "test/utility/resource.test.js",
     "testFile"
   ]
 ]

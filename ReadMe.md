@@ -2,7 +2,7 @@
 
 # WebCell
 
-Light-weight **[Web Components](https://www.webcomponents.org/) engine** based on ECMAScript 6+, powered by the practice & experience from developing [EWA v1.0 ~ 4.0](https://gitee.com/Tech_Query/EasyWebApp/).
+Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with MVVM support) based on [ECMAScript 2018][1] & [Decorator proposal][2], powered by the practice & experience from developing [EWA v1.0 ~ 4.0](https://gitee.com/Tech_Query/EasyWebApp/).
 
 [![Join the chat at https://gitter.im/EasyWebApp-js/Lobby](https://badges.gitter.im/EasyWebApp-js/Lobby.svg)](https://gitter.im/EasyWebApp-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
@@ -23,6 +23,8 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** based o
  4. [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
 
  5. [ECMAScript 6+](http://es6-features.org/)
+
+ 6. [Decorator](https://github.com/tc39/proposal-decorators#decorators)
 
 
 
@@ -94,7 +96,7 @@ textarea {
 
 `index.js`
 ```JavaScript
-import {component} from 'web-cell';
+import { component } from 'web-cell';
 
 import template from './index.html';
 
@@ -103,16 +105,22 @@ import style from './index.css';
 import data from './index.json';
 
 
-export default  component(class YourComponent extends HTMLElement {
+@component({                 //  Register this class as a Custom Element,
+    template, style, data    //  then define static properties
+})
+export default  class YourComponent extends HTMLElement {
 
-    constructor() {  super().buildDOM(template, style);  }
+    constructor() {
 
-    static get data() {  return data;  }
+        super();
+
+        this.buildDOM();    //  This method is necessary when template is set
+    }
 
     get value() {  return this.$('textarea')[0].value  }
 
     set value(raw) {  this.$('textarea')[0].value = raw;  }
-});
+}
 ```
 
 and then preview them during development with:
@@ -224,4 +232,10 @@ module.exports = {
 
  3. [CSS variables](https://www.w3.org/TR/css-variables-1/)
 
- 4. [ECMAScript 2015+](https://www.ecma-international.org/publications/standards/Ecma-262.htm)
+ 4. [ECMAScript 2018][1]
+
+
+
+[1]: https://www.ecma-international.org/publications/standards/Ecma-262.htm
+
+[2]: https://tc39.github.io/proposal-decorators/

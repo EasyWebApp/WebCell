@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">test/utility/resource.js | web-cell</title>
+  <title data-ice="title">test/ArrayView/index.test.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -65,122 +68,116 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">test/utility/resource.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import JSDOM from &apos;../../source/utility/DOM-polyfill&apos;;
-
-import {
-    serialize, request, fileTypeOf, blobFrom
-} from &apos;../../source/utility/resource&apos;;
-
-import WebServer from &apos;koapache&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/ArrayView/index.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { resolve } from &apos;path&apos;;
 
 import { readFileSync } from &apos;fs&apos;;
 
+import { JSDOM } from &apos;jsdom&apos;;
 
-describe(&apos;Resource utility&apos;,  () =&gt; {
-    /**
-     * @test {serialize}
-     */
-    describe(&apos;Serialize &lt;form /&gt; or &lt;fieldset /&gt;&apos;,  () =&gt; {
+import ArrayView from &apos;../../source/view/ArrayView&apos;;
 
-        const form = JSDOM.fragment(`
-&lt;form enctype=&quot;application/json&quot;&gt;
-    &lt;input type=&quot;text&quot; name=&quot;text&quot; value=&quot;example&quot;&gt;
-    &lt;textarea name=&quot;content&quot;&gt;sample&lt;/textarea&gt;
-    &lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;
-    &lt;input type=&quot;submit&quot;&gt;
-&lt;/form&gt;`
-        ).children[0];
+import ObjectView from &apos;../../source/view/ObjectView&apos;;
 
-        it(
-            &apos;Multiple part data&apos;,
-            ()  =&gt;  serialize( form ).should.be.instanceOf( FormData )
-        );
+const fragment = JSDOM.fragment(
+        readFileSync( resolve(module.id, &apos;../index.html&apos;) )
+    ),
+    data = require(&apos;./index.json&apos;);
 
-        it(&apos;JSON&apos;,  () =&gt; {
+var single, multiple;
 
-            form.elements.file.remove();
 
-            serialize( form ).should.be.eql({
-                text:     &apos;example&apos;,
-                content:  &apos;sample&apos;
-            });
+/**
+ * @test {ArrayView}
+ */
+describe(&apos;ArrayView()&apos;,  () =&gt; {
+
+    describe(&apos;Single top element of item template&apos;,  () =&gt; {
+
+        var element = fragment.querySelector(&apos;ol&apos;);
+
+        /**
+         * @test {ArrayView#constructor}
+         */
+        it(&apos;Scan DOM&apos;,  () =&gt; {
+
+            single = new ArrayView( element );
+
+            single.content.textContent.should.be.equal(&apos;&apos;);
         });
 
-        it(&apos;URL encode&apos;,  () =&gt; {
+        /**
+         * @test {ArrayView#render}
+         */
+        it(&apos;Render data&apos;,  () =&gt; {
 
-            form.removeAttribute(&apos;enctype&apos;);
+            single.render( data.view );
 
-            serialize( form ).should.be.equal(&apos;text=example&amp;content=sample&apos;);
+            Array.from(
+                single.content.children,  item =&gt; item.textContent
+            ).should.be.eql([
+                &apos;ObjectView&apos;, &apos;ArrayView&apos;, &apos;TreeView&apos;
+            ]);
+        });
+
+        /**
+         * @test {ArrayView#valueOf}
+         */
+        it(&apos;Get data&apos;,  () =&gt; {
+
+            single.valueOf().should.be.eql( single.data );
+
+            single.valueOf().should.not.be.equal( single.data );
+
+            single.data[0].should.be.equal( single[0].data );
         });
     });
 
-    /**
-     * @test {request}
-     */
-    describe(&apos;HTTP request&apos;,  () =&gt; {
+    describe(&apos;Multiple top element of item template&apos;,  () =&gt; {
+        /**
+         * @test {ObjectView#scan}
+         * @test {View#bindWith}
+         */
+        it(&apos;Scan DOM with booted View&apos;,  () =&gt; {
 
-        var server;
+            multiple = new ObjectView( fragment );
 
-        before(async () =&gt; {
+            multiple.should.have.length( 3 );
 
-            server = await (new WebServer()).workerHost();
+            multiple.view.should.be.equal( single );
 
-            server = `http://${server.address}:${server.port}`;
+            multiple.browser.should.be.instanceof( ArrayView );
         });
 
-        it(&apos;Get Plain text&apos;,  () =&gt; request(
-            `${server}/ReadMe.md`,
-        ).should.be.fulfilledWith(
-            readFileSync(&apos;ReadMe.md&apos;) + &apos;&apos;
-        ));
-
-        it(&apos;Get JSON object&apos;,  () =&gt; request(
-            `${server}/package.json`,
-        ).should.be.fulfilledWith(
-            JSON.parse( readFileSync(&apos;package.json&apos;) )
-        ));
-
-        it(
-            &apos;Get HTML document&apos;,
-            async ()  =&gt;  (await request(
-                `${server}/test/ObjectView/index.html`,
-            )).should.be.class(
-                &apos;DocumentFragment&apos;
-            )
-        );
-
-        it(
-            &apos;Get Binary file&apos;,
-            async ()  =&gt;  (await request(`${server}/docs/image/github.png`))
-                .should.be.class(&apos;Blob&apos;)
-        );
-    });
-
-    describe(&apos;Binary&apos;,  () =&gt; {
-
-        const data = `data:image/png;base64,${
-            readFileSync(&apos;docs/image/github.png&apos;).toString(&apos;base64&apos;)
-        }`;
-
         /**
-         * @test {fileTypeOf}
+         * @test {ObjectView#render}
          */
-        it(
-            &apos;Parse Data URI&apos;,
-            ()  =&gt;  fileTypeOf( data ).should.be.fulfilledWith({
-                schema:  &apos;data&apos;,
-                type:    &apos;png&apos;
-            })
-        );
+        it(&apos;Render part of data&apos;,  () =&gt; {
 
-        /**
-         * @test {blobFrom}
-         */
-        it(
-            &apos;Convert DataURI to Blob&apos;,
-            ()  =&gt;  blobFrom( data ).should.be.class(&apos;Blob&apos;)
-        );
+            const _data_ = Object.assign({ },  data);
+
+            delete _data_.view;
+
+            multiple.render(_data_);
+
+            multiple.view[0].scope.should.be.equal( multiple.data );
+
+            multiple.toString().should.be.equal(`
+&lt;main&gt;
+    &lt;h1&gt;${data.title}&lt;/h1&gt;
+
+    &lt;ol data-array=&quot;view&quot;&gt;${
+    data.view.map(item =&gt; `&lt;li&gt;${item.name}&lt;/li&gt;`).join(&apos;&apos;)
+}&lt;/ol&gt;
+
+    &lt;dl data-array=&quot;browser&quot;&gt;${
+    data.browser.map((item, index)  =&gt;
+        `&lt;dt&gt;${index}. ${item.brand}&lt;/dt&gt;&lt;dd&gt;${item.core} v0&lt;/dd&gt;`
+    ).join(&apos;&apos;)
+}&lt;/dl&gt;
+&lt;/main&gt;`.trim()
+            );
+        });
     });
 });
 </code></pre>

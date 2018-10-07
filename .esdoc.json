@@ -12,7 +12,7 @@
                 "test": {
                     "source": "./test",
                     "interfaces": ["describe", "it"],
-                    "includes": ["\\.js$"]
+                    "includes": ["\\.test\\.js$"]
                 }
             }
         },
@@ -20,6 +20,12 @@
             "name": "esdoc-external-webapi-plugin",
             "option": {
                 "enable": true
+            }
+        },
+        {
+            "name": "esdoc-ecmascript-proposal-plugin",
+            "option": {
+                "all": true
             }
         }
     ]

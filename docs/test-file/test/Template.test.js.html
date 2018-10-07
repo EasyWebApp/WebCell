@@ -2,13 +2,13 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <base data-ice="baseUrl" href="../../../">
-  <title data-ice="title">test/ObjectView/index.js | web-cell</title>
+  <base data-ice="baseUrl" href="../../">
+  <title data-ice="title">test/Template.test.js | web-cell</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine based on ECMAScript 6+ with MVVM support"></head>
+<meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -30,6 +30,8 @@
   <ul>
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -44,6 +46,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
@@ -65,183 +68,99 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1 data-ice="title">test/ObjectView/index.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { resolve } from &apos;path&apos;;
+<div class="content" data-ice="content"><h1 data-ice="title">test/Template.test.js</h1>
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Template from &apos;../source/view/Template&apos;;
 
-import { readFileSync } from &apos;fs&apos;;
-
-import JSDOM from &apos;../../source/utility/DOM-polyfill&apos;;
-
-import View from &apos;../../source/view/View&apos;;
-
-import ObjectView from &apos;../../source/view/ObjectView&apos;;
-
-import Sinon from &apos;sinon&apos;;
-
-import { nextTick } from &apos;../../source/utility/DOM&apos;;
-
-var HTML, fragment = `
-    &lt;fieldset&gt;
-        &lt;legend title=&quot;Test field&quot;&gt;
-            Test
-            &lt;input type=&quot;checkbox&quot;&gt;
-        &lt;/legend&gt;
-    &lt;/fieldset&gt;`.trim();
+import sinon from &apos;sinon&apos;;
 
 
 /**
- * @test {ObjectView}
+ * @test {Template}
  */
-describe(&apos;ObjectView()&apos;,  () =&gt; {
+describe(&apos;Template&apos;,  () =&gt; {
 
-    before(()  =&gt;  HTML = readFileSync(
-        resolve(module.id, &apos;../index.html&apos;),  {encoding: &apos;utf-8&apos;}
-    ));
+    /**
+     * @test {Template#parse}
+     * @test {Template#clear}
+     */
+    it(&apos;Parsing&apos;,  () =&gt; {
 
-    describe(&apos;Single view&apos;,  () =&gt; {
+        const template = new Template(
+            &apos;[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !&apos;
+        );
 
-        var view, element;
+        template.should.have.length( 2 );
 
-        before(() =&gt; {
+        template.reference.get(&apos;this&apos;)[0].should.be.equal(&apos;name&apos;);
 
-            element = JSDOM.fragment( HTML ).querySelector(&apos;fieldset&apos;);
-
-            element.remove();
-        });
-
-        /**
-         * @test {ObjectView#scan}
-         */
-        it(&apos;Scan DOM&apos;,  () =&gt; {
-
-            view = new ObjectView( element );
-
-            view.should.have.length( 3 );
-        });
-
-        /**
-         * @test {ObjectView#watch}
-         * @test {ObjectView#render}
-         */
-        it(&apos;Render data&apos;,  () =&gt; {
-
-            view.render({
-                name:    &apos;Test&apos;,
-                title:   &apos;Test field&apos;,
-                enable:  true,
-                extra:   &apos;test&apos;
-            });
-
-            view.extra.should.be.equal(&apos;test&apos;);
-
-            view.toString().should.be.equal( fragment );
-
-            view.content.querySelector(&apos;input&apos;).checked.should.be.true();
-        });
-
-        /**
-         * @test {ObjectView#valueOf}
-         */
-        it(&apos;Get data&apos;,  () =&gt; {
-
-            view.valueOf().should.be.eql( view.data );
-
-            view.valueOf().should.not.be.equal( view.data );
-        });
-
-        /**
-         * @test {ObjectView#commit}
-         * @test {ObjectView#watch}
-         */
-        it(&apos;Async render&apos;,  async () =&gt; {
-
-            view.render = Sinon.spy( view.render );
-
-            view.commit(&apos;name&apos;, &apos;Example&apos;);
-
-            view.title = &apos;Example field&apos;;
-
-            view.render.should.not.be.called();
-
-            view.toString().should.be.equal( fragment );
-
-            await nextTick();
-
-            view.render.should.be.calledOnce();
-
-            view.toString().should.be.equal(
-                fragment.replace(/Test/g, &apos;Example&apos;)
-            );
-        });
+        template.toString().should.be.equal(
+            `[ ${(new Date()).getFullYear()} ]  Hello,  !`
+        );
     });
 
-    describe(&apos;Nested view&apos;,  () =&gt; {
+    /**
+     * @test {Template#evaluate}
+     */
+    it(&apos;Evaluate text&apos;,  () =&gt; {
 
-        var view;
+        const template = new Template(
+            &apos;[ ${this.time} ]  Hello, ${scope.creator}\&apos;s ${view.name} !&apos;,
+            [&apos;view&apos;, &apos;scope&apos;]
+        );
 
-        /**
-         * @test {ObjectView#scan}
-         */
-        it(&apos;Scan DOM&apos;,  () =&gt; {
+        template.should.have.length( 3 );
 
-            view = new ObjectView( HTML );
+        template.reference.size.should.be.equal( 3 );
 
-            view.should.have.length( 4 );
+        template.evaluate(
+            {time: &apos;2015-07-23&apos;},  {name: &apos;EasyWebApp.js&apos;},  {creator: &apos;TechQuery&apos;}
+        ).should.be.equal(
+            &apos;[ 2015-07-23 ]  Hello, TechQuery\&apos;s EasyWebApp.js !&apos;
+        );
+    });
 
-            view[3].should.be.instanceof( ObjectView );
+    /**
+     * @test {Template#evaluate}
+     */
+    it(&apos;Evaluate non-text&apos;,  () =&gt; {
+
+        function method() { }
+
+        (new Template(&apos;${this.method}&apos;)).evaluate({ method })
+            .should.be.equal( method );
+    });
+
+    /**
+     * @test {Template#onChange}
+     */
+    it(&apos;Changed callback&apos;,  () =&gt; {
+
+        const empty = `[ ${(new Date()).getFullYear()} ]  Hello,  !`;
+
+        const onChange = sinon.spy((newValue, oldValue, ...bindData)  =&gt;  {
+
+            if (oldValue === null)
+                newValue.should.be.equal( empty );
+            else {
+                oldValue.should.be.equal( empty );
+
+                newValue.should.be.equal(
+                    `[ ${(new Date()).getFullYear()} ]  Hello, EWA !`
+                );
+            }
+
+            bindData.should.be.eql([1, 2, 3]);
         });
 
-        /**
-         * @test {View#bindWith}
-         * @test {View.instanceOf}
-         * @test {ObjectView#watch}
-         */
-        it(&apos;Associate DOM&apos;,  () =&gt; {
+        const template = new Template(
+            &apos;[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !&apos;,
+            onChange,
+            [1, 2, 3]
+        );
 
-            View.instanceOf( view.content[0] ).should.be.equal( view );
+        template.evaluate({name: &apos;EWA&apos;});
 
-            view.tips.parent.should.be.equal( view );
-        });
-
-        /**
-         * @test {ObjectView#render}
-         */
-        it(&apos;Render data&apos;,  () =&gt; {
-
-            view.render({
-                name:    &apos;Test&apos;,
-                title:   &apos;Test field&apos;,
-                enable:  true,
-                tips:    {
-                    title:    &apos;Test tips&apos;,
-                    content:  &apos;Test content&apos;
-                }
-            });
-
-            view.toString().trim().should.be.equal(`
-&lt;form&gt;
-    ${fragment}
-    &lt;dl data-object=&quot;tips&quot;&gt;
-        &lt;dt&gt;Test tips&lt;/dt&gt;
-        &lt;dd&gt;Test content&lt;/dd&gt;
-    &lt;/dl&gt;
-&lt;/form&gt;`.trim()
-            );
-        });
-
-        /**
-         * @test {ObjectView#valueOf}
-         */
-        it(&apos;Get data&apos;,  () =&gt; {
-
-            view.valueOf().should.be.eql( view.data );
-
-            view.valueOf().should.not.be.equal( view.data );
-
-            view.data.tips.should.be.equal( view.tips.data );
-
-            view.tips.scope.should.be.equal( view.data );
-        });
+        onChange.should.have.callCount(2);
     });
 });
 </code></pre>

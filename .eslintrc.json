@@ -5,9 +5,13 @@
         "browser": true,
         "mocha": true
     },
+    "parser": "babel-eslint",
     "parserOptions": {
         "ecmaVersion": 8,
-        "sourceType": "module"
+        "sourceType": "module",
+        "ecmaFeatures": {
+          "legacyDecorators": true
+        }
     },
     "extends": "eslint:recommended",
     "rules": {

@@ -18,14 +18,13 @@ const CSS_map = {
  */
 export default  class InputComponent extends HTMLElement {
     /**
-     * @param {string} template - HTML source code with template expressions
-     * @param {string} [style]  - CSS source code
+     * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      */
-    constructor(template, style) {
+    constructor(option) {
 
-        super().buildDOM(template, style);
+        super();
 
-        this.on.call(
+        this.buildDOM( option ).on.call(
             this.$('slot')[0],  'slotchange',  this.linkSlot.bind( this )
         );
     }
