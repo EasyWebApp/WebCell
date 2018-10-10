@@ -11,7 +11,7 @@ import { $, parseDOM } from './DOM';
 export function isXDomain(URI) {
 
     return (
-        (new URL(URI, window.location.href)).origin  !==  window.location.origin
+        (new URL(URI, document.baseURI)).origin  !==  window.location.origin
     );
 }
 

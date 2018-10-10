@@ -57,6 +57,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -69,28 +70,48 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/utility/DOM.test.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import &apos;../../source/utility/DOM-polyfill&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { readFileSync } from &apos;fs&apos;;
 
-import { readFileSync } from &apos;fs&apos;;
-
-import { parseDOM, stringifyDOM, delay, nextTick } from &apos;../../source/utility/DOM&apos;;
+import {
+    documentReady, parseDOM, stringifyDOM, $, $up, delay, nextTick
+} from &apos;../../source/utility/DOM&apos;;
 
 
 describe(&apos;DOM utility&apos;,  () =&gt; {
+
+    var fragment;
+    /**
+     * @test {documentReady}
+     */
+    it(&apos;DOM ready&apos;,  () =&gt; documentReady.should.be.resolved());
+
     /**
      * @test {parseDOM}
      * @test {stringifyDOM}
      */
     it(&apos;Parse &amp; Stringify DOM&apos;,  () =&gt; {
 
-        const HTML = (readFileSync(&apos;test/ObjectView/index.html&apos;) + &apos;&apos;)
+        const HTML = (readFileSync(&apos;test/ArrayView/index.html&apos;) + &apos;&apos;)
             .replace(/\r\n/g, &apos;\n&apos;).replace(/\r/g, &apos;\n&apos;);
 
-        const fragment = parseDOM( HTML );
+        fragment = parseDOM( HTML );
 
         fragment.should.be.class(&apos;DocumentFragment&apos;);
 
         stringifyDOM( fragment ).should.be.equal( HTML );
+    });
+
+    /**
+     * @test {\$}
+     * @test {\$up}
+     */
+    it(&apos;Search elements up &amp; down&apos;,  () =&gt; {
+
+        const cell = $(&apos;td&apos;, fragment);
+
+        cell.should.have.length(4);
+
+        $up(&apos;tbody[data-array]&apos;, cell[0]).should.be.instanceOf( Element );
     });
 
     /**

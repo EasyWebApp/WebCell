@@ -166,7 +166,7 @@ export default  class Template {
     clear() {
 
         return  this.evaluate(... Array.from(
-            this.reference.entries(),  (entry)  =>  {
+            this.reference.entries(),  entry => {
 
                 const data = { };
 

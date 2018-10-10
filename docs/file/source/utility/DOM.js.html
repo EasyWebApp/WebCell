@@ -57,6 +57,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -70,6 +71,23 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility/DOM.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">/**
+ * @type {Promise}
+ */
+export const documentReady = new Promise(resolve =&gt; {
+
+    document.addEventListener(&apos;DOMContentLoaded&apos;, resolve);
+
+    window.addEventListener(&apos;load&apos;, resolve);
+
+    (function check() {
+
+        (document.readyState === &apos;complete&apos;)  ?
+            resolve()  :  setTimeout( check );
+    })();
+});
+
+
+/**
  * jQuery-like selector
  *
  * @param {string}                            selector
@@ -151,6 +169,63 @@ export function delegate(selector, handler) {
     };
 }
 
+
+const TableWrapper = {
+        before:  &apos;&lt;table&gt;&apos;,
+        after:   &apos;&lt;/table&gt;&apos;,
+        depth:   2
+    },
+    RowWrapper = {
+        before:  &apos;&lt;table&gt;&lt;tr&gt;&apos;,
+        depth:   3
+    },
+    SelectWrapper = {
+        before:  &apos;&lt;select multiple&gt;&apos;
+    };
+
+const TagWrapper = {
+    area:      {before: &apos;&lt;map&gt;&apos;},
+    legend:    {before: &apos;&lt;fieldset&gt;&apos;},
+    param:     {before: &apos;&lt;object&gt;&apos;},
+    caption:   TableWrapper,
+    thead:     TableWrapper,
+    tbody:     TableWrapper,
+    tfoot:     TableWrapper,
+    tr:        TableWrapper,
+    th:        RowWrapper,
+    td:        RowWrapper,
+    optgroup:  SelectWrapper,
+    option:    SelectWrapper
+};
+
+/**
+ * @param {String}                           markup
+ * @param {function(markup: String): Node[]} parser
+ *
+ * @return {Node[]}
+ */
+function safeWrap(markup, parser) {
+
+    var wrapper;
+
+    markup = parser(
+        markup.replace(/&lt;(\w+)[\s\S]*?&gt;[\s\S]*?&lt;\/\1&gt;/,  (match, tagName) =&gt; {
+
+            wrapper = TagWrapper[ tagName ];
+
+            return  wrapper ?
+                (wrapper.before + match + (wrapper.after || &apos;&apos;))  :  match;
+        })
+    );
+
+    const depth = (wrapper || &apos;&apos;).depth;
+
+    for (let i = 0;  i &lt; depth;  i++)  markup = [ markup[0].firstElementChild ];
+
+    return markup;
+}
+
+
 /**
  * @param {string} markup - Code of an markup fragment
  *
@@ -158,15 +233,14 @@ export function delegate(selector, handler) {
  */
 export function parseDOM(markup) {
 
-    markup = (new DOMParser()).parseFromString(markup, &apos;text/html&apos;);
-
     const fragment = document.createDocumentFragment();
 
-    fragment.append(
-        ... Array.from( markup.head.childNodes ).concat(
-            Array.from( markup.body.childNodes )
-        )
-    );
+    fragment.append(... safeWrap(markup,  markup =&gt; {
+
+        markup = (new DOMParser()).parseFromString(markup, &apos;text/html&apos;);
+
+        return  [... markup.head.childNodes].concat([... markup.body.childNodes]);
+    }));
 
     return fragment;
 }

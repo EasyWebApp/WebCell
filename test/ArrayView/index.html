@@ -5,8 +5,14 @@
         <li>${view.name}</li>
     </ol>
 
-    <dl data-array="browser">
-        <dt>${view.index}. ${view.brand}</dt>
-        <dd>${view.core} v${scope.version}</dd>
-    </dl>
+    <table>
+        <tbody data-array="browser">
+            <tr>
+                <td>${view.index}</td>
+                <td>${view.brand}</td>
+                <td>${view.core}</td>
+                <td>v${scope.version}</td>
+            </tr>
+        </tbody>
+    </table>
 </main>

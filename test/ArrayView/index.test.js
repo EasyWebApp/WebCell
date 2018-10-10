@@ -99,11 +99,18 @@ describe('ArrayView()',  () => {
     data.view.map(item => `<li>${item.name}</li>`).join('')
 }</ol>
 
-    <dl data-array="browser">${
-    data.browser.map((item, index)  =>
-        `<dt>${index}. ${item.brand}</dt><dd>${item.core} v0</dd>`
+    <table>
+        <tbody data-array="browser">${
+    data.browser.map((item, index)  =>  `
+            <tr>
+                <td>${index}</td>
+                <td>${item.brand}</td>
+                <td>${item.core}</td>
+                <td>v0</td>
+            </tr>`.trim()
     ).join('')
-}</dl>
+}</tbody>
+    </table>
 </main>`.trim()
             );
         });

@@ -26,12 +26,12 @@ export default  class View {
                 this.name = template.dataset[ nameKey ];  break;
             case 11:
                 if (! (template.parentNode || template.host))
-                    template = Array.from( template.childNodes );
+                    template = [... template.childNodes];
                 break;
             default:
-                template = Array.from(
-                    document.importNode(parseDOM( template ),  true).childNodes
-                );
+                template = [
+                    ... document.importNode(parseDOM( template ),  true).childNodes
+                ];
         }
 
         var _this_ = this.bindWith( template );

@@ -35,7 +35,7 @@ export default  class Component {
 
         if ( template )  shadow.append( document.importNode(template, true) );
 
-        if ( style )  shadow.prepend( style );
+        if ( style )  shadow.prepend( style.cloneNode( true ) );
 
         const view = new ObjectView( shadow );
 
@@ -64,43 +64,6 @@ export default  class Component {
                 cancelable:  event.cancelable
             })
         );
-    }
-
-    /**
-     * @private
-     *
-     * @return   {Object}
-     * @property {HTMLTemplateElement}                      template
-     * @property {Array<HTMLStyleElement, HTMLLinkElement>} style
-     * @property {HTMLScriptElement}                        script
-     */
-    static findTemplate() {
-
-        var script = document.currentScript, template, style = [ ];
-
-        var element = script, stop;
-
-        while ((! stop)  &&  (element = element.previousElementSibling))
-            switch ( element.tagName.toLowerCase() ) {
-                case 'template':
-                    template = element.content;  break;
-                case 'style':
-                    style.unshift( element );  break;
-                case 'link':
-                    if (element.rel === 'stylesheet') {
-
-                        element.setAttribute('href', element.href);
-
-                        style.unshift( element );
-                    }
-                    break;
-                case 'script':
-                    stop = true;
-            }
-
-        if ( style[0] )  template.prepend(... style);
-
-        return  {template, style, script};
     }
 
     /**

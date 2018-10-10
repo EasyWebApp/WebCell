@@ -1,25 +1,45 @@
-import '../../source/utility/DOM-polyfill';
-
 import { readFileSync } from 'fs';
 
-import { parseDOM, stringifyDOM, delay, nextTick } from '../../source/utility/DOM';
+import {
+    documentReady, parseDOM, stringifyDOM, $, $up, delay, nextTick
+} from '../../source/utility/DOM';
 
 
 describe('DOM utility',  () => {
+
+    var fragment;
+    /**
+     * @test {documentReady}
+     */
+    it('DOM ready',  () => documentReady.should.be.resolved());
+
     /**
      * @test {parseDOM}
      * @test {stringifyDOM}
      */
     it('Parse & Stringify DOM',  () => {
 
-        const HTML = (readFileSync('test/ObjectView/index.html') + '')
+        const HTML = (readFileSync('test/ArrayView/index.html') + '')
             .replace(/\r\n/g, '\n').replace(/\r/g, '\n');
 
-        const fragment = parseDOM( HTML );
+        fragment = parseDOM( HTML );
 
         fragment.should.be.class('DocumentFragment');
 
         stringifyDOM( fragment ).should.be.equal( HTML );
+    });
+
+    /**
+     * @test {\$}
+     * @test {\$up}
+     */
+    it('Search elements up & down',  () => {
+
+        const cell = $('td', fragment);
+
+        cell.should.have.length(4);
+
+        $up('tbody[data-array]', cell[0]).should.be.instanceOf( Element );
     });
 
     /**

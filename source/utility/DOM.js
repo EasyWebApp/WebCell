@@ -1,4 +1,21 @@
 /**
+ * @type {Promise}
+ */
+export const documentReady = new Promise(resolve => {
+
+    document.addEventListener('DOMContentLoaded', resolve);
+
+    window.addEventListener('load', resolve);
+
+    (function check() {
+
+        (document.readyState === 'complete')  ?
+            resolve()  :  setTimeout( check );
+    })();
+});
+
+
+/**
  * jQuery-like selector
  *
  * @param {string}                            selector
@@ -80,6 +97,63 @@ export function delegate(selector, handler) {
     };
 }
 
+
+const TableWrapper = {
+        before:  '<table>',
+        after:   '</table>',
+        depth:   2
+    },
+    RowWrapper = {
+        before:  '<table><tr>',
+        depth:   3
+    },
+    SelectWrapper = {
+        before:  '<select multiple>'
+    };
+
+const TagWrapper = {
+    area:      {before: '<map>'},
+    legend:    {before: '<fieldset>'},
+    param:     {before: '<object>'},
+    caption:   TableWrapper,
+    thead:     TableWrapper,
+    tbody:     TableWrapper,
+    tfoot:     TableWrapper,
+    tr:        TableWrapper,
+    th:        RowWrapper,
+    td:        RowWrapper,
+    optgroup:  SelectWrapper,
+    option:    SelectWrapper
+};
+
+/**
+ * @param {String}                           markup
+ * @param {function(markup: String): Node[]} parser
+ *
+ * @return {Node[]}
+ */
+function safeWrap(markup, parser) {
+
+    var wrapper;
+
+    markup = parser(
+        markup.replace(/<(\w+)[\s\S]*?>[\s\S]*?<\/\1>/,  (match, tagName) => {
+
+            wrapper = TagWrapper[ tagName ];
+
+            return  wrapper ?
+                (wrapper.before + match + (wrapper.after || ''))  :  match;
+        })
+    );
+
+    const depth = (wrapper || '').depth;
+
+    for (let i = 0;  i < depth;  i++)  markup = [ markup[0].firstElementChild ];
+
+    return markup;
+}
+
+
 /**
  * @param {string} markup - Code of an markup fragment
  *
@@ -87,15 +161,14 @@ export function delegate(selector, handler) {
  */
 export function parseDOM(markup) {
 
-    markup = (new DOMParser()).parseFromString(markup, 'text/html');
-
     const fragment = document.createDocumentFragment();
 
-    fragment.append(
-        ... Array.from( markup.head.childNodes ).concat(
-            Array.from( markup.body.childNodes )
-        )
-    );
+    fragment.append(... safeWrap(markup,  markup => {
+
+        markup = (new DOMParser()).parseFromString(markup, 'text/html');
+
+        return  [... markup.head.childNodes].concat([... markup.body.childNodes]);
+    }));
 
     return fragment;
 }

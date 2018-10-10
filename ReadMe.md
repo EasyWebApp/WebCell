@@ -38,14 +38,14 @@ npm init
 
 npm install web-cell @babel/polyfill @webcomponents/webcomponentsjs whatwg-fetch
 
-npm install web-cell-cli -D
+npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D
 ```
 (More about [WebCell DevCLI](https://easywebapp.github.io/DevCLI/))
 
 
 ### Configuration
 
-Add **Source code folder** of your components to `directories.lib` field of `package.json` ([Example](https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6))
+Add **Source code folder** of your components to `directories.lib` field of `package.json` ([Example](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24))
 
 
 ### Index page
@@ -220,7 +220,7 @@ module.exports = {
 
  2. [BootCell](https://github.com/EasyWebApp/BootCell) based on **BootStrap v4**
 
- 3. [Material Cell](https://github.com/EasyWebApp/material-cell) based on **Material Design lite v1.3**
+ 3. [Material Cell](https://web-cell-ht.ml/) based on **Material Design lite v1.3**
 
 
 
@@ -233,6 +233,8 @@ module.exports = {
  3. [CSS variables](https://www.w3.org/TR/css-variables-1/)
 
  4. [ECMAScript 2018][1]
+
+ 5. [Decorator proposal][2]
 
 
 

@@ -57,6 +57,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -91,10 +92,10 @@
 
 npm install web-cell @babel/polyfill @webcomponents/webcomponentsjs whatwg-fetch
 
-npm install web-cell-cli -D</code>
+npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D</code>
 </code></pre>
 <p>(More about <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
-<h3 id="configuration">Configuration</h3><p>Add <strong>Source code folder</strong> of your components to <code>directories.lib</code> field of <code>package.json</code> (<a href="https://github.com/EasyWebApp/BootCell/blob/master/package.json#L6">Example</a>)</p>
+<h3 id="configuration">Configuration</h3><p>Add <strong>Source code folder</strong> of your components to <code>directories.lib</code> field of <code>package.json</code> (<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24">Example</a>)</p>
 <h3 id="index-page">Index page</h3><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;!DocType HTML&gt;
 &lt;html&gt;&lt;head&gt;
     &lt;script src=&quot;node_modules/@babel/polyfill/dist/polyfill.min.js&quot;&gt;&lt;/script&gt;
@@ -229,7 +230,7 @@ module.exports = {
 </li>
 <li><p><a href="https://github.com/EasyWebApp/BootCell">BootCell</a> based on <strong>BootStrap v4</strong></p>
 </li>
-<li><p><a href="https://github.com/EasyWebApp/material-cell">Material Cell</a> based on <strong>Material Design lite v1.3</strong></p>
+<li><p><a href="https://web-cell-ht.ml/">Material Cell</a> based on <strong>Material Design lite v1.3</strong></p>
 </li>
 </ol>
 <h2 id="standard-specification">Standard specification</h2><ol>
@@ -240,6 +241,8 @@ module.exports = {
 <li><p><a href="https://www.w3.org/TR/css-variables-1/">CSS variables</a></p>
 </li>
 <li><p><a href="https://www.ecma-international.org/publications/standards/Ecma-262.htm">ECMAScript 2018</a></p>
+</li>
+<li><p><a href="https://tc39.github.io/proposal-decorators/">Decorator proposal</a></p>
 </li>
 </ol>
 </div>

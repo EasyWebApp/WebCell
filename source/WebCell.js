@@ -69,15 +69,17 @@ function decoratorMix(member, mixin) {
 /**
  * Register a component
  *
- * @param {Object}         option
- * @param {String|Node}    [option.template] - HTML template source or sub DOM tree
- * @param {String|Element} [option.style]    - CSS source or `<style />`
- * @param {Object}         [option.data]     - Initial data
- * @param {String}         [option.tagName]  - Name of an HTML original tag to extend
+ * @param {Object}         meta
+ * @param {String|Node}    [meta.template] - HTML template source or sub DOM tree
+ * @param {String|Element} [meta.style]    - CSS source or `<style />`
+ * @param {Object}         [meta.data]     - Initial data
+ * @param {String}         [meta.tagName]  - Name of an HTML original tag to extend
  *
  * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator
  */
-export function component({template, style, data, tagName}) {
+export function component(meta = { }) {
+
+    var {template, style, data, tagName} = meta;
 
     return  ({elements}) => {
 

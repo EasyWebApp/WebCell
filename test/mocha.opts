@@ -2,6 +2,7 @@
 --require @babel/polyfill
 --require should
 --require should-sinon
+--require ./test/DOM-polyfill
 --recursive
 --colors
 --inline-diffs

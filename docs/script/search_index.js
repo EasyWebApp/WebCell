@@ -90,6 +90,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~documentready",
+    "variable/index.html#static-variable-documentReady",
+    "<span>documentReady</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "variable"
+  ],
+  [
     "web-cell/source/utility/object.js~extend",
     "function/index.html#static-function-extend",
     "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -234,8 +240,8 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component.findtemplate component#builddom \\$ component.findtemplate,component.findtemplate source/component/component.js~component#builddom,component#builddom source/utility/dom.js~$,\\$",
-    "test-file/test/Component/index.test.js.html#lineNumber41",
+    "component#builddom source/component/component.js~component#builddom,component#builddom",
+    "test-file/test/Component/index.test.js.html#lineNumber39",
     "Component mixin Build Shadow DOM",
     "test"
   ],
@@ -247,26 +253,20 @@ window.esdocSearchIndex = [
   ],
   [
     "delegate delegate,delegate",
-    "test-file/test/Component/index.test.js.html#lineNumber99",
+    "test-file/test/Component/index.test.js.html#lineNumber87",
     "Component mixin Delegate DOM events",
     "test"
   ],
   [
     "component#bubbleout source/component/component.js~component#bubbleout,component#bubbleout",
-    "test-file/test/Component/index.test.js.html#lineNumber77",
+    "test-file/test/Component/index.test.js.html#lineNumber75",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
   ],
   [
     "targetof indexof source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
-    "test-file/test/Component/index.test.js.html#lineNumber61",
+    "test-file/test/Component/index.test.js.html#lineNumber59",
     "Component mixin Get the event target in Shadow DOM",
-    "test"
-  ],
-  [
-    "\\$up source/utility/dom.js~$up,\\$up",
-    "test-file/test/Component/index.test.js.html#lineNumber89",
-    "Component mixin should find a parent element matched a CSS selector",
     "test"
   ],
   [
@@ -277,25 +277,37 @@ window.esdocSearchIndex = [
   ],
   [
     "delay nexttick source/utility/dom.js~delay,delay source/utility/dom.js~nexttick,nexttick",
-    "test-file/test/utility/DOM.test.js.html#lineNumber29",
+    "test-file/test/utility/DOM.test.js.html#lineNumber49",
     "DOM utility Await next tick",
     "test"
   ],
   [
+    "documentready source/utility/dom.js~documentready,documentready",
+    "test-file/test/utility/DOM.test.js.html#lineNumber14",
+    "DOM utility DOM ready",
+    "test"
+  ],
+  [
     "parsedom stringifydom source/utility/dom.js~parsedom,parsedom source/utility/dom.js~stringifydom,stringifydom",
-    "test-file/test/utility/DOM.test.js.html#lineNumber13",
+    "test-file/test/utility/DOM.test.js.html#lineNumber20",
     "DOM utility Parse & Stringify DOM",
     "test"
   ],
   [
+    "\\$ \\$up source/utility/dom.js~$,\\$ source/utility/dom.js~$up,\\$up",
+    "test-file/test/utility/DOM.test.js.html#lineNumber36",
+    "DOM utility Search elements up & down",
+    "test"
+  ],
+  [
     "",
-    "test-file/test/Component/index.test.js.html#lineNumber120",
+    "test-file/test/Component/index.test.js.html#lineNumber108",
     "Form field components",
     "test"
   ],
   [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
-    "test-file/test/Component/index.test.js.html#lineNumber125",
+    "test-file/test/Component/index.test.js.html#lineNumber113",
     "Form field components Render inner field",
     "test"
   ],
@@ -994,12 +1006,6 @@ window.esdocSearchIndex = [
     "class/source/component/InputComponent.js~InputComponent.html#instance-get-defaultValue",
     "source/component/InputComponent.js~InputComponent#defaultValue",
     "member"
-  ],
-  [
-    "source/utility/dom-polyfill.js",
-    "file/source/utility/DOM-polyfill.js.html",
-    "source/utility/DOM-polyfill.js",
-    "file"
   ],
   [
     "source/utility/dom.js",

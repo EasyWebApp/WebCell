@@ -57,6 +57,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -106,7 +107,7 @@ export default  class Component {
 
         if ( template )  shadow.append( document.importNode(template, true) );
 
-        if ( style )  shadow.prepend( style );
+        if ( style )  shadow.prepend( style.cloneNode( true ) );
 
         const view = new ObjectView( shadow );
 
@@ -135,43 +136,6 @@ export default  class Component {
                 cancelable:  event.cancelable
             })
         );
-    }
-
-    /**
-     * @private
-     *
-     * @return   {Object}
-     * @property {HTMLTemplateElement}                      template
-     * @property {Array&lt;HTMLStyleElement, HTMLLinkElement&gt;} style
-     * @property {HTMLScriptElement}                        script
-     */
-    static findTemplate() {
-
-        var script = document.currentScript, template, style = [ ];
-
-        var element = script, stop;
-
-        while ((! stop)  &amp;&amp;  (element = element.previousElementSibling))
-            switch ( element.tagName.toLowerCase() ) {
-                case &apos;template&apos;:
-                    template = element.content;  break;
-                case &apos;style&apos;:
-                    style.unshift( element );  break;
-                case &apos;link&apos;:
-                    if (element.rel === &apos;stylesheet&apos;) {
-
-                        element.setAttribute(&apos;href&apos;, element.href);
-
-                        style.unshift( element );
-                    }
-                    break;
-                case &apos;script&apos;:
-                    stop = true;
-            }
-
-        if ( style[0] )  template.prepend(... style);
-
-        return  {template, style, script};
     }
 
     /**

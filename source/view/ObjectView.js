@@ -136,7 +136,7 @@ export default  class ObjectView extends View {
      */
     parseTag(element) {
 
-        for (let attr  of  Array.from( element.attributes )) {
+        for (let attr  of  [... element.attributes]) {
 
             let name = attr.name;
 
@@ -164,7 +164,7 @@ export default  class ObjectView extends View {
             childNodes:    (root instanceof Array)  ?  root  :  [ root ]
         };
 
-        mapTree(root,  'childNodes',  (node) => {
+        mapTree(root,  'childNodes',  node => {
 
             switch ( node.nodeType ) {
                 case 1:

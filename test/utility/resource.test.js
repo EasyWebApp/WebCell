@@ -1,4 +1,4 @@
-import JSDOM from '../../source/utility/DOM-polyfill';
+import JSDOM from '../DOM-polyfill';
 
 import {
     serialize, request, fileTypeOf, blobFrom

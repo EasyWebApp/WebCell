@@ -34,9 +34,7 @@ describe('Component mixin',  () => {
     );
 
     /**
-     * @test {Component.findTemplate}
      * @test {Component#buildDOM}
-     * @test {\$}
      */
     it('Build Shadow DOM',  () =>
 
@@ -82,16 +80,6 @@ describe('Component mixin',  () => {
 
         (await changed).should.be.equal('test');
     });
-
-    /**
-     * @test {\$up}
-     */
-    it(
-        'should find a parent element matched a CSS selector',
-        () => page.$eval(
-            'cell-test',  element => element.$up('html').tagName
-        ).should.be.fulfilledWith('HTML')
-    );
 
     /**
      * @test {delegate}

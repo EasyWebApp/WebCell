@@ -2,7 +2,7 @@ import { resolve } from 'path';
 
 import { readFileSync } from 'fs';
 
-import JSDOM from '../../source/utility/DOM-polyfill';
+import JSDOM from '../DOM-polyfill';
 
 import View from '../../source/view/View';
 

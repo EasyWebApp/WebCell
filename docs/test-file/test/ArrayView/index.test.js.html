@@ -57,6 +57,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
@@ -170,11 +171,18 @@ describe(&apos;ArrayView()&apos;,  () =&gt; {
     data.view.map(item =&gt; `&lt;li&gt;${item.name}&lt;/li&gt;`).join(&apos;&apos;)
 }&lt;/ol&gt;
 
-    &lt;dl data-array=&quot;browser&quot;&gt;${
-    data.browser.map((item, index)  =&gt;
-        `&lt;dt&gt;${index}. ${item.brand}&lt;/dt&gt;&lt;dd&gt;${item.core} v0&lt;/dd&gt;`
+    &lt;table&gt;
+        &lt;tbody data-array=&quot;browser&quot;&gt;${
+    data.browser.map((item, index)  =&gt;  `
+            &lt;tr&gt;
+                &lt;td&gt;${index}&lt;/td&gt;
+                &lt;td&gt;${item.brand}&lt;/td&gt;
+                &lt;td&gt;${item.core}&lt;/td&gt;
+                &lt;td&gt;v0&lt;/td&gt;
+            &lt;/tr&gt;`.trim()
     ).join(&apos;&apos;)
-}&lt;/dl&gt;
+}&lt;/tbody&gt;
+    &lt;/table&gt;
 &lt;/main&gt;`.trim()
             );
         });
