@@ -143,6 +143,97 @@ function _arrayWithoutHoles(arr) {
     }
 }
 
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+    try {
+        var info = gen[key](arg);
+        var value = info.value;
+    } catch (error) {
+        reject(error);
+        return;
+    }
+    if (info.done) {
+        resolve(value);
+    } else {
+        Promise.resolve(value).then(_next, _throw);
+    }
+}
+
+function _asyncToGenerator(fn) {
+    return function() {
+        var self = this,
+            args = arguments;
+        return new Promise(function(resolve, reject) {
+            var gen = fn.apply(self, args);
+            function _next(value) {
+                asyncGeneratorStep(
+                    gen,
+                    resolve,
+                    reject,
+                    _next,
+                    _throw,
+                    'next',
+                    value
+                );
+            }
+            function _throw(err) {
+                asyncGeneratorStep(
+                    gen,
+                    resolve,
+                    reject,
+                    _next,
+                    _throw,
+                    'throw',
+                    err
+                );
+            }
+            _next(undefined);
+        });
+    };
+}
+
+function _slicedToArray(arr, i) {
+    return (
+        _arrayWithHoles(arr) ||
+        _iterableToArrayLimit(arr, i) ||
+        _nonIterableRest()
+    );
+}
+
+function _nonIterableRest() {
+    throw new TypeError('Invalid attempt to destructure non-iterable instance');
+}
+
+function _iterableToArrayLimit(arr, i) {
+    var _arr = [];
+    var _n = true;
+    var _d = false;
+    var _e = undefined;
+    try {
+        for (
+            var _i = arr[Symbol.iterator](), _s;
+            !(_n = (_s = _i.next()).done);
+            _n = true
+        ) {
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+        }
+    } catch (err) {
+        _d = true;
+        _e = err;
+    } finally {
+        try {
+            if (!_n && _i['return'] != null) _i['return']();
+        } finally {
+            if (_d) throw _e;
+        }
+    }
+    return _arr;
+}
+
+function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+}
+
 function _classCallCheck(instance, Constructor) {
     if (!(instance instanceof Constructor)) {
         throw new TypeError('Cannot call a class as a function');
@@ -279,98 +370,162 @@ function _getPrototypeOf(o) {
     return _getPrototypeOf(o);
 }
 
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
-    try {
-        var info = gen[key](arg);
-        var value = info.value;
-    } catch (error) {
-        reject(error);
-        return;
-    }
-    if (info.done) {
-        resolve(value);
-    } else {
-        Promise.resolve(value).then(_next, _throw);
-    }
-}
-
-function _asyncToGenerator(fn) {
-    return function() {
-        var self = this,
-            args = arguments;
-        return new Promise(function(resolve, reject) {
-            var gen = fn.apply(self, args);
-            function _next(value) {
-                asyncGeneratorStep(
-                    gen,
-                    resolve,
-                    reject,
-                    _next,
-                    _throw,
-                    'next',
-                    value
-                );
-            }
-            function _throw(err) {
-                asyncGeneratorStep(
-                    gen,
-                    resolve,
-                    reject,
-                    _next,
-                    _throw,
-                    'throw',
-                    err
-                );
-            }
-            _next(undefined);
-        });
-    };
-}
-
-function _slicedToArray(arr, i) {
-    return (
-        _arrayWithHoles(arr) ||
-        _iterableToArrayLimit(arr, i) ||
-        _nonIterableRest()
-    );
-}
-
-function _nonIterableRest() {
-    throw new TypeError('Invalid attempt to destructure non-iterable instance');
-}
-
-function _iterableToArrayLimit(arr, i) {
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-    try {
-        for (
-            var _i = arr[Symbol.iterator](), _s;
-            !(_n = (_s = _i.next()).done);
-            _n = true
-        ) {
-            _arr.push(_s.value);
-            if (i && _arr.length === i) break;
-        }
-    } catch (err) {
-        _d = true;
-        _e = err;
-    } finally {
-        try {
-            if (!_n && _i['return'] != null) _i['return']();
-        } finally {
-            if (_d) throw _e;
-        }
-    }
-    return _arr;
-}
-
-function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-}
-
 var _module_ = {
+    './component/InputComponent': {
+        base: './component',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.default = void 0;
+
+            var _DOM = require('../utility/DOM');
+
+            var _Component = require('./Component');
+
+            var CSS_map = {
+                readonly: {
+                    cursor: 'default'
+                },
+                disabled: {
+                    cursor: 'not-allowed',
+                    'point-events': 'none'
+                }
+            };
+            /**
+             * Base class for Form field components
+             */
+
+            var InputComponent =
+                /*#__PURE__*/
+                (function(_HTMLElement) {
+                    _inherits(InputComponent, _HTMLElement);
+
+                    /**
+                     * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
+                     */
+                    function InputComponent(option) {
+                        var _this;
+
+                        _classCallCheck(this, InputComponent);
+
+                        _this = _possibleConstructorReturn(
+                            this,
+                            _getPrototypeOf(InputComponent).call(this)
+                        );
+
+                        _this
+                            .buildDOM(option)
+                            .on.call(
+                                _this.$('slot')[0],
+                                'slotchange',
+                                _this.linkSlot.bind(
+                                    _assertThisInitialized(
+                                        _assertThisInitialized(_this)
+                                    )
+                                )
+                            );
+
+                        return _this;
+                    }
+                    /**
+                     * @private
+                     */
+
+                    _createClass(InputComponent, [
+                        {
+                            key: 'linkSlot',
+                            value: function linkSlot() {
+                                var _this2 = this;
+
+                                var origin = this.$slot('input')[0],
+                                    proxy = this.$('input')[0];
+                                origin.style.setProperty(
+                                    'display',
+                                    'none',
+                                    'important'
+                                );
+
+                                _DOM.watchAttributes.call(
+                                    this,
+                                    origin,
+                                    [
+                                        'type',
+                                        'name',
+                                        'value',
+                                        'readonly',
+                                        'disabled',
+                                        'checked',
+                                        'placeholder'
+                                    ],
+                                    this.changedPropertyOf
+                                );
+
+                                this.on.call(proxy, 'input', function() {
+                                    return (origin.value = proxy.value);
+                                });
+                                this.on.call(proxy, 'change', function(event) {
+                                    return _this2.bubbleOut(event);
+                                });
+                            }
+                            /**
+                             * Common behavior of Form field attributes
+                             *
+                             * @param {string}  attribute
+                             * @param {?string} oldValue
+                             * @param {?string} newValue
+                             */
+                        },
+                        {
+                            key: 'changedPropertyOf',
+                            value: function changedPropertyOf(
+                                attribute,
+                                oldValue,
+                                newValue
+                            ) {
+                                if (attribute === 'type' && !newValue)
+                                    newValue = 'text';
+                                newValue = _Component.attributeChanged.call(
+                                    this.view,
+                                    attribute,
+                                    oldValue,
+                                    newValue
+                                );
+                                var style = CSS_map[attribute];
+                                if (!style) return;
+                                if (newValue)
+                                    for (var name in style) {
+                                        this.style.setProperty(
+                                            '--input-'.concat(name),
+                                            style[name]
+                                        );
+                                    }
+                                else
+                                    for (var _name in style) {
+                                        this.style.removeProperty(
+                                            '--input-'.concat(_name)
+                                        );
+                                    }
+                            }
+                            /**
+                             * @type {string}
+                             */
+                        },
+                        {
+                            key: 'defaultValue',
+                            get: function get() {
+                                return this.getAttribute('value');
+                            }
+                        }
+                    ]);
+
+                    return InputComponent;
+                })(_wrapNativeSuper(HTMLElement));
+
+            exports.default = InputComponent;
+        }
+    },
     './utility/resource': {
         base: './utility',
         dependency: [],
@@ -728,161 +883,6 @@ var _module_ = {
                     type: type
                 });
             }
-        }
-    },
-    './component/InputComponent': {
-        base: './component',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, '__esModule', {
-                value: true
-            });
-            exports.default = void 0;
-
-            var _DOM = require('../utility/DOM');
-
-            var _Component = require('./Component');
-
-            var CSS_map = {
-                readonly: {
-                    cursor: 'default'
-                },
-                disabled: {
-                    cursor: 'not-allowed',
-                    'point-events': 'none'
-                }
-            };
-            /**
-             * Base class for Form field components
-             */
-
-            var InputComponent =
-                /*#__PURE__*/
-                (function(_HTMLElement) {
-                    _inherits(InputComponent, _HTMLElement);
-
-                    /**
-                     * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
-                     */
-                    function InputComponent(option) {
-                        var _this;
-
-                        _classCallCheck(this, InputComponent);
-
-                        _this = _possibleConstructorReturn(
-                            this,
-                            _getPrototypeOf(InputComponent).call(this)
-                        );
-
-                        _this
-                            .buildDOM(option)
-                            .on.call(
-                                _this.$('slot')[0],
-                                'slotchange',
-                                _this.linkSlot.bind(
-                                    _assertThisInitialized(
-                                        _assertThisInitialized(_this)
-                                    )
-                                )
-                            );
-
-                        return _this;
-                    }
-                    /**
-                     * @private
-                     */
-
-                    _createClass(InputComponent, [
-                        {
-                            key: 'linkSlot',
-                            value: function linkSlot() {
-                                var _this2 = this;
-
-                                var origin = this.$slot('input')[0],
-                                    proxy = this.$('input')[0];
-                                origin.style.setProperty(
-                                    'display',
-                                    'none',
-                                    'important'
-                                );
-
-                                _DOM.watchAttributes.call(
-                                    this,
-                                    origin,
-                                    [
-                                        'type',
-                                        'name',
-                                        'value',
-                                        'readonly',
-                                        'disabled',
-                                        'checked',
-                                        'placeholder'
-                                    ],
-                                    this.changedPropertyOf
-                                );
-
-                                this.on.call(proxy, 'input', function() {
-                                    return (origin.value = proxy.value);
-                                });
-                                this.on.call(proxy, 'change', function(event) {
-                                    return _this2.bubbleOut(event);
-                                });
-                            }
-                            /**
-                             * Common behavior of Form field attributes
-                             *
-                             * @param {string}  attribute
-                             * @param {?string} oldValue
-                             * @param {?string} newValue
-                             */
-                        },
-                        {
-                            key: 'changedPropertyOf',
-                            value: function changedPropertyOf(
-                                attribute,
-                                oldValue,
-                                newValue
-                            ) {
-                                if (attribute === 'type' && !newValue)
-                                    newValue = 'text';
-                                newValue = _Component.attributeChanged.call(
-                                    this.view,
-                                    attribute,
-                                    oldValue,
-                                    newValue
-                                );
-                                var style = CSS_map[attribute];
-                                if (!style) return;
-                                if (newValue)
-                                    for (var name in style) {
-                                        this.style.setProperty(
-                                            '--input-'.concat(name),
-                                            style[name]
-                                        );
-                                    }
-                                else
-                                    for (var _name in style) {
-                                        this.style.removeProperty(
-                                            '--input-'.concat(_name)
-                                        );
-                                    }
-                            }
-                            /**
-                             * @type {string}
-                             */
-                        },
-                        {
-                            key: 'defaultValue',
-                            get: function get() {
-                                return this.getAttribute('value');
-                            }
-                        }
-                    ]);
-
-                    return InputComponent;
-                })(_wrapNativeSuper(HTMLElement));
-
-            exports.default = InputComponent;
         }
     },
     './view/ArrayView': {
@@ -2930,7 +2930,7 @@ var _module_ = {
                                     if (style)
                                         shadow.prepend(style.cloneNode(true));
                                     var view = new _ObjectView.default(shadow);
-                                    if (data) view.render(data);
+                                    if (view[0]) view.render(data);
                                     return this;
                                 }
                                 /**
@@ -3177,6 +3177,7 @@ var _module_ = {
             });
             var _exportNames = {
                 mapProperty: true,
+                blobURI: true,
                 component: true,
                 Component: true,
                 attributeChanged: true,
@@ -3187,6 +3188,7 @@ var _module_ = {
                 ArrayView: true
             };
             exports.mapProperty = mapProperty;
+            exports.blobURI = blobURI;
             exports.component = component;
             Object.defineProperty(exports, 'Component', {
                 enumerable: true,
@@ -3263,10 +3265,6 @@ var _module_ = {
                 });
             });
 
-            var _InputComponent = _interopRequireDefault(
-                require('./component/InputComponent')
-            );
-
             var _resource = require('./utility/resource');
 
             Object.keys(_resource).forEach(function(key) {
@@ -3280,6 +3278,10 @@ var _module_ = {
                     }
                 });
             });
+
+            var _InputComponent = _interopRequireDefault(
+                require('./component/InputComponent')
+            );
 
             var _Template = _interopRequireDefault(require('./view/Template'));
 
@@ -3371,17 +3373,34 @@ var _module_ = {
                     );
                 };
             }
+            /**
+             * Decorator for Property getter which returns Data URI
+             *
+             * @param {DecoratorDescriptor} meta
+             */
 
-            var skip_key = {
-                name: 1,
-                length: 1,
-                prototype: 1,
-                caller: 1,
-                arguments: 1,
-                call: 1,
-                apply: 1,
-                bind: 1
-            };
+            function blobURI(meta) {
+                var getter = meta.descriptor.get,
+                    blob;
+
+                meta.descriptor.get = function() {
+                    return (
+                        blob ||
+                        (blob = URL.createObjectURL(
+                            (0, _resource.blobFrom)(
+                                getter.apply(this, arguments)
+                            )
+                        ))
+                    );
+                };
+            }
+
+            var skip_key = new Set(
+                Object.getOwnPropertyNames(Function).concat(
+                    Object.getOwnPropertyNames(Function.prototype)
+                )
+            );
+            skip_key.delete('toString');
 
             function decoratorMix(member, mixin) {
                 var skip = mixin instanceof Function,
@@ -3390,7 +3409,7 @@ var _module_ = {
                 for (var key in property) {
                     if (
                         !(skip
-                            ? key in skip_key
+                            ? skip_key.has(key)
                             : key === 'constructor' &&
                               property[key].value instanceof Function)
                     )

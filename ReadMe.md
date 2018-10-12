@@ -77,6 +77,7 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
     <textarea onchange="${host.bubbleOut.bind( host )}">
         Hello, ${view.name}!
     </textarea>
+    <img src="${host.constructor.icon}">
 </template>
 ```
 
@@ -94,15 +95,22 @@ textarea {
 }
 ```
 
+`icon.svg`
+```XML
+<svg></svg>
+```
+
 `index.js`
 ```JavaScript
-import { component } from 'web-cell';
+import { component, blobURI } from 'web-cell';
 
 import template from './index.html';
 
 import style from './index.css';
 
 import data from './index.json';
+
+import icon from './icon.svg';
 
 
 @component({                 //  Register this class as a Custom Element,
@@ -116,6 +124,9 @@ export default  class YourComponent extends HTMLElement {
 
         this.buildDOM();    //  This method is necessary when template is set
     }
+
+    @blobURI
+    static get icon() {  return icon;  }
 
     get value() {  return this.$('textarea')[0].value  }
 

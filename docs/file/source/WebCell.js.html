@@ -29,7 +29,8 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
@@ -76,6 +77,8 @@ import { getPropertyDescriptor, decoratorOf } from &apos;./utility/object&apos;;
 
 import { parseDOM } from &apos;./utility/DOM&apos;;
 
+import { blobFrom } from &apos;./utility/resource&apos;;
+
 
 /**
  * @typedef {Object} DecoratorDescriptor
@@ -112,16 +115,33 @@ export function mapProperty(meta) {
 }
 
 
-const skip_key = {
-    name:       1,
-    length:     1,
-    prototype:  1,
-    caller:     1,
-    arguments:  1,
-    call:       1,
-    apply:      1,
-    bind:       1
-};
+/**
+ * Decorator for Property getter which returns Data URI
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function blobURI(meta) {
+
+    var getter = meta.descriptor.get, blob;
+
+    meta.descriptor.get = function () {
+
+        return  blob || (
+            blob = URL.createObjectURL(
+                blobFrom( getter.apply(this, arguments) )
+            )
+        );
+    };
+}
+
+
+const skip_key = new Set(
+    Object.getOwnPropertyNames( Function ).concat(
+        Object.getOwnPropertyNames( Function.prototype )
+    )
+);
+
+skip_key.delete(&apos;toString&apos;);
 
 function decoratorMix(member, mixin) {
 
@@ -129,7 +149,7 @@ function decoratorMix(member, mixin) {
         property = Object.getOwnPropertyDescriptors( mixin );
 
     for (let key in property)
-        if (!(skip  ?  (key in skip_key)  :  (
+        if (!(skip  ?  skip_key.has( key )  :  (
             (key === &apos;constructor&apos;)  &amp;&amp;  (property[key].value instanceof Function)
         )))
             member.push(

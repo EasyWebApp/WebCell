@@ -29,7 +29,8 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
@@ -116,6 +117,7 @@ npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D<
     &lt;textarea onchange=&quot;${host.bubbleOut.bind( host )}&quot;&gt;
         Hello, ${view.name}!
     &lt;/textarea&gt;
+    &lt;img src=&quot;${host.constructor.icon}&quot;&gt;
 &lt;/template&gt;</code>
 </code></pre>
 <p><code>index.css</code></p>
@@ -128,14 +130,19 @@ npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D<
     &quot;name&quot;:  &quot;Web components&quot;
 }</code>
 </code></pre>
+<p><code>icon.svg</code></p>
+<pre><code class="lang-XML"><code class="source-code prettyprint">&lt;svg&gt;&lt;/svg&gt;</code>
+</code></pre>
 <p><code>index.js</code></p>
-<pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component } from &apos;web-cell&apos;;
+<pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component, blobURI } from &apos;web-cell&apos;;
 
 import template from &apos;./index.html&apos;;
 
 import style from &apos;./index.css&apos;;
 
 import data from &apos;./index.json&apos;;
+
+import icon from &apos;./icon.svg&apos;;
 
 
 @component({                 //  Register this class as a Custom Element,
@@ -149,6 +156,9 @@ export default  class YourComponent extends HTMLElement {
 
         this.buildDOM();    //  This method is necessary when template is set
     }
+
+    @blobURI
+    static get icon() {  return icon;  }
 
     get value() {  return this.$(&apos;textarea&apos;)[0].value  }
 

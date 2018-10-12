@@ -39,7 +39,7 @@ export default  class Component {
 
         const view = new ObjectView( shadow );
 
-        if ( data )  view.render( data );
+        if ( view[0] )  view.render( data );
 
         return this;
     }

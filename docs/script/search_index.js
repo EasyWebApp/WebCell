@@ -66,6 +66,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/webcell.js~bloburi",
+    "function/index.html#static-function-blobURI",
+    "<span>blobURI</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~classnameof",
     "function/index.html#static-function-classNameOf",
     "<span>classNameOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",

@@ -4,6 +4,8 @@ import { getPropertyDescriptor, decoratorOf } from './utility/object';
 
 import { parseDOM } from './utility/DOM';
 
+import { blobFrom } from './utility/resource';
+
 
 /**
  * @typedef {Object} DecoratorDescriptor
@@ -40,16 +42,33 @@ export function mapProperty(meta) {
 }
 
 
-const skip_key = {
-    name:       1,
-    length:     1,
-    prototype:  1,
-    caller:     1,
-    arguments:  1,
-    call:       1,
-    apply:      1,
-    bind:       1
-};
+/**
+ * Decorator for Property getter which returns Data URI
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function blobURI(meta) {
+
+    var getter = meta.descriptor.get, blob;
+
+    meta.descriptor.get = function () {
+
+        return  blob || (
+            blob = URL.createObjectURL(
+                blobFrom( getter.apply(this, arguments) )
+            )
+        );
+    };
+}
+
+
+const skip_key = new Set(
+    Object.getOwnPropertyNames( Function ).concat(
+        Object.getOwnPropertyNames( Function.prototype )
+    )
+);
+
+skip_key.delete('toString');
 
 function decoratorMix(member, mixin) {
 
@@ -57,7 +76,7 @@ function decoratorMix(member, mixin) {
         property = Object.getOwnPropertyDescriptors( mixin );
 
     for (let key in property)
-        if (!(skip  ?  (key in skip_key)  :  (
+        if (!(skip  ?  skip_key.has( key )  :  (
             (key === 'constructor')  &&  (property[key].value instanceof Function)
         )))
             member.push(
