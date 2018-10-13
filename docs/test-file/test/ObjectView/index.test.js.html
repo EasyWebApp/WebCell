@@ -88,7 +88,7 @@ import { nextTick } from &apos;../../source/utility/DOM&apos;;
 var HTML, fragment = `
     &lt;fieldset&gt;
         &lt;legend title=&quot;Test field&quot;&gt;
-            Test
+            &lt;label&gt;Test&lt;/label&gt;
             &lt;input type=&quot;checkbox&quot;&gt;
         &lt;/legend&gt;
     &lt;/fieldset&gt;`.trim();
@@ -162,7 +162,7 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
 
             view.render = Sinon.spy( view.render );
 
-            view.commit(&apos;name&apos;, &apos;Example&apos;);
+            view.commit(&apos;name&apos;, &apos;&lt;b&gt;Example&lt;/b&gt;&apos;);
 
             view.title = &apos;Example field&apos;;
 
@@ -175,7 +175,8 @@ describe(&apos;ObjectView()&apos;,  () =&gt; {
             view.render.should.be.calledOnce();
 
             view.toString().should.be.equal(
-                fragment.replace(/Test/g, &apos;Example&apos;)
+                fragment.replace(/Test(?= )/, &apos;Example&apos;)
+                    .replace(&apos;Test&apos;, &apos;&lt;b&gt;Example&lt;/b&gt;&apos;)
             );
         });
     });

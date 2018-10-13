@@ -175,13 +175,17 @@ export default  class ObjectView extends View {
                     else
                         this.parseTag( node );
                     break;
-                case 3:
-                    this.addTemplate(
-                        node,
-                        ObjectView.templateOf(
+                case 3:  {
+                    const template = ObjectView.templateOf(
                             node,  value => node.nodeValue = value
-                        )
-                    );
+                        ),
+                        element = node.parentNode;
+
+                    if (! element.innerHTML.trim())
+                        template.onChange = value => element.innerHTML = value;
+
+                    this.addTemplate(element, template);
+                }
             }
 
             return node;

@@ -238,9 +238,11 @@ export function parseDOM(markup) {
 
     fragment.append(... safeWrap(markup,  markup =&gt; {
 
-        markup = (new DOMParser()).parseFromString(markup, &apos;text/html&apos;);
+        const box = document.createElement(&apos;div&apos;);
 
-        return  [... markup.head.childNodes].concat([... markup.body.childNodes]);
+        box.innerHTML = markup;
+
+        return  [... box.childNodes];
     }));
 
     return fragment;

@@ -421,31 +421,31 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/ObjectView/index.test.js.html#lineNumber110",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber111",
     "ObjectView() Nested view",
     "test"
   ],
   [
     "view#bindwith view.instanceof objectview#watch source/view/view.js~view#bindwith,view#bindwith source/view/view.js~view.instanceof,view.instanceof source/view/objectview.js~objectview#watch,objectview#watch",
-    "test-file/test/ObjectView/index.test.js.html#lineNumber131",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber132",
     "ObjectView() Nested view Associate DOM",
     "test"
   ],
   [
     "objectview#valueof source/view/objectview.js~objectview#valueof,objectview#valueof",
-    "test-file/test/ObjectView/index.test.js.html#lineNumber167",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber168",
     "ObjectView() Nested view Get data",
     "test"
   ],
   [
     "objectview#render source/view/objectview.js~objectview#render,objectview#render",
-    "test-file/test/ObjectView/index.test.js.html#lineNumber141",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber142",
     "ObjectView() Nested view Render data",
     "test"
   ],
   [
     "objectview#scan objectview#scan,objectview#scan",
-    "test-file/test/ObjectView/index.test.js.html#lineNumber117",
+    "test-file/test/ObjectView/index.test.js.html#lineNumber118",
     "ObjectView() Nested view Scan DOM",
     "test"
   ],

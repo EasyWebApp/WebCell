@@ -15,7 +15,7 @@ import { nextTick } from '../../source/utility/DOM';
 var HTML, fragment = `
     <fieldset>
         <legend title="Test field">
-            Test
+            <label>Test</label>
             <input type="checkbox">
         </legend>
     </fieldset>`.trim();
@@ -89,7 +89,7 @@ describe('ObjectView()',  () => {
 
             view.render = Sinon.spy( view.render );
 
-            view.commit('name', 'Example');
+            view.commit('name', '<b>Example</b>');
 
             view.title = 'Example field';
 
@@ -102,7 +102,8 @@ describe('ObjectView()',  () => {
             view.render.should.be.calledOnce();
 
             view.toString().should.be.equal(
-                fragment.replace(/Test/g, 'Example')
+                fragment.replace(/Test(?= )/, 'Example')
+                    .replace('Test', '<b>Example</b>')
             );
         });
     });

@@ -6,9 +6,9 @@
     if ((typeof define === 'function')  &&  define.amd)
         define('web-cell', factory);
     else if (typeof module === 'object')
-        return  module.exports = factory();
+        return  module.exports = factory.call(global);
     else
-        return  this['web-cell'] = factory();
+        return  this['web-cell'] = factory.call(self);
 
 })(function () {
 
@@ -22,8 +22,8 @@ function outPackage(name) {
   return /^[^./]/.test(name);
 }
 
-    if (typeof require !== 'function')
-        require = function (name) {
+    var require = (typeof this.require === 'function') ?
+        this.require  :  function (name) {
 
             if (self[name] != null)  return self[name];
 
@@ -2339,16 +2339,29 @@ var _module_ = {
                                                     else _this11.parseTag(node);
                                                     break;
 
-                                                case 3:
-                                                    _this11.addTemplate(
-                                                        node,
-                                                        ObjectView.templateOf(
+                                                case 3: {
+                                                    var template = ObjectView.templateOf(
                                                             node,
                                                             function(value) {
                                                                 return (node.nodeValue = value);
                                                             }
-                                                        )
+                                                        ),
+                                                        element =
+                                                            node.parentNode;
+                                                    if (
+                                                        !element.innerHTML.trim()
+                                                    )
+                                                        template.onChange = function(
+                                                            value
+                                                        ) {
+                                                            return (element.innerHTML = value);
+                                                        };
+
+                                                    _this11.addTemplate(
+                                                        element,
+                                                        template
                                                     );
+                                                }
                                             }
 
                                             return node;
@@ -2697,15 +2710,9 @@ var _module_ = {
                     fragment,
                     _toConsumableArray(
                         safeWrap(markup, function(markup) {
-                            markup = new DOMParser().parseFromString(
-                                markup,
-                                'text/html'
-                            );
-                            return _toConsumableArray(
-                                markup.head.childNodes
-                            ).concat(
-                                _toConsumableArray(markup.body.childNodes)
-                            );
+                            var box = document.createElement('div');
+                            box.innerHTML = markup;
+                            return _toConsumableArray(box.childNodes);
                         })
                     )
                 );
