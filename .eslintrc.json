@@ -34,5 +34,8 @@
             "requireReturn": false,
             "requireReturnDescription": false
         }]
+    },
+    "globals": {
+        "ShadyCSS": true
     }
 }

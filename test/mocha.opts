@@ -4,5 +4,6 @@
 --require should-sinon
 --require ./test/DOM-polyfill
 --recursive
+--timeout 3000
 --colors
 --inline-diffs

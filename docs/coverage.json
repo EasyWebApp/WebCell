@@ -1,6 +1,6 @@
 {
-  "coverage": "73.21%",
-  "expectCount": 112,
+  "coverage": "72.56%",
+  "expectCount": 113,
   "actualCount": 82,
   "files": {
     "source/component/Component.js": {
@@ -85,11 +85,12 @@
       ]
     },
     "source/WebCell.js": {
-      "expectCount": 5,
+      "expectCount": 6,
       "actualCount": 3,
       "undocumentLines": [
         65,
-        73
+        73,
+        88
       ]
     }
   }

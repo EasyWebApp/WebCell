@@ -2915,6 +2915,11 @@ var _module_ = {
                                  * @return {HTMLElement} This custom element
                                  */
                                 value: function buildDOM(option) {
+                                    if (
+                                        !ShadyCSS.nativeCss ||
+                                        !ShadyCSS.nativeShadow
+                                    )
+                                        ShadyCSS.styleElement(this);
                                     var shadow = this.attachShadow(
                                             _objectSpread(
                                                 {
@@ -2926,14 +2931,11 @@ var _module_ = {
                                         ),
                                         _this$constructor = this.constructor,
                                         template = _this$constructor.template,
-                                        style = _this$constructor.style,
                                         data = _this$constructor.data;
                                     if (template)
-                                        shadow.append(
+                                        shadow.appendChild(
                                             document.importNode(template, true)
                                         );
-                                    if (style)
-                                        shadow.prepend(style.cloneNode(true));
                                     var view = new _ObjectView.default(shadow);
                                     if (view[0]) view.render(data);
                                     return this;
@@ -3427,6 +3429,42 @@ var _module_ = {
                         );
                 }
             }
+
+            function define(Class, template, style) {
+                if (template) {
+                    if (template instanceof Node)
+                        template = (0, _DOM.stringifyDOM)(template);
+                    template = (0, _DOM.parseDOM)((template + '').trim());
+
+                    if (template.firstChild.tagName !== 'TEMPLATE') {
+                        var temp = document.createElement('template');
+                        temp.content.appendChild(template);
+                        template = temp;
+                    } else template = template.firstChild;
+                } else template = document.createElement('template');
+
+                Object.defineProperty(Class, 'template', {
+                    value: template.content,
+                    enumerable: true
+                });
+
+                if (style) {
+                    if (!(style instanceof Node))
+                        style = Object.assign(document.createElement('style'), {
+                            textContent: style
+                        });
+                    Object.defineProperty(Class, 'style', {
+                        value: style,
+                        enumerable: true
+                    });
+                    template.content.insertBefore(
+                        style,
+                        template.content.firstChild
+                    );
+                }
+
+                return template;
+            }
             /**
              * Register a component
              *
@@ -3450,40 +3488,6 @@ var _module_ = {
                     tagName = meta.tagName;
                 return function(_ref7) {
                     var elements = _ref7.elements;
-
-                    if (template) {
-                        if (!(template instanceof Node)) {
-                            template = (0, _DOM.parseDOM)(
-                                (template + '').trim()
-                            );
-                            if (template.firstChild.tagName === 'TEMPLATE')
-                                template = template.firstChild.content;
-                        }
-
-                        elements.push(
-                            (0, _object.decoratorOf)(
-                                _Component.default,
-                                'template',
-                                template
-                            )
-                        );
-                    }
-
-                    if (style)
-                        elements.push(
-                            (0, _object.decoratorOf)(
-                                _Component.default,
-                                'style',
-                                style instanceof Node
-                                    ? style
-                                    : Object.assign(
-                                          document.createElement('style'),
-                                          {
-                                              textContent: style
-                                          }
-                                      )
-                            )
-                        );
                     if (data)
                         elements.push(
                             (0, _object.decoratorOf)(
@@ -3498,6 +3502,14 @@ var _module_ = {
                         kind: 'class',
                         elements: elements,
                         finisher: function finisher(Class) {
+                            var merged =
+                                (template || style) &&
+                                define(Class, template, style);
+                            if (
+                                merged &&
+                                !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)
+                            )
+                                ShadyCSS.prepareTemplate(merged, Class.tagName);
                             window.customElements.define(
                                 Class.tagName,
                                 Class,

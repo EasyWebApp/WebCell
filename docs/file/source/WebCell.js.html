@@ -76,7 +76,7 @@
 
 import { getPropertyDescriptor, decoratorOf } from &apos;./utility/object&apos;;
 
-import { parseDOM } from &apos;./utility/DOM&apos;;
+import { stringifyDOM, parseDOM } from &apos;./utility/DOM&apos;;
 
 import { blobFrom } from &apos;./utility/resource&apos;;
 
@@ -159,6 +159,50 @@ function decoratorMix(member, mixin) {
 }
 
 
+function define(Class, template, style) {
+
+    if ( template ) {
+
+        if (template instanceof Node)  template = stringifyDOM( template );
+
+        template = parseDOM( (template + &apos;&apos;).trim() );
+
+        if (template.firstChild.tagName !== &apos;TEMPLATE&apos;) {
+
+            let temp = document.createElement(&apos;template&apos;);
+
+            temp.content.appendChild( template );
+
+            template = temp;
+        } else
+            template = template.firstChild;
+    } else
+        template = document.createElement(&apos;template&apos;);
+
+    Object.defineProperty(Class, &apos;template&apos;, {
+        value:       template.content,
+        enumerable:  true
+    });
+
+    if ( style ) {
+
+        if (!(style instanceof Node))
+            style = Object.assign(
+                document.createElement(&apos;style&apos;),  {textContent: style}
+            );
+
+        Object.defineProperty(Class, &apos;style&apos;, {
+            value:       style,
+            enumerable:  true
+        });
+
+        template.content.insertBefore(style, template.content.firstChild);
+    }
+
+    return template;
+}
+
+
 /**
  * Register a component
  *
@@ -176,28 +220,6 @@ export function component(meta = { }) {
 
     return  ({elements}) =&gt; {
 
-        if ( template ) {
-
-            if (!(template instanceof Node)) {
-
-                template = parseDOM( (template + &apos;&apos;).trim() );
-
-                if (template.firstChild.tagName === &apos;TEMPLATE&apos;)
-                    template = template.firstChild.content;
-            }
-
-            elements.push( decoratorOf(Component, &apos;template&apos;, template) );
-        }
-
-        if ( style )
-            elements.push(decoratorOf(
-                Component,
-                &apos;style&apos;,
-                (style instanceof Node)  ?  style  :  Object.assign(
-                    document.createElement(&apos;style&apos;),  {textContent: style}
-                )
-            ));
-
         if ( data )  elements.push( decoratorOf(Component, &apos;data&apos;, data) );
 
         decoratorMix(elements, Component);
@@ -208,6 +230,12 @@ export function component(meta = { }) {
             kind:  &apos;class&apos;,
             elements,
             finisher(Class) {
+
+                const merged = (template || style)  &amp;&amp;
+                    define(Class, template, style);
+
+                if (merged  &amp;&amp;  !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow))
+                    ShadyCSS.prepareTemplate(merged, Class.tagName);
 
                 window.customElements.define(
                     Class.tagName,  Class,  tagName &amp;&amp; {extends: tagName}

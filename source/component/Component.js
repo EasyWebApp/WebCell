@@ -26,16 +26,18 @@ export default  class Component {
      */
     buildDOM(option) {
 
+        if (!ShadyCSS.nativeCss || !ShadyCSS.nativeShadow)
+            ShadyCSS.styleElement( this );
+
         const shadow = this.attachShadow({
                 mode:            'open',
                 delegatesFocus:  true,
                 ...option
             }),
-            {template, style, data} = this.constructor;
+            {template, data} = this.constructor;
 
-        if ( template )  shadow.append( document.importNode(template, true) );
-
-        if ( style )  shadow.prepend( style.cloneNode( true ) );
+        if ( template )
+            shadow.appendChild( document.importNode(template, true) );
 
         const view = new ObjectView( shadow );
 
