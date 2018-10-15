@@ -1,3 +1,6 @@
+import Template from '../view/Template';
+
+
 /**
  * @type {Promise}
  */
@@ -45,6 +48,54 @@ export function $up(selector, context) {
             return context;
     }
 }
+
+
+function mediaLoad(media, condition) {
+
+    return  new Promise((resolve, reject) => {
+
+        if ( condition() )
+            resolve();
+        else
+            media.onload = resolve,
+            media.onerror = reject;
+    });
+}
+
+/**
+ * @param {Element|Document} [context]
+ *
+ * @return {Promise} Resolved when all media elements in `context` are loaded
+ */
+export function mediaReady(context) {
+
+    return Promise.all($(
+        'img[src], iframe[src], audio[src], video[src]',  context
+    ).map(media => {
+
+        if (Template.Expression.test( media.getAttribute('src') ))  return;
+
+        switch ( media.tagName.toLowerCase() ) {
+            case 'img':
+                return  mediaLoad(media, () => media.complete);
+            case 'iframe':
+                return  new Promise((resolve, reject) => {
+                    try {
+                        if (media.contentDocument.readyState === 'complete')
+                            resolve();
+                        else
+                            media.onload = resolve,
+                            media.onerror = reject;
+
+                    } catch (error) {  resolve();  }
+                });
+            case 'audio':
+            case 'video':
+                return  mediaLoad(media, () => (media.readyState > 0));
+        }
+    }));
+}
+
 
 /**
  * @param {Element} element
@@ -98,62 +149,6 @@ export function delegate(selector, handler) {
 }
 
 
-const TableWrapper = {
-        before:  '<table>',
-        after:   '</table>',
-        depth:   2
-    },
-    RowWrapper = {
-        before:  '<table><tr>',
-        depth:   3
-    },
-    SelectWrapper = {
-        before:  '<select multiple>'
-    };
-
-const TagWrapper = {
-    area:      {before: '<map>'},
-    legend:    {before: '<fieldset>'},
-    param:     {before: '<object>'},
-    caption:   TableWrapper,
-    thead:     TableWrapper,
-    tbody:     TableWrapper,
-    tfoot:     TableWrapper,
-    tr:        TableWrapper,
-    th:        RowWrapper,
-    td:        RowWrapper,
-    optgroup:  SelectWrapper,
-    option:    SelectWrapper
-};
-
-/**
- * @param {String}                           markup
- * @param {function(markup: String): Node[]} parser
- *
- * @return {Node[]}
- */
-function safeWrap(markup, parser) {
-
-    var wrapper;
-
-    markup = parser(
-        markup.replace(/<(\w+)[\s\S]*?>[\s\S]*?<\/\1>/,  (match, tagName) => {
-
-            wrapper = TagWrapper[ tagName ];
-
-            return  wrapper ?
-                (wrapper.before + match + (wrapper.after || ''))  :  match;
-        })
-    );
-
-    const depth = (wrapper || '').depth;
-
-    for (let i = 0;  i < depth;  i++)  markup = [ markup[0].firstElementChild ];
-
-    return markup;
-}
-
-
 /**
  * @param {string} markup - Code of an markup fragment
  *
@@ -161,18 +156,11 @@ function safeWrap(markup, parser) {
  */
 export function parseDOM(markup) {
 
-    const fragment = document.createDocumentFragment();
+    const box = document.createElement('template');
 
-    fragment.append(... safeWrap(markup,  markup => {
+    box.innerHTML = markup;
 
-        const box = document.createElement('div');
-
-        box.innerHTML = markup;
-
-        return  [... box.childNodes];
-    }));
-
-    return fragment;
+    return box.content;
 }
 
 

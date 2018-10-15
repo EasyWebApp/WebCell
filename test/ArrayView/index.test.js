@@ -1,17 +1,14 @@
-import { resolve } from 'path';
-
 import { readFileSync } from 'fs';
 
-import { JSDOM } from 'jsdom';
+import JSDOM from '../DOM-polyfill';
 
 import ArrayView from '../../source/view/ArrayView';
 
 import ObjectView from '../../source/view/ObjectView';
 
-const fragment = JSDOM.fragment(
-        readFileSync( resolve(module.id, '../index.html') )
-    ),
-    data = require('./index.json');
+
+const fragment = JSDOM.fragment(readFileSync('test/ArrayView/index.html') + ''),
+    data = JSON.parse( readFileSync('test/ArrayView/index.json') );
 
 var single, multiple;
 

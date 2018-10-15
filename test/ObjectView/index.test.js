@@ -1,5 +1,3 @@
-import { resolve } from 'path';
-
 import { readFileSync } from 'fs';
 
 import JSDOM from '../DOM-polyfill';
@@ -26,9 +24,7 @@ var HTML, fragment = `
  */
 describe('ObjectView()',  () => {
 
-    before(()  =>  HTML = readFileSync(
-        resolve(module.id, '../index.html'),  {encoding: 'utf-8'}
-    ));
+    before(()  =>  HTML = readFileSync('test/ObjectView/index.html') + '');
 
     describe('Single view',  () => {
 

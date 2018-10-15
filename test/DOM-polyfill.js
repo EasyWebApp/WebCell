@@ -1,6 +1,6 @@
-import fetch from 'node-fetch';
-
 import { JSDOM } from 'jsdom';
+
+import fetch from 'node-fetch';
 
 export default JSDOM;
 
@@ -10,10 +10,9 @@ const { window } = (new JSDOM('', {
     pretendToBeVisual:  true
 }));
 
-global.window = window;
-
 for (let key of [
-    'Blob', 'document', 'Element', 'DOMParser',
+    'window', 'document',
+    'Blob', 'Element', 'DOMParser',
     'URL', 'URLSearchParams', 'FormData'
 ])
     global[key] = window[key];

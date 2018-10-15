@@ -56,6 +56,8 @@ Add **Source code folder** of your components to `directories.lib` field of `pac
     <script src="node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
     <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
     <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
+    <script src="node_modules/whatwg-fetch/dist/fetch.umd.js"></script>
+
     <script src="node_modules/web-cell/dist/web-cell.js"></script>
 
     <script src="dist/your-component.js"></script>

@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
@@ -71,20 +72,17 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/ArrayView/index.test.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { resolve } from &apos;path&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { readFileSync } from &apos;fs&apos;;
 
-import { readFileSync } from &apos;fs&apos;;
-
-import { JSDOM } from &apos;jsdom&apos;;
+import JSDOM from &apos;../DOM-polyfill&apos;;
 
 import ArrayView from &apos;../../source/view/ArrayView&apos;;
 
 import ObjectView from &apos;../../source/view/ObjectView&apos;;
 
-const fragment = JSDOM.fragment(
-        readFileSync( resolve(module.id, &apos;../index.html&apos;) )
-    ),
-    data = require(&apos;./index.json&apos;);
+
+const fragment = JSDOM.fragment(readFileSync(&apos;test/ArrayView/index.html&apos;) + &apos;&apos;),
+    data = JSON.parse( readFileSync(&apos;test/ArrayView/index.json&apos;) );
 
 var single, multiple;
 

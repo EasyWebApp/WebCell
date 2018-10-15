@@ -1317,358 +1317,6 @@ var _module_ = {
             }
         }
     },
-    './view/Template': {
-        base: './view',
-        dependency: [],
-        factory: function factory(require, exports, module) {
-            Object.defineProperty(exports, '__esModule', {
-                value: true
-            });
-            exports.default = void 0;
-            var Array_iterator = [][Symbol.iterator];
-            /**
-             * String template
-             */
-
-            var Template =
-                /*#__PURE__*/
-                (function() {
-                    /**
-                     * @param {string}          raw
-                     * @param {stirng[]}        [varName]  - Name list of the Local variable
-                     * @param {ChangedCallback} [onChange] - Call with New & Old value
-                     * @param {Array}           [bindData] - The parameter bound to `onChange`
-                     */
-                    function Template(raw, varName, onChange, bindData) {
-                        _classCallCheck(this, Template);
-
-                        this.length = 0;
-                        this.raw = raw;
-                        /**
-                         * Last evaluated value
-                         *
-                         * @type {*}
-                         */
-
-                        this.value = null;
-                        if (varName instanceof Function)
-                            (bindData = onChange),
-                                (onChange = varName),
-                                (varName = null);
-                        this.varName = varName || [];
-                        /**
-                         * Reference map of contexts
-                         *
-                         * @type {Map}
-                         */
-
-                        this.reference = new Map();
-                        var _iteratorNormalCompletion3 = true;
-                        var _didIteratorError3 = false;
-                        var _iteratorError3 = undefined;
-
-                        try {
-                            for (
-                                var _iterator3 = ['this']
-                                        .concat(this.varName)
-                                        [Symbol.iterator](),
-                                    _step3;
-                                !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
-                                    .done);
-                                _iteratorNormalCompletion3 = true
-                            ) {
-                                var scope = _step3.value;
-                                this.reference.set(scope, []);
-                            }
-                        } catch (err) {
-                            _didIteratorError3 = true;
-                            _iteratorError3 = err;
-                        } finally {
-                            try {
-                                if (
-                                    !_iteratorNormalCompletion3 &&
-                                    _iterator3.return != null
-                                ) {
-                                    _iterator3.return();
-                                }
-                            } finally {
-                                if (_didIteratorError3) {
-                                    throw _iteratorError3;
-                                }
-                            }
-                        }
-
-                        this.onChange =
-                            onChange instanceof Function ? onChange : null;
-                        this.data = bindData || [];
-                        this.parse().clear();
-                    }
-
-                    _createClass(
-                        Template,
-                        [
-                            {
-                                key: Symbol.iterator,
-                                value: function value() {
-                                    return Array_iterator.call(this);
-                                }
-                                /**
-                                 * @type {RegExp}
-                                 */
-                            },
-                            {
-                                key: 'push',
-                                value: function push() {
-                                    return Array.prototype.push.apply(
-                                        this,
-                                        arguments
-                                    );
-                                }
-                                /**
-                                 * @private
-                                 *
-                                 * @param {string} expression
-                                 *
-                                 * @return {number} Index of this Evaluation function
-                                 */
-                            },
-                            {
-                                key: 'compile',
-                                value: function compile(expression) {
-                                    this[this.length++] = _construct(
-                                        Function,
-                                        _toConsumableArray(this.varName).concat(
-                                            ['return ' + expression.trim()]
-                                        )
-                                    );
-                                    return this.length - 1;
-                                }
-                                /**
-                                 * @private
-                                 *
-                                 * @return {Template}
-                                 */
-                            },
-                            {
-                                key: 'parse',
-                                value: function parse() {
-                                    var _this5 = this;
-
-                                    var addReference = function addReference(
-                                        match,
-                                        context,
-                                        key1,
-                                        key2,
-                                        key3
-                                    ) {
-                                        if (_this5.reference.has(context))
-                                            _this5.reference
-                                                .get(context)
-                                                .push(key1 || key2 || key3);
-                                    };
-
-                                    this.raw = this.raw.replace(
-                                        Template.Expression,
-                                        function(_, expression) {
-                                            expression.replace(
-                                                Template.Reference,
-                                                addReference
-                                            );
-                                            return (
-                                                '${' +
-                                                _this5.compile(expression) +
-                                                '}'
-                                            );
-                                        }
-                                    );
-                                    return this;
-                                }
-                                /**
-                                 * @private
-                                 *
-                                 * @param {number}  index
-                                 * @param {?object} context
-                                 * @param {Array}   [parameter]
-                                 *
-                                 * @return {*}
-                                 */
-                            },
-                            {
-                                key: 'eval',
-                                value: function _eval(
-                                    index,
-                                    context,
-                                    parameter
-                                ) {
-                                    try {
-                                        var value = this[index].apply(
-                                            context,
-                                            parameter
-                                        );
-                                        return value != null ? value : '';
-                                    } catch (error) {
-                                        if (this.value !== null)
-                                            console.warn(error);
-                                        return '';
-                                    }
-                                }
-                                /**
-                                 * Evaluate expression
-                                 *
-                                 * @param {?object} context     - Value of `this` in the expression
-                                 * @param {...*}    [parameter] - One or more value of the Local variable
-                                 *
-                                 * @return {*}
-                                 */
-                            },
-                            {
-                                key: 'evaluate',
-                                value: function evaluate(context) {
-                                    var _this6 = this;
-
-                                    for (
-                                        var _len3 = arguments.length,
-                                            parameter = new Array(
-                                                _len3 > 1 ? _len3 - 1 : 0
-                                            ),
-                                            _key3 = 1;
-                                        _key3 < _len3;
-                                        _key3++
-                                    ) {
-                                        parameter[_key3 - 1] = arguments[_key3];
-                                    }
-
-                                    var value =
-                                        this.raw !== '${0}'
-                                            ? this.raw.replace(
-                                                  /\$\{(\d+)\}/g,
-                                                  function(_, index) {
-                                                      return _this6.eval(
-                                                          index,
-                                                          context,
-                                                          parameter
-                                                      );
-                                                  }
-                                              )
-                                            : this.eval(0, context, parameter);
-
-                                    if (value !== this.value) {
-                                        /**
-                                         * Call back only on Value changed
-                                         *
-                                         * @typedef {function} ChangedCallback
-                                         *
-                                         * @param {*}    newValue
-                                         * @param {*}    oldValue
-                                         * @param {...*} bindData
-                                         */
-                                        if (this.onChange)
-                                            this.onChange.apply(
-                                                this,
-                                                _toConsumableArray(
-                                                    [value, this.value].concat(
-                                                        this.data
-                                                    )
-                                                )
-                                            );
-                                        this.value = value;
-                                    }
-
-                                    return value;
-                                }
-                                /**
-                                 * @return {string} Value evaluated with empty data
-                                 */
-                            },
-                            {
-                                key: 'clear',
-                                value: function clear() {
-                                    return this.evaluate.apply(
-                                        this,
-                                        _toConsumableArray(
-                                            Array.from(
-                                                this.reference.entries(),
-                                                function(entry) {
-                                                    var data = {};
-                                                    var _iteratorNormalCompletion4 = true;
-                                                    var _didIteratorError4 = false;
-                                                    var _iteratorError4 = undefined;
-
-                                                    try {
-                                                        for (
-                                                            var _iterator4 = entry[1][
-                                                                    Symbol
-                                                                        .iterator
-                                                                ](),
-                                                                _step4;
-                                                            !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next())
-                                                                .done);
-                                                            _iteratorNormalCompletion4 = true
-                                                        ) {
-                                                            var key =
-                                                                _step4.value;
-                                                            data[key] = '';
-                                                        }
-                                                    } catch (err) {
-                                                        _didIteratorError4 = true;
-                                                        _iteratorError4 = err;
-                                                    } finally {
-                                                        try {
-                                                            if (
-                                                                !_iteratorNormalCompletion4 &&
-                                                                _iterator4.return !=
-                                                                    null
-                                                            ) {
-                                                                _iterator4.return();
-                                                            }
-                                                        } finally {
-                                                            if (
-                                                                _didIteratorError4
-                                                            ) {
-                                                                throw _iteratorError4;
-                                                            }
-                                                        }
-                                                    }
-
-                                                    return data;
-                                                }
-                                            )
-                                        )
-                                    );
-                                }
-                            },
-                            {
-                                key: 'toString',
-                                value: function toString() {
-                                    return this.value + '';
-                                }
-                            }
-                        ],
-                        [
-                            {
-                                key: 'Expression',
-                                get: function get() {
-                                    return /\$\{([\s\S]+?)\}/g;
-                                }
-                                /**
-                                 * @type {RegExp}
-                                 */
-                            },
-                            {
-                                key: 'Reference',
-                                get: function get() {
-                                    return /(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g;
-                                }
-                            }
-                        ]
-                    );
-
-                    return Template;
-                })();
-
-            exports.default = Template;
-        }
-    },
     './view/View': {
         base: './view',
         dependency: [],
@@ -1749,7 +1397,7 @@ var _module_ = {
                             {
                                 key: 'bindWith',
                                 value: function bindWith(template) {
-                                    var _this7 = this;
+                                    var _this5 = this;
 
                                     var _this_;
 
@@ -1766,7 +1414,7 @@ var _module_ = {
                                                     )
                                                         DOM_view.set(
                                                             node,
-                                                            _this7
+                                                            _this5
                                                         );
                                                     break;
 
@@ -1975,12 +1623,12 @@ var _module_ = {
                      * @param {View}                            [parent]
                      */
                     function ObjectView(template, parent) {
-                        var _this8;
+                        var _this6;
 
                         _classCallCheck(this, ObjectView);
 
                         if (
-                            !(_this8 = _possibleConstructorReturn(
+                            !(_this6 = _possibleConstructorReturn(
                                 this,
                                 _getPrototypeOf(ObjectView).call(
                                     this,
@@ -1991,8 +1639,8 @@ var _module_ = {
                                 )
                             )).booted
                         )
-                            (_this8.length = 0), _this8.scan();
-                        return _possibleConstructorReturn(_this8);
+                            (_this6.length = 0), _this6.scan();
+                        return _possibleConstructorReturn(_this6);
                     }
 
                     _createClass(
@@ -2008,21 +1656,21 @@ var _module_ = {
                                 key: 'valueOf',
                                 value: function valueOf() {
                                     var data = Object.assign({}, this.data);
-                                    var _iteratorNormalCompletion5 = true;
-                                    var _didIteratorError5 = false;
-                                    var _iteratorError5 = undefined;
+                                    var _iteratorNormalCompletion3 = true;
+                                    var _didIteratorError3 = false;
+                                    var _iteratorError3 = undefined;
 
                                     try {
                                         for (
-                                            var _iterator5 = this[
+                                            var _iterator3 = this[
                                                     Symbol.iterator
                                                 ](),
-                                                _step5;
-                                            !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next())
+                                                _step3;
+                                            !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next())
                                                 .done);
-                                            _iteratorNormalCompletion5 = true
+                                            _iteratorNormalCompletion3 = true
                                         ) {
-                                            var template = _step5.value;
+                                            var template = _step3.value;
                                             if (
                                                 template instanceof
                                                 _View.default
@@ -2032,19 +1680,19 @@ var _module_ = {
                                                 ] = template.valueOf();
                                         }
                                     } catch (err) {
-                                        _didIteratorError5 = true;
-                                        _iteratorError5 = err;
+                                        _didIteratorError3 = true;
+                                        _iteratorError3 = err;
                                     } finally {
                                         try {
                                             if (
-                                                !_iteratorNormalCompletion5 &&
-                                                _iterator5.return != null
+                                                !_iteratorNormalCompletion3 &&
+                                                _iterator3.return != null
                                             ) {
-                                                _iterator5.return();
+                                                _iterator3.return();
                                             }
                                         } finally {
-                                            if (_didIteratorError5) {
-                                                throw _iteratorError5;
+                                            if (_didIteratorError3) {
+                                                throw _iteratorError3;
                                             }
                                         }
                                     }
@@ -2154,7 +1802,7 @@ var _module_ = {
                             {
                                 key: 'watch',
                                 value: function watch(key, value) {
-                                    var _this9 = this;
+                                    var _this7 = this;
 
                                     if (!(key in this))
                                         Object.defineProperty(
@@ -2167,12 +1815,12 @@ var _module_ = {
                                                   }
                                                 : {
                                                       get: function get() {
-                                                          return _this9.data[
+                                                          return _this7.data[
                                                               key
                                                           ];
                                                       },
                                                       set: function set(value) {
-                                                          return _this9.commit(
+                                                          return _this7.commit(
                                                               key,
                                                               value
                                                           );
@@ -2204,37 +1852,37 @@ var _module_ = {
                                         (this[this.length++] = template),
                                         element
                                     );
-                                    var _iteratorNormalCompletion6 = true;
-                                    var _didIteratorError6 = false;
-                                    var _iteratorError6 = undefined;
+                                    var _iteratorNormalCompletion4 = true;
+                                    var _didIteratorError4 = false;
+                                    var _iteratorError4 = undefined;
 
                                     try {
                                         for (
-                                            var _iterator6 = template.reference
+                                            var _iterator4 = template.reference
                                                     .get('view')
                                                     [Symbol.iterator](),
-                                                _step6;
-                                            !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next())
+                                                _step4;
+                                            !(_iteratorNormalCompletion4 = (_step4 = _iterator4.next())
                                                 .done);
-                                            _iteratorNormalCompletion6 = true
+                                            _iteratorNormalCompletion4 = true
                                         ) {
-                                            var key = _step6.value;
+                                            var key = _step4.value;
                                             this.watch(key);
                                         }
                                     } catch (err) {
-                                        _didIteratorError6 = true;
-                                        _iteratorError6 = err;
+                                        _didIteratorError4 = true;
+                                        _iteratorError4 = err;
                                     } finally {
                                         try {
                                             if (
-                                                !_iteratorNormalCompletion6 &&
-                                                _iterator6.return != null
+                                                !_iteratorNormalCompletion4 &&
+                                                _iterator4.return != null
                                             ) {
-                                                _iterator6.return();
+                                                _iterator4.return();
                                             }
                                         } finally {
-                                            if (_didIteratorError6) {
-                                                throw _iteratorError6;
+                                            if (_didIteratorError4) {
+                                                throw _iteratorError4;
                                             }
                                         }
                                     }
@@ -2262,7 +1910,7 @@ var _module_ = {
                             {
                                 key: 'parseTag',
                                 value: function parseTag(element) {
-                                    var _this10 = this;
+                                    var _this8 = this;
 
                                     var _arr3 = _toConsumableArray(
                                         element.attributes
@@ -2289,7 +1937,7 @@ var _module_ = {
                                         if (template == '')
                                             element.removeAttribute(name);
 
-                                        _this10.addTemplate(element, template);
+                                        _this8.addTemplate(element, template);
                                     };
 
                                     for (
@@ -2307,7 +1955,7 @@ var _module_ = {
                             {
                                 key: 'scan',
                                 value: function scan() {
-                                    var _this11 = this;
+                                    var _this9 = this;
 
                                     var root = this.content;
                                     root = root.parentNode
@@ -2325,18 +1973,18 @@ var _module_ = {
                                             switch (node.nodeType) {
                                                 case 1:
                                                     if (node.dataset.object)
-                                                        _this11.addView(
+                                                        _this9.addView(
                                                             node.dataset.object,
                                                             new ObjectView(node)
                                                         );
                                                     else if (node.dataset.array)
-                                                        _this11.addView(
+                                                        _this9.addView(
                                                             node.dataset.array,
                                                             new _ArrayView.default(
                                                                 node
                                                             )
                                                         );
-                                                    else _this11.parseTag(node);
+                                                    else _this9.parseTag(node);
                                                     break;
 
                                                 case 3: {
@@ -2357,7 +2005,7 @@ var _module_ = {
                                                             return (element.innerHTML = value);
                                                         };
 
-                                                    _this11.addTemplate(
+                                                    _this9.addTemplate(
                                                         element,
                                                         template
                                                     );
@@ -2394,21 +2042,21 @@ var _module_ = {
                                         this.watch(key);
                                     }
 
-                                    var _iteratorNormalCompletion7 = true;
-                                    var _didIteratorError7 = false;
-                                    var _iteratorError7 = undefined;
+                                    var _iteratorNormalCompletion5 = true;
+                                    var _didIteratorError5 = false;
+                                    var _iteratorError5 = undefined;
 
                                     try {
                                         for (
-                                            var _iterator7 = this[
+                                            var _iterator5 = this[
                                                     Symbol.iterator
                                                 ](),
-                                                _step7;
-                                            !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next())
+                                                _step5;
+                                            !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next())
                                                 .done);
-                                            _iteratorNormalCompletion7 = true
+                                            _iteratorNormalCompletion5 = true
                                         ) {
-                                            var template = _step7.value;
+                                            var template = _step5.value;
                                             var name = template.name;
                                             if (
                                                 template instanceof
@@ -2431,19 +2079,19 @@ var _module_ = {
                                                 ).data;
                                         }
                                     } catch (err) {
-                                        _didIteratorError7 = true;
-                                        _iteratorError7 = err;
+                                        _didIteratorError5 = true;
+                                        _iteratorError5 = err;
                                     } finally {
                                         try {
                                             if (
-                                                !_iteratorNormalCompletion7 &&
-                                                _iterator7.return != null
+                                                !_iteratorNormalCompletion5 &&
+                                                _iterator5.return != null
                                             ) {
-                                                _iterator7.return();
+                                                _iterator5.return();
                                             }
                                         } finally {
-                                            if (_didIteratorError7) {
-                                                throw _iteratorError7;
+                                            if (_didIteratorError5) {
+                                                throw _iteratorError5;
                                             }
                                         }
                                     }
@@ -2454,37 +2102,37 @@ var _module_ = {
                             {
                                 key: 'clear',
                                 value: function clear() {
-                                    var _iteratorNormalCompletion8 = true;
-                                    var _didIteratorError8 = false;
-                                    var _iteratorError8 = undefined;
+                                    var _iteratorNormalCompletion6 = true;
+                                    var _didIteratorError6 = false;
+                                    var _iteratorError6 = undefined;
 
                                     try {
                                         for (
-                                            var _iterator8 = this[
+                                            var _iterator6 = this[
                                                     Symbol.iterator
                                                 ](),
-                                                _step8;
-                                            !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next())
+                                                _step6;
+                                            !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next())
                                                 .done);
-                                            _iteratorNormalCompletion8 = true
+                                            _iteratorNormalCompletion6 = true
                                         ) {
-                                            var template = _step8.value;
+                                            var template = _step6.value;
                                             template.clear();
                                         }
                                     } catch (err) {
-                                        _didIteratorError8 = true;
-                                        _iteratorError8 = err;
+                                        _didIteratorError6 = true;
+                                        _iteratorError6 = err;
                                     } finally {
                                         try {
                                             if (
-                                                !_iteratorNormalCompletion8 &&
-                                                _iterator8.return != null
+                                                !_iteratorNormalCompletion6 &&
+                                                _iterator6.return != null
                                             ) {
-                                                _iterator8.return();
+                                                _iterator6.return();
                                             }
                                         } finally {
-                                            if (_didIteratorError8) {
-                                                throw _iteratorError8;
+                                            if (_didIteratorError6) {
+                                                throw _iteratorError6;
                                             }
                                         }
                                     }
@@ -2529,6 +2177,358 @@ var _module_ = {
             exports.default = ObjectView;
         }
     },
+    './view/Template': {
+        base: './view',
+        dependency: [],
+        factory: function factory(require, exports, module) {
+            Object.defineProperty(exports, '__esModule', {
+                value: true
+            });
+            exports.default = void 0;
+            var Array_iterator = [][Symbol.iterator];
+            /**
+             * String template
+             */
+
+            var Template =
+                /*#__PURE__*/
+                (function() {
+                    /**
+                     * @param {string}          raw
+                     * @param {stirng[]}        [varName]  - Name list of the Local variable
+                     * @param {ChangedCallback} [onChange] - Call with New & Old value
+                     * @param {Array}           [bindData] - The parameter bound to `onChange`
+                     */
+                    function Template(raw, varName, onChange, bindData) {
+                        _classCallCheck(this, Template);
+
+                        this.length = 0;
+                        this.raw = raw;
+                        /**
+                         * Last evaluated value
+                         *
+                         * @type {*}
+                         */
+
+                        this.value = null;
+                        if (varName instanceof Function)
+                            (bindData = onChange),
+                                (onChange = varName),
+                                (varName = null);
+                        this.varName = varName || [];
+                        /**
+                         * Reference map of contexts
+                         *
+                         * @type {Map}
+                         */
+
+                        this.reference = new Map();
+                        var _iteratorNormalCompletion7 = true;
+                        var _didIteratorError7 = false;
+                        var _iteratorError7 = undefined;
+
+                        try {
+                            for (
+                                var _iterator7 = ['this']
+                                        .concat(this.varName)
+                                        [Symbol.iterator](),
+                                    _step7;
+                                !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next())
+                                    .done);
+                                _iteratorNormalCompletion7 = true
+                            ) {
+                                var scope = _step7.value;
+                                this.reference.set(scope, []);
+                            }
+                        } catch (err) {
+                            _didIteratorError7 = true;
+                            _iteratorError7 = err;
+                        } finally {
+                            try {
+                                if (
+                                    !_iteratorNormalCompletion7 &&
+                                    _iterator7.return != null
+                                ) {
+                                    _iterator7.return();
+                                }
+                            } finally {
+                                if (_didIteratorError7) {
+                                    throw _iteratorError7;
+                                }
+                            }
+                        }
+
+                        this.onChange =
+                            onChange instanceof Function ? onChange : null;
+                        this.data = bindData || [];
+                        this.parse().clear();
+                    }
+
+                    _createClass(
+                        Template,
+                        [
+                            {
+                                key: Symbol.iterator,
+                                value: function value() {
+                                    return Array_iterator.call(this);
+                                }
+                                /**
+                                 * @type {RegExp}
+                                 */
+                            },
+                            {
+                                key: 'push',
+                                value: function push() {
+                                    return Array.prototype.push.apply(
+                                        this,
+                                        arguments
+                                    );
+                                }
+                                /**
+                                 * @private
+                                 *
+                                 * @param {string} expression
+                                 *
+                                 * @return {number} Index of this Evaluation function
+                                 */
+                            },
+                            {
+                                key: 'compile',
+                                value: function compile(expression) {
+                                    this[this.length++] = _construct(
+                                        Function,
+                                        _toConsumableArray(this.varName).concat(
+                                            ['return ' + expression.trim()]
+                                        )
+                                    );
+                                    return this.length - 1;
+                                }
+                                /**
+                                 * @private
+                                 *
+                                 * @return {Template}
+                                 */
+                            },
+                            {
+                                key: 'parse',
+                                value: function parse() {
+                                    var _this10 = this;
+
+                                    var addReference = function addReference(
+                                        match,
+                                        context,
+                                        key1,
+                                        key2,
+                                        key3
+                                    ) {
+                                        if (_this10.reference.has(context))
+                                            _this10.reference
+                                                .get(context)
+                                                .push(key1 || key2 || key3);
+                                    };
+
+                                    this.raw = this.raw.replace(
+                                        Template.Expression,
+                                        function(_, expression) {
+                                            expression.replace(
+                                                Template.Reference,
+                                                addReference
+                                            );
+                                            return (
+                                                '${' +
+                                                _this10.compile(expression) +
+                                                '}'
+                                            );
+                                        }
+                                    );
+                                    return this;
+                                }
+                                /**
+                                 * @private
+                                 *
+                                 * @param {number}  index
+                                 * @param {?object} context
+                                 * @param {Array}   [parameter]
+                                 *
+                                 * @return {*}
+                                 */
+                            },
+                            {
+                                key: 'eval',
+                                value: function _eval(
+                                    index,
+                                    context,
+                                    parameter
+                                ) {
+                                    try {
+                                        var value = this[index].apply(
+                                            context,
+                                            parameter
+                                        );
+                                        return value != null ? value : '';
+                                    } catch (error) {
+                                        if (this.value !== null)
+                                            console.warn(error);
+                                        return '';
+                                    }
+                                }
+                                /**
+                                 * Evaluate expression
+                                 *
+                                 * @param {?object} context     - Value of `this` in the expression
+                                 * @param {...*}    [parameter] - One or more value of the Local variable
+                                 *
+                                 * @return {*}
+                                 */
+                            },
+                            {
+                                key: 'evaluate',
+                                value: function evaluate(context) {
+                                    var _this11 = this;
+
+                                    for (
+                                        var _len3 = arguments.length,
+                                            parameter = new Array(
+                                                _len3 > 1 ? _len3 - 1 : 0
+                                            ),
+                                            _key3 = 1;
+                                        _key3 < _len3;
+                                        _key3++
+                                    ) {
+                                        parameter[_key3 - 1] = arguments[_key3];
+                                    }
+
+                                    var value =
+                                        this.raw !== '${0}'
+                                            ? this.raw.replace(
+                                                  /\$\{(\d+)\}/g,
+                                                  function(_, index) {
+                                                      return _this11.eval(
+                                                          index,
+                                                          context,
+                                                          parameter
+                                                      );
+                                                  }
+                                              )
+                                            : this.eval(0, context, parameter);
+
+                                    if (value !== this.value) {
+                                        /**
+                                         * Call back only on Value changed
+                                         *
+                                         * @typedef {function} ChangedCallback
+                                         *
+                                         * @param {*}    newValue
+                                         * @param {*}    oldValue
+                                         * @param {...*} bindData
+                                         */
+                                        if (this.onChange)
+                                            this.onChange.apply(
+                                                this,
+                                                _toConsumableArray(
+                                                    [value, this.value].concat(
+                                                        this.data
+                                                    )
+                                                )
+                                            );
+                                        this.value = value;
+                                    }
+
+                                    return value;
+                                }
+                                /**
+                                 * @return {string} Value evaluated with empty data
+                                 */
+                            },
+                            {
+                                key: 'clear',
+                                value: function clear() {
+                                    return this.evaluate.apply(
+                                        this,
+                                        _toConsumableArray(
+                                            Array.from(
+                                                this.reference.entries(),
+                                                function(entry) {
+                                                    var data = {};
+                                                    var _iteratorNormalCompletion8 = true;
+                                                    var _didIteratorError8 = false;
+                                                    var _iteratorError8 = undefined;
+
+                                                    try {
+                                                        for (
+                                                            var _iterator8 = entry[1][
+                                                                    Symbol
+                                                                        .iterator
+                                                                ](),
+                                                                _step8;
+                                                            !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next())
+                                                                .done);
+                                                            _iteratorNormalCompletion8 = true
+                                                        ) {
+                                                            var key =
+                                                                _step8.value;
+                                                            data[key] = '';
+                                                        }
+                                                    } catch (err) {
+                                                        _didIteratorError8 = true;
+                                                        _iteratorError8 = err;
+                                                    } finally {
+                                                        try {
+                                                            if (
+                                                                !_iteratorNormalCompletion8 &&
+                                                                _iterator8.return !=
+                                                                    null
+                                                            ) {
+                                                                _iterator8.return();
+                                                            }
+                                                        } finally {
+                                                            if (
+                                                                _didIteratorError8
+                                                            ) {
+                                                                throw _iteratorError8;
+                                                            }
+                                                        }
+                                                    }
+
+                                                    return data;
+                                                }
+                                            )
+                                        )
+                                    );
+                                }
+                            },
+                            {
+                                key: 'toString',
+                                value: function toString() {
+                                    return this.value + '';
+                                }
+                            }
+                        ],
+                        [
+                            {
+                                key: 'Expression',
+                                get: function get() {
+                                    return /\$\{([\s\S]+?)\}/g;
+                                }
+                                /**
+                                 * @type {RegExp}
+                                 */
+                            },
+                            {
+                                key: 'Reference',
+                                get: function get() {
+                                    return /(\w+)(?:\.(\w+)|\[(?:'([^']+)|"([^"]+)))/g;
+                                }
+                            }
+                        ]
+                    );
+
+                    return Template;
+                })();
+
+            exports.default = Template;
+        }
+    },
     './utility/DOM': {
         base: './utility',
         dependency: [],
@@ -2538,6 +2538,7 @@ var _module_ = {
             });
             exports.$ = $;
             exports.$up = $up;
+            exports.mediaReady = mediaReady;
             exports.indexOf = indexOf;
             exports.targetOf = targetOf;
             exports.delegate = delegate;
@@ -2547,6 +2548,16 @@ var _module_ = {
             exports.delay = delay;
             exports.nextTick = nextTick;
             exports.documentReady = void 0;
+
+            var _Template = _interopRequireDefault(require('../view/Template'));
+
+            function _interopRequireDefault(obj) {
+                return obj && obj.__esModule
+                    ? obj
+                    : {
+                          default: obj
+                      };
+            }
             /**
              * @type {Promise}
              */
@@ -2590,6 +2601,63 @@ var _module_ = {
                     if (context.matches && context.matches(selector))
                         return context;
                 }
+            }
+
+            function mediaLoad(media, condition) {
+                return new Promise(function(resolve, reject) {
+                    if (condition()) resolve();
+                    else (media.onload = resolve), (media.onerror = reject);
+                });
+            }
+            /**
+             * @param {Element|Document} [context]
+             *
+             * @return {Promise} Resolved when all media elements in `context` are loaded
+             */
+
+            function mediaReady(context) {
+                return Promise.all(
+                    $(
+                        'img[src], iframe[src], audio[src], video[src]',
+                        context
+                    ).map(function(media) {
+                        if (
+                            _Template.default.Expression.test(
+                                media.getAttribute('src')
+                            )
+                        )
+                            return;
+
+                        switch (media.tagName.toLowerCase()) {
+                            case 'img':
+                                return mediaLoad(media, function() {
+                                    return media.complete;
+                                });
+
+                            case 'iframe':
+                                return new Promise(function(resolve, reject) {
+                                    try {
+                                        if (
+                                            media.contentDocument.readyState ===
+                                            'complete'
+                                        )
+                                            resolve();
+                                        else
+                                            (media.onload = resolve),
+                                                (media.onerror = reject);
+                                    } catch (error) {
+                                        resolve();
+                                    }
+                                });
+
+                            case 'audio':
+                            case 'video':
+                                return mediaLoad(media, function() {
+                                    return media.readyState > 0;
+                                });
+                        }
+                    })
+                );
             }
             /**
              * @param {Element} element
@@ -2637,67 +2705,6 @@ var _module_ = {
                     if (target) return handler.call(target, event);
                 };
             }
-
-            var TableWrapper = {
-                    before: '<table>',
-                    after: '</table>',
-                    depth: 2
-                },
-                RowWrapper = {
-                    before: '<table><tr>',
-                    depth: 3
-                },
-                SelectWrapper = {
-                    before: '<select multiple>'
-                };
-            var TagWrapper = {
-                area: {
-                    before: '<map>'
-                },
-                legend: {
-                    before: '<fieldset>'
-                },
-                param: {
-                    before: '<object>'
-                },
-                caption: TableWrapper,
-                thead: TableWrapper,
-                tbody: TableWrapper,
-                tfoot: TableWrapper,
-                tr: TableWrapper,
-                th: RowWrapper,
-                td: RowWrapper,
-                optgroup: SelectWrapper,
-                option: SelectWrapper
-            };
-            /**
-             * @param {String}                           markup
-             * @param {function(markup: String): Node[]} parser
-             *
-             * @return {Node[]}
-             */
-
-            function safeWrap(markup, parser) {
-                var wrapper;
-                markup = parser(
-                    markup.replace(/<(\w+)[\s\S]*?>[\s\S]*?<\/\1>/, function(
-                        match,
-                        tagName
-                    ) {
-                        wrapper = TagWrapper[tagName];
-                        return wrapper
-                            ? wrapper.before + match + (wrapper.after || '')
-                            : match;
-                    })
-                );
-                var depth = (wrapper || '').depth;
-
-                for (var i = 0; i < depth; i++) {
-                    markup = [markup[0].firstElementChild];
-                }
-
-                return markup;
-            }
             /**
              * @param {string} markup - Code of an markup fragment
              *
@@ -2705,18 +2712,9 @@ var _module_ = {
              */
 
             function parseDOM(markup) {
-                var fragment = document.createDocumentFragment();
-                fragment.append.apply(
-                    fragment,
-                    _toConsumableArray(
-                        safeWrap(markup, function(markup) {
-                            var box = document.createElement('div');
-                            box.innerHTML = markup;
-                            return _toConsumableArray(box.childNodes);
-                        })
-                    )
-                );
-                return fragment;
+                var box = document.createElement('template');
+                box.innerHTML = markup;
+                return box.content;
             }
             /**
              * @param {Element|Element[]|DocumentFragment} tree

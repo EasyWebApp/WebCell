@@ -41,6 +41,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
@@ -71,9 +72,7 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/ObjectView/index.test.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { resolve } from &apos;path&apos;;
-
-import { readFileSync } from &apos;fs&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { readFileSync } from &apos;fs&apos;;
 
 import JSDOM from &apos;../DOM-polyfill&apos;;
 
@@ -99,9 +98,7 @@ var HTML, fragment = `
  */
 describe(&apos;ObjectView()&apos;,  () =&gt; {
 
-    before(()  =&gt;  HTML = readFileSync(
-        resolve(module.id, &apos;../index.html&apos;),  {encoding: &apos;utf-8&apos;}
-    ));
+    before(()  =&gt;  HTML = readFileSync(&apos;test/ObjectView/index.html&apos;) + &apos;&apos;);
 
     describe(&apos;Single view&apos;,  () =&gt; {
 
