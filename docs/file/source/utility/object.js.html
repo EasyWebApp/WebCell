@@ -32,7 +32,6 @@
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
@@ -47,12 +46,14 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
@@ -61,6 +62,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -99,6 +101,91 @@ export function getPropertyDescriptor(object, key) {
 
 
 /**
+ * @typedef {Object} DecoratorDescriptor
+ *
+ * @property {String}                kind         - `class`, `field` or `method`
+ * @property {String}                [key]        - Member name
+ * @property {String}                [placement]  - `static` or `prototype`
+ * @property {Object}                [descriptor] - Last parameter of `Object.defineProperty()`
+ * @property {DecoratorDescriptor[]} [elements]   - Class members
+ */
+
+/**
+ * @param {Function|Object}   target                          - Class or its prototype
+ * @param {String}            key                             - Member name
+ * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
+ * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
+ *
+ * @return {DecoratorDescriptor}
+ */
+export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
+
+    descriptor = {
+        key, descriptor,
+        placement:  (target instanceof Function) ? &apos;static&apos; : &apos;prototype&apos;
+    };
+
+    if (value instanceof Function)
+        descriptor.kind = &apos;method&apos;,  descriptor.descriptor.value = value;
+    else if (
+        (value.constructor === Object)  &amp;&amp;
+        ((value.set || value.get) instanceof Function)
+    )
+        descriptor.kind = &apos;method&apos;,  Object.assign(descriptor.descriptor, value);
+    else
+        descriptor.kind = &apos;field&apos;,  descriptor.initializer = () =&gt; value;
+
+    return descriptor;
+}
+
+
+const Array_iterator = [ ][Symbol.iterator];
+
+/**
+ * @param {Object} arrayLike
+ *
+ * @return {Iterable} `arrayLike`
+ */
+export function toIterable(arrayLike) {
+
+    if (!(arrayLike[Symbol.iterator] instanceof Function))
+        arrayLike[Symbol.iterator] = Array_iterator;
+
+    return arrayLike;
+}
+
+
+/**
+ * Iteratable decorator for Class, Method or Getter
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function arrayLike(meta) {
+
+    const descriptor = meta.descriptor;
+
+    switch ( meta.kind ) {
+        case &apos;class&apos;:
+            meta.elements.push(
+                decoratorOf({ }, Symbol.iterator, Array_iterator)
+            );
+            break;
+        case &apos;method&apos;:
+            for (let key  of  [&apos;value&apos;, &apos;get&apos;]) {
+
+                let origin;
+
+                if (origin = descriptor[key])
+                    descriptor[key] = function () {
+
+                        return  toIterable( origin.apply(this, arguments) );
+                    };
+            }
+    }
+}
+
+
+/**
  * Equivalent to the integration of Array&apos;s map() &amp; filter() methods
  *
  * @param {Iterable}                                           list
@@ -109,17 +196,20 @@ export function getPropertyDescriptor(object, key) {
  */
 export function multipleMap(list, filter) {
 
-    const result = [ ];  filter = (filter instanceof Function)  &amp;&amp;  filter;
+    toIterable( list );
 
-    for (let i = 0;  i &lt; list.length;  i++) {
+    filter = (filter instanceof Function)  &amp;&amp;  filter;
 
-        let item = filter  ?  filter(list[i], i, list)  :  list[i];
+    var result = [ ], i = 0;
+
+    for (let item of list) {
+
+        if ( filter )  item = filter(item, i, list);
 
         if (item != null)
-            if (item instanceof Array)
-                result.push(...item);
-            else
-                result.push( item );
+            result.push[
+                (item instanceof Array)  ?  &apos;apply&apos;  :  &apos;call&apos;
+            ](result, item);
     }
 
     return result;
@@ -197,35 +287,6 @@ export function* mapTree(node, fork_key) {
     }
 
     depth-- ;
-}
-
-
-/**
- * @param {Function|Object}   target                          - Class or its prototype
- * @param {String}            key                             - Member name
- * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
- * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
- *
- * @return {Object} Decorator descriptor
- */
-export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
-
-    descriptor = {
-        key, descriptor,
-        placement:  (target instanceof Function) ? &apos;static&apos; : &apos;prototype&apos;
-    };
-
-    if (value instanceof Function)
-        descriptor.kind = &apos;method&apos;,  descriptor.descriptor.value = value;
-    else if (
-        (value.constructor === Object)  &amp;&amp;
-        ((value.set || value.get) instanceof Function)
-    )
-        descriptor.kind = &apos;method&apos;,  Object.assign(descriptor.descriptor, value);
-    else
-        descriptor.kind = &apos;field&apos;,  descriptor.initializer = () =&gt; value;
-
-    return descriptor;
 }
 </code></pre>
 

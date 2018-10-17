@@ -1,10 +1,13 @@
+import { arrayLike } from '../utility/object';
+
 import View from './View';
 
 import ObjectView from './ObjectView';
 
-const Array_iterator = [ ][Symbol.iterator], Array_indexOf = [ ].indexOf;
+const Array_indexOf = [ ].indexOf;
 
 
+@arrayLike
 /**
  * View for Array model
  */
@@ -15,13 +18,17 @@ export default  class ArrayView extends View {
      */
     constructor(element, parent) {
 
-        if (! super(element,  'array',  [ ],  parent).booted) {
+        super(element,  'array',  [ ],  parent);
 
-            this.template = element.children[0].content;  this.clear();
-        }
+        if ( this.booted )  return;
+
+        const template = element.children[0];
+
+        this.template = (template.tagName.toLowerCase() === 'template')  ?
+            template.content  :  element.innerHTML;
+
+        this.clear();
     }
-
-    [Symbol.iterator]() {  return  Array_iterator.call( this );  }
 
     clear() {
 

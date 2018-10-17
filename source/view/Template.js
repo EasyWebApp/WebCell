@@ -1,6 +1,7 @@
-const Array_iterator = [ ][Symbol.iterator];
+import { arrayLike } from '../utility/object';
 
 
+@arrayLike
 /**
  * String template
  */
@@ -45,8 +46,6 @@ export default  class Template {
 
         this.parse().clear();
     }
-
-    [Symbol.iterator]() {  return  Array_iterator.call( this );  }
 
     /**
      * @type {RegExp}

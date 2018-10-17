@@ -1,18 +1,17 @@
+import { arrayLike, mapTree, extend } from '../utility/object';
+
 import View from './View';
 
 import Template from './Template';
 
 import { nextTick } from '../utility/DOM';
 
-import { mapTree, extend } from '../utility/object';
-
 import ArrayView from './ArrayView';
 
-const Array_iterator = [ ][Symbol.iterator],
-    template_element = new WeakMap(),
-    view_buffer = new WeakMap();
+const template_element = new WeakMap(), view_buffer = new WeakMap();
 
 
+@arrayLike
 /**
  * View for Object model
  */
@@ -23,11 +22,10 @@ export default  class ObjectView extends View {
      */
     constructor(template, parent) {
 
-        if (! super(template,  'object',  { },  parent).booted)
-            this.length = 0, this.scan();
-    }
+        super(template,  'object',  { },  parent);
 
-    [Symbol.iterator]() {  return  Array_iterator.call( this );  }
+        if (! this.booted)  this.length = 0, this.scan();
+    }
 
     valueOf() {
 

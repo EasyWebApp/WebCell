@@ -8,16 +8,6 @@ import { blobFrom } from './utility/resource';
 
 
 /**
- * @typedef {Object} DecoratorDescriptor
- *
- * @property {String} kind       - `class`, `field` or `method`
- * @property {String} key        - Member name
- * @property {String} placement  - `static` or `prototype`
- * @property {Object} descriptor - Last parameter of `Object.defineProperty()`
- */
-
-
-/**
  * Decorator for `observedAttributes()`
  *
  * @param {DecoratorDescriptor} meta

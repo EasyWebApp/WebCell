@@ -48,6 +48,12 @@ window.esdocSearchIndex = [
     "class"
   ],
   [
+    "web-cell/source/utility/object.js~arraylike",
+    "function/index.html#static-function-arrayLike",
+    "<span>arrayLike</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/component/component.js~attributechanged",
     "function/index.html#static-function-attributeChanged",
     "<span>attributeChanged</span> <span class=\"search-result-import-path\">web-cell/source/component/Component.js</span>",
@@ -189,6 +195,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~targetof",
     "function/index.html#static-function-targetOf",
     "<span>targetOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/object.js~toiterable",
+    "function/index.html#static-function-toIterable",
+    "<span>toIterable</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
     "function"
   ],
   [
@@ -930,12 +942,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "source/webcell.js~decoratordescriptor",
-    "typedef/index.html#static-typedef-DecoratorDescriptor",
-    "source/WebCell.js~DecoratorDescriptor",
-    "typedef"
-  ],
-  [
     "source/component/component.js",
     "file/source/component/Component.js.html",
     "source/component/Component.js",
@@ -1038,6 +1044,12 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
+    "source/utility/object.js~decoratordescriptor",
+    "typedef/index.html#static-typedef-DecoratorDescriptor",
+    "source/utility/object.js~DecoratorDescriptor",
+    "typedef"
+  ],
+  [
     "source/utility/resource.js",
     "file/source/utility/resource.js.html",
     "source/utility/resource.js",
@@ -1048,12 +1060,6 @@ window.esdocSearchIndex = [
     "file/source/view/ArrayView.js.html",
     "source/view/ArrayView.js",
     "file"
-  ],
-  [
-    "source/view/arrayview.js~arrayview#[symbol.iterator]",
-    "class/source/view/ArrayView.js~ArrayView.html#instance-method-[Symbol.iterator]",
-    "source/view/ArrayView.js~ArrayView#[Symbol.iterator]",
-    "method"
   ],
   [
     "source/view/arrayview.js~arrayview#clear",
@@ -1110,12 +1116,6 @@ window.esdocSearchIndex = [
     "file"
   ],
   [
-    "source/view/objectview.js~objectview#[symbol.iterator]",
-    "class/source/view/ObjectView.js~ObjectView.html#instance-method-[Symbol.iterator]",
-    "source/view/ObjectView.js~ObjectView#[Symbol.iterator]",
-    "method"
-  ],
-  [
     "source/view/objectview.js~objectview#clear",
     "class/source/view/ObjectView.js~ObjectView.html#instance-method-clear",
     "source/view/ObjectView.js~ObjectView#clear",
@@ -1168,12 +1168,6 @@ window.esdocSearchIndex = [
     "class/source/view/Template.js~Template.html#instance-member-[.length++]",
     "source/view/Template.js~Template#[.length++]",
     "member"
-  ],
-  [
-    "source/view/template.js~template#[symbol.iterator]",
-    "class/source/view/Template.js~Template.html#instance-method-[Symbol.iterator]",
-    "source/view/Template.js~Template#[Symbol.iterator]",
-    "method"
   ],
   [
     "source/view/template.js~template#clear",

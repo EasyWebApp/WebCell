@@ -26,6 +26,91 @@ export function getPropertyDescriptor(object, key) {
 
 
 /**
+ * @typedef {Object} DecoratorDescriptor
+ *
+ * @property {String}                kind         - `class`, `field` or `method`
+ * @property {String}                [key]        - Member name
+ * @property {String}                [placement]  - `static` or `prototype`
+ * @property {Object}                [descriptor] - Last parameter of `Object.defineProperty()`
+ * @property {DecoratorDescriptor[]} [elements]   - Class members
+ */
+
+/**
+ * @param {Function|Object}   target                          - Class or its prototype
+ * @param {String}            key                             - Member name
+ * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
+ * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
+ *
+ * @return {DecoratorDescriptor}
+ */
+export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
+
+    descriptor = {
+        key, descriptor,
+        placement:  (target instanceof Function) ? 'static' : 'prototype'
+    };
+
+    if (value instanceof Function)
+        descriptor.kind = 'method',  descriptor.descriptor.value = value;
+    else if (
+        (value.constructor === Object)  &&
+        ((value.set || value.get) instanceof Function)
+    )
+        descriptor.kind = 'method',  Object.assign(descriptor.descriptor, value);
+    else
+        descriptor.kind = 'field',  descriptor.initializer = () => value;
+
+    return descriptor;
+}
+
+
+const Array_iterator = [ ][Symbol.iterator];
+
+/**
+ * @param {Object} arrayLike
+ *
+ * @return {Iterable} `arrayLike`
+ */
+export function toIterable(arrayLike) {
+
+    if (!(arrayLike[Symbol.iterator] instanceof Function))
+        arrayLike[Symbol.iterator] = Array_iterator;
+
+    return arrayLike;
+}
+
+
+/**
+ * Iteratable decorator for Class, Method or Getter
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function arrayLike(meta) {
+
+    const descriptor = meta.descriptor;
+
+    switch ( meta.kind ) {
+        case 'class':
+            meta.elements.push(
+                decoratorOf({ }, Symbol.iterator, Array_iterator)
+            );
+            break;
+        case 'method':
+            for (let key  of  ['value', 'get']) {
+
+                let origin;
+
+                if (origin = descriptor[key])
+                    descriptor[key] = function () {
+
+                        return  toIterable( origin.apply(this, arguments) );
+                    };
+            }
+    }
+}
+
+
+/**
  * Equivalent to the integration of Array's map() & filter() methods
  *
  * @param {Iterable}                                           list
@@ -36,17 +121,20 @@ export function getPropertyDescriptor(object, key) {
  */
 export function multipleMap(list, filter) {
 
-    const result = [ ];  filter = (filter instanceof Function)  &&  filter;
+    toIterable( list );
 
-    for (let i = 0;  i < list.length;  i++) {
+    filter = (filter instanceof Function)  &&  filter;
 
-        let item = filter  ?  filter(list[i], i, list)  :  list[i];
+    var result = [ ], i = 0;
+
+    for (let item of list) {
+
+        if ( filter )  item = filter(item, i, list);
 
         if (item != null)
-            if (item instanceof Array)
-                result.push(...item);
-            else
-                result.push( item );
+            result.push[
+                (item instanceof Array)  ?  'apply'  :  'call'
+            ](result, item);
     }
 
     return result;
@@ -124,33 +212,4 @@ export function* mapTree(node, fork_key) {
     }
 
     depth-- ;
-}
-
-
-/**
- * @param {Function|Object}   target                          - Class or its prototype
- * @param {String}            key                             - Member name
- * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
- * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
- *
- * @return {Object} Decorator descriptor
- */
-export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
-
-    descriptor = {
-        key, descriptor,
-        placement:  (target instanceof Function) ? 'static' : 'prototype'
-    };
-
-    if (value instanceof Function)
-        descriptor.kind = 'method',  descriptor.descriptor.value = value;
-    else if (
-        (value.constructor === Object)  &&
-        ((value.set || value.get) instanceof Function)
-    )
-        descriptor.kind = 'method',  Object.assign(descriptor.descriptor, value);
-    else
-        descriptor.kind = 'field',  descriptor.initializer = () => value;
-
-    return descriptor;
 }
