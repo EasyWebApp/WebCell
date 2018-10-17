@@ -99,28 +99,33 @@ describe('Object utility',  () => {
      */
     it('Filter object tree',  () => {
 
-        mapTree({
-            id:        0,
-            children:  [
+        Array.from(
+            mapTree(
                 {
-                    id:        1,
+                    id:        0,
                     children:  [
                         {
-                            id:        3,
+                            id:        1,
+                            children:  [
+                                {
+                                    id:        3,
+                                    children:  []
+                                }
+                            ]
+                        },
+                        {
+                            id:        2,
                             children:  []
                         }
                     ]
                 },
-                {
-                    id:        2,
-                    children:  []
-                }
-            ]
-        },  'children',  function (child, index, depth) {
+                'children'
+            ),
+            ({node, depth}) => {
 
-            if (depth < 2)  return child.id;
-
-        }).should.be.eql([1, 2]);
+                if (depth < 2)  return node.id;
+            }
+        ).filter( Boolean ).should.be.eql([1, 2]);
     });
 
     /**

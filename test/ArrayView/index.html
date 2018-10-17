@@ -1,18 +1,18 @@
 <main>
     <h1>${view.title}</h1>
 
-    <ol data-array="view">
+    <ol data-array="view"><template>
         <li>${view.name}</li>
-    </ol>
+    </template></ol>
 
     <table>
-        <tbody data-array="browser">
+        <tbody data-array="browser"><template>
             <tr>
                 <td>${view.index}</td>
                 <td>${view.brand}</td>
                 <td>${view.core}</td>
                 <td>v${scope.version}</td>
             </tr>
-        </tbody>
+        </template></tbody>
     </table>
 </main>

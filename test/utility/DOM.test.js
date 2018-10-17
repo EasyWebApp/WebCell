@@ -35,11 +35,11 @@ describe('DOM utility',  () => {
      */
     it('Search elements up & down',  () => {
 
-        const cell = $('td', fragment);
+        const template = $('template', fragment);
 
-        cell.should.have.length(4);
+        template.should.have.length(2);
 
-        $up('tbody[data-array]', cell[0]).should.be.instanceOf( Element );
+        $up('table', template[1]).should.be.instanceOf( Element );
     });
 
     /**

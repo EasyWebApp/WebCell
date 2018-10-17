@@ -331,31 +331,31 @@ window.esdocSearchIndex = [
   ],
   [
     "decoratorof source/utility/object.js~decoratorof,decoratorof",
-    "test-file/test/utility/object.test.js.html#lineNumber129",
+    "test-file/test/utility/object.test.js.html#lineNumber134",
     "Object utility Create decorator descriptor",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber182",
+    "test-file/test/utility/object.test.js.html#lineNumber187",
     "Object utility Create decorator descriptor Prototype methods",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber167",
+    "test-file/test/utility/object.test.js.html#lineNumber172",
     "Object utility Create decorator descriptor Static accessors",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber131",
+    "test-file/test/utility/object.test.js.html#lineNumber136",
     "Object utility Create decorator descriptor Static fields",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber148",
+    "test-file/test/utility/object.test.js.html#lineNumber153",
     "Object utility Create decorator descriptor Static methods",
     "test"
   ],
@@ -1036,12 +1036,6 @@ window.esdocSearchIndex = [
     "file/source/utility/object.js.html",
     "source/utility/object.js",
     "file"
-  ],
-  [
-    "source/utility/object.js~maptreefilter",
-    "typedef/index.html#static-typedef-MapTreeFilter",
-    "source/utility/object.js~MapTreeFilter",
-    "typedef"
   ],
   [
     "source/utility/resource.js",

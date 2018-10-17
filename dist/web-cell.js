@@ -938,7 +938,7 @@ var _module_ = {
                                 )
                             )).booted
                         ) {
-                            _this3.template = element.innerHTML.trim();
+                            _this3.template = element.children[0].content;
 
                             _this3.clear();
                         }
@@ -1042,7 +1042,9 @@ var _module_ = {
                                                     var view = (_this4[
                                                         _this4.length++
                                                     ] = new _ObjectView.default(
-                                                        _this4.template,
+                                                        _this4.template.cloneNode(
+                                                            true
+                                                        ),
                                                         _this4
                                                     ));
                                                     data[data.length] =
@@ -1105,6 +1107,10 @@ var _module_ = {
         base: './utility',
         dependency: [],
         factory: function factory(require, exports, module) {
+            var _marked =
+                /*#__PURE__*/
+                regeneratorRuntime.mark(mapTree);
+
             Object.defineProperty(exports, '__esModule', {
                 value: true
             });
@@ -1233,49 +1239,77 @@ var _module_ = {
 
             var depth = 0;
             /**
-             * Traverse Object-tree & return Node array through the filter
+             * Traverse Object-tree
              *
-             * @param {object}        node     - Object tree
-             * @param {string}        fork_key - Key of children list
-             * @param {MapTreeFilter} filter   - Map filter
+             * @param {Object} node     - Object tree
+             * @param {String} fork_key - Key of children list
              *
-             * @return {Array}  Result list of Map filter
+             * @yield {Object}
+             * @property {?Object} node   - Current node
+             * @property {Object}  parent - Parent node
+             * @property {Number}  index  - Index of current level
+             * @property {Number}  depth  - Level count of current node
              */
 
-            function mapTree(node, fork_key, filter) {
-                var children = node[fork_key],
-                    list = [];
-                depth++;
+            function mapTree(node, fork_key) {
+                var children, i;
+                return regeneratorRuntime.wrap(
+                    function mapTree$(_context3) {
+                        while (1) {
+                            switch ((_context3.prev = _context3.next)) {
+                                case 0:
+                                    children = node[fork_key];
+                                    depth++;
+                                    i = 0;
 
-                for (var i = 0, value; i < children.length; i++) {
-                    /**
-                     * @typedef {function} MapTreeFilter
-                     *
-                     * @param {object} child
-                     * @param {number} index
-                     * @param {number} depth
-                     *
-                     * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
-                     *                    and Any other Type to Add into the Result Array.
-                     */
-                    try {
-                        value = filter.call(node, children[i], i, depth);
-                    } catch (error) {
-                        depth = 0;
-                        throw error;
-                    }
+                                case 3:
+                                    if (!(i < children.length)) {
+                                        _context3.next = 11;
+                                        break;
+                                    }
 
-                    if (!(value != null)) continue;
-                    list.push(value);
-                    if (children[i] != null && (children[i][fork_key] || '')[0])
-                        list.push.apply(
-                            list,
-                            mapTree(children[i], fork_key, filter)
-                        );
-                }
+                                    _context3.next = 6;
+                                    return {
+                                        parent: node,
+                                        node: children[i],
+                                        index: i,
+                                        depth: depth
+                                    };
 
-                depth--;
-                return list;
+                                case 6:
+                                    if (
+                                        !(
+                                            children[i] != null &&
+                                            (children[i][fork_key] || '')[0]
+                                        )
+                                    ) {
+                                        _context3.next = 8;
+                                        break;
+                                    }
+
+                                    return _context3.delegateYield(
+                                        mapTree(children[i], fork_key),
+                                        't0',
+                                        8
+                                    );
+
+                                case 8:
+                                    i++;
+                                    _context3.next = 3;
+                                    break;
+
+                                case 11:
+                                    depth--;
+
+                                case 12:
+                                case 'end':
+                                    return _context3.stop();
+                            }
+                        }
+                    },
+                    _marked,
+                    this
+                );
             }
             /**
              * @param {Function|Object}   target                          - Class or its prototype
@@ -1727,12 +1761,12 @@ var _module_ = {
                                                 var buffer;
                                                 return regeneratorRuntime.wrap(
                                                     function _callee3$(
-                                                        _context3
+                                                        _context4
                                                     ) {
                                                         while (1) {
                                                             switch (
-                                                                (_context3.prev =
-                                                                    _context3.next)
+                                                                (_context4.prev =
+                                                                    _context4.next)
                                                             ) {
                                                                 case 0:
                                                                     if (
@@ -1747,7 +1781,7 @@ var _module_ = {
                                                                     buffer[
                                                                         key
                                                                     ] = value;
-                                                                    _context3.next = 4;
+                                                                    _context4.next = 4;
                                                                     return (0,
                                                                     _DOM.nextTick)();
 
@@ -1757,11 +1791,11 @@ var _module_ = {
                                                                             this
                                                                         )
                                                                     ) {
-                                                                        _context3.next = 6;
+                                                                        _context4.next = 6;
                                                                         break;
                                                                     }
 
-                                                                    return _context3.abrupt(
+                                                                    return _context4.abrupt(
                                                                         'return'
                                                                     );
 
@@ -1775,7 +1809,7 @@ var _module_ = {
 
                                                                 case 8:
                                                                 case 'end':
-                                                                    return _context3.stop();
+                                                                    return _context4.stop();
                                                             }
                                                         }
                                                     },
@@ -1966,10 +2000,14 @@ var _module_ = {
                                                       ? root
                                                       : [root]
                                           };
-                                    (0, _object.mapTree)(
-                                        root,
-                                        'childNodes',
-                                        function(node) {
+                                    var _iteratorNormalCompletion5 = true;
+                                    var _didIteratorError5 = false;
+                                    var _iteratorError5 = undefined;
+
+                                    try {
+                                        var _loop2 = function _loop2() {
+                                            var node = _step5.value.node;
+
                                             switch (node.nodeType) {
                                                 case 1:
                                                     if (node.dataset.object)
@@ -2011,10 +2049,38 @@ var _module_ = {
                                                     );
                                                 }
                                             }
+                                        };
 
-                                            return node;
+                                        for (
+                                            var _iterator5 = (0,
+                                                _object.mapTree)(
+                                                    root,
+                                                    'childNodes'
+                                                )[Symbol.iterator](),
+                                                _step5;
+                                            !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next())
+                                                .done);
+                                            _iteratorNormalCompletion5 = true
+                                        ) {
+                                            _loop2();
                                         }
-                                    );
+                                    } catch (err) {
+                                        _didIteratorError5 = true;
+                                        _iteratorError5 = err;
+                                    } finally {
+                                        try {
+                                            if (
+                                                !_iteratorNormalCompletion5 &&
+                                                _iterator5.return != null
+                                            ) {
+                                                _iterator5.return();
+                                            }
+                                        } finally {
+                                            if (_didIteratorError5) {
+                                                throw _iteratorError5;
+                                            }
+                                        }
+                                    }
                                 }
                                 /**
                                  * First ancestor scope which isn't `Array`
@@ -2042,21 +2108,21 @@ var _module_ = {
                                         this.watch(key);
                                     }
 
-                                    var _iteratorNormalCompletion5 = true;
-                                    var _didIteratorError5 = false;
-                                    var _iteratorError5 = undefined;
+                                    var _iteratorNormalCompletion6 = true;
+                                    var _didIteratorError6 = false;
+                                    var _iteratorError6 = undefined;
 
                                     try {
                                         for (
-                                            var _iterator5 = this[
+                                            var _iterator6 = this[
                                                     Symbol.iterator
                                                 ](),
-                                                _step5;
-                                            !(_iteratorNormalCompletion5 = (_step5 = _iterator5.next())
+                                                _step6;
+                                            !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next())
                                                 .done);
-                                            _iteratorNormalCompletion5 = true
+                                            _iteratorNormalCompletion6 = true
                                         ) {
-                                            var template = _step5.value;
+                                            var template = _step6.value;
                                             var name = template.name;
                                             if (
                                                 template instanceof
@@ -2079,47 +2145,6 @@ var _module_ = {
                                                 ).data;
                                         }
                                     } catch (err) {
-                                        _didIteratorError5 = true;
-                                        _iteratorError5 = err;
-                                    } finally {
-                                        try {
-                                            if (
-                                                !_iteratorNormalCompletion5 &&
-                                                _iterator5.return != null
-                                            ) {
-                                                _iterator5.return();
-                                            }
-                                        } finally {
-                                            if (_didIteratorError5) {
-                                                throw _iteratorError5;
-                                            }
-                                        }
-                                    }
-
-                                    return this;
-                                }
-                            },
-                            {
-                                key: 'clear',
-                                value: function clear() {
-                                    var _iteratorNormalCompletion6 = true;
-                                    var _didIteratorError6 = false;
-                                    var _iteratorError6 = undefined;
-
-                                    try {
-                                        for (
-                                            var _iterator6 = this[
-                                                    Symbol.iterator
-                                                ](),
-                                                _step6;
-                                            !(_iteratorNormalCompletion6 = (_step6 = _iterator6.next())
-                                                .done);
-                                            _iteratorNormalCompletion6 = true
-                                        ) {
-                                            var template = _step6.value;
-                                            template.clear();
-                                        }
-                                    } catch (err) {
                                         _didIteratorError6 = true;
                                         _iteratorError6 = err;
                                     } finally {
@@ -2133,6 +2158,47 @@ var _module_ = {
                                         } finally {
                                             if (_didIteratorError6) {
                                                 throw _iteratorError6;
+                                            }
+                                        }
+                                    }
+
+                                    return this;
+                                }
+                            },
+                            {
+                                key: 'clear',
+                                value: function clear() {
+                                    var _iteratorNormalCompletion7 = true;
+                                    var _didIteratorError7 = false;
+                                    var _iteratorError7 = undefined;
+
+                                    try {
+                                        for (
+                                            var _iterator7 = this[
+                                                    Symbol.iterator
+                                                ](),
+                                                _step7;
+                                            !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next())
+                                                .done);
+                                            _iteratorNormalCompletion7 = true
+                                        ) {
+                                            var template = _step7.value;
+                                            template.clear();
+                                        }
+                                    } catch (err) {
+                                        _didIteratorError7 = true;
+                                        _iteratorError7 = err;
+                                    } finally {
+                                        try {
+                                            if (
+                                                !_iteratorNormalCompletion7 &&
+                                                _iterator7.return != null
+                                            ) {
+                                                _iterator7.return();
+                                            }
+                                        } finally {
+                                            if (_didIteratorError7) {
+                                                throw _iteratorError7;
                                             }
                                         }
                                     }
@@ -2223,37 +2289,37 @@ var _module_ = {
                          */
 
                         this.reference = new Map();
-                        var _iteratorNormalCompletion7 = true;
-                        var _didIteratorError7 = false;
-                        var _iteratorError7 = undefined;
+                        var _iteratorNormalCompletion8 = true;
+                        var _didIteratorError8 = false;
+                        var _iteratorError8 = undefined;
 
                         try {
                             for (
-                                var _iterator7 = ['this']
+                                var _iterator8 = ['this']
                                         .concat(this.varName)
                                         [Symbol.iterator](),
-                                    _step7;
-                                !(_iteratorNormalCompletion7 = (_step7 = _iterator7.next())
+                                    _step8;
+                                !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next())
                                     .done);
-                                _iteratorNormalCompletion7 = true
+                                _iteratorNormalCompletion8 = true
                             ) {
-                                var scope = _step7.value;
+                                var scope = _step8.value;
                                 this.reference.set(scope, []);
                             }
                         } catch (err) {
-                            _didIteratorError7 = true;
-                            _iteratorError7 = err;
+                            _didIteratorError8 = true;
+                            _iteratorError8 = err;
                         } finally {
                             try {
                                 if (
-                                    !_iteratorNormalCompletion7 &&
-                                    _iterator7.return != null
+                                    !_iteratorNormalCompletion8 &&
+                                    _iterator8.return != null
                                 ) {
-                                    _iterator7.return();
+                                    _iterator8.return();
                                 }
                             } finally {
-                                if (_didIteratorError7) {
-                                    throw _iteratorError7;
+                                if (_didIteratorError8) {
+                                    throw _iteratorError8;
                                 }
                             }
                         }
@@ -2450,42 +2516,42 @@ var _module_ = {
                                                 this.reference.entries(),
                                                 function(entry) {
                                                     var data = {};
-                                                    var _iteratorNormalCompletion8 = true;
-                                                    var _didIteratorError8 = false;
-                                                    var _iteratorError8 = undefined;
+                                                    var _iteratorNormalCompletion9 = true;
+                                                    var _didIteratorError9 = false;
+                                                    var _iteratorError9 = undefined;
 
                                                     try {
                                                         for (
-                                                            var _iterator8 = entry[1][
+                                                            var _iterator9 = entry[1][
                                                                     Symbol
                                                                         .iterator
                                                                 ](),
-                                                                _step8;
-                                                            !(_iteratorNormalCompletion8 = (_step8 = _iterator8.next())
+                                                                _step9;
+                                                            !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next())
                                                                 .done);
-                                                            _iteratorNormalCompletion8 = true
+                                                            _iteratorNormalCompletion9 = true
                                                         ) {
                                                             var key =
-                                                                _step8.value;
+                                                                _step9.value;
                                                             data[key] = '';
                                                         }
                                                     } catch (err) {
-                                                        _didIteratorError8 = true;
-                                                        _iteratorError8 = err;
+                                                        _didIteratorError9 = true;
+                                                        _iteratorError9 = err;
                                                     } finally {
                                                         try {
                                                             if (
-                                                                !_iteratorNormalCompletion8 &&
-                                                                _iterator8.return !=
+                                                                !_iteratorNormalCompletion9 &&
+                                                                _iterator9.return !=
                                                                     null
                                                             ) {
-                                                                _iterator8.return();
+                                                                _iterator9.return();
                                                             }
                                                         } finally {
                                                             if (
-                                                                _didIteratorError8
+                                                                _didIteratorError9
                                                             ) {
-                                                                throw _iteratorError8;
+                                                                throw _iteratorError9;
                                                             }
                                                         }
                                                     }
@@ -2755,18 +2821,18 @@ var _module_ = {
                 var _this12 = this;
 
                 var observer = new MutationObserver(function(list) {
-                    var _iteratorNormalCompletion9 = true;
-                    var _didIteratorError9 = false;
-                    var _iteratorError9 = undefined;
+                    var _iteratorNormalCompletion10 = true;
+                    var _didIteratorError10 = false;
+                    var _iteratorError10 = undefined;
 
                     try {
                         for (
-                            var _iterator9 = list[Symbol.iterator](), _step9;
-                            !(_iteratorNormalCompletion9 = (_step9 = _iterator9.next())
+                            var _iterator10 = list[Symbol.iterator](), _step10;
+                            !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next())
                                 .done);
-                            _iteratorNormalCompletion9 = true
+                            _iteratorNormalCompletion10 = true
                         ) {
-                            var mutation = _step9.value;
+                            var mutation = _step10.value;
                             callback.call(
                                 _this12,
                                 mutation.attributeName,
@@ -2775,19 +2841,19 @@ var _module_ = {
                             );
                         }
                     } catch (err) {
-                        _didIteratorError9 = true;
-                        _iteratorError9 = err;
+                        _didIteratorError10 = true;
+                        _iteratorError10 = err;
                     } finally {
                         try {
                             if (
-                                !_iteratorNormalCompletion9 &&
-                                _iterator9.return != null
+                                !_iteratorNormalCompletion10 &&
+                                _iterator10.return != null
                             ) {
-                                _iterator9.return();
+                                _iterator10.return();
                             }
                         } finally {
-                            if (_didIteratorError9) {
-                                throw _iteratorError9;
+                            if (_didIteratorError10) {
+                                throw _iteratorError10;
                             }
                         }
                     }
@@ -2797,19 +2863,19 @@ var _module_ = {
                     attributeOldValue: true,
                     attributeFilter: names
                 });
-                var _iteratorNormalCompletion10 = true;
-                var _didIteratorError10 = false;
-                var _iteratorError10 = undefined;
+                var _iteratorNormalCompletion11 = true;
+                var _didIteratorError11 = false;
+                var _iteratorError11 = undefined;
 
                 try {
                     for (
-                        var _iterator10 = element.attributes[Symbol.iterator](),
-                            _step10;
-                        !(_iteratorNormalCompletion10 = (_step10 = _iterator10.next())
+                        var _iterator11 = element.attributes[Symbol.iterator](),
+                            _step11;
+                        !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next())
                             .done);
-                        _iteratorNormalCompletion10 = true
+                        _iteratorNormalCompletion11 = true
                     ) {
-                        var attribute = _step10.value;
+                        var attribute = _step11.value;
                         callback.call(
                             this,
                             attribute.name,
@@ -2818,19 +2884,19 @@ var _module_ = {
                         );
                     }
                 } catch (err) {
-                    _didIteratorError10 = true;
-                    _iteratorError10 = err;
+                    _didIteratorError11 = true;
+                    _iteratorError11 = err;
                 } finally {
                     try {
                         if (
-                            !_iteratorNormalCompletion10 &&
-                            _iterator10.return != null
+                            !_iteratorNormalCompletion11 &&
+                            _iterator11.return != null
                         ) {
-                            _iterator10.return();
+                            _iterator11.return();
                         }
                     } finally {
-                        if (_didIteratorError10) {
-                            throw _iteratorError10;
+                        if (_didIteratorError11) {
+                            throw _iteratorError11;
                         }
                     }
                 }
@@ -3095,13 +3161,13 @@ var _module_ = {
             function linkDataOf(attributes) {
                 var _this13 = this;
 
-                var _iteratorNormalCompletion11 = true;
-                var _didIteratorError11 = false;
-                var _iteratorError11 = undefined;
+                var _iteratorNormalCompletion12 = true;
+                var _didIteratorError12 = false;
+                var _iteratorError12 = undefined;
 
                 try {
-                    var _loop2 = function _loop2() {
-                        var key = _step11.value;
+                    var _loop3 = function _loop3() {
+                        var key = _step12.value;
                         key = attr_prop[key] || key;
                         if (!(key in _this13.prototype))
                             Object.defineProperty(_this13.prototype, key, {
@@ -3116,28 +3182,28 @@ var _module_ = {
                     };
 
                     for (
-                        var _iterator11 = attributes[Symbol.iterator](),
-                            _step11;
-                        !(_iteratorNormalCompletion11 = (_step11 = _iterator11.next())
+                        var _iterator12 = attributes[Symbol.iterator](),
+                            _step12;
+                        !(_iteratorNormalCompletion12 = (_step12 = _iterator12.next())
                             .done);
-                        _iteratorNormalCompletion11 = true
+                        _iteratorNormalCompletion12 = true
                     ) {
-                        _loop2();
+                        _loop3();
                     }
                 } catch (err) {
-                    _didIteratorError11 = true;
-                    _iteratorError11 = err;
+                    _didIteratorError12 = true;
+                    _iteratorError12 = err;
                 } finally {
                     try {
                         if (
-                            !_iteratorNormalCompletion11 &&
-                            _iterator11.return != null
+                            !_iteratorNormalCompletion12 &&
+                            _iterator12.return != null
                         ) {
-                            _iterator11.return();
+                            _iterator12.return();
                         }
                     } finally {
-                        if (_didIteratorError11) {
-                            throw _iteratorError11;
+                        if (_didIteratorError12) {
+                            throw _iteratorError12;
                         }
                     }
                 }
@@ -3404,7 +3470,7 @@ var _module_ = {
 
             var skip_key = new Set(
                 Object.getOwnPropertyNames(Function).concat(
-                    Object.getOwnPropertyNames(Function.prototype)
+                    Object.getOwnPropertyNames(function() {})
                 )
             );
             skip_key.delete('toString');
@@ -3430,7 +3496,7 @@ var _module_ = {
                 }
             }
 
-            function define(Class, template, style) {
+            function define(meta, template, style) {
                 if (template) {
                     if (template instanceof Node)
                         template = (0, _DOM.stringifyDOM)(template);
@@ -3443,20 +3509,26 @@ var _module_ = {
                     } else template = template.firstChild;
                 } else template = document.createElement('template');
 
-                Object.defineProperty(Class, 'template', {
-                    value: template.content,
-                    enumerable: true
-                });
+                meta.push(
+                    (0, _object.decoratorOf)(
+                        _Component.default,
+                        'template',
+                        template.content
+                    )
+                );
 
                 if (style) {
                     if (!(style instanceof Node))
                         style = Object.assign(document.createElement('style'), {
                             textContent: style
                         });
-                    Object.defineProperty(Class, 'style', {
-                        value: style,
-                        enumerable: true
-                    });
+                    meta.push(
+                        (0, _object.decoratorOf)(
+                            _Component.default,
+                            'style',
+                            style
+                        )
+                    );
                     template.content.insertBefore(
                         style,
                         template.content.firstChild
@@ -3488,6 +3560,9 @@ var _module_ = {
                     tagName = meta.tagName;
                 return function(_ref7) {
                     var elements = _ref7.elements;
+                    var merged =
+                        (template || style) &&
+                        define(elements, template, style);
                     if (data)
                         elements.push(
                             (0, _object.decoratorOf)(
@@ -3502,9 +3577,6 @@ var _module_ = {
                         kind: 'class',
                         elements: elements,
                         finisher: function finisher(Class) {
-                            var merged =
-                                (template || style) &&
-                                define(Class, template, style);
                             if (
                                 merged &&
                                 !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)

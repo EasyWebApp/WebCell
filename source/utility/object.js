@@ -100,50 +100,30 @@ export function extend(target, ...source) {
 var depth = 0;
 
 /**
- * Traverse Object-tree & return Node array through the filter
+ * Traverse Object-tree
  *
- * @param {object}        node     - Object tree
- * @param {string}        fork_key - Key of children list
- * @param {MapTreeFilter} filter   - Map filter
+ * @param {Object} node     - Object tree
+ * @param {String} fork_key - Key of children list
  *
- * @return {Array}  Result list of Map filter
+ * @yield {Object}
+ * @property {?Object} node   - Current node
+ * @property {Object}  parent - Parent node
+ * @property {Number}  index  - Index of current level
+ * @property {Number}  depth  - Level count of current node
  */
-export function mapTree(node, fork_key, filter) {
+export function* mapTree(node, fork_key) {
 
-    var children = node[fork_key], list = [ ];    depth++ ;
+    const children = node[fork_key];    depth++ ;
 
-    for (var i = 0, value;  i < children.length;  i++) {
-        /**
-         * @typedef {function} MapTreeFilter
-         *
-         * @param {object} child
-         * @param {number} index
-         * @param {number} depth
-         *
-         * @return {?object}  `Null` or `Undefined` to **Skip the Sub-Tree**,
-         *                    and Any other Type to Add into the Result Array.
-         */
-        try {
-            value = filter.call(node, children[i], i, depth);
+    for (var i = 0;  i < children.length;  i++) {
 
-        } catch (error) {
-
-            depth = 0;    throw error;
-        }
-
-        if (! (value != null))  continue;
-
-        list.push( value );
+        yield {parent: node,  node: children[i],  index: i,  depth};
 
         if ((children[i] != null)  &&  (children[i][fork_key] || '')[0])
-            list.push.apply(
-                list,  mapTree(children[i], fork_key, filter)
-            );
+            yield* mapTree(children[i], fork_key);
     }
 
     depth-- ;
-
-    return list;
 }
 
 

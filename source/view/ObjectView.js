@@ -164,8 +164,7 @@ export default  class ObjectView extends View {
             childNodes:    (root instanceof Array)  ?  root  :  [ root ]
         };
 
-        mapTree(root,  'childNodes',  node => {
-
+        for (let { node }  of  mapTree(root, 'childNodes'))
             switch ( node.nodeType ) {
                 case 1:
                     if ( node.dataset.object )
@@ -187,9 +186,6 @@ export default  class ObjectView extends View {
                     this.addTemplate(element, template);
                 }
             }
-
-            return node;
-        });
     }
 
     /**

@@ -17,7 +17,7 @@ export default  class ArrayView extends View {
 
         if (! super(element,  'array',  [ ],  parent).booted) {
 
-            this.template = element.innerHTML.trim();  this.clear();
+            this.template = element.children[0].content;  this.clear();
         }
     }
 
@@ -61,7 +61,7 @@ export default  class ArrayView extends View {
             ... Array.from(list,  item => {
 
                 const view = this[ this.length++ ] = new ObjectView(
-                    this.template, this
+                    this.template.cloneNode( true ),  this
                 );
 
                 data[ data.length ] = view.data;

@@ -80,6 +80,13 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
         Hello, ${view.name}!
     </textarea>
     <img src="${host.constructor.icon}">
+    <table>
+        <tbody data-array="specification"><template>
+            <tr>
+                <td>${view.index}</td><td>${view.name}</td>
+            </tr>
+        <template></tbody>
+    </table>
 </template>
 ```
 
@@ -93,7 +100,13 @@ textarea {
 `index.json`
 ```JSON
 {
-    "name":  "Web components"
+    "name":           "Web components",
+    "specification":  [
+        {"name": "HTML 5.3"},
+        {"name": "DOM 4.1"},
+        {"name": "ECMAScript 2018"},
+        {"name": "Decorator proposal"}
+    ]
 }
 ```
 

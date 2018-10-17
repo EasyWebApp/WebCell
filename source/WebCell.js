@@ -64,7 +64,7 @@ export function blobURI(meta) {
 
 const skip_key = new Set(
     Object.getOwnPropertyNames( Function ).concat(
-        Object.getOwnPropertyNames( Function.prototype )
+        Object.getOwnPropertyNames(() => { })
     )
 );
 
@@ -85,7 +85,7 @@ function decoratorMix(member, mixin) {
 }
 
 
-function define(Class, template, style) {
+function define(meta, template, style) {
 
     if ( template ) {
 
@@ -105,10 +105,7 @@ function define(Class, template, style) {
     } else
         template = document.createElement('template');
 
-    Object.defineProperty(Class, 'template', {
-        value:       template.content,
-        enumerable:  true
-    });
+    meta.push( decoratorOf(Component, 'template', template.content) );
 
     if ( style ) {
 
@@ -117,10 +114,7 @@ function define(Class, template, style) {
                 document.createElement('style'),  {textContent: style}
             );
 
-        Object.defineProperty(Class, 'style', {
-            value:       style,
-            enumerable:  true
-        });
+        meta.push( decoratorOf(Component, 'style', style) );
 
         template.content.insertBefore(style, template.content.firstChild);
     }
@@ -146,6 +140,9 @@ export function component(meta = { }) {
 
     return  ({elements}) => {
 
+        const merged = (template || style)  &&
+            define(elements, template, style);
+
         if ( data )  elements.push( decoratorOf(Component, 'data', data) );
 
         decoratorMix(elements, Component);
@@ -156,9 +153,6 @@ export function component(meta = { }) {
             kind:  'class',
             elements,
             finisher(Class) {
-
-                const merged = (template || style)  &&
-                    define(Class, template, style);
 
                 if (merged  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
                     ShadyCSS.prepareTemplate(merged, Class.tagName);

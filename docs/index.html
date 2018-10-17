@@ -61,7 +61,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -121,6 +120,13 @@ npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D<
         Hello, ${view.name}!
     &lt;/textarea&gt;
     &lt;img src=&quot;${host.constructor.icon}&quot;&gt;
+    &lt;table&gt;
+        &lt;tbody data-array=&quot;specification&quot;&gt;&lt;template&gt;
+            &lt;tr&gt;
+                &lt;td&gt;${view.index}&lt;/td&gt;&lt;td&gt;${view.name}&lt;/td&gt;
+            &lt;/tr&gt;
+        &lt;template&gt;&lt;/tbody&gt;
+    &lt;/table&gt;
 &lt;/template&gt;</code>
 </code></pre>
 <p><code>index.css</code></p>
@@ -130,7 +136,13 @@ npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D<
 </code></pre>
 <p><code>index.json</code></p>
 <pre><code class="lang-JSON"><code class="source-code prettyprint">{
-    &quot;name&quot;:  &quot;Web components&quot;
+    &quot;name&quot;:           &quot;Web components&quot;,
+    &quot;specification&quot;:  [
+        {&quot;name&quot;: &quot;HTML 5.3&quot;},
+        {&quot;name&quot;: &quot;DOM 4.1&quot;},
+        {&quot;name&quot;: &quot;ECMAScript 2018&quot;},
+        {&quot;name&quot;: &quot;Decorator proposal&quot;}
+    ]
 }</code>
 </code></pre>
 <p><code>icon.svg</code></p>

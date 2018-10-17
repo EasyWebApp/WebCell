@@ -61,7 +61,6 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-MapTreeFilter">MapTreeFilter</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -138,7 +137,7 @@ export function blobURI(meta) {
 
 const skip_key = new Set(
     Object.getOwnPropertyNames( Function ).concat(
-        Object.getOwnPropertyNames( Function.prototype )
+        Object.getOwnPropertyNames(() =&gt; { })
     )
 );
 
@@ -159,7 +158,7 @@ function decoratorMix(member, mixin) {
 }
 
 
-function define(Class, template, style) {
+function define(meta, template, style) {
 
     if ( template ) {
 
@@ -179,10 +178,7 @@ function define(Class, template, style) {
     } else
         template = document.createElement(&apos;template&apos;);
 
-    Object.defineProperty(Class, &apos;template&apos;, {
-        value:       template.content,
-        enumerable:  true
-    });
+    meta.push( decoratorOf(Component, &apos;template&apos;, template.content) );
 
     if ( style ) {
 
@@ -191,10 +187,7 @@ function define(Class, template, style) {
                 document.createElement(&apos;style&apos;),  {textContent: style}
             );
 
-        Object.defineProperty(Class, &apos;style&apos;, {
-            value:       style,
-            enumerable:  true
-        });
+        meta.push( decoratorOf(Component, &apos;style&apos;, style) );
 
         template.content.insertBefore(style, template.content.firstChild);
     }
@@ -220,6 +213,9 @@ export function component(meta = { }) {
 
     return  ({elements}) =&gt; {
 
+        const merged = (template || style)  &amp;&amp;
+            define(elements, template, style);
+
         if ( data )  elements.push( decoratorOf(Component, &apos;data&apos;, data) );
 
         decoratorMix(elements, Component);
@@ -230,9 +226,6 @@ export function component(meta = { }) {
             kind:  &apos;class&apos;,
             elements,
             finisher(Class) {
-
-                const merged = (template || style)  &amp;&amp;
-                    define(Class, template, style);
 
                 if (merged  &amp;&amp;  !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow))
                     ShadyCSS.prepareTemplate(merged, Class.tagName);
