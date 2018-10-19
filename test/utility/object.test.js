@@ -99,7 +99,7 @@ describe('Object utility',  () => {
      */
     it('Filter object tree',  () => {
 
-        Array.from(
+        multipleMap(
             mapTree(
                 {
                     id:        0,
@@ -125,7 +125,7 @@ describe('Object utility',  () => {
 
                 if (depth < 2)  return node.id;
             }
-        ).filter( Boolean ).should.be.eql([1, 2]);
+        ).should.be.eql([1, 2]);
     });
 
     /**

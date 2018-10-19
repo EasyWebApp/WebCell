@@ -117,7 +117,7 @@ textarea {
 
 `index.js`
 ```JavaScript
-import { component, blobURI } from 'web-cell';
+import { component, blobURI, mapProperty, mapData } from 'web-cell';
 
 import template from './index.html';
 
@@ -140,8 +140,14 @@ export default  class YourComponent extends HTMLElement {
         this.buildDOM();    //  This method is necessary when template is set
     }
 
-    @blobURI
+    @blobURI    //  Convert Data URL to Object URL, then cache it
     static get icon() {  return icon;  }
+
+    @mapProperty    //  Assign parsed value of Attribute to Property with the same name
+    static get observedAttributes() {  return ['value', 'name'];  }
+
+    @mapData    //  Assign Property value to Data with the same name
+    attributeChangedCallback() { }
 
     get value() {  return this.$('textarea')[0].value  }
 

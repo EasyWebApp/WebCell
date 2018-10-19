@@ -54,12 +54,6 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
-    "web-cell/source/component/component.js~attributechanged",
-    "function/index.html#static-function-attributeChanged",
-    "<span>attributeChanged</span> <span class=\"search-result-import-path\">web-cell/source/component/Component.js</span>",
-    "function"
-  ],
-  [
     "web-cell/source/utility/resource.js~blobfrom",
     "function/index.html#static-function-blobFrom",
     "<span>blobFrom</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
@@ -135,6 +129,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/resource.js~isxdomain",
     "function/index.html#static-function-isXDomain",
     "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/webcell.js~mapdata",
+    "function/index.html#static-function-mapData",
+    "<span>mapData</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
     "function"
   ],
   [
@@ -259,38 +259,50 @@ window.esdocSearchIndex = [
   ],
   [
     "component source/component/component.js~component,component",
-    "test-file/test/Component/index.test.js.html#lineNumber16",
+    "test-file/test/Component/index.test.js.html#lineNumber19",
     "Component mixin",
     "test"
   ],
   [
     "component#builddom source/component/component.js~component#builddom,component#builddom",
-    "test-file/test/Component/index.test.js.html#lineNumber39",
+    "test-file/test/Component/index.test.js.html#lineNumber42",
     "Component mixin Build Shadow DOM",
     "test"
   ],
   [
     "component component.tagname source/webcell.js~component,component source/component/component.js~component.tagname,component.tagname",
-    "test-file/test/Component/index.test.js.html#lineNumber26",
+    "test-file/test/Component/index.test.js.html#lineNumber29",
     "Component mixin Define Custom element",
     "test"
   ],
   [
     "delegate delegate,delegate",
-    "test-file/test/Component/index.test.js.html#lineNumber87",
+    "test-file/test/Component/index.test.js.html#lineNumber120",
     "Component mixin Delegate DOM events",
     "test"
   ],
   [
     "component#bubbleout source/component/component.js~component#bubbleout,component#bubbleout",
-    "test-file/test/Component/index.test.js.html#lineNumber75",
+    "test-file/test/Component/index.test.js.html#lineNumber108",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
   ],
   [
     "targetof indexof source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
-    "test-file/test/Component/index.test.js.html#lineNumber59",
+    "test-file/test/Component/index.test.js.html#lineNumber92",
     "Component mixin Get the event target in Shadow DOM",
+    "test"
+  ],
+  [
+    "mapproperty source/webcell.js~mapproperty,mapproperty",
+    "test-file/test/Component/index.test.js.html#lineNumber61",
+    "Component mixin Map Attribute to Property",
+    "test"
+  ],
+  [
+    "mapdata source/webcell.js~mapdata,mapdata",
+    "test-file/test/Component/index.test.js.html#lineNumber74",
+    "Component mixin Map Property to Data",
     "test"
   ],
   [
@@ -325,13 +337,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Component/index.test.js.html#lineNumber108",
+    "test-file/test/Component/index.test.js.html#lineNumber141",
     "Form field components",
     "test"
   ],
   [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
-    "test-file/test/Component/index.test.js.html#lineNumber113",
+    "test-file/test/Component/index.test.js.html#lineNumber146",
     "Form field components Render inner field",
     "test"
   ],
@@ -554,25 +566,25 @@ window.esdocSearchIndex = [
   [
     "serialize source/utility/resource.js~serialize,serialize",
     "test-file/test/utility/resource.test.js.html#lineNumber16",
-    "Resource utility Serialize <form /> or <fieldset />",
+    "Resource utility Serialize `<form />` or `<fieldset />`",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber32",
-    "Resource utility Serialize <form /> or <fieldset /> JSON",
+    "Resource utility Serialize `<form />` or `<fieldset />` JSON",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber27",
-    "Resource utility Serialize <form /> or <fieldset /> Multiple part data",
+    "Resource utility Serialize `<form />` or `<fieldset />` Multiple part data",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber42",
-    "Resource utility Serialize <form /> or <fieldset /> URL encode",
+    "Resource utility Serialize `<form />` or `<fieldset />` URL encode",
     "test"
   ],
   [
@@ -963,6 +975,18 @@ window.esdocSearchIndex = [
     "source/component/component.js~component#$up",
     "class/source/component/Component.js~Component.html#instance-method-$up",
     "source/component/Component.js~Component#$up",
+    "method"
+  ],
+  [
+    "source/component/component.js~component#[symbol.tostringtag]",
+    "class/source/component/Component.js~Component.html#instance-get-[Symbol.toStringTag]",
+    "source/component/Component.js~Component#[Symbol.toStringTag]",
+    "member"
+  ],
+  [
+    "source/component/component.js~component#attributechangedcallback",
+    "class/source/component/Component.js~Component.html#instance-method-attributeChangedCallback",
+    "source/component/Component.js~Component#attributeChangedCallback",
     "method"
   ],
   [

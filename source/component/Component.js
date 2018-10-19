@@ -4,6 +4,12 @@ import ObjectView from '../view/ObjectView';
 
 import View from '../view/View';
 
+const attr_prop = {
+    class:     'className',
+    for:       'htmlFor',
+    readonly:  'readOnly'
+};
+
 
 /**
  * Utility methods of Web Component
@@ -19,6 +25,8 @@ export default  class Component {
         ).slice( 1 );
     }
 
+    get [Symbol.toStringTag]() {  return this.constructor.name;  }
+
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      *
@@ -26,7 +34,7 @@ export default  class Component {
      */
     buildDOM(option) {
 
-        if (!ShadyCSS.nativeCss || !ShadyCSS.nativeShadow)
+        if (window.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
         const shadow = this.attachShadow({
@@ -41,9 +49,70 @@ export default  class Component {
 
         const view = new ObjectView( shadow );
 
-        if ( view[0] )  view.render( data );
+        if ( view[0] )  view.render(data || { });
 
         return this;
+    }
+
+    /**
+     * Set the getter & setter of the DOM property
+     *
+     * @private
+     *
+     * @param {string[]} attributes - Names of HTML attributes
+     *
+     * @return {string[]} `attributes`
+     */
+    static linkDataOf(attributes) {
+
+        for (let key of attributes) {
+
+            key = attr_prop[key] || key;
+
+            if (! (key in this.prototype))
+                Object.defineProperty(this.prototype, key, {
+                    set:         function (value) {
+
+                        this.view.commit(key, value);
+                    },
+                    get:         function () {
+
+                        return  this.view.data[ key ];
+                    },
+                    enumerable:  true
+                });
+        }
+
+        return attributes;
+    }
+
+    /**
+     * Assign the new value to the DOM property
+     * which has the same name of the changed attribute
+     *
+     * @protected
+     *
+     * @param {string}  name
+     * @param {?string} oldValue
+     * @param {?string} newValue
+     *
+     * @return {*} DOM property value of `newValue`
+     */
+    attributeChangedCallback(name, oldValue, newValue) {
+
+        name = attr_prop[name] || name;
+
+        switch ( newValue ) {
+            case '':      return  this[ name ] = true;
+            case null:    return  this[ name ] = false;
+            default:      try {
+                return  this[ name ] = JSON.parse( newValue );
+
+            } catch (error) {
+
+                return  this[ name ] = newValue;
+            }
+        }
     }
 
     /**
@@ -120,70 +189,3 @@ export default  class Component {
 /**
  * @typedef {function(event: Event): *} DOMEventHandler
  */
-
-
-const attr_prop = {
-    class:     'className',
-    for:       'htmlFor',
-    readonly:  'readOnly'
-};
-
-/**
- * Set the getter & setter of the DOM property
- *
- * @private
- *
- * @param {string[]} attributes - Names of HTML attributes
- *
- * @return {string[]} `attributes`
- */
-export function linkDataOf(attributes) {
-
-    for (let key of attributes) {
-
-        key = attr_prop[key] || key;
-
-        if (! (key in this.prototype))
-            Object.defineProperty(this.prototype, key, {
-                set:         function (value) {
-
-                    this.view.commit(key, value);
-                },
-                get:         function () {
-
-                    return  this.view.data[ key ];
-                },
-                enumerable:  true
-            });
-    }
-
-    return attributes;
-}
-
-
-/**
- * Assign the new value to the DOM property
- * which has the same name of the changed attribute
- *
- * @param {string}  name
- * @param {?string} oldValue
- * @param {?string} newValue
- *
- * @return {*} DOM property value of `newValue`
- */
-export function attributeChanged(name, oldValue, newValue) {
-
-    name = attr_prop[name] || name;
-
-    switch ( newValue ) {
-        case '':      return  this[ name ] = true;
-        case null:    return  this[ name ] = false;
-        default:      try {
-            return  this[ name ] = JSON.parse( newValue );
-
-        } catch (error) {
-
-            return  this[ name ] = newValue;
-        }
-    }
-}

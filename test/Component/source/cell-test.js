@@ -1,4 +1,4 @@
-import { component, targetOf, indexOf } from 'web-cell';
+import { component, mapProperty, mapData, targetOf, indexOf } from 'web-cell';
 
 
 @component({
@@ -22,6 +22,12 @@ export class CellTest extends HTMLElement {
 
         this.buildDOM();
     }
+
+    @mapProperty
+    static get observedAttributes() {  return ['value', 'name'];  }
+
+    @mapData
+    attributeChangedCallback() { }
 
     get value() {  return this.$('textarea')[0].value;  }
 

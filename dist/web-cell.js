@@ -771,17 +771,27 @@ var _module_ = {
 
             var _DOM = require('../utility/DOM');
 
-            var _Component = require('./Component');
+            var _Component = _interopRequireDefault(require('./Component'));
+
+            function _interopRequireDefault(obj) {
+                return obj && obj.__esModule
+                    ? obj
+                    : {
+                          default: obj
+                      };
+            }
 
             var CSS_map = {
-                readonly: {
-                    cursor: 'default'
+                    readonly: {
+                        cursor: 'default'
+                    },
+                    disabled: {
+                        cursor: 'not-allowed',
+                        'point-events': 'none'
+                    }
                 },
-                disabled: {
-                    cursor: 'not-allowed',
-                    'point-events': 'none'
-                }
-            };
+                attributeChanged =
+                    _Component.default.prototype.attributeChangedCallback;
             /**
              * Base class for Form field components
              */
@@ -875,27 +885,32 @@ var _module_ = {
                             ) {
                                 if (attribute === 'type' && !newValue)
                                     newValue = 'text';
-                                newValue = _Component.attributeChanged.call(
+                                newValue = attributeChanged.call(
                                     this.view,
                                     attribute,
                                     oldValue,
                                     newValue
                                 );
                                 var style = CSS_map[attribute];
-                                if (!style) return;
-                                if (newValue)
-                                    for (var name in style) {
-                                        this.style.setProperty(
-                                            '--input-'.concat(name),
-                                            style[name]
-                                        );
+
+                                if (style) {
+                                    var _arr = Object.entries(style);
+
+                                    for (var _i = 0; _i < _arr.length; _i++) {
+                                        var _arr$_i = _slicedToArray(
+                                                _arr[_i],
+                                                2
+                                            ),
+                                            key = _arr$_i[0],
+                                            value = _arr$_i[1];
+
+                                        this.style[
+                                            newValue
+                                                ? 'setProperty'
+                                                : 'removeProperty'
+                                        ]('--input-'.concat(key), value);
                                     }
-                                else
-                                    for (var _name in style) {
-                                        this.style.removeProperty(
-                                            '--input-'.concat(_name)
-                                        );
-                                    }
+                                }
                             }
                             /**
                              * @type {string}
@@ -1287,6 +1302,8 @@ var _module_ = {
 
             var _View = _interopRequireDefault(require('./View'));
 
+            var _DOM = require('../utility/DOM');
+
             var _ObjectView = _interopRequireDefault(require('./ObjectView'));
 
             function _interopRequireDefault(obj) {
@@ -1297,7 +1314,8 @@ var _module_ = {
                       };
             }
 
-            var Array_indexOf = [].indexOf;
+            var Array_find = [].find,
+                Array_indexOf = [].indexOf;
 
             var /**
              * View for Array model
@@ -1338,12 +1356,21 @@ var _module_ = {
 
                                 if (_this3.booted)
                                     return _possibleConstructorReturn(_this3);
-                                var template = element.children[0];
+                                var template = Array_find.call(
+                                    element.childNodes,
+                                    function(node) {
+                                        return (
+                                            node.nodeType === 8 ||
+                                            node.tagName === 'TEMPLATE'
+                                        );
+                                    }
+                                );
                                 _this3.template =
-                                    template.tagName.toLowerCase() ===
-                                    'template'
+                                    template.nodeType === 1
                                         ? template.content
-                                        : element.innerHTML;
+                                        : (0, _DOM.parseDOM)(
+                                              template.nodeValue
+                                          );
 
                                 _this3.clear();
 
@@ -3360,8 +3387,6 @@ var _module_ = {
             Object.defineProperty(exports, '__esModule', {
                 value: true
             });
-            exports.linkDataOf = linkDataOf;
-            exports.attributeChanged = attributeChanged;
             exports.default = void 0;
 
             var _DOM = require('../utility/DOM');
@@ -3379,6 +3404,12 @@ var _module_ = {
                           default: obj
                       };
             }
+
+            var attr_prop = {
+                class: 'className',
+                for: 'htmlFor',
+                readonly: 'readOnly'
+            };
             /**
              * Utility methods of Web Component
              */
@@ -3403,8 +3434,11 @@ var _module_ = {
                                  */
                                 value: function buildDOM(option) {
                                     if (
-                                        !ShadyCSS.nativeCss ||
-                                        !ShadyCSS.nativeShadow
+                                        window.ShadyCSS &&
+                                        !(
+                                            ShadyCSS.nativeCss &&
+                                            ShadyCSS.nativeShadow
+                                        )
                                     )
                                         ShadyCSS.styleElement(this);
                                     var shadow = this.attachShadow(
@@ -3424,8 +3458,57 @@ var _module_ = {
                                             document.importNode(template, true)
                                         );
                                     var view = new _ObjectView.default(shadow);
-                                    if (view[0]) view.render(data);
+                                    if (view[0]) view.render(data || {});
                                     return this;
+                                }
+                                /**
+                                 * Set the getter & setter of the DOM property
+                                 *
+                                 * @private
+                                 *
+                                 * @param {string[]} attributes - Names of HTML attributes
+                                 *
+                                 * @return {string[]} `attributes`
+                                 */
+                            },
+                            {
+                                key: 'attributeChangedCallback',
+
+                                /**
+                                 * Assign the new value to the DOM property
+                                 * which has the same name of the changed attribute
+                                 *
+                                 * @protected
+                                 *
+                                 * @param {string}  name
+                                 * @param {?string} oldValue
+                                 * @param {?string} newValue
+                                 *
+                                 * @return {*} DOM property value of `newValue`
+                                 */
+                                value: function attributeChangedCallback(
+                                    name,
+                                    oldValue,
+                                    newValue
+                                ) {
+                                    name = attr_prop[name] || name;
+
+                                    switch (newValue) {
+                                        case '':
+                                            return (this[name] = true);
+
+                                        case null:
+                                            return (this[name] = false);
+
+                                        default:
+                                            try {
+                                                return (this[name] = JSON.parse(
+                                                    newValue
+                                                ));
+                                            } catch (error) {
+                                                return (this[name] = newValue);
+                                            }
+                                    }
                                 }
                                 /**
                                  * Main view of this component
@@ -3531,6 +3614,12 @@ var _module_ = {
                                 }
                             },
                             {
+                                key: Symbol.toStringTag,
+                                get: function get() {
+                                    return this.constructor.name;
+                                }
+                            },
+                            {
                                 key: 'view',
                                 get: function get() {
                                     return _View.default.instanceOf(
@@ -3540,6 +3629,73 @@ var _module_ = {
                             }
                         ],
                         [
+                            {
+                                key: 'linkDataOf',
+                                value: function linkDataOf(attributes) {
+                                    var _this13 = this;
+
+                                    var _iteratorNormalCompletion13 = true;
+                                    var _didIteratorError13 = false;
+                                    var _iteratorError13 = undefined;
+
+                                    try {
+                                        var _loop4 = function _loop4() {
+                                            var key = _step13.value;
+                                            key = attr_prop[key] || key;
+                                            if (!(key in _this13.prototype))
+                                                Object.defineProperty(
+                                                    _this13.prototype,
+                                                    key,
+                                                    {
+                                                        set: function set(
+                                                            value
+                                                        ) {
+                                                            this.view.commit(
+                                                                key,
+                                                                value
+                                                            );
+                                                        },
+                                                        get: function get() {
+                                                            return this.view
+                                                                .data[key];
+                                                        },
+                                                        enumerable: true
+                                                    }
+                                                );
+                                        };
+
+                                        for (
+                                            var _iterator13 = attributes[
+                                                    Symbol.iterator
+                                                ](),
+                                                _step13;
+                                            !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next())
+                                                .done);
+                                            _iteratorNormalCompletion13 = true
+                                        ) {
+                                            _loop4();
+                                        }
+                                    } catch (err) {
+                                        _didIteratorError13 = true;
+                                        _iteratorError13 = err;
+                                    } finally {
+                                        try {
+                                            if (
+                                                !_iteratorNormalCompletion13 &&
+                                                _iterator13.return != null
+                                            ) {
+                                                _iterator13.return();
+                                            }
+                                        } finally {
+                                            if (_didIteratorError13) {
+                                                throw _iteratorError13;
+                                            }
+                                        }
+                                    }
+
+                                    return attributes;
+                                }
+                            },
                             {
                                 key: 'tagName',
 
@@ -3564,102 +3720,6 @@ var _module_ = {
              */
 
             exports.default = Component;
-            var attr_prop = {
-                class: 'className',
-                for: 'htmlFor',
-                readonly: 'readOnly'
-            };
-            /**
-             * Set the getter & setter of the DOM property
-             *
-             * @private
-             *
-             * @param {string[]} attributes - Names of HTML attributes
-             *
-             * @return {string[]} `attributes`
-             */
-
-            function linkDataOf(attributes) {
-                var _this13 = this;
-
-                var _iteratorNormalCompletion13 = true;
-                var _didIteratorError13 = false;
-                var _iteratorError13 = undefined;
-
-                try {
-                    var _loop4 = function _loop4() {
-                        var key = _step13.value;
-                        key = attr_prop[key] || key;
-                        if (!(key in _this13.prototype))
-                            Object.defineProperty(_this13.prototype, key, {
-                                set: function set(value) {
-                                    this.view.commit(key, value);
-                                },
-                                get: function get() {
-                                    return this.view.data[key];
-                                },
-                                enumerable: true
-                            });
-                    };
-
-                    for (
-                        var _iterator13 = attributes[Symbol.iterator](),
-                            _step13;
-                        !(_iteratorNormalCompletion13 = (_step13 = _iterator13.next())
-                            .done);
-                        _iteratorNormalCompletion13 = true
-                    ) {
-                        _loop4();
-                    }
-                } catch (err) {
-                    _didIteratorError13 = true;
-                    _iteratorError13 = err;
-                } finally {
-                    try {
-                        if (
-                            !_iteratorNormalCompletion13 &&
-                            _iterator13.return != null
-                        ) {
-                            _iterator13.return();
-                        }
-                    } finally {
-                        if (_didIteratorError13) {
-                            throw _iteratorError13;
-                        }
-                    }
-                }
-
-                return attributes;
-            }
-            /**
-             * Assign the new value to the DOM property
-             * which has the same name of the changed attribute
-             *
-             * @param {string}  name
-             * @param {?string} oldValue
-             * @param {?string} newValue
-             *
-             * @return {*} DOM property value of `newValue`
-             */
-
-            function attributeChanged(name, oldValue, newValue) {
-                name = attr_prop[name] || name;
-
-                switch (newValue) {
-                    case '':
-                        return (this[name] = true);
-
-                    case null:
-                        return (this[name] = false);
-
-                    default:
-                        try {
-                            return (this[name] = JSON.parse(newValue));
-                        } catch (error) {
-                            return (this[name] = newValue);
-                        }
-                }
-            }
         }
     },
     './WebCell': {
@@ -3671,10 +3731,10 @@ var _module_ = {
             });
             var _exportNames = {
                 mapProperty: true,
+                mapData: true,
                 blobURI: true,
                 component: true,
                 Component: true,
-                attributeChanged: true,
                 InputComponent: true,
                 Template: true,
                 View: true,
@@ -3682,18 +3742,13 @@ var _module_ = {
                 ArrayView: true
             };
             exports.mapProperty = mapProperty;
+            exports.mapData = mapData;
             exports.blobURI = blobURI;
             exports.component = component;
             Object.defineProperty(exports, 'Component', {
                 enumerable: true,
                 get: function get() {
                     return _Component.default;
-                }
-            });
-            Object.defineProperty(exports, 'attributeChanged', {
-                enumerable: true,
-                get: function get() {
-                    return _Component.attributeChanged;
                 }
             });
             Object.defineProperty(exports, 'InputComponent', {
@@ -3727,7 +3782,7 @@ var _module_ = {
                 }
             });
 
-            var _Component = _interopRequireWildcard(
+            var _Component = _interopRequireDefault(
                 require('./component/Component')
             );
 
@@ -3796,65 +3851,36 @@ var _module_ = {
                           default: obj
                       };
             }
-
-            function _interopRequireWildcard(obj) {
-                if (obj && obj.__esModule) {
-                    return obj;
-                } else {
-                    var newObj = {};
-
-                    if (obj != null) {
-                        for (var key in obj) {
-                            if (
-                                Object.prototype.hasOwnProperty.call(obj, key)
-                            ) {
-                                var desc =
-                                    Object.defineProperty &&
-                                    Object.getOwnPropertyDescriptor
-                                        ? Object.getOwnPropertyDescriptor(
-                                              obj,
-                                              key
-                                          )
-                                        : {};
-
-                                if (desc.get || desc.set) {
-                                    Object.defineProperty(newObj, key, desc);
-                                } else {
-                                    newObj[key] = obj[key];
-                                }
-                            }
-                        }
-                    }
-
-                    newObj.default = obj;
-                    return newObj;
-                }
-            }
             /**
-             * Decorator for `observedAttributes()`
+             * Decorator for `observedAttributes` getter
              *
              * @param {DecoratorDescriptor} meta
              */
 
             function mapProperty(meta) {
-                var observer = meta.descriptor.get;
+                var getter = meta.descriptor.get;
 
                 meta.descriptor.get = function() {
-                    var onChange = (0, _object.getPropertyDescriptor)(
-                        this.prototype,
-                        'attributeChangedCallback'
-                    );
-                    if (!onChange)
-                        Object.defineProperty(
-                            this.prototype,
-                            'attributeChangedCallback',
-                            {
-                                value: _Component.attributeChanged
-                            }
-                        );
-                    return _Component.linkDataOf.call(
+                    return this.linkDataOf(getter.call(this));
+                };
+            }
+            /**
+             * Decorator for `attributeChangedCallback()` method
+             *
+             * @param {DecoratorDescriptor} meta
+             */
+
+            function mapData(meta) {
+                var origin = meta.descriptor.value,
+                    onChange =
+                        _Component.default.prototype.attributeChangedCallback;
+
+                meta.descriptor.value = function(name, oldValue) {
+                    origin.call(
                         this,
-                        observer.call(this)
+                        name,
+                        oldValue,
+                        onChange.apply(this, arguments)
                     );
                 };
             }
@@ -3880,29 +3906,44 @@ var _module_ = {
                 };
             }
 
-            var skip_key = new Set(
-                Object.getOwnPropertyNames(Function).concat(
-                    Object.getOwnPropertyNames(function() {})
-                )
-            );
-            skip_key.delete('toString');
+            var skip_key = {
+                name: 1,
+                length: 1,
+                prototype: 1,
+                caller: 1,
+                arguments: 1,
+                call: 1,
+                apply: 1,
+                bind: 1,
+                constructor: 1
+            };
 
             function decoratorMix(member, mixin) {
-                var skip = mixin instanceof Function,
+                var ownKey = member.map(function(item) {
+                        return item.key;
+                    }),
+                    skip = mixin instanceof Function,
                     property = Object.getOwnPropertyDescriptors(mixin);
 
-                for (var key in property) {
+                var _arr5 = Object.entries(property);
+
+                for (var _i6 = 0; _i6 < _arr5.length; _i6++) {
+                    var _arr5$_i = _slicedToArray(_arr5[_i6], 2),
+                        key = _arr5$_i[0],
+                        meta = _arr5$_i[1];
+
                     if (
                         !(skip
-                            ? skip_key.has(key)
+                            ? skip_key[key]
                             : key === 'constructor' &&
-                              property[key].value instanceof Function)
+                              meta.value instanceof Function) &&
+                        !ownKey.includes(key)
                     )
                         member.push(
                             (0, _object.decoratorOf)(
                                 mixin,
                                 key,
-                                property[key].value || property[key]
+                                meta.value || meta
                             )
                         );
                 }
@@ -3991,6 +4032,7 @@ var _module_ = {
                         finisher: function finisher(Class) {
                             if (
                                 merged &&
+                                window.ShadyCSS &&
                                 !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)
                             )
                                 ShadyCSS.prepareTemplate(merged, Class.tagName);

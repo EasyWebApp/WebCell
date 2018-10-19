@@ -1,17 +1,19 @@
 import { watchAttributes } from '../utility/DOM';
 
-import { attributeChanged } from './Component';
+import Component from './Component';
 
 
 const CSS_map = {
-    readonly:  {
-        cursor:  'default'
+        readonly:  {
+            cursor:  'default'
+        },
+        disabled:  {
+            cursor:          'not-allowed',
+            'point-events':  'none'
+        }
     },
-    disabled:  {
-        cursor:          'not-allowed',
-        'point-events':  'none'
-    }
-};
+    attributeChanged = Component.prototype.attributeChangedCallback;
+
 
 /**
  * Base class for Form field components
@@ -70,14 +72,13 @@ export default  class InputComponent extends HTMLElement {
 
         const style = CSS_map[ attribute ];
 
-        if (! style)  return;
-
-        if ( newValue )
-            for (let name in style)
-                this.style.setProperty(`--input-${name}`,  style[ name ]);
-        else
-            for (let name in style)
-                this.style.removeProperty(`--input-${name}`);
+        if ( style )
+            for (let [key, value]  of  Object.entries( style ))
+                this.style[
+                    newValue ? 'setProperty' : 'removeProperty'
+                ](
+                    `--input-${key}`, value
+                );
     }
 
     /**

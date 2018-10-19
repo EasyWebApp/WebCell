@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 & Decorator proposal",
   "keywords": [
     "WebApp",

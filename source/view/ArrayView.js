@@ -2,9 +2,11 @@ import { arrayLike } from '../utility/object';
 
 import View from './View';
 
+import { parseDOM } from '../utility/DOM';
+
 import ObjectView from './ObjectView';
 
-const Array_indexOf = [ ].indexOf;
+const Array_find = [ ].find, Array_indexOf = [ ].indexOf;
 
 
 @arrayLike
@@ -22,10 +24,12 @@ export default  class ArrayView extends View {
 
         if ( this.booted )  return;
 
-        const template = element.children[0];
+        const template = Array_find.call(element.childNodes,  node =>
+            (node.nodeType === 8)  ||  (node.tagName === 'TEMPLATE')
+        );
 
-        this.template = (template.tagName.toLowerCase() === 'template')  ?
-            template.content  :  element.innerHTML;
+        this.template = (template.nodeType === 1)  ?
+            template.content  :  parseDOM( template.nodeValue );
 
         this.clear();
     }

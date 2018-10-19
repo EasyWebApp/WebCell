@@ -37,9 +37,9 @@ describe('DOM utility',  () => {
 
         const template = $('template', fragment);
 
-        template.should.have.length(2);
+        template.should.have.length(1);
 
-        $up('table', template[1]).should.be.instanceOf( Element );
+        $up('main', template[0]).should.be.instanceOf( Element );
     });
 
     /**

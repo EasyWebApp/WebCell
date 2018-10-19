@@ -31,10 +31,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
@@ -73,9 +73,9 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component, { linkDataOf, attributeChanged } from &apos;./component/Component&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./component/Component&apos;;
 
-import { getPropertyDescriptor, decoratorOf } from &apos;./utility/object&apos;;
+import { decoratorOf } from &apos;./utility/object&apos;;
 
 import { stringifyDOM, parseDOM } from &apos;./utility/DOM&apos;;
 
@@ -83,26 +83,34 @@ import { blobFrom } from &apos;./utility/resource&apos;;
 
 
 /**
- * Decorator for `observedAttributes()`
+ * Decorator for `observedAttributes` getter
  *
  * @param {DecoratorDescriptor} meta
  */
 export function mapProperty(meta) {
 
-    const observer = meta.descriptor.get;
+    const getter = meta.descriptor.get;
 
     meta.descriptor.get = function () {
 
-        const onChange = getPropertyDescriptor(
-            this.prototype, &apos;attributeChangedCallback&apos;
-        );
+        return  this.linkDataOf( getter.call( this ) );
+    };
+}
 
-        if (! onChange)
-            Object.defineProperty(this.prototype, &apos;attributeChangedCallback&apos;, {
-                value:  attributeChanged
-            });
 
-        return  linkDataOf.call(this, observer.call( this ));
+/**
+ * Decorator for `attributeChangedCallback()` method
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function mapData(meta) {
+
+    const origin = meta.descriptor.value,
+        onChange = Component.prototype.attributeChangedCallback;
+
+    meta.descriptor.value = function (name, oldValue) {
+
+        origin.call(this,  name,  oldValue,  onChange.apply(this, arguments));
     };
 }
 
@@ -127,26 +135,32 @@ export function blobURI(meta) {
 }
 
 
-const skip_key = new Set(
-    Object.getOwnPropertyNames( Function ).concat(
-        Object.getOwnPropertyNames(() =&gt; { })
-    )
-);
-
-skip_key.delete(&apos;toString&apos;);
+const skip_key = {
+    name:         1,
+    length:       1,
+    prototype:    1,
+    caller:       1,
+    arguments:    1,
+    call:         1,
+    apply:        1,
+    bind:         1,
+    constructor:  1
+};
 
 function decoratorMix(member, mixin) {
 
-    const skip = mixin instanceof Function,
+    const ownKey = member.map(item =&gt; item.key),
+        skip = mixin instanceof Function,
         property = Object.getOwnPropertyDescriptors( mixin );
 
-    for (let key in property)
-        if (!(skip  ?  skip_key.has( key )  :  (
-            (key === &apos;constructor&apos;)  &amp;&amp;  (property[key].value instanceof Function)
-        )))
-            member.push(
-                decoratorOf(mixin,  key,  property[key].value || property[key])
-            );
+    for (let [key, meta]  of  Object.entries( property ))
+        if (
+            !(skip  ?  skip_key[key]  :  (
+                (key === &apos;constructor&apos;)  &amp;&amp;  (meta.value instanceof Function)
+            ))  &amp;&amp;
+            !ownKey.includes( key )
+        )
+            member.push( decoratorOf(mixin,  key,  meta.value || meta) );
 }
 
 
@@ -218,8 +232,10 @@ export function component(meta = { }) {
             kind:  &apos;class&apos;,
             elements,
             finisher(Class) {
-
-                if (merged  &amp;&amp;  !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow))
+                if (
+                    merged  &amp;&amp;  window.ShadyCSS  &amp;&amp;
+                    !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow)
+                )
                     ShadyCSS.prepareTemplate(merged, Class.tagName);
 
                 window.customElements.define(
@@ -230,7 +246,7 @@ export function component(meta = { }) {
     };
 }
 
-export { Component, attributeChanged };
+export { Component };
 
 export {default as InputComponent} from &apos;./component/InputComponent&apos;;
 

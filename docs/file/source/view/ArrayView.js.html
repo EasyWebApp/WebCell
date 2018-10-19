@@ -31,10 +31,10 @@
     
   <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
-<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-attributeChanged">attributeChanged</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
@@ -77,9 +77,11 @@
 
 import View from &apos;./View&apos;;
 
+import { parseDOM } from &apos;../utility/DOM&apos;;
+
 import ObjectView from &apos;./ObjectView&apos;;
 
-const Array_indexOf = [ ].indexOf;
+const Array_find = [ ].find, Array_indexOf = [ ].indexOf;
 
 
 @arrayLike
@@ -97,10 +99,12 @@ export default  class ArrayView extends View {
 
         if ( this.booted )  return;
 
-        const template = element.children[0];
+        const template = Array_find.call(element.childNodes,  node =&gt;
+            (node.nodeType === 8)  ||  (node.tagName === &apos;TEMPLATE&apos;)
+        );
 
-        this.template = (template.tagName.toLowerCase() === &apos;template&apos;)  ?
-            template.content  :  element.innerHTML;
+        this.template = (template.nodeType === 1)  ?
+            template.content  :  parseDOM( template.nodeValue );
 
         this.clear();
     }

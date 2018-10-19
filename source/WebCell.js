@@ -1,6 +1,6 @@
-import Component, { linkDataOf, attributeChanged } from './component/Component';
+import Component from './component/Component';
 
-import { getPropertyDescriptor, decoratorOf } from './utility/object';
+import { decoratorOf } from './utility/object';
 
 import { stringifyDOM, parseDOM } from './utility/DOM';
 
@@ -8,26 +8,34 @@ import { blobFrom } from './utility/resource';
 
 
 /**
- * Decorator for `observedAttributes()`
+ * Decorator for `observedAttributes` getter
  *
  * @param {DecoratorDescriptor} meta
  */
 export function mapProperty(meta) {
 
-    const observer = meta.descriptor.get;
+    const getter = meta.descriptor.get;
 
     meta.descriptor.get = function () {
 
-        const onChange = getPropertyDescriptor(
-            this.prototype, 'attributeChangedCallback'
-        );
+        return  this.linkDataOf( getter.call( this ) );
+    };
+}
 
-        if (! onChange)
-            Object.defineProperty(this.prototype, 'attributeChangedCallback', {
-                value:  attributeChanged
-            });
 
-        return  linkDataOf.call(this, observer.call( this ));
+/**
+ * Decorator for `attributeChangedCallback()` method
+ *
+ * @param {DecoratorDescriptor} meta
+ */
+export function mapData(meta) {
+
+    const origin = meta.descriptor.value,
+        onChange = Component.prototype.attributeChangedCallback;
+
+    meta.descriptor.value = function (name, oldValue) {
+
+        origin.call(this,  name,  oldValue,  onChange.apply(this, arguments));
     };
 }
 
@@ -52,26 +60,32 @@ export function blobURI(meta) {
 }
 
 
-const skip_key = new Set(
-    Object.getOwnPropertyNames( Function ).concat(
-        Object.getOwnPropertyNames(() => { })
-    )
-);
-
-skip_key.delete('toString');
+const skip_key = {
+    name:         1,
+    length:       1,
+    prototype:    1,
+    caller:       1,
+    arguments:    1,
+    call:         1,
+    apply:        1,
+    bind:         1,
+    constructor:  1
+};
 
 function decoratorMix(member, mixin) {
 
-    const skip = mixin instanceof Function,
+    const ownKey = member.map(item => item.key),
+        skip = mixin instanceof Function,
         property = Object.getOwnPropertyDescriptors( mixin );
 
-    for (let key in property)
-        if (!(skip  ?  skip_key.has( key )  :  (
-            (key === 'constructor')  &&  (property[key].value instanceof Function)
-        )))
-            member.push(
-                decoratorOf(mixin,  key,  property[key].value || property[key])
-            );
+    for (let [key, meta]  of  Object.entries( property ))
+        if (
+            !(skip  ?  skip_key[key]  :  (
+                (key === 'constructor')  &&  (meta.value instanceof Function)
+            ))  &&
+            !ownKey.includes( key )
+        )
+            member.push( decoratorOf(mixin,  key,  meta.value || meta) );
 }
 
 
@@ -143,8 +157,10 @@ export function component(meta = { }) {
             kind:  'class',
             elements,
             finisher(Class) {
-
-                if (merged  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
+                if (
+                    merged  &&  window.ShadyCSS  &&
+                    !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)
+                )
                     ShadyCSS.prepareTemplate(merged, Class.tagName);
 
                 window.customElements.define(
@@ -155,7 +171,7 @@ export function component(meta = { }) {
     };
 }
 
-export { Component, attributeChanged };
+export { Component };
 
 export {default as InputComponent} from './component/InputComponent';
 

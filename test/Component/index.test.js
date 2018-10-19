@@ -1,5 +1,8 @@
 import PuppeteerBrowser from 'puppeteer-browser';
 
+import { delay } from '../../source/utility/DOM';
+
+
 var page;
 
 function consoleText() {
@@ -27,7 +30,7 @@ describe('Component mixin',  () => {
 
         page.$eval('cell-test',  element => [
             element.constructor.name,
-            element.shadowRoot.nodeType
+            element.constructor.template.nodeType
         ]).should.be.fulfilledWith([
             'CellTest', 11
         ])
@@ -51,6 +54,36 @@ describe('Component mixin',  () => {
             'STYLE',  'TEXTAREA',  'Hello, Web components!', 'italic'
         ])
     );
+
+    /**
+     * @test {mapProperty}
+     */
+    it('Map Attribute to Property',  async () => {
+
+        await page.$eval(
+            'cell-test',  element => element.setAttribute('value', 'example')
+        );
+
+        (await page.$eval('cell-test',  element => element.value))
+            .should.be.equal('example');
+    });
+
+    /**
+     * @test {mapData}
+     */
+    it('Map Property to Data',  async () => {
+
+        await page.$eval('cell-test',  element => element.name = 'WebCell');
+
+        await delay(0.05);
+
+        (await page.$eval(
+            'cell-test',
+            element  =>  element.$('textarea')[0].textContent.trim()
+        )).should.be.equal(
+            'Hello, WebCell!'
+        );
+    });
 
     /**
      * @test {targetOf}
