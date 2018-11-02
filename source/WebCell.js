@@ -18,7 +18,18 @@ export function mapProperty(meta) {
 
     meta.descriptor.get = function () {
 
-        return  this.linkDataOf( getter.call( this ) );
+        const list = getter.call( this );
+
+        for (let key of list)
+            if (
+                Object.getOwnPropertyDescriptor(HTMLElement.prototype, key)  &&
+                !Object.getOwnPropertyDescriptor(this.constructor.prototype, key)
+            )
+                throw ReferenceError(
+                    `HTML DOM property "${key}" getter should be overwritten`
+                );
+
+        return  this.linkDataOf( list );
     };
 }
 

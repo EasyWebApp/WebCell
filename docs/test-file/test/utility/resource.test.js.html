@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -56,10 +57,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
@@ -76,7 +80,7 @@
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import JSDOM from &apos;../DOM-polyfill&apos;;
 
 import {
-    serialize, request, fileTypeOf, blobFrom
+    serialize, stringify, parse, request, fileTypeOf, blobFrom
 } from &apos;../../source/utility/resource&apos;;
 
 import WebServer from &apos;koapache&apos;;
@@ -119,6 +123,55 @@ describe(&apos;Resource utility&apos;,  () =&gt; {
             form.removeAttribute(&apos;enctype&apos;);
 
             serialize( form ).should.be.equal(&apos;text=example&amp;content=sample&apos;);
+        });
+    });
+
+    describe(&apos;JSON parser&apos;,  () =&gt; {
+
+        const object = {
+                name:     &apos;WebCell&apos;,
+                time:     new Date(&apos;2018-11-10&apos;),
+                content:  document.createElement(&apos;a&apos;)
+            },
+            string = `{
+    &quot;name&quot;: &quot;WebCell&quot;,
+    &quot;time&quot;: &quot;2018-11-10T00:00:00.000Z&quot;,
+    &quot;content&quot;: &quot;&lt;a&gt;&lt;/a&gt;&quot;
+}`;
+        /**
+         * @test {stringify}
+         */
+        it(&apos;Serialization&apos;,  () =&gt; {
+
+            stringify( object.content ).should.be.equal(&apos;&quot;&lt;a&gt;&lt;/a&gt;&quot;&apos;);
+
+            stringify( object ).should.be.equal( string );
+        });
+
+        /**
+         * @test {parse}
+         */
+        describe(&apos;Parsing&apos;,  () =&gt; {
+
+            it(&apos;Date()&apos;,  () =&gt; {
+
+                const result = parse(&apos;&quot;2018-11-10T00:00:00.000Z&quot;&apos;);
+
+                result.should.be.instanceOf( Date );
+
+                result.should.be.eql( object.time );
+            });
+
+            it(&apos;Element()&apos;,  () =&gt; {
+
+                const result = parse(&apos;&quot;&lt;a /&gt;&quot;&apos;);
+
+                result.should.be.instanceOf( Element );
+
+                result.should.be.eql( object.content );
+            });
+
+            it(&apos;Mixin&apos;,  () =&gt; parse( string ).should.be.eql( object ));
         });
     });
 

@@ -1,6 +1,17 @@
+import { $, stringifyDOM, parseDOM } from './DOM';
+
 import { extend } from './object';
 
-import { $, parseDOM } from './DOM';
+
+/**
+ * @param {String} raw
+ *
+ * @return {Number} Length in Half-width characters
+ */
+export function byteLength(raw) {
+
+    return  raw.replace(/[^\u0021-\u007e\uff61-\uffef]/g, 'xx').length;
+}
 
 
 /**
@@ -14,6 +25,7 @@ export function isXDomain(URI) {
         (new URL(URI, document.baseURI)).origin  !==  window.location.origin
     );
 }
+
 
 /**
  * @param {Element} form - `<form />` or `<fieldset />`
@@ -41,6 +53,47 @@ export function serialize(form) {
     return form;
 }
 
+
+/**
+ * @param {Object} data
+ *
+ * @return {String} JSON source code
+ */
+export function stringify(data) {
+
+    return  JSON.stringify(data,  (key, value) => {
+
+        if (value instanceof Node)  return stringifyDOM( value );
+
+        return value;
+    }, 4);
+}
+
+
+/**
+ * @param {String} raw - JSON source code
+ *
+ * @return {Object}
+ */
+export function parse(raw) {
+
+    return  JSON.parse(raw,  (key, value) => {
+
+        if (/^\d{4}(-\d{2}){2}T\d{2}(:\d{2}){2}\.\d{3}Z$/.test( value ))
+            return  new Date( value );
+
+        if (/<[\w-][\s\S]*?>/.test( value )) {
+
+            const node = parseDOM( value );
+
+            return  (node.childNodes.length < 2)  ?  node.firstChild  :  node;
+        }
+
+        return value;
+    });
+}
+
+
 /**
  * HTTP request
  *
@@ -58,7 +111,7 @@ export async function request(URI, method = 'GET', body, headers, option) {
 
     if (body instanceof Object)  try {
 
-        body = JSON.stringify( body.valueOf() );
+        body = stringify( body.valueOf() );
 
         headers = headers || { };
 
@@ -88,6 +141,7 @@ export async function request(URI, method = 'GET', body, headers, option) {
             ]();
     }
 }
+
 
 /**
  * @param {String} URI - Returned by `URL.createObjectURL()`
@@ -138,6 +192,7 @@ export async function fileTypeOf(URI) {
         default:      return {schema, type};
     }
 }
+
 
 /**
  * @param {String} URI - Data URI

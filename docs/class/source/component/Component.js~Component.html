@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -56,10 +57,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
@@ -73,13 +77,13 @@
 </nav>
 
 <div class="content" data-ice="content"><div class="header-notice">
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/component/Component.js.html#lineNumber17">web-cell/source/component/Component.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import Component from &apos;<span><a href="file/source/component/Component.js.html#lineNumber20">web-cell/source/component/Component.js</a></span>&apos;</code></pre></div>
   <span data-ice="access">public</span>
   <span data-ice="kind">class</span>
   
   
   
-  <span data-ice="source">| <span><a href="file/source/component/Component.js.html#lineNumber17">source</a></span></span>
+  <span data-ice="source">| <span><a href="file/source/component/Component.js.html#lineNumber20">source</a></span></span>
 </div>
 
 <div class="self-detail detail">
@@ -392,6 +396,34 @@
       
     </td>
   </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="class/source/component/Component.js~Component.html#instance-method-trigger">trigger</a></span></span><span class="code" data-ice="signature">(type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
 </tbody>
 </table>
 <table class="summary" data-ice="summary">
@@ -448,7 +480,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber21">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber24">source</a></span></span>
     </span>
   </h3>
 
@@ -502,7 +534,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber28">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber31">source</a></span></span>
     </span>
   </h3>
 
@@ -545,7 +577,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber123">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber82">source</a></span></span>
     </span>
   </h3>
 
@@ -592,7 +624,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber145">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber165">source</a></span></span>
     </span>
   </h3>
 
@@ -665,7 +697,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber159">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber179">source</a></span></span>
     </span>
   </h3>
 
@@ -738,7 +770,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber152">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber172">source</a></span></span>
     </span>
   </h3>
 
@@ -811,7 +843,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber130">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber150">source</a></span></span>
     </span>
   </h3>
 
@@ -890,7 +922,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber38">source</a></span></span>
     </span>
   </h3>
 
@@ -969,7 +1001,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber177">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber197">source</a></span></span>
     </span>
   </h3>
 
@@ -1044,6 +1076,106 @@ which has the same name of the changed attribute</p>
   
   
 </div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="instance-method-trigger">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">trigger</span><span class="code" data-ice="signature">(type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber218">source</a></span></span>
+    </span>
+  </h3>
+
+  
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">type</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">detail</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
+      <td data-ice="description"><p>Additional data</p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">bubbles</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">cancelable</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">composed</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+      <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
+      <td data-ice="description"><p>Whether the event will cross
+                               from the shadow DOM into the standard DOM
+                               after reaching the shadow root</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Event be canceled or not</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
 <h2 data-ice="title">Protected Methods</h2>
 
 <div class="detail" data-ice="detail">
@@ -1058,7 +1190,7 @@ which has the same name of the changed attribute</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber101">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/component/Component.js.html#lineNumber128">source</a></span></span>
     </span>
   </h3>
 

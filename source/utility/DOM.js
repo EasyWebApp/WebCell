@@ -150,6 +150,25 @@ export function delegate(selector, handler) {
 
 
 /**
+ * @param {Element}  element
+ * @param {String}   type
+ * @param {?*}       detail     - Additional data
+ * @param {?Boolean} bubbles
+ * @param {?Boolean} cancelable
+ * @param {?Boolean} composed   - Whether the event will cross
+ *                                from the shadow DOM into the standard DOM
+ *                                after reaching the shadow root
+ * @return {Boolean} Event be canceled or not
+ */
+export function trigger(element, type, detail, bubbles, cancelable, composed) {
+
+    return  element.dispatchEvent(new CustomEvent(type, {
+        bubbles, cancelable, composed, detail
+    }));
+}
+
+
+/**
  * @param {string} markup - Code of an markup fragment
  *
  * @return {DocumentFragment}

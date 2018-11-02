@@ -12,7 +12,7 @@ const { window } = (new JSDOM('', {
 
 for (let key of [
     'window', 'document',
-    'Blob', 'Element', 'DOMParser',
+    'Blob', 'Node', 'Element', 'DOMParser', 'CustomEvent',
     'URL', 'URLSearchParams', 'FormData'
 ])
     global[key] = window[key];

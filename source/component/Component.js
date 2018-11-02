@@ -1,8 +1,11 @@
-import { $ as $_,  $up as $_up,  delegate } from '../utility/DOM';
-
 import ObjectView from '../view/ObjectView';
 
 import View from '../view/View';
+
+import { parse } from '../utility/resource';
+
+import { $ as $_,  $up as $_up,  delegate, trigger } from '../utility/DOM';
+
 
 const attr_prop = {
     class:     'className',
@@ -47,12 +50,36 @@ export default  class Component {
         if ( template )
             shadow.appendChild( document.importNode(template, true) );
 
+        if (this.slotChangedCallback instanceof Function)
+            for (let slot of this.$('slot'))
+                slot.addEventListener(
+                    'slotchange',  () => this.slotChangedCallback(
+                        [... slot.assignedNodes()],  slot,  slot.name
+                    )
+                );
+
+        if (this.viewUpdateCallback instanceof Function)
+            this.on('update',  event => {
+
+                const {oldData, newData, view} = event.detail;
+
+                if (this.viewUpdateCallback(newData, oldData, view)  ===  false)
+                    event.preventDefault();
+            });
+
         const view = new ObjectView( shadow );
 
         if ( view[0] )  view.render(data || { });
 
         return this;
     }
+
+    /**
+     * Main view of this component
+     *
+     * @type {View}
+     */
+    get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
      * Set the getter & setter of the DOM property
@@ -106,7 +133,7 @@ export default  class Component {
             case '':      return  this[ name ] = true;
             case null:    return  this[ name ] = false;
             default:      try {
-                return  this[ name ] = JSON.parse( newValue );
+                return  this[ name ] = parse( newValue );
 
             } catch (error) {
 
@@ -114,13 +141,6 @@ export default  class Component {
             }
         }
     }
-
-    /**
-     * Main view of this component
-     *
-     * @type {View}
-     */
-    get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
      * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
@@ -183,6 +203,21 @@ export default  class Component {
         );
 
         return this;
+    }
+
+    /**
+     * @param {String}   type
+     * @param {?*}       detail     - Additional data
+     * @param {?Boolean} bubbles
+     * @param {?Boolean} cancelable
+     * @param {?Boolean} composed   - Whether the event will cross
+     *                                from the shadow DOM into the standard DOM
+     *                                after reaching the shadow root
+     * @return {Boolean} Event be canceled or not
+     */
+    trigger(type, detail, bubbles, cancelable, composed) {
+
+        return  trigger(this, type, detail, bubbles, cancelable, composed);
     }
 }
 

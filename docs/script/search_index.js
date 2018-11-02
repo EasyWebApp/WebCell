@@ -72,6 +72,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~bytelength",
+    "function/index.html#static-function-byteLength",
+    "<span>byteLength</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~classnameof",
     "function/index.html#static-function-classNameOf",
     "<span>classNameOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -168,6 +174,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~parse",
+    "function/index.html#static-function-parse",
+    "<span>parse</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~parsedom",
     "function/index.html#static-function-parseDOM",
     "<span>parseDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -186,6 +198,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~stringify",
+    "function/index.html#static-function-stringify",
+    "<span>stringify</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~stringifydom",
     "function/index.html#static-function-stringifyDOM",
     "<span>stringifyDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -201,6 +219,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/object.js~toiterable",
     "function/index.html#static-function-toIterable",
     "<span>toIterable</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~trigger",
+    "function/index.html#static-function-trigger",
+    "<span>trigger</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -517,50 +541,86 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/utility/resource.test.js.html#lineNumber92",
+    "test-file/test/utility/resource.test.js.html#lineNumber141",
     "Resource utility Binary",
     "test"
   ],
   [
     "blobfrom source/utility/resource.js~blobfrom,blobfrom",
-    "test-file/test/utility/resource.test.js.html#lineNumber112",
+    "test-file/test/utility/resource.test.js.html#lineNumber161",
     "Resource utility Binary Convert DataURI to Blob",
     "test"
   ],
   [
     "filetypeof source/utility/resource.js~filetypeof,filetypeof",
-    "test-file/test/utility/resource.test.js.html#lineNumber101",
+    "test-file/test/utility/resource.test.js.html#lineNumber150",
     "Resource utility Binary Parse Data URI",
     "test"
   ],
   [
     "request source/utility/resource.js~request,request",
-    "test-file/test/utility/resource.test.js.html#lineNumber53",
+    "test-file/test/utility/resource.test.js.html#lineNumber102",
     "Resource utility HTTP request",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.test.js.html#lineNumber85",
+    "test-file/test/utility/resource.test.js.html#lineNumber134",
     "Resource utility HTTP request Get Binary file",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.test.js.html#lineNumber76",
+    "test-file/test/utility/resource.test.js.html#lineNumber125",
     "Resource utility HTTP request Get HTML document",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.test.js.html#lineNumber70",
+    "test-file/test/utility/resource.test.js.html#lineNumber119",
     "Resource utility HTTP request Get JSON object",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/resource.test.js.html#lineNumber64",
+    "test-file/test/utility/resource.test.js.html#lineNumber113",
     "Resource utility HTTP request Get Plain text",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.test.js.html#lineNumber50",
+    "Resource utility JSON parser",
+    "test"
+  ],
+  [
+    "parse source/utility/resource.js~parse,parse",
+    "test-file/test/utility/resource.test.js.html#lineNumber75",
+    "Resource utility JSON parser Parsing",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.test.js.html#lineNumber77",
+    "Resource utility JSON parser Parsing Date()",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.test.js.html#lineNumber86",
+    "Resource utility JSON parser Parsing Element()",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/resource.test.js.html#lineNumber95",
+    "Resource utility JSON parser Parsing Mixin",
+    "test"
+  ],
+  [
+    "stringify source/utility/resource.js~stringify,stringify",
+    "test-file/test/utility/resource.test.js.html#lineNumber65",
+    "Resource utility JSON parser Serialization",
     "test"
   ],
   [
@@ -1008,6 +1068,12 @@ window.esdocSearchIndex = [
     "method"
   ],
   [
+    "source/component/component.js~component#trigger",
+    "class/source/component/Component.js~Component.html#instance-method-trigger",
+    "source/component/Component.js~Component#trigger",
+    "method"
+  ],
+  [
     "source/component/component.js~component#view",
     "class/source/component/Component.js~Component.html#instance-get-view",
     "source/component/Component.js~Component#view",
@@ -1048,6 +1114,12 @@ window.esdocSearchIndex = [
     "class/source/component/InputComponent.js~InputComponent.html#instance-get-defaultValue",
     "source/component/InputComponent.js~InputComponent#defaultValue",
     "member"
+  ],
+  [
+    "source/component/inputcomponent.js~inputcomponent#slotchangedcallback",
+    "class/source/component/InputComponent.js~InputComponent.html#instance-method-slotChangedCallback",
+    "source/component/InputComponent.js~InputComponent#slotChangedCallback",
+    "method"
   ],
   [
     "source/utility/dom.js",

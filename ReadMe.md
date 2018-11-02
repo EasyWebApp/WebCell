@@ -31,42 +31,17 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with M
 ## Basic Usage
 
 
-### Installation
+### Quick start
 
 ```Shell
-npm init
+# Only first time in a computer
+npm install web-cell-cli -g --production
 
-npm install web-cell @babel/polyfill @webcomponents/webcomponentsjs whatwg-fetch
+mkdir my_project  &&  cd my_project
 
-npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D
+web-cell boot
 ```
-(More about [WebCell DevCLI](https://easywebapp.github.io/DevCLI/))
-
-
-### Configuration
-
-Add **Source code folder** of your components to `directories.lib` field of `package.json` ([Example](https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24))
-
-
-### Index page
-
-```HTML
-<!DocType HTML>
-<html><head>
-    <script src="node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
-    <script src="node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
-    <script src="node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
-    <script src="node_modules/whatwg-fetch/dist/fetch.umd.js"></script>
-
-    <script src="node_modules/web-cell/dist/web-cell.js"></script>
-
-    <script src="dist/your-component.js"></script>
-    <!-- More Script tags of your Web components -->
-</head><body>
-    <your-component></your-component>
-</body></html>
-```
-(Set the directory of `index.html` into `directories.test` field of `package.json` for auto-preview during development)
+(More configuration & template files can be found in the document of [WebCell DevCLI](https://easywebapp.github.io/DevCLI/))
 
 
 ### Component
@@ -87,6 +62,7 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
             </tr>
         <template></tbody>
     </table>
+    <slot></slot>
 </template>
 ```
 
@@ -148,6 +124,23 @@ export default  class YourComponent extends HTMLElement {
 
     @mapData    //  Assign Property value to Data with the same name
     attributeChangedCallback() { }
+
+    /**
+     * Do something after Outside nodes changing
+     *
+     * @param {Node[]}          assigned - Nodes pluged into a slot
+     * @param {HTMLSlotElement} slot
+     * @param {?String}         name     - `name` attribute of `slot`
+     */
+    slotChangedCallback(assigned, slot, name) { }
+
+    /**
+     * @param {Object} newData
+     * @param {Object} oldData
+     *
+     * @return {?Boolean} `false` can prevent the view of this Component to rerender
+     */
+    viewUpdateCallback(newData, oldData) { }
 
     get value() {  return this.$('textarea')[0].value  }
 

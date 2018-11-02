@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -56,10 +57,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
@@ -73,9 +77,20 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/utility/resource.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { extend } from &apos;./object&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { $, stringifyDOM, parseDOM } from &apos;./DOM&apos;;
 
-import { $, parseDOM } from &apos;./DOM&apos;;
+import { extend } from &apos;./object&apos;;
+
+
+/**
+ * @param {String} raw
+ *
+ * @return {Number} Length in Half-width characters
+ */
+export function byteLength(raw) {
+
+    return  raw.replace(/[^\u0021-\u007e\uff61-\uffef]/g, &apos;xx&apos;).length;
+}
 
 
 /**
@@ -89,6 +104,7 @@ export function isXDomain(URI) {
         (new URL(URI, document.baseURI)).origin  !==  window.location.origin
     );
 }
+
 
 /**
  * @param {Element} form - `&lt;form /&gt;` or `&lt;fieldset /&gt;`
@@ -116,6 +132,47 @@ export function serialize(form) {
     return form;
 }
 
+
+/**
+ * @param {Object} data
+ *
+ * @return {String} JSON source code
+ */
+export function stringify(data) {
+
+    return  JSON.stringify(data,  (key, value) =&gt; {
+
+        if (value instanceof Node)  return stringifyDOM( value );
+
+        return value;
+    }, 4);
+}
+
+
+/**
+ * @param {String} raw - JSON source code
+ *
+ * @return {Object}
+ */
+export function parse(raw) {
+
+    return  JSON.parse(raw,  (key, value) =&gt; {
+
+        if (/^\d{4}(-\d{2}){2}T\d{2}(:\d{2}){2}\.\d{3}Z$/.test( value ))
+            return  new Date( value );
+
+        if (/&lt;[\w-][\s\S]*?&gt;/.test( value )) {
+
+            const node = parseDOM( value );
+
+            return  (node.childNodes.length &lt; 2)  ?  node.firstChild  :  node;
+        }
+
+        return value;
+    });
+}
+
+
 /**
  * HTTP request
  *
@@ -133,7 +190,7 @@ export async function request(URI, method = &apos;GET&apos;, body, headers, opti
 
     if (body instanceof Object)  try {
 
-        body = JSON.stringify( body.valueOf() );
+        body = stringify( body.valueOf() );
 
         headers = headers || { };
 
@@ -163,6 +220,7 @@ export async function request(URI, method = &apos;GET&apos;, body, headers, opti
             ]();
     }
 }
+
 
 /**
  * @param {String} URI - Returned by `URL.createObjectURL()`
@@ -213,6 +271,7 @@ export async function fileTypeOf(URI) {
         default:      return {schema, type};
     }
 }
+
 
 /**
  * @param {String} URI - Data URI

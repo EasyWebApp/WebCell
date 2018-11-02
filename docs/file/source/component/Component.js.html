@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -56,10 +57,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
@@ -73,11 +77,14 @@
 </nav>
 
 <div class="content" data-ice="content"><h1 data-ice="title">source/component/Component.js</h1>
-<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import { $ as $_,  $up as $_up,  delegate } from &apos;../utility/DOM&apos;;
-
-import ObjectView from &apos;../view/ObjectView&apos;;
+<pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import ObjectView from &apos;../view/ObjectView&apos;;
 
 import View from &apos;../view/View&apos;;
+
+import { parse } from &apos;../utility/resource&apos;;
+
+import { $ as $_,  $up as $_up,  delegate, trigger } from &apos;../utility/DOM&apos;;
+
 
 const attr_prop = {
     class:     &apos;className&apos;,
@@ -122,12 +129,36 @@ export default  class Component {
         if ( template )
             shadow.appendChild( document.importNode(template, true) );
 
+        if (this.slotChangedCallback instanceof Function)
+            for (let slot of this.$(&apos;slot&apos;))
+                slot.addEventListener(
+                    &apos;slotchange&apos;,  () =&gt; this.slotChangedCallback(
+                        [... slot.assignedNodes()],  slot,  slot.name
+                    )
+                );
+
+        if (this.viewUpdateCallback instanceof Function)
+            this.on(&apos;update&apos;,  event =&gt; {
+
+                const {oldData, newData, view} = event.detail;
+
+                if (this.viewUpdateCallback(newData, oldData, view)  ===  false)
+                    event.preventDefault();
+            });
+
         const view = new ObjectView( shadow );
 
         if ( view[0] )  view.render(data || { });
 
         return this;
     }
+
+    /**
+     * Main view of this component
+     *
+     * @type {View}
+     */
+    get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
      * Set the getter &amp; setter of the DOM property
@@ -181,7 +212,7 @@ export default  class Component {
             case &apos;&apos;:      return  this[ name ] = true;
             case null:    return  this[ name ] = false;
             default:      try {
-                return  this[ name ] = JSON.parse( newValue );
+                return  this[ name ] = parse( newValue );
 
             } catch (error) {
 
@@ -189,13 +220,6 @@ export default  class Component {
             }
         }
     }
-
-    /**
-     * Main view of this component
-     *
-     * @type {View}
-     */
-    get view() {  return  View.instanceOf( this.shadowRoot );  }
 
     /**
      * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
@@ -258,6 +282,21 @@ export default  class Component {
         );
 
         return this;
+    }
+
+    /**
+     * @param {String}   type
+     * @param {?*}       detail     - Additional data
+     * @param {?Boolean} bubbles
+     * @param {?Boolean} cancelable
+     * @param {?Boolean} composed   - Whether the event will cross
+     *                                from the shadow DOM into the standard DOM
+     *                                after reaching the shadow root
+     * @return {Boolean} Event be canceled or not
+     */
+    trigger(type, detail, bubbles, cancelable, composed) {
+
+        return  trigger(this, type, detail, bubbles, cancelable, composed);
     }
 }
 

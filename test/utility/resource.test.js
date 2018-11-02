@@ -1,7 +1,7 @@
 import JSDOM from '../DOM-polyfill';
 
 import {
-    serialize, request, fileTypeOf, blobFrom
+    serialize, stringify, parse, request, fileTypeOf, blobFrom
 } from '../../source/utility/resource';
 
 import WebServer from 'koapache';
@@ -44,6 +44,55 @@ describe('Resource utility',  () => {
             form.removeAttribute('enctype');
 
             serialize( form ).should.be.equal('text=example&content=sample');
+        });
+    });
+
+    describe('JSON parser',  () => {
+
+        const object = {
+                name:     'WebCell',
+                time:     new Date('2018-11-10'),
+                content:  document.createElement('a')
+            },
+            string = `{
+    "name": "WebCell",
+    "time": "2018-11-10T00:00:00.000Z",
+    "content": "<a></a>"
+}`;
+        /**
+         * @test {stringify}
+         */
+        it('Serialization',  () => {
+
+            stringify( object.content ).should.be.equal('"<a></a>"');
+
+            stringify( object ).should.be.equal( string );
+        });
+
+        /**
+         * @test {parse}
+         */
+        describe('Parsing',  () => {
+
+            it('Date()',  () => {
+
+                const result = parse('"2018-11-10T00:00:00.000Z"');
+
+                result.should.be.instanceOf( Date );
+
+                result.should.be.eql( object.time );
+            });
+
+            it('Element()',  () => {
+
+                const result = parse('"<a />"');
+
+                result.should.be.instanceOf( Element );
+
+                result.should.be.eql( object.content );
+            });
+
+            it('Mixin',  () => parse( string ).should.be.eql( object ));
         });
     });
 

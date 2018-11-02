@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-targetOf">targetOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span></span></li>
@@ -56,10 +57,13 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
@@ -91,30 +95,14 @@
 <li><p><a href="https://github.com/tc39/proposal-decorators#decorators">Decorator</a></p>
 </li>
 </ol>
-<h2 id="basic-usage">Basic Usage</h2><h3 id="installation">Installation</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm init
+<h2 id="basic-usage">Basic Usage</h2><h3 id="quick-start">Quick start</h3><pre><code class="lang-Shell"><code class="source-code prettyprint"># Only first time in a computer
+npm install web-cell-cli -g --production
 
-npm install web-cell @babel/polyfill @webcomponents/webcomponentsjs whatwg-fetch
+mkdir my_project  &amp;&amp;  cd my_project
 
-npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D</code>
+web-cell boot</code>
 </code></pre>
-<p>(More about <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
-<h3 id="configuration">Configuration</h3><p>Add <strong>Source code folder</strong> of your components to <code>directories.lib</code> field of <code>package.json</code> (<a href="https://github.com/EasyWebApp/material-cell/blob/master/package.json#L24">Example</a>)</p>
-<h3 id="index-page">Index page</h3><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;!DocType HTML&gt;
-&lt;html&gt;&lt;head&gt;
-    &lt;script src=&quot;node_modules/@babel/polyfill/dist/polyfill.min.js&quot;&gt;&lt;/script&gt;
-    &lt;script src=&quot;node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js&quot;&gt;&lt;/script&gt;
-    &lt;script src=&quot;node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js&quot;&gt;&lt;/script&gt;
-    &lt;script src=&quot;node_modules/whatwg-fetch/dist/fetch.umd.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;node_modules/web-cell/dist/web-cell.js&quot;&gt;&lt;/script&gt;
-
-    &lt;script src=&quot;dist/your-component.js&quot;&gt;&lt;/script&gt;
-    &lt;!-- More Script tags of your Web components --&gt;
-&lt;/head&gt;&lt;body&gt;
-    &lt;your-component&gt;&lt;/your-component&gt;
-&lt;/body&gt;&lt;/html&gt;</code>
-</code></pre>
-<p>(Set the directory of <code>index.html</code> into <code>directories.test</code> field of <code>package.json</code> for auto-preview during development)</p>
+<p>(More configuration &amp; template files can be found in the document of <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
 <h3 id="component">Component</h3><p>Create <a href="https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js">files as shown below</a> in <code>path/to/your-component</code> directory:</p>
 <p><code>index.html</code></p>
 <pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
@@ -129,6 +117,7 @@ npm install web-cell-cli @babel/preset-env @babel/plugin-proposal-decorators -D<
             &lt;/tr&gt;
         &lt;template&gt;&lt;/tbody&gt;
     &lt;/table&gt;
+    &lt;slot&gt;&lt;/slot&gt;
 &lt;/template&gt;</code>
 </code></pre>
 <p><code>index.css</code></p>
@@ -182,6 +171,23 @@ export default  class YourComponent extends HTMLElement {
 
     @mapData    //  Assign Property value to Data with the same name
     attributeChangedCallback() { }
+
+    /**
+     * Do something after Outside nodes changing
+     *
+     * @param {Node[]}          assigned - Nodes pluged into a slot
+     * @param {HTMLSlotElement} slot
+     * @param {?String}         name     - `name` attribute of `slot`
+     */
+    slotChangedCallback(assigned, slot, name) { }
+
+    /**
+     * @param {Object} newData
+     * @param {Object} oldData
+     *
+     * @return {?Boolean} `false` can prevent the view of this Component to rerender
+     */
+    viewUpdateCallback(newData, oldData) { }
 
     get value() {  return this.$(&apos;textarea&apos;)[0].value  }
 

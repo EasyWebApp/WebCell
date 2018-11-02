@@ -26,17 +26,19 @@ export default  class InputComponent extends HTMLElement {
 
         super();
 
-        this.buildDOM( option ).on.call(
-            this.$('slot')[0],  'slotchange',  this.linkSlot.bind( this )
-        );
+        this.buildDOM( option );
     }
 
     /**
-     * @private
+     * @protected
+     *
+     * @param {Node[]} assigned
      */
-    linkSlot() {
+    slotChangedCallback(assigned) {
 
-        const origin = this.$slot('input')[0], proxy = this.$('input')[0];
+        const origin = assigned.find(node  =>  node.tagName === 'INPUT');
+
+        if (! origin)  return;
 
         origin.style.setProperty('display', 'none', 'important');
 
@@ -49,6 +51,8 @@ export default  class InputComponent extends HTMLElement {
             ],
             this.changedPropertyOf
         );
+
+        const proxy = this.$('input')[0];
 
         this.on.call(proxy,  'input',  () => origin.value = proxy.value);
 

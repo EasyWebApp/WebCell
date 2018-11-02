@@ -4,7 +4,7 @@ import View from './View';
 
 import Template from './Template';
 
-import { nextTick } from '../utility/DOM';
+import { nextTick, trigger } from '../utility/DOM';
 
 import ArrayView from './ArrayView';
 
@@ -29,7 +29,7 @@ export default  class ObjectView extends View {
 
     valueOf() {
 
-        const data = Object.assign({ },  this.data);
+        const data = {... this.data};
 
         for (let template of this)
             if (template instanceof View)
@@ -158,9 +158,7 @@ export default  class ObjectView extends View {
 
         var root = this.content;
 
-        root = root.parentNode ? root : {
-            childNodes:    (root instanceof Array)  ?  root  :  [ root ]
-        };
+        root = (root instanceof Node)  ?  root  :  {childNodes: root};
 
         for (let { node }  of  mapTree(root, 'childNodes'))
             switch ( node.nodeType ) {
@@ -204,9 +202,26 @@ export default  class ObjectView extends View {
     /**
      * @param {Object} [data]
      *
+     * @emits {CustomEvent} - `update` event (bubble & cancelable)
+     *                        with `oldData`, `newData` & `view` detail properties
      * @return {ObjectView}
      */
     render(data) {
+
+        const target = this.content;
+
+        if (! trigger(
+            (target instanceof Node)  ?  target  :  target[0],
+            'update',
+            {
+                oldData:  this.valueOf(),
+                newData:  data,
+                view:     this
+            },
+            true,
+            true
+        ))
+            return this;
 
         const _data_ = extend(this.data, data);
 

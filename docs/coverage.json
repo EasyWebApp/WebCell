@@ -1,14 +1,14 @@
 {
-  "coverage": "73.91%",
-  "expectCount": 115,
-  "actualCount": 85,
+  "coverage": "75%",
+  "expectCount": 120,
+  "actualCount": 90,
   "files": {
     "source/component/Component.js": {
-      "expectCount": 13,
-      "actualCount": 11,
+      "expectCount": 14,
+      "actualCount": 12,
       "undocumentLines": [
-        7,
-        28
+        10,
+        31
       ]
     },
     "source/component/InputComponent.js": {
@@ -19,8 +19,8 @@
       ]
     },
     "source/utility/DOM.js": {
-      "expectCount": 13,
-      "actualCount": 12,
+      "expectCount": 14,
+      "actualCount": 13,
       "undocumentLines": [
         53
       ]
@@ -34,10 +34,10 @@
       ]
     },
     "source/utility/resource.js": {
-      "expectCount": 7,
-      "actualCount": 6,
+      "expectCount": 10,
+      "actualCount": 9,
       "undocumentLines": [
-        116
+        170
       ]
     },
     "source/view/ArrayView.js": {
@@ -58,7 +58,7 @@
       "undocumentLines": [
         11,
         30,
-        230
+        245
       ]
     },
     "source/view/Template.js": {
@@ -88,9 +88,9 @@
       "expectCount": 7,
       "actualCount": 4,
       "undocumentLines": [
-        63,
-        75,
-        92
+        74,
+        86,
+        103
       ]
     }
   }
