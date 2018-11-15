@@ -24,19 +24,15 @@ export default  class InputComponent extends HTMLElement {
      */
     constructor(option) {
 
-        super();
-
-        this.buildDOM( option );
+        super().buildDOM( option );
     }
 
     /**
      * @protected
-     *
-     * @param {Node[]} assigned
      */
-    slotChangedCallback(assigned) {
+    slotChangedCallback() {
 
-        const origin = assigned.find(node  =>  node.tagName === 'INPUT');
+        const origin = this.$slot('input')[0];
 
         if (! origin)  return;
 

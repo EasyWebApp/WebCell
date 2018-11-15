@@ -11,10 +11,12 @@ const { window } = (new JSDOM('', {
 }));
 
 for (let key of [
-    'window', 'document',
-    'Blob', 'Node', 'Element', 'DOMParser', 'CustomEvent',
-    'URL', 'URLSearchParams', 'FormData'
+    'self', 'document',
+    'Node', 'Element', 'HTMLElement', 'DocumentFragment', 'HTMLDocument',
+    'DOMParser', 'XMLSerializer',
+    'Event', 'CustomEvent',
+    'URL', 'URLSearchParams', 'FormData', 'Blob'
 ])
     global[key] = window[key];
 
-window.fetch = fetch;
+self.fetch = fetch;

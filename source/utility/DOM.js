@@ -8,7 +8,7 @@ export const documentReady = new Promise(resolve => {
 
     document.addEventListener('DOMContentLoaded', resolve);
 
-    window.addEventListener('load', resolve);
+    self.addEventListener('load', resolve);
 
     (function check() {
 
@@ -40,13 +40,9 @@ export function $(selector, context) {
  */
 export function $up(selector, context) {
 
-    while ( context.parentNode ) {
-
-        context = context.parentNode;
-
+    while (context = context.parentNode)
         if (context.matches  &&  context.matches( selector ))
             return context;
-    }
 }
 
 
@@ -144,27 +140,35 @@ export function delegate(selector, handler) {
         if (! target.matches( selector ))
             target = $up(selector, target);
 
-        if ( target )  return handler.call(target, event);
+        if ( target )
+            return  handler.call(target, event, target, event.detail);
     };
 }
 
 
 /**
- * @param {Element}  element
- * @param {String}   type
- * @param {?*}       detail     - Additional data
- * @param {?Boolean} bubbles
- * @param {?Boolean} cancelable
- * @param {?Boolean} composed   - Whether the event will cross
- *                                from the shadow DOM into the standard DOM
- *                                after reaching the shadow root
+ * @param {Element}      element
+ * @param {String|Event} event
+ * @param {?*}           detail     - Additional data
+ * @param {?Boolean}     bubbles
+ * @param {?Boolean}     cancelable
+ * @param {?Boolean}     composed   - Whether the event will cross
+ *                                    from the shadow DOM into the standard DOM
+ *                                    after reaching the shadow root
  * @return {Boolean} Event be canceled or not
  */
-export function trigger(element, type, detail, bubbles, cancelable, composed) {
+export function trigger(element, event, detail, bubbles, cancelable, composed) {
 
-    return  element.dispatchEvent(new CustomEvent(type, {
-        bubbles, cancelable, composed, detail
-    }));
+    return element.dispatchEvent(
+        (event instanceof Event)  ?
+            new event.constructor(event.type, {
+                bubbles:     event.bubbles,
+                cancelable:  event.cancelable
+            }) :
+            new CustomEvent(event, {
+                bubbles, cancelable, composed, detail
+            })
+    );
 }
 
 
@@ -184,20 +188,80 @@ export function parseDOM(markup) {
 
 
 /**
- * @param {Element|Element[]|DocumentFragment} tree
+ * @param {*} DOM
+ *
+ * @return {Boolean}
+ */
+export function isHTML(DOM) {
+
+    return  (DOM instanceof HTMLDocument)  ||
+        (DOM instanceof DocumentFragment)  ||
+        (DOM instanceof HTMLElement);
+}
+
+
+const serializer = new XMLSerializer(),
+    documentXML = document.implementation.createDocument(null, 'xml');
+
+function stringOf(document) {
+
+    if (document instanceof HTMLDocument)
+        for (let element of $(
+            'style:not(:empty), script:not(:empty)',  document
+        ))
+            if ( element.textContent.trim() )
+                element.firstChild.replaceWith(
+                    documentXML.createCDATASection( element.textContent )
+                );
+
+    return  serializer.serializeToString( document );
+}
+
+/**
+ * @param {Node} fragment
  *
  * @return {string} HTML/XML source code
  */
-export function stringifyDOM(tree) {
+export function stringifyDOM(fragment) {
 
-    return  (tree.nodeType === 1)  ?
-        tree.outerHTML  :  Array.from(tree.childNodes || tree,  node => {
+    if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))
+        return stringOf( fragment );
 
-            switch ( node.nodeType ) {
-                case 1:    return node.outerHTML;
-                case 3:    return node.nodeValue;
-            }
-        }).join('');
+    if (fragment instanceof HTMLElement)  return fragment.outerHTML;
+
+    const box = document.createElement('template');
+
+    box.content.append( fragment.cloneNode( true ) );
+
+    return box.innerHTML;
+}
+
+
+const sandbox = document.createElement('div');
+
+/**
+ * @param {String} source - Markup source code
+ *
+ * @return {String} Special characters are tranformed to Markup entries
+ */
+export function encodeMarkup(source) {
+
+    sandbox.textContent = source;
+
+    return sandbox.innerHTML;
+}
+
+/**
+ * @param {String} source
+ *
+ * @return {String} Markup entries are tranformed back to Special characters or
+ *                  Escape Markup tags
+ */
+export function decodeMarkup(source) {
+
+    sandbox.innerHTML = source;
+
+    return sandbox.textContent;
 }
 
 
@@ -261,7 +325,7 @@ export function nextTick() {
 
     return  tick || (
         tick = new Promise(
-            resolve => window.requestAnimationFrame(
+            resolve => self.requestAnimationFrame(
                 time  =>  (tick = null, resolve( time ))
             )
         )

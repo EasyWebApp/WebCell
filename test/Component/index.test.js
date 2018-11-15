@@ -121,15 +121,12 @@ describe('Component mixin',  () => {
 
         const input = consoleText();
 
-        await page.$eval('body',  body => {
-
-            self['web-cell'].Component.prototype.on.call(
-                body,  'focusin',  'textarea',  function (event) {
-
-                    console.info(this.tagName, event.type);
-                }
-            );
-        });
+        await page.$eval('body',  body => body.addEventListener(
+            'focusin', self['web-cell'].delegate(
+                'textarea',
+                function ({ type }) {  console.info(this.tagName, type);  }
+            )
+        ));
 
         await page.click('cell-test');
 

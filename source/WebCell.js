@@ -169,12 +169,12 @@ export function component(meta = { }) {
             elements,
             finisher(Class) {
                 if (
-                    merged  &&  window.ShadyCSS  &&
+                    merged  &&  self.ShadyCSS  &&
                     !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)
                 )
                     ShadyCSS.prepareTemplate(merged, Class.tagName);
 
-                window.customElements.define(
+                self.customElements.define(
                     Class.tagName,  Class,  tagName && {extends: tagName}
                 );
             }

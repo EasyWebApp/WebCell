@@ -13,7 +13,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
@@ -38,8 +38,11 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
@@ -61,6 +64,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-readAs">readAs</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
@@ -87,7 +91,7 @@ export const documentReady = new Promise(resolve =&gt; {
 
     document.addEventListener(&apos;DOMContentLoaded&apos;, resolve);
 
-    window.addEventListener(&apos;load&apos;, resolve);
+    self.addEventListener(&apos;load&apos;, resolve);
 
     (function check() {
 
@@ -119,13 +123,9 @@ export function $(selector, context) {
  */
 export function $up(selector, context) {
 
-    while ( context.parentNode ) {
-
-        context = context.parentNode;
-
+    while (context = context.parentNode)
         if (context.matches  &amp;&amp;  context.matches( selector ))
             return context;
-    }
 }
 
 
@@ -223,27 +223,35 @@ export function delegate(selector, handler) {
         if (! target.matches( selector ))
             target = $up(selector, target);
 
-        if ( target )  return handler.call(target, event);
+        if ( target )
+            return  handler.call(target, event, target, event.detail);
     };
 }
 
 
 /**
- * @param {Element}  element
- * @param {String}   type
- * @param {?*}       detail     - Additional data
- * @param {?Boolean} bubbles
- * @param {?Boolean} cancelable
- * @param {?Boolean} composed   - Whether the event will cross
- *                                from the shadow DOM into the standard DOM
- *                                after reaching the shadow root
+ * @param {Element}      element
+ * @param {String|Event} event
+ * @param {?*}           detail     - Additional data
+ * @param {?Boolean}     bubbles
+ * @param {?Boolean}     cancelable
+ * @param {?Boolean}     composed   - Whether the event will cross
+ *                                    from the shadow DOM into the standard DOM
+ *                                    after reaching the shadow root
  * @return {Boolean} Event be canceled or not
  */
-export function trigger(element, type, detail, bubbles, cancelable, composed) {
+export function trigger(element, event, detail, bubbles, cancelable, composed) {
 
-    return  element.dispatchEvent(new CustomEvent(type, {
-        bubbles, cancelable, composed, detail
-    }));
+    return element.dispatchEvent(
+        (event instanceof Event)  ?
+            new event.constructor(event.type, {
+                bubbles:     event.bubbles,
+                cancelable:  event.cancelable
+            }) :
+            new CustomEvent(event, {
+                bubbles, cancelable, composed, detail
+            })
+    );
 }
 
 
@@ -263,20 +271,80 @@ export function parseDOM(markup) {
 
 
 /**
- * @param {Element|Element[]|DocumentFragment} tree
+ * @param {*} DOM
+ *
+ * @return {Boolean}
+ */
+export function isHTML(DOM) {
+
+    return  (DOM instanceof HTMLDocument)  ||
+        (DOM instanceof DocumentFragment)  ||
+        (DOM instanceof HTMLElement);
+}
+
+
+const serializer = new XMLSerializer(),
+    documentXML = document.implementation.createDocument(null, &apos;xml&apos;);
+
+function stringOf(document) {
+
+    if (document instanceof HTMLDocument)
+        for (let element of $(
+            &apos;style:not(:empty), script:not(:empty)&apos;,  document
+        ))
+            if ( element.textContent.trim() )
+                element.firstChild.replaceWith(
+                    documentXML.createCDATASection( element.textContent )
+                );
+
+    return  serializer.serializeToString( document );
+}
+
+/**
+ * @param {Node} fragment
  *
  * @return {string} HTML/XML source code
  */
-export function stringifyDOM(tree) {
+export function stringifyDOM(fragment) {
 
-    return  (tree.nodeType === 1)  ?
-        tree.outerHTML  :  Array.from(tree.childNodes || tree,  node =&gt; {
+    if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))
+        return stringOf( fragment );
 
-            switch ( node.nodeType ) {
-                case 1:    return node.outerHTML;
-                case 3:    return node.nodeValue;
-            }
-        }).join(&apos;&apos;);
+    if (fragment instanceof HTMLElement)  return fragment.outerHTML;
+
+    const box = document.createElement(&apos;template&apos;);
+
+    box.content.append( fragment.cloneNode( true ) );
+
+    return box.innerHTML;
+}
+
+
+const sandbox = document.createElement(&apos;div&apos;);
+
+/**
+ * @param {String} source - Markup source code
+ *
+ * @return {String} Special characters are tranformed to Markup entries
+ */
+export function encodeMarkup(source) {
+
+    sandbox.textContent = source;
+
+    return sandbox.innerHTML;
+}
+
+/**
+ * @param {String} source
+ *
+ * @return {String} Markup entries are tranformed back to Special characters or
+ *                  Escape Markup tags
+ */
+export function decodeMarkup(source) {
+
+    sandbox.innerHTML = source;
+
+    return sandbox.textContent;
 }
 
 
@@ -340,7 +408,7 @@ export function nextTick() {
 
     return  tick || (
         tick = new Promise(
-            resolve =&gt; window.requestAnimationFrame(
+            resolve =&gt; self.requestAnimationFrame(
                 time  =&gt;  (tick = null, resolve( time ))
             )
         )

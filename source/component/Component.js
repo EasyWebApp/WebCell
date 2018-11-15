@@ -6,6 +6,8 @@ import { parse } from '../utility/resource';
 
 import { $ as $_,  $up as $_up,  delegate, trigger } from '../utility/DOM';
 
+import { multipleMap } from '../utility/object';
+
 
 const attr_prop = {
     class:     'className',
@@ -37,7 +39,7 @@ export default  class Component {
      */
     buildDOM(option) {
 
-        if (window.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
+        if (self.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
         const shadow = this.attachShadow({
@@ -143,21 +145,6 @@ export default  class Component {
     }
 
     /**
-     * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
-     *
-     * @return {boolean} Default behavior of this event can be executed or not
-     */
-    bubbleOut(event) {
-
-        return this.shadowRoot.host.dispatchEvent(
-            new event.constructor(event.type, {
-                bubbles:     event.bubbles,
-                cancelable:  event.cancelable
-            })
-        );
-    }
-
-    /**
      * @param {string} selector - CSS selector
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
@@ -178,10 +165,20 @@ export default  class Component {
      */
     $slot(selector) {
 
-        return  [ ].concat(
-            ... this.$('slot').map(slot => slot.assignedNodes())
-        ).filter(
-            node  =>  node.matches && node.matches( selector )
+        return multipleMap(
+            multipleMap(this.$('slot'),  slot => slot.assignedNodes()),
+            node => {
+
+                if (!(node instanceof Element))  return;
+
+                const list = [ ];
+
+                if (node.matches( selector ))  list[0] = node;
+
+                list.push(... $_(selector, node));
+
+                return list;
+            }
         );
     }
 
@@ -206,18 +203,18 @@ export default  class Component {
     }
 
     /**
-     * @param {String}   type
-     * @param {?*}       detail     - Additional data
-     * @param {?Boolean} bubbles
-     * @param {?Boolean} cancelable
-     * @param {?Boolean} composed   - Whether the event will cross
-     *                                from the shadow DOM into the standard DOM
-     *                                after reaching the shadow root
+     * @param {String|Event} event
+     * @param {?*}           detail     - Additional data
+     * @param {?Boolean}     bubbles
+     * @param {?Boolean}     cancelable
+     * @param {?Boolean}     composed   - Whether the event will cross
+     *                                    from the shadow DOM into the standard DOM
+     *                                    after reaching the shadow root
      * @return {Boolean} Event be canceled or not
      */
-    trigger(type, detail, bubbles, cancelable, composed) {
+    trigger(event, detail, bubbles, cancelable, composed) {
 
-        return  trigger(this, type, detail, bubbles, cancelable, composed);
+        return  trigger(this, event, detail, bubbles, cancelable, composed);
     }
 }
 

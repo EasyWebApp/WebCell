@@ -13,7 +13,7 @@ describe('Resource utility',  () => {
     /**
      * @test {serialize}
      */
-    describe('Serialize `<form />` or `<fieldset />`',  () => {
+    describe('Serialize "form" or "fieldset" element',  () => {
 
         const form = JSDOM.fragment(`
 <form enctype="application/json">

@@ -1,5 +1,4 @@
-![WebCell logo](https://web-cell.tk/image/WebCell.svg)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_shield)
+![WebCell logo](https://web-cell.tk/WebCell/image/WebCell.svg)
 
 # WebCell
 
@@ -8,6 +7,8 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with M
 [![Join the chat at https://gitter.im/EasyWebApp-js/Lobby](https://badges.gitter.im/EasyWebApp-js/Lobby.svg)](https://gitter.im/EasyWebApp-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)](https://david-dm.org/EasyWebApp/WebCell)
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_shield)
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell/)
 
@@ -49,10 +50,11 @@ web-cell boot
 
 Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js) in `path/to/your-component` directory:
 
-`index.html`
+#### `index.html`
+
 ```HTML
 <template>
-    <textarea onchange="${host.bubbleOut.bind( host )}">
+    <textarea onchange="${host.trigger.bind( host )}">
         Hello, ${view.name}!
     </textarea>
     <img src="${host.constructor.icon}">
@@ -67,14 +69,16 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
 </template>
 ```
 
-`index.css`
+#### `index.css`
+
 ```CSS
 textarea {
     font-style: italic;
 }
 ```
 
-`index.json`
+#### `index.json`
+
 ```JSON
 {
     "name":           "Web components",
@@ -87,12 +91,14 @@ textarea {
 }
 ```
 
-`icon.svg`
+#### `icon.svg`
+
 ```XML
 <svg></svg>
 ```
 
-`index.js`
+#### `index.js`
+
 ```JavaScript
 import { component, blobURI, mapProperty, mapData } from 'web-cell';
 
@@ -112,9 +118,7 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super();
-
-        this.buildDOM();    //  This method is necessary when template is set
+        super().buildDOM();    //  This method is necessary when template is set
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it
@@ -162,81 +166,11 @@ web-cell pack
 ```
 
 
-## Integration
+## Documentation
 
-### webpack configuration
+ - [API](https://web-cell.tk/WebCell/): `npm docs` or `npm start`
 
-```Shell
-npm install --save-dev \
-    webpack webpack-cli \
-    html-loader posthtml-loader \
-    to-string-loader css-loader
-```
-
-`webpack.config.js`
-```JavaScript
-const path = require('path');
-
-module.exports = {
-    entry: 'path/to/your-component/index.js',
-    output: {
-        filename: 'your-component.js',
-        path: path.resolve(__dirname, 'dist')
-    },
-    module: {
-        rules: [
-            {
-                test: /\.html$/,
-                use: [
-                    'html-loader',
-                    {
-                        loader: 'posthtml-loader',
-                        options: {
-                            ident: 'posthtml'
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    'to-string-loader',
-                    'css-loader'
-                ]
-            }
-        ]
-    }
-};
-```
-### Import to other frameworks
-
-`your-component-wrapper.vue`
-```HTML
-<template>
-    <your-component v-model="message"></your-component>
-    <p>
-        Text from Web component: {{message}}
-    </p>
-</template>
-
-<script>
-    import 'path/to/your-component';
-
-    export default {
-        data() {
-
-            return  {message: 'Come from Vue!'};
-        }
-    }
-</script>
-```
-
-
-## API document
-
- - Online --- https://web-cell.tk/ or `npm docs`
-
- - Offline --- `npm start`
+ - [Guide](https://web-cell.tk/WebCell/manual/): `npm start manual`
 
 
 
@@ -269,5 +203,34 @@ module.exports = {
 [2]: https://tc39.github.io/proposal-decorators/
 
 
+
 ## License
+
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_large)
+
+
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+    <img alt="Creative Commons License" style="border-width:0"
+         src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png" />
+</a>
+
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title" rel="dct:type"
+      href="http://purl.org/dc/dcmitype/StillImage">
+    WebCell logo
+</span>
+by
+<a xmlns:cc="http://creativecommons.org/ns#"
+   property="cc:attributionName" rel="cc:attributionURL"
+   href="https://web-cell.tk/">
+   Shi Yao  &  Xie JiaQi
+</a>
+is licensed under a
+<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+   Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+</a>.
+
+Based on a work at
+<a xmlns:dct="http://purl.org/dc/terms/" rel="dct:source"
+   href="https://web-cell.tk/WebCell/">
+    https://web-cell.tk/WebCell/
+</a>.

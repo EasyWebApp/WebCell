@@ -13,6 +13,11 @@
                     "source": "./test",
                     "interfaces": ["describe", "it"],
                     "includes": ["\\.test\\.js$"]
+                },
+                "manual": {
+                    "files": [
+                        "./manual/Integration.md"
+                    ]
                 }
             }
         },

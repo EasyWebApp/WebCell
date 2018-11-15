@@ -90,6 +90,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~decodemarkup",
+    "function/index.html#static-function-decodeMarkup",
+    "<span>decodeMarkup</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~decoratorof",
     "function/index.html#static-function-decoratorOf",
     "<span>decoratorOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -106,6 +112,12 @@ window.esdocSearchIndex = [
     "variable/index.html#static-variable-documentReady",
     "<span>documentReady</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "variable"
+  ],
+  [
+    "web-cell/source/utility/dom.js~encodemarkup",
+    "function/index.html#static-function-encodeMarkup",
+    "<span>encodeMarkup</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
   ],
   [
     "web-cell/source/utility/object.js~extend",
@@ -129,6 +141,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~indexof",
     "function/index.html#static-function-indexOf",
     "<span>indexOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~ishtml",
+    "function/index.html#static-function-isHTML",
+    "<span>isHTML</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -183,6 +201,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~parsedom",
     "function/index.html#static-function-parseDOM",
     "<span>parseDOM</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/resource.js~readas",
+    "function/index.html#static-function-readAs",
+    "<span>readAs</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
     "function"
   ],
   [
@@ -306,7 +330,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component#bubbleout source/component/component.js~component#bubbleout,component#bubbleout",
+    "component#bubbleout component#bubbleout,component#bubbleout",
     "test-file/test/Component/index.test.js.html#lineNumber108",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
@@ -361,13 +385,13 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Component/index.test.js.html#lineNumber141",
+    "test-file/test/Component/index.test.js.html#lineNumber138",
     "Form field components",
     "test"
   ],
   [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
-    "test-file/test/Component/index.test.js.html#lineNumber146",
+    "test-file/test/Component/index.test.js.html#lineNumber143",
     "Form field components Render inner field",
     "test"
   ],
@@ -379,37 +403,37 @@ window.esdocSearchIndex = [
   ],
   [
     "decoratorof source/utility/object.js~decoratorof,decoratorof",
-    "test-file/test/utility/object.test.js.html#lineNumber134",
+    "test-file/test/utility/object.test.js.html#lineNumber138",
     "Object utility Create decorator descriptor",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber187",
+    "test-file/test/utility/object.test.js.html#lineNumber191",
     "Object utility Create decorator descriptor Prototype methods",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber172",
+    "test-file/test/utility/object.test.js.html#lineNumber176",
     "Object utility Create decorator descriptor Static accessors",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber136",
+    "test-file/test/utility/object.test.js.html#lineNumber140",
     "Object utility Create decorator descriptor Static fields",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber153",
+    "test-file/test/utility/object.test.js.html#lineNumber157",
     "Object utility Create decorator descriptor Static methods",
     "test"
   ],
   [
     "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility/object.test.js.html#lineNumber100",
+    "test-file/test/utility/object.test.js.html#lineNumber104",
     "Object utility Filter object tree",
     "test"
   ],
@@ -457,7 +481,7 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber73",
+    "test-file/test/utility/object.test.js.html#lineNumber77",
     "Object utility Mixin objects Function or Class",
     "test"
   ],
@@ -626,25 +650,25 @@ window.esdocSearchIndex = [
   [
     "serialize source/utility/resource.js~serialize,serialize",
     "test-file/test/utility/resource.test.js.html#lineNumber16",
-    "Resource utility Serialize `<form />` or `<fieldset />`",
+    "Resource utility Serialize \"form\" or \"fieldset\" element",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber32",
-    "Resource utility Serialize `<form />` or `<fieldset />` JSON",
+    "Resource utility Serialize \"form\" or \"fieldset\" element JSON",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber27",
-    "Resource utility Serialize `<form />` or `<fieldset />` Multiple part data",
+    "Resource utility Serialize \"form\" or \"fieldset\" element Multiple part data",
     "test"
   ],
   [
     "",
     "test-file/test/utility/resource.test.js.html#lineNumber42",
-    "Resource utility Serialize `<form />` or `<fieldset />` URL encode",
+    "Resource utility Serialize \"form\" or \"fieldset\" element URL encode",
     "test"
   ],
   [
@@ -1047,12 +1071,6 @@ window.esdocSearchIndex = [
     "source/component/component.js~component#attributechangedcallback",
     "class/source/component/Component.js~Component.html#instance-method-attributeChangedCallback",
     "source/component/Component.js~Component#attributeChangedCallback",
-    "method"
-  ],
-  [
-    "source/component/component.js~component#bubbleout",
-    "class/source/component/Component.js~Component.html#instance-method-bubbleOut",
-    "source/component/Component.js~Component#bubbleOut",
     "method"
   ],
   [

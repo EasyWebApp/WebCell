@@ -1,4 +1,4 @@
-import { arrayLike } from '../utility/object';
+import { arrayLike, multipleMap } from '../utility/object';
 
 import View from './View';
 
@@ -68,27 +68,22 @@ export default  class ArrayView extends View {
 
         const data = this.data;
 
-        this.content.append(... [ ].concat(
-            ... Array.from(list,  item => {
+        this.content.append(... multipleMap(list,  item => {
 
-                const view = this[ this.length++ ] = new ObjectView(
-                    this.template.cloneNode( true ),  this
-                );
+            const view = this[ this.length++ ] = new ObjectView(
+                this.template.cloneNode( true ),  this
+            );
 
-                data[ data.length ] = view.data;
+            data[ data.length ] = view.data;
 
-                if (! (item.index != null))
-                    Object.defineProperty(item, 'index', {
-                        get:         function () {
+            if (! (item.index != null))
+                Object.defineProperty(item, 'index', {
+                    get:         function () {  return data.indexOf(this);  },
+                    enumerable:  true
+                });
 
-                            return  data.indexOf( this );
-                        },
-                        enumerable:  true
-                    });
-
-                return  view.render( item ).content;
-            })
-        ));
+            return  view.render( item ).content;
+        }));
 
         return this;
     }

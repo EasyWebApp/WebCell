@@ -58,15 +58,19 @@ describe('Object utility',  () => {
 
         it('Ordinary objects',  () => {
 
-            Object.keys(extend(
-                { },  null,  {
-                    example:   1,
-                    get test() { },
-                    null:       null,
-                    undefined:  undefined
-                }
-            )).should.be.eql([
-                'example', 'test'
+            const data = {
+                example:   1,
+                get test() { },
+                null:       null,
+                undefined:  undefined
+            };
+
+            Object.defineProperty(data,  'hidden',  {value: 1});
+
+            Object.getOwnPropertyNames(
+                extend({ },  null,  data)
+            ).should.be.eql([
+                'example', 'test', 'hidden'
             ]);
         });
 

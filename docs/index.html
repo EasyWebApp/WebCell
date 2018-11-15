@@ -13,7 +13,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
@@ -38,8 +38,11 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
@@ -61,6 +64,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-readAs">readAs</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
@@ -76,10 +80,11 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><p><img src="https://web-cell.tk/image/WebCell.svg" alt="WebCell logo"></p>
+<div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><p><img src="https://web-cell.tk/WebCell/image/WebCell.svg" alt="WebCell logo"></p>
 <h1 id="webcell">WebCell</h1><p>Light-weight <strong><a href="https://www.webcomponents.org/">Web Components</a> engine</strong> (with MVVM support) based on <a href="https://www.ecma-international.org/publications/standards/Ecma-262.htm">ECMAScript 2018</a> &amp; <a href="https://tc39.github.io/proposal-decorators/">Decorator proposal</a>, powered by the practice &amp; experience from developing <a href="https://gitee.com/Tech_Query/EasyWebApp/">EWA v1.0 ~ 4.0</a>.</p>
 <p><a href="https://gitter.im/EasyWebApp-js/Lobby?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/EasyWebApp-js/Lobby.svg" alt="Join the chat at https://gitter.im/EasyWebApp-js/Lobby"></a></p>
 <p><a href="https://david-dm.org/EasyWebApp/WebCell"><img src="https://david-dm.org/EasyWebApp/WebCell.svg" alt="NPM Dependency"></a></p>
+<p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_shield"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=shield" alt="FOSSA Status"></a></p>
 <p><a href="https://nodei.co/npm/web-cell/"><img src="https://nodei.co/npm/web-cell.png?downloads=true&amp;downloadRank=true&amp;stars=true" alt="NPM"></a></p>
 <h2 id="basic-knowledge">Basic knowledge</h2><ol>
 <li><p><a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components">Web components</a></p>
@@ -104,9 +109,8 @@ web-cell boot</code>
 </code></pre>
 <p>(More configuration &amp; template files can be found in the document of <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
 <h3 id="component">Component</h3><p>Create <a href="https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js">files as shown below</a> in <code>path/to/your-component</code> directory:</p>
-<p><code>index.html</code></p>
-<pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
-    &lt;textarea onchange=&quot;${host.bubbleOut.bind( host )}&quot;&gt;
+<h4 id="-code-index-html--code-"><code>index.html</code></h4><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
+    &lt;textarea onchange=&quot;${host.trigger.bind( host )}&quot;&gt;
         Hello, ${view.name}!
     &lt;/textarea&gt;
     &lt;img src=&quot;${host.constructor.icon}&quot;&gt;
@@ -120,13 +124,11 @@ web-cell boot</code>
     &lt;slot&gt;&lt;/slot&gt;
 &lt;/template&gt;</code>
 </code></pre>
-<p><code>index.css</code></p>
-<pre><code class="lang-CSS"><code class="source-code prettyprint">textarea {
+<h4 id="-code-index-css--code-"><code>index.css</code></h4><pre><code class="lang-CSS"><code class="source-code prettyprint">textarea {
     font-style: italic;
 }</code>
 </code></pre>
-<p><code>index.json</code></p>
-<pre><code class="lang-JSON"><code class="source-code prettyprint">{
+<h4 id="-code-index-json--code-"><code>index.json</code></h4><pre><code class="lang-JSON"><code class="source-code prettyprint">{
     &quot;name&quot;:           &quot;Web components&quot;,
     &quot;specification&quot;:  [
         {&quot;name&quot;: &quot;HTML 5.3&quot;},
@@ -136,11 +138,9 @@ web-cell boot</code>
     ]
 }</code>
 </code></pre>
-<p><code>icon.svg</code></p>
-<pre><code class="lang-XML"><code class="source-code prettyprint">&lt;svg&gt;&lt;/svg&gt;</code>
+<h4 id="-code-icon-svg--code-"><code>icon.svg</code></h4><pre><code class="lang-XML"><code class="source-code prettyprint">&lt;svg&gt;&lt;/svg&gt;</code>
 </code></pre>
-<p><code>index.js</code></p>
-<pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component, blobURI, mapProperty, mapData } from &apos;web-cell&apos;;
+<h4 id="-code-index-js--code-"><code>index.js</code></h4><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component, blobURI, mapProperty, mapData } from &apos;web-cell&apos;;
 
 import template from &apos;./index.html&apos;;
 
@@ -158,9 +158,7 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super();
-
-        this.buildDOM();    //  This method is necessary when template is set
+        super().buildDOM();    //  This method is necessary when template is set
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it
@@ -200,68 +198,10 @@ export default  class YourComponent extends HTMLElement {
 <h3 id="bundle">Bundle</h3><p>Bundle components to a package with JS modules in it:</p>
 <pre><code class="lang-Shell"><code class="source-code prettyprint">web-cell pack</code>
 </code></pre>
-<h2 id="integration">Integration</h2><h3 id="webpack-configuration">webpack configuration</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm install --save-dev \
-    webpack webpack-cli \
-    html-loader posthtml-loader \
-    to-string-loader css-loader</code>
-</code></pre>
-<p><code>webpack.config.js</code></p>
-<pre><code class="lang-JavaScript"><code class="source-code prettyprint">const path = require(&apos;path&apos;);
-
-module.exports = {
-    entry: &apos;path/to/your-component/index.js&apos;,
-    output: {
-        filename: &apos;your-component.js&apos;,
-        path: path.resolve(__dirname, &apos;dist&apos;)
-    },
-    module: {
-        rules: [
-            {
-                test: /\.html$/,
-                use: [
-                    &apos;html-loader&apos;,
-                    {
-                        loader: &apos;posthtml-loader&apos;,
-                        options: {
-                            ident: &apos;posthtml&apos;
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    &apos;to-string-loader&apos;,
-                    &apos;css-loader&apos;
-                ]
-            }
-        ]
-    }
-};</code>
-</code></pre>
-<h3 id="import-to-other-frameworks">Import to other frameworks</h3><p><code>your-component-wrapper.vue</code></p>
-<pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
-    &lt;your-component v-model=&quot;message&quot;&gt;&lt;/your-component&gt;
-    &lt;p&gt;
-        Text from Web component: {{message}}
-    &lt;/p&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-    import &apos;path/to/your-component&apos;;
-
-    export default {
-        data() {
-
-            return  {message: &apos;Come from Vue!&apos;};
-        }
-    }
-&lt;/script&gt;</code>
-</code></pre>
-<h2 id="api-document">API document</h2><ul>
-<li><p>Online --- <a href="https://web-cell.tk/">https://web-cell.tk/</a> or <code>npm docs</code></p>
+<h2 id="documentation">Documentation</h2><ul>
+<li><p><a href="https://web-cell.tk/WebCell/">API</a>: <code>npm docs</code> or <code>npm start</code></p>
 </li>
-<li><p>Offline --- <code>npm start</code></p>
+<li><p><a href="https://web-cell.tk/WebCell/manual/">Guide</a>: <code>npm start manual</code></p>
 </li>
 </ul>
 <h2 id="component-library">Component library</h2><ol>
@@ -284,6 +224,25 @@ module.exports = {
 <li><p><a href="https://tc39.github.io/proposal-decorators/">Decorator proposal</a></p>
 </li>
 </ol>
+<h2 id="license">License</h2><p><a href="https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_large"><img src="https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=large" alt="FOSSA Status"></a></p>
+<p><a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+    <img src="https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png">
+</a></p>
+<p><span xmlns:="" href="http://purl.org/dc/dcmitype/StillImage">
+    WebCell logo
+</span>
+by
+<a xmlns:="" href="https://web-cell.tk/">
+   Shi Yao  &amp;  Xie JiaQi
+</a>
+is licensed under a
+<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">
+   Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License
+</a>.</p>
+<p>Based on a work at
+<a xmlns:="" href="https://web-cell.tk/WebCell/">
+    https://web-cell.tk/WebCell/
+</a>.</p>
 </div>
 </div>
 

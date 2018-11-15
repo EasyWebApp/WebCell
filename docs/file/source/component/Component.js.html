@@ -13,7 +13,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
@@ -38,8 +38,11 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
@@ -61,6 +64,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-readAs">readAs</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
@@ -84,6 +88,8 @@ import View from &apos;../view/View&apos;;
 import { parse } from &apos;../utility/resource&apos;;
 
 import { $ as $_,  $up as $_up,  delegate, trigger } from &apos;../utility/DOM&apos;;
+
+import { multipleMap } from &apos;../utility/object&apos;;
 
 
 const attr_prop = {
@@ -116,7 +122,7 @@ export default  class Component {
      */
     buildDOM(option) {
 
-        if (window.ShadyCSS  &amp;&amp;  !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow))
+        if (self.ShadyCSS  &amp;&amp;  !(ShadyCSS.nativeCss &amp;&amp; ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
         const shadow = this.attachShadow({
@@ -222,21 +228,6 @@ export default  class Component {
     }
 
     /**
-     * @param {Event} event - Event object which is created and only bubbles in the Shadow DOM
-     *
-     * @return {boolean} Default behavior of this event can be executed or not
-     */
-    bubbleOut(event) {
-
-        return this.shadowRoot.host.dispatchEvent(
-            new event.constructor(event.type, {
-                bubbles:     event.bubbles,
-                cancelable:  event.cancelable
-            })
-        );
-    }
-
-    /**
      * @param {string} selector - CSS selector
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
@@ -257,10 +248,20 @@ export default  class Component {
      */
     $slot(selector) {
 
-        return  [ ].concat(
-            ... this.$(&apos;slot&apos;).map(slot =&gt; slot.assignedNodes())
-        ).filter(
-            node  =&gt;  node.matches &amp;&amp; node.matches( selector )
+        return multipleMap(
+            multipleMap(this.$(&apos;slot&apos;),  slot =&gt; slot.assignedNodes()),
+            node =&gt; {
+
+                if (!(node instanceof Element))  return;
+
+                const list = [ ];
+
+                if (node.matches( selector ))  list[0] = node;
+
+                list.push(... $_(selector, node));
+
+                return list;
+            }
         );
     }
 
@@ -285,18 +286,18 @@ export default  class Component {
     }
 
     /**
-     * @param {String}   type
-     * @param {?*}       detail     - Additional data
-     * @param {?Boolean} bubbles
-     * @param {?Boolean} cancelable
-     * @param {?Boolean} composed   - Whether the event will cross
-     *                                from the shadow DOM into the standard DOM
-     *                                after reaching the shadow root
+     * @param {String|Event} event
+     * @param {?*}           detail     - Additional data
+     * @param {?Boolean}     bubbles
+     * @param {?Boolean}     cancelable
+     * @param {?Boolean}     composed   - Whether the event will cross
+     *                                    from the shadow DOM into the standard DOM
+     *                                    after reaching the shadow root
      * @return {Boolean} Event be canceled or not
      */
-    trigger(type, detail, bubbles, cancelable, composed) {
+    trigger(event, detail, bubbles, cancelable, composed) {
 
-        return  trigger(this, type, detail, bubbles, cancelable, composed);
+        return  trigger(this, event, detail, bubbles, cancelable, composed);
     }
 }
 

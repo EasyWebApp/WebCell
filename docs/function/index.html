@@ -13,7 +13,7 @@
 
 <header>
   <a href="./">Home</a>
-  
+  <a href="./manual/index.html" data-ice="manualHeaderLink">Manual</a>
   <a href="identifiers.html">Reference</a>
   <a href="source.html">Source</a>
   <a href="test.html" data-ice="testLink">Test</a>
@@ -38,8 +38,11 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#utility">utility</a><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$">$</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parseDOM">parseDOM</a></span></span></li>
@@ -61,6 +64,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-fileTypeOf">fileTypeOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isXDomain">isXDomain</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-parse">parse</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-readAs">readAs</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-serialize">serialize</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-stringify">stringify</a></span></span></li>
@@ -351,6 +355,34 @@
           
           
           
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span><span class="code" data-ice="signature">(target: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, key: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, value: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function">Function</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span>*</span>, descriptor: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span>
         </p>
       </div>
@@ -380,6 +412,34 @@
           
           
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span><span class="code" data-ice="signature">(second: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise">Promise</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
         </p>
       </div>
       <div>
@@ -494,6 +554,34 @@ by their descriptor</p>
           
           
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number">number</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span><span class="code" data-ice="signature">(DOM: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -775,6 +863,34 @@ by their descriptor</p>
       <div>
         <p>
           
+          
+          
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-readAs">readAs</a></span></span><span class="code" data-ice="signature">(file: <span>File</span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, encoding: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+        </p>
+      </div>
+      <div>
+        
+        
+        
+      </div>
+    </td>
+    <td>
+      
+      
+    </td>
+  </tr>
+<tr data-ice="target">
+    <td>
+      <span class="access" data-ice="access">public</span>
+      
+      
+      
+      <span class="override" data-ice="override"></span>
+    </td>
+    <td>
+      <div>
+        <p>
+          
           <span data-ice="async">async</span>
           
           <span class="code" data-ice="name"><span><a href="function/index.html#static-function-request">request</a></span></span><span class="code" data-ice="signature">(URI: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, method: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span>, body: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, headers: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>, option: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object">Object</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span> | <span>Blob</span></span>
@@ -862,7 +978,7 @@ by their descriptor</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span><span class="code" data-ice="signature">(tree: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span><span>[]</span></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-stringifyDOM">stringifyDOM</a></span></span><span class="code" data-ice="signature">(fragment: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
         </p>
       </div>
       <div>
@@ -946,7 +1062,7 @@ by their descriptor</p>
           
           
           
-          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+          <span class="code" data-ice="name"><span><a href="function/index.html#static-function-trigger">trigger</a></span></span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event">Event</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
         </p>
       </div>
       <div>
@@ -1235,11 +1351,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber202">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber218">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {blobFrom} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber202">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {blobFrom} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber218">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -1313,11 +1429,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber151">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber167">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {blobOf} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber151">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {blobOf} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber167">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -1445,11 +1561,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber11">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber9">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {byteLength} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber11">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {byteLength} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber9">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -1684,6 +1800,79 @@ by their descriptor</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-decodeMarkup">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">decodeMarkup</span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber260">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {decodeMarkup} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber260">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">source</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Markup entries are tranformed back to Special characters or
+                 Escape Markup tags</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-decoratorOf">
     <span class="access" data-ice="access">public</span>
     
@@ -1776,7 +1965,7 @@ by their descriptor</p>
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/utility/object.test.js.html#lineNumber134">Object utility Create decorator descriptor</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/utility/object.test.js.html#lineNumber138">Object utility Create decorator descriptor</a></span></li>
 </ul>
   </div>
 
@@ -1795,11 +1984,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber250">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber314">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {delay} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber250">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {delay} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber314">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -1858,6 +2047,79 @@ by their descriptor</p>
     <li data-ice="test"><span><a href="test-file/test/utility/DOM.test.js.html#lineNumber49">DOM utility Await next tick</a></span></li>
 </ul>
   </div>
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-encodeMarkup">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">encodeMarkup</span><span class="code" data-ice="signature">(source: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber247">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {encodeMarkup} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber247">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">source</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"><p>Markup source code</p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+          <td class="return-desc" data-ice="returnDescription"><p>Special characters are tranformed to Markup entries</p>
+</td>
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
 
   
   
@@ -1964,11 +2226,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber179">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber195">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fileTypeOf} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber179">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {fileTypeOf} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber195">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2151,11 +2413,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber105">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber101">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {indexOf} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber105">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {indexOf} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber101">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2218,6 +2480,77 @@ by their descriptor</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-isHTML">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">isHTML</span><span class="code" data-ice="signature">(DOM: <span>*</span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber195">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isHTML} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber195">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">DOM</td>
+      <td data-ice="type" class="code"><span>*</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-isXDomain">
     <span class="access" data-ice="access">public</span>
     
@@ -2229,11 +2562,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber22">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber20">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isXDomain} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber22">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {isXDomain} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber20">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2489,7 +2822,7 @@ by their descriptor</p>
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/utility/object.test.js.html#lineNumber100">Object utility Filter object tree</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/utility/object.test.js.html#lineNumber104">Object utility Filter object tree</a></span></li>
 </ul>
   </div>
 
@@ -2508,11 +2841,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber70">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber66">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mediaReady} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber70">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {mediaReady} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber66">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2665,11 +2998,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber260">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber324">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {nextTick} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber260">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {nextTick} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber324">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2727,11 +3060,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber78">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber74">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parse} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber78">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parse} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber74">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2805,11 +3138,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber176">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber180">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseDOM} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber176">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {parseDOM} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber180">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -2872,6 +3205,93 @@ by their descriptor</p>
   
 </div>
 <div class="detail" data-ice="detail">
+  <h3 data-ice="anchor" id="static-function-readAs">
+    <span class="access" data-ice="access">public</span>
+    
+    
+    
+    
+    
+    <span class="code" data-ice="name">readAs</span><span class="code" data-ice="signature">(file: <span>File</span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, encoding: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></span>
+    <span class="right-info">
+      
+      
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber147">source</a></span></span>
+    </span>
+  </h3>
+
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {readAs} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber147">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  
+  
+  
+
+  
+
+  <div data-ice="properties"><div data-ice="properties">
+  <h4 data-ice="title">Params:</h4>
+  <table class="params">
+    <thead>
+    <tr><td>Name</td><td>Type</td><td>Attribute</td><td>Description</td></tr>
+    </thead>
+    <tbody>
+    
+    <tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">file</td>
+      <td data-ice="type" class="code"><span>File</span></td>
+      <td data-ice="appendix"></td>
+      <td data-ice="description"></td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">type</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: &apos;DataURL&apos;</li></ul></td>
+      <td data-ice="description"><p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods">https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods</a></p>
+</td>
+    </tr>
+<tr data-ice="property" data-depth="0">
+      <td data-ice="name" class="code" data-depth="0">encoding</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="appendix"><ul><li>optional</li>
+<li>default: &apos;UTF-8&apos;</li></ul></td>
+      <td data-ice="description"><p><a href="https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters">https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters</a></p>
+</td>
+    </tr>
+</tbody>
+  </table>
+</div>
+</div>
+
+  <div class="return-params" data-ice="returnParams">
+    <h4>Return:</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td class="return-type code" data-ice="returnType"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer">ArrayBuffer</a></span></td>
+          
+        </tr>
+      </tbody>
+    </table>
+    <div data-ice="returnProperties">
+</div>
+  </div>
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+  
+</div>
+<div class="detail" data-ice="detail">
   <h3 data-ice="anchor" id="static-function-request">
     <span class="access" data-ice="access">public</span>
     
@@ -2883,11 +3303,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber108">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber104">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {request} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber108">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {request} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber104">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   <div data-ice="description"><p>HTTP request</p>
@@ -2990,11 +3410,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber35">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber31">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {serialize} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber35">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {serialize} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber31">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3049,7 +3469,7 @@ by their descriptor</p>
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/utility/resource.test.js.html#lineNumber16">Resource utility Serialize `<form>` or `<fieldset>`</fieldset></form></a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/utility/resource.test.js.html#lineNumber16">Resource utility Serialize &quot;form&quot; or &quot;fieldset&quot; element</a></span></li>
 </ul>
   </div>
 
@@ -3068,11 +3488,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber62">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/resource.js.html#lineNumber58">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {stringify} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber62">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {stringify} from &apos;<span><a href="file/source/utility/resource.js.html#lineNumber58">web-cell/source/utility/resource.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3142,15 +3562,15 @@ by their descriptor</p>
     
     
     
-    <span class="code" data-ice="name">stringifyDOM</span><span class="code" data-ice="signature">(tree: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span><span>[]</span></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
+    <span class="code" data-ice="name">stringifyDOM</span><span class="code" data-ice="signature">(fragment: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">string</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber191">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber225">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {stringifyDOM} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber191">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {stringifyDOM} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber225">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3166,8 +3586,8 @@ by their descriptor</p>
     <tbody>
     
     <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">tree</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span> | <span><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span><span>[]</span></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment">DocumentFragment</a></span></td>
+      <td data-ice="name" class="code" data-depth="0">fragment</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Node">Node</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -3224,11 +3644,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber120">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber116">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {targetOf} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber120">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {targetOf} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber116">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3370,15 +3790,15 @@ by their descriptor</p>
     
     
     
-    <span class="code" data-ice="name">trigger</span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, type: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
+    <span class="code" data-ice="name">trigger</span><span class="code" data-ice="signature">(element: <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Element">Element</a></span>, event: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event">Event</a></span>, detail: <span>*</span>, bubbles: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, cancelable: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>, composed: <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span>): <span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></span>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber163">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber160">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {trigger} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber163">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {trigger} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber160">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3400,8 +3820,8 @@ by their descriptor</p>
       <td data-ice="description"></td>
     </tr>
 <tr data-ice="property" data-depth="0">
-      <td data-ice="name" class="code" data-depth="0">type</td>
-      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span></td>
+      <td data-ice="name" class="code" data-depth="0">event</td>
+      <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String">String</a></span> | <span><a href="https://developer.mozilla.org/en-US/docs/Web/API/Event">Event</a></span></td>
       <td data-ice="appendix"></td>
       <td data-ice="description"></td>
     </tr>
@@ -3429,8 +3849,8 @@ by their descriptor</p>
       <td data-ice="type" class="code"><span><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean">Boolean</a></span></td>
       <td data-ice="appendix"><ul><li>nullable: true</li></ul></td>
       <td data-ice="description"><p>Whether the event will cross
-                               from the shadow DOM into the standard DOM
-                               after reaching the shadow root</p>
+                                   from the shadow DOM into the standard DOM
+                                   after reaching the shadow root</p>
 </td>
     </tr>
 </tbody>
@@ -3480,11 +3900,11 @@ by their descriptor</p>
     <span class="right-info">
       
       
-      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber219">source</a></span></span>
+      <span data-ice="source"><span><a href="file/source/utility/DOM.js.html#lineNumber283">source</a></span></span>
     </span>
   </h3>
 
-  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {watchAttributes} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber219">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
+  <div data-ice="importPath" class="import-path"><pre class="prettyprint"><code data-ice="importPathCode">import {watchAttributes} from &apos;<span><a href="file/source/utility/DOM.js.html#lineNumber283">web-cell/source/utility/DOM.js</a></span>&apos;</code></pre></div>
   
   
   
@@ -3550,7 +3970,7 @@ by their descriptor</p>
     <h4>Test:</h4>
     <ul>
       
-    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber146">Form field components Render inner field</a></span></li>
+    <li data-ice="test"><span><a href="test-file/test/Component/index.test.js.html#lineNumber143">Form field components Render inner field</a></span></li>
 </ul>
   </div>
 

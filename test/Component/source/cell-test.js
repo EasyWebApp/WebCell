@@ -3,7 +3,7 @@ import { component, mapProperty, mapData, targetOf, indexOf } from 'web-cell';
 
 @component({
     template: `
-        <textarea onchange="\${host.bubbleOut.bind( host )}">
+        <textarea onchange="\${host.trigger.bind( host )}">
             Hello, \${view.name}!
         </textarea>`,
     style: `
@@ -18,9 +18,7 @@ export class CellTest extends HTMLElement {
 
     constructor() {
 
-        super();
-
-        this.buildDOM();
+        super().buildDOM();
     }
 
     @mapProperty

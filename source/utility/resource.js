@@ -1,7 +1,5 @@
 import { $, stringifyDOM, parseDOM } from './DOM';
 
-import { extend } from './object';
-
 
 /**
  * @param {String} raw
@@ -21,9 +19,7 @@ export function byteLength(raw) {
  */
 export function isXDomain(URI) {
 
-    return (
-        (new URL(URI, document.baseURI)).origin  !==  window.location.origin
-    );
+    return  ((new URL(URI, document.baseURI)).origin  !==  self.location.origin);
 }
 
 
@@ -119,14 +115,12 @@ export async function request(URI, method = 'GET', body, headers, option) {
 
     } catch (error) {/* eslint-disable-line */}
 
-    const response = await window.fetch(URI, extend(
-        {
-            method,  headers,  body,
-            mode:         isXDomain( URI ) ? 'cors' : 'same-origin',
-            credentials:  'same-origin'
-        },
-        option
-    ));
+    const response = await self.fetch(URI, {
+        method,  headers,  body,
+        mode:         isXDomain( URI ) ? 'cors' : 'same-origin',
+        credentials:  'same-origin',
+        ... option
+    });
 
     const type = response.headers.get('Content-Type').split(';')[0];
 
@@ -140,6 +134,28 @@ export async function request(URI, method = 'GET', body, headers, option) {
                 (type.split('/')[0] === 'text')  ?  'text'  :  'blob'
             ]();
     }
+}
+
+
+/**
+ * @param {File}   file
+ * @param {String} [type='DataURL']   - https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods
+ * @param {String} [encoding='UTF-8'] - https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters
+ *
+ * @return {String|ArrayBuffer}
+ */
+export function readAs(file, type = 'DataURL', encoding = 'UTF-8') {
+
+    const reader = new FileReader();
+
+    return  new Promise((resolve, reject) => {
+
+        reader.onload = () => resolve( reader.result );
+
+        reader.onerror = reject;
+
+        reader[`readAs${type}`](file, encoding);
+    });
 }
 
 
@@ -203,7 +219,7 @@ export function blobFrom(URI) {
 
     var [_, type, __, base64, data] = DataURI.exec( URI )  ||  [ ];  // eslint-disable-line
 
-    data = base64  ?  window.atob( data )  :  data;
+    data = base64  ?  self.atob( data )  :  data;
 
     const aBuffer = new ArrayBuffer( data.length );
 
