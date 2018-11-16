@@ -1,14 +1,14 @@
 {
-  "coverage": "73.8%",
-  "expectCount": 126,
-  "actualCount": 93,
+  "coverage": "74.41%",
+  "expectCount": 129,
+  "actualCount": 96,
   "files": {
     "source/component/Component.js": {
-      "expectCount": 13,
-      "actualCount": 11,
+      "expectCount": 14,
+      "actualCount": 12,
       "undocumentLines": [
         12,
-        33
+        34
       ]
     },
     "source/component/InputComponent.js": {
@@ -88,12 +88,12 @@
       ]
     },
     "source/WebCell.js": {
-      "expectCount": 7,
-      "actualCount": 4,
+      "expectCount": 9,
+      "actualCount": 6,
       "undocumentLines": [
-        74,
-        86,
-        103
+        106,
+        118,
+        137
       ]
     }
   }

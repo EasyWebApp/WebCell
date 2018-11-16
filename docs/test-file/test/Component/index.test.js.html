@@ -29,10 +29,12 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-at">at</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
@@ -186,7 +188,7 @@ describe(&apos;Component mixin&apos;,  () =&gt; {
     });
 
     /**
-     * @test {Component#bubbleOut}
+     * @test {trigger}
      */
     it(&apos;Dispatch events out of Shadow DOM&apos;,  async () =&gt; {
 
@@ -247,6 +249,39 @@ describe(&apos;Form field components&apos;,  () =&gt; {
             placeholder:  &apos;test&apos;,
             cursor:       &apos;default&apos;
         });
+    });
+
+
+    it(&apos;Filter some data&apos;,  async () =&gt; {
+
+        const message = consoleText();
+
+        await page.$eval(
+            &apos;cell-input input&apos;,
+            input  =&gt;  input.setAttribute(&apos;value&apos;, &apos;wrong&apos;)
+        );
+
+        (await message).should.be.equal(&apos;Something goes wrong!&apos;);
+
+        (await page.$eval(&apos;cell-input&apos;,  input =&gt; input.$(&apos;input&apos;)[0].value))
+            .should.be.equal(&apos;1&apos;);
+    });
+
+    /**
+     * @test {on}
+     */
+    it(&apos;Auto event listener&apos;,  async () =&gt; {
+
+        const message = consoleText();
+
+        (await page.$eval(
+            &apos;cell-input&apos;,
+            input =&gt; self[&apos;web-cell&apos;].trigger(
+                input.$(&apos;input&apos;)[0],  &apos;test&apos;,  {example: &apos;sample&apos;},  true,  true
+            )
+        )).should.be.false();
+
+        (await message).should.be.equal(&apos;CustomEvent INPUT sample&apos;);
     });
 
 /*

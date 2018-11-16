@@ -10,10 +10,11 @@ import { multipleMap } from '../utility/object';
 
 
 const attr_prop = {
-    class:     'className',
-    for:       'htmlFor',
-    readonly:  'readOnly'
-};
+        class:     'className',
+        for:       'htmlFor',
+        readonly:  'readOnly'
+    },
+    event_handler = new Map();
 
 
 /**
@@ -31,6 +32,22 @@ export default  class Component {
     }
 
     get [Symbol.toStringTag]() {  return this.constructor.name;  }
+
+    /**
+     * @private
+     *
+     * @param {String}   type
+     * @param {String}   selector
+     * @param {Function} handler
+     */
+    static on(type, selector, handler) {
+
+        var map = event_handler.get( this );
+
+        if (! map)  event_handler.set(this,  map = [ ]);
+
+        map.push({type, selector, handler});
+    }
 
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
@@ -61,7 +78,7 @@ export default  class Component {
                 );
 
         if (this.viewUpdateCallback instanceof Function)
-            this.on('update',  event => {
+            this.shadowRoot.addEventListener('update',  event => {
 
                 const {oldData, newData, view} = event.detail;
 
@@ -72,6 +89,11 @@ export default  class Component {
         const view = new ObjectView( shadow );
 
         if ( view[0] )  view.render(data || { });
+
+        const map = event_handler.get( this.constructor )  ||  '';
+
+        for (let {type, selector, handler}  of  map)
+            this.on(type,  selector,  handler.bind( this ));
 
         return this;
     }
@@ -195,7 +217,7 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = '';
 
-        this.addEventListener(
+        (/^:host/.test( selector )  ?  this.shadowRoot  :  this).addEventListener(
             type,  selector ? delegate(selector, callback) : callback
         );
 

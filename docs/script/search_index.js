@@ -54,6 +54,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/webcell.js~at",
+    "function/index.html#static-function-at",
+    "<span>at</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/resource.js~blobfrom",
     "function/index.html#static-function-blobFrom",
     "<span>blobFrom</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
@@ -189,6 +195,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~nexttick",
     "function/index.html#static-function-nextTick",
     "<span>nextTick</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/webcell.js~on",
+    "function/index.html#static-function-on",
+    "<span>on</span> <span class=\"search-result-import-path\">web-cell/source/WebCell.js</span>",
     "function"
   ],
   [
@@ -330,7 +342,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "component#bubbleout component#bubbleout,component#bubbleout",
+    "trigger source/component/component.js~component#trigger,trigger",
     "test-file/test/Component/index.test.js.html#lineNumber108",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
@@ -387,6 +399,18 @@ window.esdocSearchIndex = [
     "",
     "test-file/test/Component/index.test.js.html#lineNumber138",
     "Form field components",
+    "test"
+  ],
+  [
+    "on source/component/component.js~component#on,on",
+    "test-file/test/Component/index.test.js.html#lineNumber188",
+    "Form field components Auto event listener",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/Component/index.test.js.html#lineNumber170",
+    "Form field components Filter some data",
     "test"
   ],
   [

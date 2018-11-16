@@ -1,4 +1,4 @@
-import { component, InputComponent } from 'web-cell';
+import { component, InputComponent, on, classNameOf } from 'web-cell';
 
 
 @component({
@@ -11,4 +11,22 @@ import { component, InputComponent } from 'web-cell';
 export class CellInput extends InputComponent {
 
     constructor() {  super();  }
+
+    viewUpdateCallback(newData) {
+
+        if (newData.value === 'wrong') {
+
+            console.error('Something goes wrong!');
+
+            return false;
+        }
+    }
+
+    @on('test',  ':host input')
+    onTest(event, that, {example}) {
+
+        event.preventDefault();
+
+        console.info(classNameOf( event ),  that.tagName,  example);
+    }
 }

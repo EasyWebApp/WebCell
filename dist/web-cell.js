@@ -849,8 +849,6 @@ var _module_ = {
                         {
                             key: 'slotChangedCallback',
                             value: function slotChangedCallback() {
-                                var _this2 = this;
-
                                 var origin = this.$slot('input')[0];
                                 if (!origin) return;
                                 origin.style.setProperty(
@@ -874,13 +872,24 @@ var _module_ = {
                                     this.changedPropertyOf
                                 );
 
-                                var proxy = this.$('input')[0];
-                                this.on.call(proxy, 'input', function() {
-                                    return (origin.value = proxy.value);
-                                });
-                                this.on.call(proxy, 'change', function(event) {
-                                    return _this2.bubbleOut(event);
-                                });
+                                this.on(
+                                    'input',
+                                    ':host input[type="'.concat(
+                                        origin.type,
+                                        '"]'
+                                    ),
+                                    function(_ref) {
+                                        var target = _ref.target;
+                                        return (origin.value = target.value);
+                                    }
+                                ).on(
+                                    'change',
+                                    ':host input[type="'.concat(
+                                        origin.type,
+                                        '"]'
+                                    ),
+                                    this.trigger.bind(this)
+                                );
                             }
                             /**
                              * Common behavior of Form field attributes
@@ -1298,22 +1307,22 @@ var _module_ = {
                 _fileTypeOf = _asyncToGenerator(
                     /*#__PURE__*/
                     regeneratorRuntime.mark(function _callee2(URI) {
-                        var _ref3, _ref4, _, schema, type, blob;
+                        var _ref4, _ref5, _, schema, type, blob;
 
                         return regeneratorRuntime.wrap(
                             function _callee2$(_context2) {
                                 while (1) {
                                     switch ((_context2.prev = _context2.next)) {
                                         case 0:
-                                            (_ref3 =
+                                            (_ref4 =
                                                 schema_type.exec(URI) || []),
-                                                (_ref4 = _slicedToArray(
-                                                    _ref3,
+                                                (_ref5 = _slicedToArray(
+                                                    _ref4,
                                                     3
                                                 )),
-                                                (_ = _ref4[0]),
-                                                (schema = _ref4[1]),
-                                                (type = _ref4[2]); // eslint-disable-line
+                                                (_ = _ref5[0]),
+                                                (schema = _ref5[1]),
+                                                (type = _ref5[2]); // eslint-disable-line
 
                                             _context2.t0 = schema;
                                             _context2.next =
@@ -1362,13 +1371,13 @@ var _module_ = {
             }
 
             function blobFrom(URI) {
-                var _ref = DataURI.exec(URI) || [],
-                    _ref2 = _slicedToArray(_ref, 5),
-                    _ = _ref2[0],
-                    type = _ref2[1],
-                    __ = _ref2[2],
-                    base64 = _ref2[3],
-                    data = _ref2[4]; // eslint-disable-line
+                var _ref2 = DataURI.exec(URI) || [],
+                    _ref3 = _slicedToArray(_ref2, 5),
+                    _ = _ref3[0],
+                    type = _ref3[1],
+                    __ = _ref3[2],
+                    base64 = _ref3[3],
+                    data = _ref3[4]; // eslint-disable-line
 
                 data = base64 ? self.atob(data) : data;
                 var aBuffer = new ArrayBuffer(data.length);
@@ -1428,11 +1437,11 @@ var _module_ = {
                                  * @param {View}    [parent]
                                  */
                                 function ArrayView(element, parent) {
-                                    var _this3;
+                                    var _this2;
 
                                     _classCallCheck(this, ArrayView);
 
-                                    _this3 = _possibleConstructorReturn(
+                                    _this2 = _possibleConstructorReturn(
                                         this,
                                         _getPrototypeOf(ArrayView).call(
                                             this,
@@ -1445,13 +1454,13 @@ var _module_ = {
 
                                     _initialize(
                                         _assertThisInitialized(
-                                            _assertThisInitialized(_this3)
+                                            _assertThisInitialized(_this2)
                                         )
                                     );
 
-                                    if (_this3.booted)
+                                    if (_this2.booted)
                                         return _possibleConstructorReturn(
-                                            _this3
+                                            _this2
                                         );
                                     var template = Array_find.call(
                                         element.childNodes,
@@ -1462,16 +1471,16 @@ var _module_ = {
                                             );
                                         }
                                     );
-                                    _this3.template =
+                                    _this2.template =
                                         template.nodeType === 1
                                             ? template.content
                                             : (0, _DOM.parseDOM)(
                                                   template.nodeValue
                                               );
 
-                                    _this3.clear();
+                                    _this2.clear();
 
-                                    return _this3;
+                                    return _this2;
                                 }
 
                                 return ArrayView;
@@ -1549,7 +1558,7 @@ var _module_ = {
                                     key: 'render',
                                     value: function value(list) {
                                         var _this$content,
-                                            _this4 = this;
+                                            _this3 = this;
 
                                         if (!list) return this.update();
                                         var data = this.data;
@@ -1561,13 +1570,13 @@ var _module_ = {
                                                 (0, _object.multipleMap)(
                                                     list,
                                                     function(item) {
-                                                        var view = (_this4[
-                                                            _this4.length++
+                                                        var view = (_this3[
+                                                            _this3.length++
                                                         ] = new _ObjectView.default(
-                                                            _this4.template.cloneNode(
+                                                            _this3.template.cloneNode(
                                                                 true
                                                             ),
-                                                            _this4
+                                                            _this3
                                                         ));
                                                         data[data.length] =
                                                             view.data;
@@ -1775,7 +1784,7 @@ var _module_ = {
                                 kind: 'method',
                                 key: 'parse',
                                 value: function value() {
-                                    var _this5 = this;
+                                    var _this4 = this;
 
                                     var addReference = function addReference(
                                         match,
@@ -1784,8 +1793,8 @@ var _module_ = {
                                         key2,
                                         key3
                                     ) {
-                                        if (_this5.reference.has(context))
-                                            _this5.reference
+                                        if (_this4.reference.has(context))
+                                            _this4.reference
                                                 .get(context)
                                                 .push(key1 || key2 || key3);
                                     };
@@ -1799,7 +1808,7 @@ var _module_ = {
                                             );
                                             return (
                                                 '${' +
-                                                _this5.compile(expression) +
+                                                _this4.compile(expression) +
                                                 '}'
                                             );
                                         }
@@ -1832,7 +1841,7 @@ var _module_ = {
                                 kind: 'method',
                                 key: 'evaluate',
                                 value: function value(context) {
-                                    var _this6 = this;
+                                    var _this5 = this;
 
                                     for (
                                         var _len2 = arguments.length,
@@ -1851,7 +1860,7 @@ var _module_ = {
                                             ? this.raw.replace(
                                                   /\$\{(\d+)\}/g,
                                                   function(_, index) {
-                                                      return _this6.eval(
+                                                      return _this5.eval(
                                                           index,
                                                           context,
                                                           parameter
@@ -2307,7 +2316,7 @@ var _module_ = {
              */
 
             function watchAttributes(element, names, callback) {
-                var _this7 = this;
+                var _this6 = this;
 
                 var observer = new MutationObserver(function(list) {
                     var _iteratorNormalCompletion6 = true;
@@ -2323,7 +2332,7 @@ var _module_ = {
                         ) {
                             var mutation = _step6.value;
                             callback.call(
-                                _this7,
+                                _this6,
                                 mutation.attributeName,
                                 mutation.oldValue,
                                 element.getAttribute(mutation.attributeName)
@@ -2501,7 +2510,7 @@ var _module_ = {
                             {
                                 key: 'bindWith',
                                 value: function bindWith(template) {
-                                    var _this8 = this;
+                                    var _this7 = this;
 
                                     var _this_;
 
@@ -2518,7 +2527,7 @@ var _module_ = {
                                                     )
                                                         DOM_view.set(
                                                             node,
-                                                            _this8
+                                                            _this7
                                                         );
                                                     break;
 
@@ -3077,11 +3086,11 @@ var _module_ = {
                                  * @param {View}                            [parent]
                                  */
                                 function ObjectView(template, parent) {
-                                    var _this9;
+                                    var _this8;
 
                                     _classCallCheck(this, ObjectView);
 
-                                    _this9 = _possibleConstructorReturn(
+                                    _this8 = _possibleConstructorReturn(
                                         this,
                                         _getPrototypeOf(ObjectView).call(
                                             this,
@@ -3094,13 +3103,13 @@ var _module_ = {
 
                                     _initialize3(
                                         _assertThisInitialized(
-                                            _assertThisInitialized(_this9)
+                                            _assertThisInitialized(_this8)
                                         )
                                     );
 
-                                    if (!_this9.booted)
-                                        (_this9.length = 0), _this9.scan();
-                                    return _this9;
+                                    if (!_this8.booted)
+                                        (_this8.length = 0), _this8.scan();
+                                    return _this8;
                                 }
 
                                 return ObjectView;
@@ -3253,7 +3262,7 @@ var _module_ = {
                                     kind: 'method',
                                     key: 'watch',
                                     value: function value(key, _value3) {
-                                        var _this10 = this;
+                                        var _this9 = this;
 
                                         if (!(key in this))
                                             Object.defineProperty(
@@ -3266,13 +3275,13 @@ var _module_ = {
                                                       }
                                                     : {
                                                           get: function get() {
-                                                              return _this10
+                                                              return _this9
                                                                   .data[key];
                                                           },
                                                           set: function set(
                                                               value
                                                           ) {
-                                                              return _this10.commit(
+                                                              return _this9.commit(
                                                                   key,
                                                                   value
                                                               );
@@ -3350,7 +3359,7 @@ var _module_ = {
                                     kind: 'method',
                                     key: 'parseTag',
                                     value: function value(element) {
-                                        var _this11 = this;
+                                        var _this10 = this;
 
                                         var _arr4 = _toConsumableArray(
                                             element.attributes
@@ -3377,7 +3386,7 @@ var _module_ = {
                                             if (template == '')
                                                 element.removeAttribute(name);
 
-                                            _this11.addTemplate(
+                                            _this10.addTemplate(
                                                 element,
                                                 template
                                             );
@@ -3396,7 +3405,7 @@ var _module_ = {
                                     kind: 'method',
                                     key: 'scan',
                                     value: function value() {
-                                        var _this12 = this;
+                                        var _this11 = this;
 
                                         var root = this.content;
                                         root =
@@ -3416,7 +3425,7 @@ var _module_ = {
                                                 switch (node.nodeType) {
                                                     case 1:
                                                         if (node.dataset.object)
-                                                            _this12.addView(
+                                                            _this11.addView(
                                                                 node.dataset
                                                                     .object,
                                                                 new ObjectView(
@@ -3426,7 +3435,7 @@ var _module_ = {
                                                         else if (
                                                             node.dataset.array
                                                         )
-                                                            _this12.addView(
+                                                            _this11.addView(
                                                                 node.dataset
                                                                     .array,
                                                                 new _ArrayView.default(
@@ -3434,7 +3443,7 @@ var _module_ = {
                                                                 )
                                                             );
                                                         else
-                                                            _this12.parseTag(
+                                                            _this11.parseTag(
                                                                 node
                                                             );
                                                         break;
@@ -3459,7 +3468,7 @@ var _module_ = {
                                                                 return (element.innerHTML = value);
                                                             };
 
-                                                        _this12.addTemplate(
+                                                        _this11.addTemplate(
                                                             element,
                                                             template
                                                         );
@@ -3687,10 +3696,11 @@ var _module_ = {
             }
 
             var attr_prop = {
-                class: 'className',
-                for: 'htmlFor',
-                readonly: 'readOnly'
-            };
+                    class: 'className',
+                    for: 'htmlFor',
+                    readonly: 'readOnly'
+                },
+                event_handler = new Map();
             /**
              * Utility methods of Web Component
              */
@@ -3714,7 +3724,7 @@ var _module_ = {
                                  * @return {HTMLElement} This custom element
                                  */
                                 value: function buildDOM(option) {
-                                    var _this13 = this;
+                                    var _this12 = this;
 
                                     if (
                                         self.ShadyCSS &&
@@ -3755,7 +3765,7 @@ var _module_ = {
                                                 slot.addEventListener(
                                                     'slotchange',
                                                     function() {
-                                                        return _this13.slotChangedCallback(
+                                                        return _this12.slotChangedCallback(
                                                             _toConsumableArray(
                                                                 slot.assignedNodes()
                                                             ),
@@ -3800,22 +3810,74 @@ var _module_ = {
                                         this.viewUpdateCallback instanceof
                                         Function
                                     )
-                                        this.on('update', function(event) {
-                                            var _event$detail = event.detail,
-                                                oldData = _event$detail.oldData,
-                                                newData = _event$detail.newData,
-                                                view = _event$detail.view;
-                                            if (
-                                                _this13.viewUpdateCallback(
-                                                    newData,
-                                                    oldData,
-                                                    view
-                                                ) === false
-                                            )
-                                                event.preventDefault();
-                                        });
+                                        this.shadowRoot.addEventListener(
+                                            'update',
+                                            function(event) {
+                                                var _event$detail =
+                                                        event.detail,
+                                                    oldData =
+                                                        _event$detail.oldData,
+                                                    newData =
+                                                        _event$detail.newData,
+                                                    view = _event$detail.view;
+                                                if (
+                                                    _this12.viewUpdateCallback(
+                                                        newData,
+                                                        oldData,
+                                                        view
+                                                    ) === false
+                                                )
+                                                    event.preventDefault();
+                                            }
+                                        );
                                     var view = new _ObjectView.default(shadow);
                                     if (view[0]) view.render(data || {});
+                                    var map =
+                                        event_handler.get(this.constructor) ||
+                                        '';
+                                    var _iteratorNormalCompletion15 = true;
+                                    var _didIteratorError15 = false;
+                                    var _iteratorError15 = undefined;
+
+                                    try {
+                                        for (
+                                            var _iterator15 = map[
+                                                    Symbol.iterator
+                                                ](),
+                                                _step15;
+                                            !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next())
+                                                .done);
+                                            _iteratorNormalCompletion15 = true
+                                        ) {
+                                            var _step15$value = _step15.value,
+                                                type = _step15$value.type,
+                                                selector =
+                                                    _step15$value.selector,
+                                                handler = _step15$value.handler;
+                                            this.on(
+                                                type,
+                                                selector,
+                                                handler.bind(this)
+                                            );
+                                        }
+                                    } catch (err) {
+                                        _didIteratorError15 = true;
+                                        _iteratorError15 = err;
+                                    } finally {
+                                        try {
+                                            if (
+                                                !_iteratorNormalCompletion15 &&
+                                                _iterator15.return != null
+                                            ) {
+                                                _iterator15.return();
+                                            }
+                                        } finally {
+                                            if (_didIteratorError15) {
+                                                throw _iteratorError15;
+                                            }
+                                        }
+                                    }
+
                                     return this;
                                 }
                                 /**
@@ -3934,7 +3996,10 @@ var _module_ = {
                                 value: function on(type, selector, callback) {
                                     if (selector instanceof Function)
                                         (callback = selector), (selector = '');
-                                    this.addEventListener(
+                                    (/^:host/.test(selector)
+                                        ? this.shadowRoot
+                                        : this
+                                    ).addEventListener(
                                         type,
                                         selector
                                             ? (0, _DOM.delegate)(
@@ -3980,6 +4045,13 @@ var _module_ = {
                                 get: function get() {
                                     return this.constructor.name;
                                 }
+                                /**
+                                 * @private
+                                 *
+                                 * @param {String}   type
+                                 * @param {String}   selector
+                                 * @param {Function} handler
+                                 */
                             },
                             {
                                 key: 'view',
@@ -4001,21 +4073,34 @@ var _module_ = {
                         ],
                         [
                             {
+                                key: 'on',
+                                value: function on(type, selector, handler) {
+                                    var map = event_handler.get(this);
+                                    if (!map)
+                                        event_handler.set(this, (map = []));
+                                    map.push({
+                                        type: type,
+                                        selector: selector,
+                                        handler: handler
+                                    });
+                                }
+                            },
+                            {
                                 key: 'linkDataOf',
                                 value: function linkDataOf(attributes) {
-                                    var _this14 = this;
+                                    var _this13 = this;
 
-                                    var _iteratorNormalCompletion15 = true;
-                                    var _didIteratorError15 = false;
-                                    var _iteratorError15 = undefined;
+                                    var _iteratorNormalCompletion16 = true;
+                                    var _didIteratorError16 = false;
+                                    var _iteratorError16 = undefined;
 
                                     try {
                                         var _loop5 = function _loop5() {
-                                            var key = _step15.value;
+                                            var key = _step16.value;
                                             key = attr_prop[key] || key;
-                                            if (!(key in _this14.prototype))
+                                            if (!(key in _this13.prototype))
                                                 Object.defineProperty(
-                                                    _this14.prototype,
+                                                    _this13.prototype,
                                                     key,
                                                     {
                                                         set: function set(
@@ -4036,30 +4121,30 @@ var _module_ = {
                                         };
 
                                         for (
-                                            var _iterator15 = attributes[
+                                            var _iterator16 = attributes[
                                                     Symbol.iterator
                                                 ](),
-                                                _step15;
-                                            !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next())
+                                                _step16;
+                                            !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next())
                                                 .done);
-                                            _iteratorNormalCompletion15 = true
+                                            _iteratorNormalCompletion16 = true
                                         ) {
                                             _loop5();
                                         }
                                     } catch (err) {
-                                        _didIteratorError15 = true;
-                                        _iteratorError15 = err;
+                                        _didIteratorError16 = true;
+                                        _iteratorError16 = err;
                                     } finally {
                                         try {
                                             if (
-                                                !_iteratorNormalCompletion15 &&
-                                                _iterator15.return != null
+                                                !_iteratorNormalCompletion16 &&
+                                                _iterator16.return != null
                                             ) {
-                                                _iterator15.return();
+                                                _iterator16.return();
                                             }
                                         } finally {
-                                            if (_didIteratorError15) {
-                                                throw _iteratorError15;
+                                            if (_didIteratorError16) {
+                                                throw _iteratorError16;
                                             }
                                         }
                                     }
@@ -4104,6 +4189,8 @@ var _module_ = {
                 mapProperty: true,
                 mapData: true,
                 blobURI: true,
+                at: true,
+                on: true,
                 component: true,
                 Component: true,
                 InputComponent: true,
@@ -4115,6 +4202,8 @@ var _module_ = {
             exports.mapProperty = mapProperty;
             exports.mapData = mapData;
             exports.blobURI = blobURI;
+            exports.at = at;
+            exports.on = on;
             exports.component = component;
             Object.defineProperty(exports, 'Component', {
                 enumerable: true,
@@ -4233,18 +4322,18 @@ var _module_ = {
 
                 meta.descriptor.get = function() {
                     var list = getter.call(this);
-                    var _iteratorNormalCompletion16 = true;
-                    var _didIteratorError16 = false;
-                    var _iteratorError16 = undefined;
+                    var _iteratorNormalCompletion17 = true;
+                    var _didIteratorError17 = false;
+                    var _iteratorError17 = undefined;
 
                     try {
                         for (
-                            var _iterator16 = list[Symbol.iterator](), _step16;
-                            !(_iteratorNormalCompletion16 = (_step16 = _iterator16.next())
+                            var _iterator17 = list[Symbol.iterator](), _step17;
+                            !(_iteratorNormalCompletion17 = (_step17 = _iterator17.next())
                                 .done);
-                            _iteratorNormalCompletion16 = true
+                            _iteratorNormalCompletion17 = true
                         ) {
-                            var key = _step16.value;
+                            var key = _step17.value;
                             if (
                                 Object.getOwnPropertyDescriptor(
                                     HTMLElement.prototype,
@@ -4263,19 +4352,19 @@ var _module_ = {
                                 );
                         }
                     } catch (err) {
-                        _didIteratorError16 = true;
-                        _iteratorError16 = err;
+                        _didIteratorError17 = true;
+                        _iteratorError17 = err;
                     } finally {
                         try {
                             if (
-                                !_iteratorNormalCompletion16 &&
-                                _iterator16.return != null
+                                !_iteratorNormalCompletion17 &&
+                                _iterator17.return != null
                             ) {
-                                _iterator16.return();
+                                _iterator17.return();
                             }
                         } finally {
-                            if (_didIteratorError16) {
-                                throw _iteratorError16;
+                            if (_didIteratorError17) {
+                                throw _iteratorError17;
                             }
                         }
                     }
@@ -4324,6 +4413,35 @@ var _module_ = {
                     );
                 };
             }
+            /**
+             * @param {String} selector - CSS selector
+             *
+             * @return {Function} Decorator for Event handler
+             */
+
+            function at(selector) {
+                return function(_ref6) {
+                    var descriptor = _ref6.descriptor;
+                    descriptor.value = (0, _DOM.delegate)(
+                        selector,
+                        descriptor.value
+                    );
+                };
+            }
+            /**
+             * @param {String} type
+             * @param {String} selector
+             *
+             * @return {Function} Decorator for Event handler
+             */
+
+            function on(type, selector) {
+                return function(meta) {
+                    meta.finisher = function(Class) {
+                        Class.on(type, selector, meta.descriptor.value);
+                    };
+                };
+            }
 
             var skip_key = {
                 name: 1,
@@ -4338,10 +4456,7 @@ var _module_ = {
             };
 
             function decoratorMix(member, mixin) {
-                var ownKey = member.map(function(item) {
-                        return item.key;
-                    }),
-                    skip = mixin instanceof Function,
+                var isClass = mixin instanceof Function,
                     property = Object.getOwnPropertyDescriptors(mixin);
 
                 var _arr5 = Object.entries(property);
@@ -4352,19 +4467,28 @@ var _module_ = {
                         meta = _arr5$_i[1];
 
                     if (
-                        !(skip
+                        !(isClass
                             ? skip_key[key]
                             : key === 'constructor' &&
-                              meta.value instanceof Function) &&
-                        !ownKey.includes(key)
-                    )
-                        member.push(
-                            (0, _object.decoratorOf)(
+                              meta.value instanceof Function)
+                    ) {
+                        (function() {
+                            var item = (0, _object.decoratorOf)(
                                 mixin,
                                 key,
                                 meta.value || meta
+                            );
+                            if (
+                                !member.some(function(old) {
+                                    return (
+                                        old.key === item.key &&
+                                        old.placement === item.placement
+                                    );
+                                })
                             )
-                        );
+                                member.push(item);
+                        })();
+                    }
                 }
             }
 
@@ -4430,8 +4554,8 @@ var _module_ = {
                     style = meta.style,
                     data = meta.data,
                     tagName = meta.tagName;
-                return function(_ref5) {
-                    var elements = _ref5.elements;
+                return function(_ref7) {
+                    var elements = _ref7.elements;
                     var merged =
                         (template || style) &&
                         define(elements, template, style);

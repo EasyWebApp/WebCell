@@ -29,10 +29,12 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-at">at</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
@@ -140,7 +142,7 @@ web-cell boot</code>
 </code></pre>
 <h4 id="-code-icon-svg--code-"><code>icon.svg</code></h4><pre><code class="lang-XML"><code class="source-code prettyprint">&lt;svg&gt;&lt;/svg&gt;</code>
 </code></pre>
-<h4 id="-code-index-js--code-"><code>index.js</code></h4><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component, blobURI, mapProperty, mapData } from &apos;web-cell&apos;;
+<h4 id="-code-index-js--code-"><code>index.js</code></h4><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import { component, blobURI, mapProperty, mapData, on } from &apos;web-cell&apos;;
 
 import template from &apos;./index.html&apos;;
 
@@ -158,7 +160,7 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super().buildDOM();    //  This method is necessary when template is set
+        super().buildDOM();    //  This method is necessary when @component or @on is used
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it
@@ -186,6 +188,15 @@ export default  class YourComponent extends HTMLElement {
      * @return {?Boolean} `false` can prevent the view of this Component to rerender
      */
     viewUpdateCallback(newData, oldData) { }
+
+    @on(&apos;input&apos;,  &apos;:host textarea&apos;)
+    countLength(event, target) {
+
+        console.log(`Input length: ${target.value.length}`);
+    }
+
+    @at(&apos;:host *&apos;)
+    onAny(event, target) { }
 
     get value() {  return this.$(&apos;textarea&apos;)[0].value  }
 

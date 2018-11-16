@@ -29,10 +29,12 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-at">at</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
@@ -85,7 +87,7 @@
 
 import { decoratorOf } from &apos;./utility/object&apos;;
 
-import { stringifyDOM, parseDOM } from &apos;./utility/DOM&apos;;
+import { delegate, stringifyDOM, parseDOM } from &apos;./utility/DOM&apos;;
 
 import { blobFrom } from &apos;./utility/resource&apos;;
 
@@ -154,6 +156,38 @@ export function blobURI(meta) {
 }
 
 
+/**
+ * @param {String} selector - CSS selector
+ *
+ * @return {Function} Decorator for Event handler
+ */
+export function at(selector) {
+
+    return  ({ descriptor }) =&gt; {
+
+        descriptor.value = delegate(selector, descriptor.value);
+    };
+}
+
+
+/**
+ * @param {String} type
+ * @param {String} selector
+ *
+ * @return {Function} Decorator for Event handler
+ */
+export function on(type, selector) {
+
+    return  meta =&gt; {
+
+        meta.finisher = Class =&gt; {
+
+            Class.on(type, selector, meta.descriptor.value);
+        };
+    };
+}
+
+
 const skip_key = {
     name:         1,
     length:       1,
@@ -168,18 +202,20 @@ const skip_key = {
 
 function decoratorMix(member, mixin) {
 
-    const ownKey = member.map(item =&gt; item.key),
-        skip = mixin instanceof Function,
+    const isClass = mixin instanceof Function,
         property = Object.getOwnPropertyDescriptors( mixin );
 
     for (let [key, meta]  of  Object.entries( property ))
-        if (
-            !(skip  ?  skip_key[key]  :  (
-                (key === &apos;constructor&apos;)  &amp;&amp;  (meta.value instanceof Function)
-            ))  &amp;&amp;
-            !ownKey.includes( key )
-        )
-            member.push( decoratorOf(mixin,  key,  meta.value || meta) );
+        if (! (isClass  ?  skip_key[key]  :  (
+            (key === &apos;constructor&apos;)  &amp;&amp;  (meta.value instanceof Function)
+        ))) {
+            const item = decoratorOf(mixin,  key,  meta.value || meta);
+
+            if (! member.some(old =&gt;
+                ((old.key === item.key) &amp;&amp; (old.placement === item.placement))
+            ))
+                member.push( item );
+        }
 }
 
 

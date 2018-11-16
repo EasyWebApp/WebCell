@@ -29,10 +29,12 @@
 <nav class="navigation" data-ice="nav"><div>
   <ul>
     
-  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
+  <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-at">at</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobURI">blobURI</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-component">component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapData">mapData</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-on">on</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#component">component</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/component/InputComponent.js~InputComponent.html">InputComponent</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DOMEventHandler">DOMEventHandler</a></span></span></li>
@@ -93,10 +95,11 @@ import { multipleMap } from &apos;../utility/object&apos;;
 
 
 const attr_prop = {
-    class:     &apos;className&apos;,
-    for:       &apos;htmlFor&apos;,
-    readonly:  &apos;readOnly&apos;
-};
+        class:     &apos;className&apos;,
+        for:       &apos;htmlFor&apos;,
+        readonly:  &apos;readOnly&apos;
+    },
+    event_handler = new Map();
 
 
 /**
@@ -114,6 +117,22 @@ export default  class Component {
     }
 
     get [Symbol.toStringTag]() {  return this.constructor.name;  }
+
+    /**
+     * @private
+     *
+     * @param {String}   type
+     * @param {String}   selector
+     * @param {Function} handler
+     */
+    static on(type, selector, handler) {
+
+        var map = event_handler.get( this );
+
+        if (! map)  event_handler.set(this,  map = [ ]);
+
+        map.push({type, selector, handler});
+    }
 
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
@@ -144,7 +163,7 @@ export default  class Component {
                 );
 
         if (this.viewUpdateCallback instanceof Function)
-            this.on(&apos;update&apos;,  event =&gt; {
+            this.shadowRoot.addEventListener(&apos;update&apos;,  event =&gt; {
 
                 const {oldData, newData, view} = event.detail;
 
@@ -155,6 +174,11 @@ export default  class Component {
         const view = new ObjectView( shadow );
 
         if ( view[0] )  view.render(data || { });
+
+        const map = event_handler.get( this.constructor )  ||  &apos;&apos;;
+
+        for (let {type, selector, handler}  of  map)
+            this.on(type,  selector,  handler.bind( this ));
 
         return this;
     }
@@ -278,7 +302,7 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = &apos;&apos;;
 
-        this.addEventListener(
+        (/^:host/.test( selector )  ?  this.shadowRoot  :  this).addEventListener(
             type,  selector ? delegate(selector, callback) : callback
         );
 

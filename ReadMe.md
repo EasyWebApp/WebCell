@@ -100,7 +100,7 @@ textarea {
 #### `index.js`
 
 ```JavaScript
-import { component, blobURI, mapProperty, mapData } from 'web-cell';
+import { component, blobURI, mapProperty, mapData, on } from 'web-cell';
 
 import template from './index.html';
 
@@ -118,7 +118,7 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super().buildDOM();    //  This method is necessary when template is set
+        super().buildDOM();    //  This method is necessary when @component or @on is used
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it
@@ -146,6 +146,15 @@ export default  class YourComponent extends HTMLElement {
      * @return {?Boolean} `false` can prevent the view of this Component to rerender
      */
     viewUpdateCallback(newData, oldData) { }
+
+    @on('input',  ':host textarea')
+    countLength(event, target) {
+
+        console.log(`Input length: ${target.value.length}`);
+    }
+
+    @at(':host *')
+    onAny(event, target) { }
 
     get value() {  return this.$('textarea')[0].value  }
 

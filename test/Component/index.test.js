@@ -103,7 +103,7 @@ describe('Component mixin',  () => {
     });
 
     /**
-     * @test {Component#bubbleOut}
+     * @test {trigger}
      */
     it('Dispatch events out of Shadow DOM',  async () => {
 
@@ -164,6 +164,39 @@ describe('Form field components',  () => {
             placeholder:  'test',
             cursor:       'default'
         });
+    });
+
+
+    it('Filter some data',  async () => {
+
+        const message = consoleText();
+
+        await page.$eval(
+            'cell-input input',
+            input  =>  input.setAttribute('value', 'wrong')
+        );
+
+        (await message).should.be.equal('Something goes wrong!');
+
+        (await page.$eval('cell-input',  input => input.$('input')[0].value))
+            .should.be.equal('1');
+    });
+
+    /**
+     * @test {on}
+     */
+    it('Auto event listener',  async () => {
+
+        const message = consoleText();
+
+        (await page.$eval(
+            'cell-input',
+            input => self['web-cell'].trigger(
+                input.$('input')[0],  'test',  {example: 'sample'},  true,  true
+            )
+        )).should.be.false();
+
+        (await message).should.be.equal('CustomEvent INPUT sample');
     });
 
 /*

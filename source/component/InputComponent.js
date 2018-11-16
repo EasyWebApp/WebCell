@@ -48,11 +48,15 @@ export default  class InputComponent extends HTMLElement {
             this.changedPropertyOf
         );
 
-        const proxy = this.$('input')[0];
-
-        this.on.call(proxy,  'input',  () => origin.value = proxy.value);
-
-        this.on.call(proxy,  'change',  event => this.bubbleOut( event ));
+        this.on(
+            'input',
+            `:host input[type="${origin.type}"]`,
+            ({ target })  =>  origin.value = target.value
+        ).on(
+            'change',
+            `:host input[type="${origin.type}"]`,
+            this.trigger.bind( this )
+        );
     }
 
     /**

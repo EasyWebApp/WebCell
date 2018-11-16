@@ -2,7 +2,7 @@ import Component from './component/Component';
 
 import { decoratorOf } from './utility/object';
 
-import { stringifyDOM, parseDOM } from './utility/DOM';
+import { delegate, stringifyDOM, parseDOM } from './utility/DOM';
 
 import { blobFrom } from './utility/resource';
 
@@ -71,6 +71,38 @@ export function blobURI(meta) {
 }
 
 
+/**
+ * @param {String} selector - CSS selector
+ *
+ * @return {Function} Decorator for Event handler
+ */
+export function at(selector) {
+
+    return  ({ descriptor }) => {
+
+        descriptor.value = delegate(selector, descriptor.value);
+    };
+}
+
+
+/**
+ * @param {String} type
+ * @param {String} selector
+ *
+ * @return {Function} Decorator for Event handler
+ */
+export function on(type, selector) {
+
+    return  meta => {
+
+        meta.finisher = Class => {
+
+            Class.on(type, selector, meta.descriptor.value);
+        };
+    };
+}
+
+
 const skip_key = {
     name:         1,
     length:       1,
@@ -85,18 +117,20 @@ const skip_key = {
 
 function decoratorMix(member, mixin) {
 
-    const ownKey = member.map(item => item.key),
-        skip = mixin instanceof Function,
+    const isClass = mixin instanceof Function,
         property = Object.getOwnPropertyDescriptors( mixin );
 
     for (let [key, meta]  of  Object.entries( property ))
-        if (
-            !(skip  ?  skip_key[key]  :  (
-                (key === 'constructor')  &&  (meta.value instanceof Function)
-            ))  &&
-            !ownKey.includes( key )
-        )
-            member.push( decoratorOf(mixin,  key,  meta.value || meta) );
+        if (! (isClass  ?  skip_key[key]  :  (
+            (key === 'constructor')  &&  (meta.value instanceof Function)
+        ))) {
+            const item = decoratorOf(mixin,  key,  meta.value || meta);
+
+            if (! member.some(old =>
+                ((old.key === item.key) && (old.placement === item.placement))
+            ))
+                member.push( item );
+        }
 }
 
 
