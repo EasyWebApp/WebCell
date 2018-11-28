@@ -42,6 +42,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
@@ -60,6 +61,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unique">unique</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
@@ -73,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-UniqueComparer">UniqueComparer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -85,7 +88,7 @@
 <div class="content" data-ice="content"><h1 data-ice="title">source/WebCell.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import Component from &apos;./component/Component&apos;;
 
-import { decoratorOf } from &apos;./utility/object&apos;;
+import { multipleMap, decoratorOf, unique } from &apos;./utility/object&apos;;
 
 import { delegate, stringifyDOM, parseDOM } from &apos;./utility/DOM&apos;;
 
@@ -200,22 +203,20 @@ const skip_key = {
     constructor:  1
 };
 
-function decoratorMix(member, mixin) {
+function decoratorMix(mixin) {
 
-    const isClass = mixin instanceof Function,
-        property = Object.getOwnPropertyDescriptors( mixin );
+    const isClass = mixin instanceof Function;
 
-    for (let [key, meta]  of  Object.entries( property ))
-        if (! (isClass  ?  skip_key[key]  :  (
-            (key === &apos;constructor&apos;)  &amp;&amp;  (meta.value instanceof Function)
-        ))) {
-            const item = decoratorOf(mixin,  key,  meta.value || meta);
+    return multipleMap(
+        Object.entries( Object.getOwnPropertyDescriptors( mixin ) ),
+        ([key, meta]) =&gt; {
 
-            if (! member.some(old =&gt;
-                ((old.key === item.key) &amp;&amp; (old.placement === item.placement))
-            ))
-                member.push( item );
+            if (! (isClass  ?  skip_key[key]  :  (
+                (key === &apos;constructor&apos;)  &amp;&amp;  (meta.value instanceof Function)
+            )))
+                return  decoratorOf(mixin,  key,  meta.value || meta);
         }
+    );
 }
 
 
@@ -279,13 +280,17 @@ export function component(meta = { }) {
 
         if ( data )  elements.push( decoratorOf(Component, &apos;data&apos;, data) );
 
-        decoratorMix(elements, Component);
-
-        decoratorMix(elements, Component.prototype);
+        elements.push(
+            ... decoratorMix( Component ),
+            ... decoratorMix( Component.prototype )
+        );
 
         return {
-            kind:  &apos;class&apos;,
-            elements,
+            kind:           &apos;class&apos;,
+            elements:       unique(
+                elements,
+                (A, B)  =&gt;  ((A.key !== B.key) || (A.placement !== B.placement))
+            ),
             finisher(Class) {
                 if (
                     merged  &amp;&amp;  self.ShadyCSS  &amp;&amp;

@@ -124,8 +124,6 @@ export function targetOf(event) {
 /**
  * DOM event delegate
  *
- * @private
- *
  * @param {string}          selector
  * @param {DOMEventHandler} handler
  *

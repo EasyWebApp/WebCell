@@ -1,6 +1,6 @@
 import Component from './component/Component';
 
-import { decoratorOf } from './utility/object';
+import { multipleMap, decoratorOf, unique } from './utility/object';
 
 import { delegate, stringifyDOM, parseDOM } from './utility/DOM';
 
@@ -115,22 +115,20 @@ const skip_key = {
     constructor:  1
 };
 
-function decoratorMix(member, mixin) {
+function decoratorMix(mixin) {
 
-    const isClass = mixin instanceof Function,
-        property = Object.getOwnPropertyDescriptors( mixin );
+    const isClass = mixin instanceof Function;
 
-    for (let [key, meta]  of  Object.entries( property ))
-        if (! (isClass  ?  skip_key[key]  :  (
-            (key === 'constructor')  &&  (meta.value instanceof Function)
-        ))) {
-            const item = decoratorOf(mixin,  key,  meta.value || meta);
+    return multipleMap(
+        Object.entries( Object.getOwnPropertyDescriptors( mixin ) ),
+        ([key, meta]) => {
 
-            if (! member.some(old =>
-                ((old.key === item.key) && (old.placement === item.placement))
-            ))
-                member.push( item );
+            if (! (isClass  ?  skip_key[key]  :  (
+                (key === 'constructor')  &&  (meta.value instanceof Function)
+            )))
+                return  decoratorOf(mixin,  key,  meta.value || meta);
         }
+    );
 }
 
 
@@ -194,13 +192,17 @@ export function component(meta = { }) {
 
         if ( data )  elements.push( decoratorOf(Component, 'data', data) );
 
-        decoratorMix(elements, Component);
-
-        decoratorMix(elements, Component.prototype);
+        elements.push(
+            ... decoratorMix( Component ),
+            ... decoratorMix( Component.prototype )
+        );
 
         return {
-            kind:  'class',
-            elements,
+            kind:           'class',
+            elements:       unique(
+                elements,
+                (A, B)  =>  ((A.key !== B.key) || (A.placement !== B.placement))
+            ),
             finisher(Class) {
                 if (
                     merged  &&  self.ShadyCSS  &&

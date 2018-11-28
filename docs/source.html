@@ -42,6 +42,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
@@ -60,6 +61,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unique">unique</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
@@ -73,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-UniqueComparer">UniqueComparer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -82,7 +85,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">96/129</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">97/131</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -98,7 +101,7 @@
   <tbody>
     
   <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/WebCell.js.html#errorLines=106,118,137">source/WebCell.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/WebCell.js.html#errorLines=106,118,135">source/WebCell.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-at">at</a></span>
 <span><a href="function/index.html#static-function-blobURI">blobURI</a></span>
 <span><a href="function/index.html#static-function-component">component</a></span>
@@ -106,9 +109,9 @@
 <span><a href="function/index.html#static-function-mapProperty">mapProperty</a></span>
 <span><a href="function/index.html#static-function-on">on</a></span></td>
       <td class="coverage"><span data-ice="coverage">66 %</span><span data-ice="coverageCount" class="coverage-count">6/9</span></td>
-      <td style="display: none;" data-ice="size">5696 byte</td>
-      <td style="display: none;" data-ice="lines">235</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 14:11:24 (UTC)</td>
+      <td style="display: none;" data-ice="size">5734 byte</td>
+      <td style="display: none;" data-ice="lines">237</td>
+      <td style="display: none;" data-ice="updated">2018-11-04 09:06:27 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/source/component/Component.js.html#errorLines=12,34">source/component/Component.js</a></span></td>
@@ -127,11 +130,12 @@
       <td style="display: none;" data-ice="updated">2018-11-05 13:59:33 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/utility/DOM.js.html#errorLines=203,206,240,49">source/utility/DOM.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/utility/DOM.js.html#errorLines=201,204,238,49">source/utility/DOM.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-$">$</a></span>
 <span><a href="function/index.html#static-function-$up">$up</a></span>
 <span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span>
 <span><a href="function/index.html#static-function-delay">delay</a></span>
+<span><a href="function/index.html#static-function-delegate">delegate</a></span>
 <span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span>
 <span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span>
 <span><a href="function/index.html#static-function-indexOf">indexOf</a></span>
@@ -144,12 +148,12 @@
 <span><a href="function/index.html#static-function-trigger">trigger</a></span>
 <span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></td>
       <td class="coverage"><span data-ice="coverage">80 %</span><span data-ice="coverageCount" class="coverage-count">16/20</span></td>
-      <td style="display: none;" data-ice="size">7608 byte</td>
-      <td style="display: none;" data-ice="lines">333</td>
-      <td style="display: none;" data-ice="updated">2018-11-05 13:59:04 (UTC)</td>
+      <td style="display: none;" data-ice="size">7593 byte</td>
+      <td style="display: none;" data-ice="lines">331</td>
+      <td style="display: none;" data-ice="updated">2018-11-04 09:23:23 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/utility/object.js.html#errorLines=188,67">source/utility/object.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/utility/object.js.html#errorLines=144,233,67">source/utility/object.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span>
 <span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span>
 <span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span>
@@ -157,11 +161,12 @@
 <span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span>
 <span><a href="function/index.html#static-function-mapTree">mapTree</a></span>
 <span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span>
-<span><a href="function/index.html#static-function-toIterable">toIterable</a></span></td>
-      <td class="coverage"><span data-ice="coverage">80 %</span><span data-ice="coverageCount" class="coverage-count">8/10</span></td>
-      <td style="display: none;" data-ice="size">5897 byte</td>
-      <td style="display: none;" data-ice="lines">215</td>
-      <td style="display: none;" data-ice="updated">2018-11-05 13:59:04 (UTC)</td>
+<span><a href="function/index.html#static-function-toIterable">toIterable</a></span>
+<span><a href="function/index.html#static-function-unique">unique</a></span></td>
+      <td class="coverage"><span data-ice="coverage">75 %</span><span data-ice="coverageCount" class="coverage-count">9/12</span></td>
+      <td style="display: none;" data-ice="size">6948 byte</td>
+      <td style="display: none;" data-ice="lines">260</td>
+      <td style="display: none;" data-ice="updated">2018-11-04 09:18:38 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/source/utility/resource.js.html#errorLines=186">source/utility/resource.js</a></span></td>

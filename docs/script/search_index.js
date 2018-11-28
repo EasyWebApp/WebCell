@@ -114,6 +114,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~delegate",
+    "function/index.html#static-function-delegate",
+    "<span>delegate</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~documentready",
     "variable/index.html#static-variable-documentReady",
     "<span>documentReady</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -264,6 +270,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/object.js~unique",
+    "function/index.html#static-function-unique",
+    "<span>unique</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~watchattributes",
     "function/index.html#static-function-watchAttributes",
     "<span>watchAttributes</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -336,7 +348,7 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "delegate delegate,delegate",
+    "delegate source/utility/dom.js~delegate,delegate",
     "test-file/test/Component/index.test.js.html#lineNumber120",
     "Component mixin Delegate DOM events",
     "test"
@@ -426,32 +438,62 @@ window.esdocSearchIndex = [
     "test"
   ],
   [
-    "decoratorof source/utility/object.js~decoratorof,decoratorof",
+    "unique source/utility/object.js~unique,unique",
     "test-file/test/utility/object.test.js.html#lineNumber138",
-    "Object utility Create decorator descriptor",
+    "Object utility Array deduplication",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber191",
-    "Object utility Create decorator descriptor Prototype methods",
+    "test-file/test/utility/object.test.js.html#lineNumber171",
+    "Object utility Array deduplication should compare items using \"!==\" by a String or Symbol key",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber176",
-    "Object utility Create decorator descriptor Static accessors",
+    "test-file/test/utility/object.test.js.html#lineNumber147",
+    "Object utility Array deduplication should compare items using \"!==\" while 0 parameter passed in",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber197",
+    "Object utility Array deduplication should reserve an item while the Custom callback return `true`",
     "test"
   ],
   [
     "",
     "test-file/test/utility/object.test.js.html#lineNumber140",
+    "Object utility Array deduplication should return new Array",
+    "test"
+  ],
+  [
+    "decoratorof source/utility/object.js~decoratorof,decoratorof",
+    "test-file/test/utility/object.test.js.html#lineNumber211",
+    "Object utility Create decorator descriptor",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber264",
+    "Object utility Create decorator descriptor Prototype methods",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber249",
+    "Object utility Create decorator descriptor Static accessors",
+    "test"
+  ],
+  [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber213",
     "Object utility Create decorator descriptor Static fields",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber157",
+    "test-file/test/utility/object.test.js.html#lineNumber230",
     "Object utility Create decorator descriptor Static methods",
     "test"
   ],
@@ -1185,6 +1227,12 @@ window.esdocSearchIndex = [
     "source/utility/object.js~decoratordescriptor",
     "typedef/index.html#static-typedef-DecoratorDescriptor",
     "source/utility/object.js~DecoratorDescriptor",
+    "typedef"
+  ],
+  [
+    "source/utility/object.js~uniquecomparer",
+    "typedef/index.html#static-typedef-UniqueComparer",
+    "source/utility/object.js~UniqueComparer",
     "typedef"
   ],
   [

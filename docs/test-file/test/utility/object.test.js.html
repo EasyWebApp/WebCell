@@ -42,6 +42,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-$up">$up</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delay">delay</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
@@ -60,6 +61,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-unique">unique</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobFrom">blobFrom</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-blobOf">blobOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-byteLength">byteLength</a></span></span></li>
@@ -73,6 +75,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-variable">V</span><span data-ice="name"><span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-AttributeWatcher">AttributeWatcher</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-DecoratorDescriptor">DecoratorDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-typedef">T</span><span data-ice="name"><span><a href="typedef/index.html#static-typedef-UniqueComparer">UniqueComparer</a></span></span></li>
 <li data-ice="doc"><a data-ice="dirPath" class="nav-dir-path" href="identifiers.html#view">view</a><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-class">C</span><span data-ice="name"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></span></li>
@@ -84,7 +87,7 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/utility/object.test.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {
-    getPropertyDescriptor, multipleMap, extend, mapTree, decoratorOf
+    getPropertyDescriptor, multipleMap, unique, extend, mapTree, decoratorOf
 } from &apos;../../source/utility/object&apos;;
 
 
@@ -215,6 +218,79 @@ describe(&apos;Object utility&apos;,  () =&gt; {
                 if (depth &lt; 2)  return node.id;
             }
         ).should.be.eql([1, 2]);
+    });
+
+    /**
+     * @test {unique}
+     */
+    describe(&apos;Array deduplication&apos;,  () =&gt; {
+
+        it(&apos;should return new Array&apos;,  () =&gt; {
+
+            const origin = [ ];
+
+            unique( origin ).should.not.be.equal( origin );
+        });
+
+        it(
+            &apos;should compare items using &quot;!==&quot; while 0 parameter passed in&apos;,
+            ()  =&gt;  unique([1, 2, 3, 3, 2, 1]).should.be.eql([1, 2, 3])
+        );
+
+        const symbol = Symbol.for(&apos;test&apos;);
+
+        const origin = [
+            {
+                id:   1,
+                uid:  10000,
+            },
+            {
+                id:        2,
+                uid:       10000,
+                [symbol]:  &apos;example&apos;
+            },
+            {
+                id:        3,
+                uid:       10001,
+                [symbol]:  &apos;example&apos;
+            }
+        ];
+
+        it(&apos;should compare items using &quot;!==&quot; by a String or Symbol key&apos;,  () =&gt; {
+
+            unique(origin, &apos;uid&apos;).should.be.eql([
+                {
+                    id:   1,
+                    uid:  10000,
+                },
+                {
+                    id:   3,
+                    uid:  10001,
+                }
+            ]);
+
+            unique(origin, symbol).should.be.eql([
+                {
+                    id:   1,
+                    uid:  10000,
+                },
+                {
+                    id:        2,
+                    uid:       10000,
+                    [symbol]:  &apos;example&apos;
+                }
+            ]);
+        });
+
+        it(
+            &apos;should reserve an item while the Custom callback return `true`&apos;,
+            () =&gt; unique(
+                origin,
+                (A, B)  =&gt;  ((A.uid !== B.uid) || (A[symbol] !== B[symbol]))
+            ).should.be.eql(
+                origin
+            )
+        );
     });
 
     /**

@@ -2129,8 +2129,6 @@ var _module_ = {
             /**
              * DOM event delegate
              *
-             * @private
-             *
              * @param {string}          selector
              * @param {DOMEventHandler} handler
              *
@@ -2720,6 +2718,7 @@ var _module_ = {
             exports.toIterable = toIterable;
             exports.arrayLike = arrayLike;
             exports.multipleMap = multipleMap;
+            exports.unique = unique;
             exports.extend = extend;
             exports.mapTree = mapTree;
             /**
@@ -2897,6 +2896,60 @@ var _module_ = {
                             throw _iteratorError8;
                         }
                     }
+                }
+
+                return result;
+            }
+
+            function notEqual(A, B) {
+                return A !== B;
+            }
+            /**
+             * Return `true` means that A is not equal B
+             *
+             * @typedef {function(A: *, B: *): Boolean} UniqueComparer
+             */
+
+            /**
+             * @param {Array}                        list        - Original array
+             * @param {String|Symbol|UniqueComparer} [condition]
+             *
+             * @return {Array} Deduplicated new array
+             */
+
+            function unique(list, condition) {
+                switch (_typeof(condition)) {
+                    case 'string':
+                    case 'symbol':
+                        condition = function(key, A, B) {
+                            return A[key] !== B[key];
+                        }.bind(null, condition);
+
+                        break;
+
+                    case 'function':
+                        break;
+
+                    default:
+                        condition = notEqual;
+                }
+
+                var result = [];
+
+                function uniqueWith(item) {
+                    for (
+                        var i = 0, length = result.length >>> 0;
+                        i < length;
+                        i++
+                    ) {
+                        if (!condition(item, result[i])) return false;
+                    }
+
+                    return true;
+                }
+
+                for (var i = 0, l = list.length >>> 0; i < l; i++) {
+                    if (i === 0 || uniqueWith(list[i])) result.push(list[i]);
                 }
 
                 return result;
@@ -4455,41 +4508,28 @@ var _module_ = {
                 constructor: 1
             };
 
-            function decoratorMix(member, mixin) {
-                var isClass = mixin instanceof Function,
-                    property = Object.getOwnPropertyDescriptors(mixin);
+            function decoratorMix(mixin) {
+                var isClass = mixin instanceof Function;
+                return (0, _object.multipleMap)(
+                    Object.entries(Object.getOwnPropertyDescriptors(mixin)),
+                    function(_ref7) {
+                        var _ref8 = _slicedToArray(_ref7, 2),
+                            key = _ref8[0],
+                            meta = _ref8[1];
 
-                var _arr5 = Object.entries(property);
-
-                for (var _i6 = 0; _i6 < _arr5.length; _i6++) {
-                    var _arr5$_i = _slicedToArray(_arr5[_i6], 2),
-                        key = _arr5$_i[0],
-                        meta = _arr5$_i[1];
-
-                    if (
-                        !(isClass
-                            ? skip_key[key]
-                            : key === 'constructor' &&
-                              meta.value instanceof Function)
-                    ) {
-                        (function() {
-                            var item = (0, _object.decoratorOf)(
+                        if (
+                            !(isClass
+                                ? skip_key[key]
+                                : key === 'constructor' &&
+                                  meta.value instanceof Function)
+                        )
+                            return (0, _object.decoratorOf)(
                                 mixin,
                                 key,
                                 meta.value || meta
                             );
-                            if (
-                                !member.some(function(old) {
-                                    return (
-                                        old.key === item.key &&
-                                        old.placement === item.placement
-                                    );
-                                })
-                            )
-                                member.push(item);
-                        })();
                     }
-                }
+                );
             }
 
             function define(meta, template, style) {
@@ -4554,8 +4594,8 @@ var _module_ = {
                     style = meta.style,
                     data = meta.data,
                     tagName = meta.tagName;
-                return function(_ref7) {
-                    var elements = _ref7.elements;
+                return function(_ref9) {
+                    var elements = _ref9.elements;
                     var merged =
                         (template || style) &&
                         define(elements, template, style);
@@ -4567,11 +4607,23 @@ var _module_ = {
                                 data
                             )
                         );
-                    decoratorMix(elements, _Component.default);
-                    decoratorMix(elements, _Component.default.prototype);
+                    elements.push.apply(
+                        elements,
+                        _toConsumableArray(
+                            decoratorMix(_Component.default)
+                        ).concat(
+                            _toConsumableArray(
+                                decoratorMix(_Component.default.prototype)
+                            )
+                        )
+                    );
                     return {
                         kind: 'class',
-                        elements: elements,
+                        elements: (0, _object.unique)(elements, function(A, B) {
+                            return (
+                                A.key !== B.key || A.placement !== B.placement
+                            );
+                        }),
                         finisher: function finisher(Class) {
                             if (
                                 merged &&

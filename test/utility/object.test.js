@@ -1,5 +1,5 @@
 import {
-    getPropertyDescriptor, multipleMap, extend, mapTree, decoratorOf
+    getPropertyDescriptor, multipleMap, unique, extend, mapTree, decoratorOf
 } from '../../source/utility/object';
 
 
@@ -130,6 +130,79 @@ describe('Object utility',  () => {
                 if (depth < 2)  return node.id;
             }
         ).should.be.eql([1, 2]);
+    });
+
+    /**
+     * @test {unique}
+     */
+    describe('Array deduplication',  () => {
+
+        it('should return new Array',  () => {
+
+            const origin = [ ];
+
+            unique( origin ).should.not.be.equal( origin );
+        });
+
+        it(
+            'should compare items using "!==" while 0 parameter passed in',
+            ()  =>  unique([1, 2, 3, 3, 2, 1]).should.be.eql([1, 2, 3])
+        );
+
+        const symbol = Symbol.for('test');
+
+        const origin = [
+            {
+                id:   1,
+                uid:  10000,
+            },
+            {
+                id:        2,
+                uid:       10000,
+                [symbol]:  'example'
+            },
+            {
+                id:        3,
+                uid:       10001,
+                [symbol]:  'example'
+            }
+        ];
+
+        it('should compare items using "!==" by a String or Symbol key',  () => {
+
+            unique(origin, 'uid').should.be.eql([
+                {
+                    id:   1,
+                    uid:  10000,
+                },
+                {
+                    id:   3,
+                    uid:  10001,
+                }
+            ]);
+
+            unique(origin, symbol).should.be.eql([
+                {
+                    id:   1,
+                    uid:  10000,
+                },
+                {
+                    id:        2,
+                    uid:       10000,
+                    [symbol]:  'example'
+                }
+            ]);
+        });
+
+        it(
+            'should reserve an item while the Custom callback return `true`',
+            () => unique(
+                origin,
+                (A, B)  =>  ((A.uid !== B.uid) || (A[symbol] !== B[symbol]))
+            ).should.be.eql(
+                origin
+            )
+        );
     });
 
     /**

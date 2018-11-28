@@ -1338,7 +1338,7 @@
     "__docId__": 80,
     "kind": "file",
     "name": "source/utility/DOM.js",
-    "content": "import Template from '../view/Template';\n\n\n/**\n * @type {Promise}\n */\nexport const documentReady = new Promise(resolve => {\n\n    document.addEventListener('DOMContentLoaded', resolve);\n\n    self.addEventListener('load', resolve);\n\n    (function check() {\n\n        (document.readyState === 'complete')  ?\n            resolve()  :  setTimeout( check );\n    })();\n});\n\n\n/**\n * jQuery-like selector\n *\n * @param {string}                            selector\n * @param {Element|Document|DocumentFragment} [context=document]\n *\n * @return {Element[]}\n */\nexport function $(selector, context) {\n\n    return  [... (context || document).querySelectorAll( selector )];\n}\n\n\n/**\n * @param {string} selector - CSS selector\n * @param {Node}   context\n *\n * @return {?Element} Matched parent\n */\nexport function $up(selector, context) {\n\n    while (context = context.parentNode)\n        if (context.matches  &&  context.matches( selector ))\n            return context;\n}\n\n\nfunction mediaLoad(media, condition) {\n\n    return  new Promise((resolve, reject) => {\n\n        if ( condition() )\n            resolve();\n        else\n            media.onload = resolve,\n            media.onerror = reject;\n    });\n}\n\n/**\n * @param {Element|Document} [context]\n *\n * @return {Promise} Resolved when all media elements in `context` are loaded\n */\nexport function mediaReady(context) {\n\n    return Promise.all($(\n        'img[src], iframe[src], audio[src], video[src]',  context\n    ).map(media => {\n\n        if (Template.Expression.test( media.getAttribute('src') ))  return;\n\n        switch ( media.tagName.toLowerCase() ) {\n            case 'img':\n                return  mediaLoad(media, () => media.complete);\n            case 'iframe':\n                return  new Promise((resolve, reject) => {\n                    try {\n                        if (media.contentDocument.readyState === 'complete')\n                            resolve();\n                        else\n                            media.onload = resolve,\n                            media.onerror = reject;\n\n                    } catch (error) {  resolve();  }\n                });\n            case 'audio':\n            case 'video':\n                return  mediaLoad(media, () => (media.readyState > 0));\n        }\n    }));\n}\n\n\n/**\n * @param {Element} element\n *\n * @return {number} The index of `element` in its siblings\n */\nexport function indexOf(element) {\n\n    var index = 0;\n\n    while (element = element.previousElementSibling)  index++;\n\n    return index;\n}\n\n\n/**\n * @param {Event} event\n *\n * @return {Element} The target of `event` object (**Shadow DOM** is in account)\n */\nexport function targetOf(event) {\n\n    const target = event.composedPath ? event.composedPath() : event.path;\n\n    return  (target || '')[0]  ||  event.target;\n}\n\n\n/**\n * DOM event delegate\n *\n * @private\n *\n * @param {string}          selector\n * @param {DOMEventHandler} handler\n *\n * @return {Function} Handler wrapper\n */\nexport function delegate(selector, handler) {\n\n    return  function (event) {\n\n        var target = targetOf( event );\n\n        if (! target.matches( selector ))\n            target = $up(selector, target);\n\n        if ( target )\n            return  handler.call(target, event, target, event.detail);\n    };\n}\n\n\n/**\n * @param {Element}      element\n * @param {String|Event} event\n * @param {?*}           detail     - Additional data\n * @param {?Boolean}     bubbles\n * @param {?Boolean}     cancelable\n * @param {?Boolean}     composed   - Whether the event will cross\n *                                    from the shadow DOM into the standard DOM\n *                                    after reaching the shadow root\n * @return {Boolean} Event be canceled or not\n */\nexport function trigger(element, event, detail, bubbles, cancelable, composed) {\n\n    return element.dispatchEvent(\n        (event instanceof Event)  ?\n            new event.constructor(event.type, {\n                bubbles:     event.bubbles,\n                cancelable:  event.cancelable\n            }) :\n            new CustomEvent(event, {\n                bubbles, cancelable, composed, detail\n            })\n    );\n}\n\n\n/**\n * @param {string} markup - Code of an markup fragment\n *\n * @return {DocumentFragment}\n */\nexport function parseDOM(markup) {\n\n    const box = document.createElement('template');\n\n    box.innerHTML = markup;\n\n    return box.content;\n}\n\n\n/**\n * @param {*} DOM\n *\n * @return {Boolean}\n */\nexport function isHTML(DOM) {\n\n    return  (DOM instanceof HTMLDocument)  ||\n        (DOM instanceof DocumentFragment)  ||\n        (DOM instanceof HTMLElement);\n}\n\n\nconst serializer = new XMLSerializer(),\n    documentXML = document.implementation.createDocument(null, 'xml');\n\nfunction stringOf(document) {\n\n    if (document instanceof HTMLDocument)\n        for (let element of $(\n            'style:not(:empty), script:not(:empty)',  document\n        ))\n            if ( element.textContent.trim() )\n                element.firstChild.replaceWith(\n                    documentXML.createCDATASection( element.textContent )\n                );\n\n    return  serializer.serializeToString( document );\n}\n\n/**\n * @param {Node} fragment\n *\n * @return {string} HTML/XML source code\n */\nexport function stringifyDOM(fragment) {\n\n    if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))\n        return stringOf( fragment );\n\n    if (fragment instanceof HTMLElement)  return fragment.outerHTML;\n\n    const box = document.createElement('template');\n\n    box.content.append( fragment.cloneNode( true ) );\n\n    return box.innerHTML;\n}\n\n\nconst sandbox = document.createElement('div');\n\n/**\n * @param {String} source - Markup source code\n *\n * @return {String} Special characters are tranformed to Markup entries\n */\nexport function encodeMarkup(source) {\n\n    sandbox.textContent = source;\n\n    return sandbox.innerHTML;\n}\n\n/**\n * @param {String} source\n *\n * @return {String} Markup entries are tranformed back to Special characters or\n *                  Escape Markup tags\n */\nexport function decodeMarkup(source) {\n\n    sandbox.innerHTML = source;\n\n    return sandbox.textContent;\n}\n\n\n/**\n * @typedef {Function} AttributeWatcher\n *\n * @param {string}  name\n * @param {?string} oldValue\n * @param {?string} newValue\n */\n\n/**\n * @param {Element}          element\n * @param {string[]}         names\n * @param {AttributeWatcher} callback\n *\n * @return {MutationObserver}\n */\nexport function watchAttributes(element, names, callback) {\n\n    const observer = new MutationObserver(list => {\n\n        for (let mutation of list)\n            callback.call(\n                this,\n                mutation.attributeName,\n                mutation.oldValue,\n                element.getAttribute( mutation.attributeName )\n            );\n    });\n\n    observer.observe(element, {\n        attributes:         true,\n        attributeOldValue:  true,\n        attributeFilter:    names\n    });\n\n    for (let attribute of element.attributes)\n        callback.call(this, attribute.name, null, attribute.value);\n\n    return observer;\n}\n\n\n/**\n * @param {number} [second=0]\n *\n * @return {Promise} Wait seconds in Macro tasks\n */\nexport function delay(second) {\n\n    return  new Promise(resolve  =>  setTimeout(resolve, (second || 0) * 1000));\n}\n\n\nvar tick;\n/**\n * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)\n */\nexport function nextTick() {\n\n    return  tick || (\n        tick = new Promise(\n            resolve => self.requestAnimationFrame(\n                time  =>  (tick = null, resolve( time ))\n            )\n        )\n    );\n}\n",
+    "content": "import Template from '../view/Template';\n\n\n/**\n * @type {Promise}\n */\nexport const documentReady = new Promise(resolve => {\n\n    document.addEventListener('DOMContentLoaded', resolve);\n\n    self.addEventListener('load', resolve);\n\n    (function check() {\n\n        (document.readyState === 'complete')  ?\n            resolve()  :  setTimeout( check );\n    })();\n});\n\n\n/**\n * jQuery-like selector\n *\n * @param {string}                            selector\n * @param {Element|Document|DocumentFragment} [context=document]\n *\n * @return {Element[]}\n */\nexport function $(selector, context) {\n\n    return  [... (context || document).querySelectorAll( selector )];\n}\n\n\n/**\n * @param {string} selector - CSS selector\n * @param {Node}   context\n *\n * @return {?Element} Matched parent\n */\nexport function $up(selector, context) {\n\n    while (context = context.parentNode)\n        if (context.matches  &&  context.matches( selector ))\n            return context;\n}\n\n\nfunction mediaLoad(media, condition) {\n\n    return  new Promise((resolve, reject) => {\n\n        if ( condition() )\n            resolve();\n        else\n            media.onload = resolve,\n            media.onerror = reject;\n    });\n}\n\n/**\n * @param {Element|Document} [context]\n *\n * @return {Promise} Resolved when all media elements in `context` are loaded\n */\nexport function mediaReady(context) {\n\n    return Promise.all($(\n        'img[src], iframe[src], audio[src], video[src]',  context\n    ).map(media => {\n\n        if (Template.Expression.test( media.getAttribute('src') ))  return;\n\n        switch ( media.tagName.toLowerCase() ) {\n            case 'img':\n                return  mediaLoad(media, () => media.complete);\n            case 'iframe':\n                return  new Promise((resolve, reject) => {\n                    try {\n                        if (media.contentDocument.readyState === 'complete')\n                            resolve();\n                        else\n                            media.onload = resolve,\n                            media.onerror = reject;\n\n                    } catch (error) {  resolve();  }\n                });\n            case 'audio':\n            case 'video':\n                return  mediaLoad(media, () => (media.readyState > 0));\n        }\n    }));\n}\n\n\n/**\n * @param {Element} element\n *\n * @return {number} The index of `element` in its siblings\n */\nexport function indexOf(element) {\n\n    var index = 0;\n\n    while (element = element.previousElementSibling)  index++;\n\n    return index;\n}\n\n\n/**\n * @param {Event} event\n *\n * @return {Element} The target of `event` object (**Shadow DOM** is in account)\n */\nexport function targetOf(event) {\n\n    const target = event.composedPath ? event.composedPath() : event.path;\n\n    return  (target || '')[0]  ||  event.target;\n}\n\n\n/**\n * DOM event delegate\n *\n * @param {string}          selector\n * @param {DOMEventHandler} handler\n *\n * @return {Function} Handler wrapper\n */\nexport function delegate(selector, handler) {\n\n    return  function (event) {\n\n        var target = targetOf( event );\n\n        if (! target.matches( selector ))\n            target = $up(selector, target);\n\n        if ( target )\n            return  handler.call(target, event, target, event.detail);\n    };\n}\n\n\n/**\n * @param {Element}      element\n * @param {String|Event} event\n * @param {?*}           detail     - Additional data\n * @param {?Boolean}     bubbles\n * @param {?Boolean}     cancelable\n * @param {?Boolean}     composed   - Whether the event will cross\n *                                    from the shadow DOM into the standard DOM\n *                                    after reaching the shadow root\n * @return {Boolean} Event be canceled or not\n */\nexport function trigger(element, event, detail, bubbles, cancelable, composed) {\n\n    return element.dispatchEvent(\n        (event instanceof Event)  ?\n            new event.constructor(event.type, {\n                bubbles:     event.bubbles,\n                cancelable:  event.cancelable\n            }) :\n            new CustomEvent(event, {\n                bubbles, cancelable, composed, detail\n            })\n    );\n}\n\n\n/**\n * @param {string} markup - Code of an markup fragment\n *\n * @return {DocumentFragment}\n */\nexport function parseDOM(markup) {\n\n    const box = document.createElement('template');\n\n    box.innerHTML = markup;\n\n    return box.content;\n}\n\n\n/**\n * @param {*} DOM\n *\n * @return {Boolean}\n */\nexport function isHTML(DOM) {\n\n    return  (DOM instanceof HTMLDocument)  ||\n        (DOM instanceof DocumentFragment)  ||\n        (DOM instanceof HTMLElement);\n}\n\n\nconst serializer = new XMLSerializer(),\n    documentXML = document.implementation.createDocument(null, 'xml');\n\nfunction stringOf(document) {\n\n    if (document instanceof HTMLDocument)\n        for (let element of $(\n            'style:not(:empty), script:not(:empty)',  document\n        ))\n            if ( element.textContent.trim() )\n                element.firstChild.replaceWith(\n                    documentXML.createCDATASection( element.textContent )\n                );\n\n    return  serializer.serializeToString( document );\n}\n\n/**\n * @param {Node} fragment\n *\n * @return {string} HTML/XML source code\n */\nexport function stringifyDOM(fragment) {\n\n    if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))\n        return stringOf( fragment );\n\n    if (fragment instanceof HTMLElement)  return fragment.outerHTML;\n\n    const box = document.createElement('template');\n\n    box.content.append( fragment.cloneNode( true ) );\n\n    return box.innerHTML;\n}\n\n\nconst sandbox = document.createElement('div');\n\n/**\n * @param {String} source - Markup source code\n *\n * @return {String} Special characters are tranformed to Markup entries\n */\nexport function encodeMarkup(source) {\n\n    sandbox.textContent = source;\n\n    return sandbox.innerHTML;\n}\n\n/**\n * @param {String} source\n *\n * @return {String} Markup entries are tranformed back to Special characters or\n *                  Escape Markup tags\n */\nexport function decodeMarkup(source) {\n\n    sandbox.innerHTML = source;\n\n    return sandbox.textContent;\n}\n\n\n/**\n * @typedef {Function} AttributeWatcher\n *\n * @param {string}  name\n * @param {?string} oldValue\n * @param {?string} newValue\n */\n\n/**\n * @param {Element}          element\n * @param {string[]}         names\n * @param {AttributeWatcher} callback\n *\n * @return {MutationObserver}\n */\nexport function watchAttributes(element, names, callback) {\n\n    const observer = new MutationObserver(list => {\n\n        for (let mutation of list)\n            callback.call(\n                this,\n                mutation.attributeName,\n                mutation.oldValue,\n                element.getAttribute( mutation.attributeName )\n            );\n    });\n\n    observer.observe(element, {\n        attributes:         true,\n        attributeOldValue:  true,\n        attributeFilter:    names\n    });\n\n    for (let attribute of element.attributes)\n        callback.call(this, attribute.name, null, attribute.value);\n\n    return observer;\n}\n\n\n/**\n * @param {number} [second=0]\n *\n * @return {Promise} Wait seconds in Macro tasks\n */\nexport function delay(second) {\n\n    return  new Promise(resolve  =>  setTimeout(resolve, (second || 0) * 1000));\n}\n\n\nvar tick;\n/**\n * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)\n */\nexport function nextTick() {\n\n    return  tick || (\n        tick = new Promise(\n            resolve => self.requestAnimationFrame(\n                time  =>  (tick = null, resolve( time ))\n            )\n        )\n    );\n}\n",
     "static": true,
     "longname": "d:/OpenSource/WebCell/source/utility/DOM.js",
     "access": "public",
@@ -1618,12 +1618,12 @@
     "async": false,
     "static": true,
     "longname": "source/utility/DOM.js~delegate",
-    "access": "private",
+    "access": "public",
     "export": true,
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{delegate}",
     "description": "DOM event delegate",
-    "lineNumber": 134,
+    "lineNumber": 132,
     "params": [
       {
         "nullable": null,
@@ -1653,8 +1653,7 @@
       ],
       "spread": false,
       "description": "Handler wrapper"
-    },
-    "ignore": true
+    }
   },
   {
     "__docId__": 89,
@@ -1670,7 +1669,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{trigger}",
     "description": "",
-    "lineNumber": 160,
+    "lineNumber": 158,
     "params": [
       {
         "nullable": null,
@@ -1757,7 +1756,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{parseDOM}",
     "description": "",
-    "lineNumber": 180,
+    "lineNumber": 178,
     "params": [
       {
         "nullable": null,
@@ -1793,7 +1792,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{isHTML}",
     "description": "",
-    "lineNumber": 195,
+    "lineNumber": 193,
     "params": [
       {
         "nullable": null,
@@ -1827,7 +1826,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 203,
+    "lineNumber": 201,
     "undocument": true,
     "type": {
       "types": [
@@ -1850,7 +1849,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 206,
+    "lineNumber": 204,
     "undocument": true,
     "params": [
       {
@@ -1881,7 +1880,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{stringifyDOM}",
     "description": "",
-    "lineNumber": 225,
+    "lineNumber": 223,
     "params": [
       {
         "nullable": null,
@@ -1915,7 +1914,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 240,
+    "lineNumber": 238,
     "undocument": true,
     "type": {
       "types": [
@@ -1938,7 +1937,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{encodeMarkup}",
     "description": "",
-    "lineNumber": 247,
+    "lineNumber": 245,
     "params": [
       {
         "nullable": null,
@@ -1974,7 +1973,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{decodeMarkup}",
     "description": "",
-    "lineNumber": 260,
+    "lineNumber": 258,
     "params": [
       {
         "nullable": null,
@@ -2059,7 +2058,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{watchAttributes}",
     "description": "",
-    "lineNumber": 283,
+    "lineNumber": 281,
     "params": [
       {
         "nullable": null,
@@ -2115,7 +2114,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{delay}",
     "description": "",
-    "lineNumber": 314,
+    "lineNumber": 312,
     "params": [
       {
         "nullable": null,
@@ -2153,7 +2152,7 @@
     "importPath": "web-cell/source/utility/DOM.js",
     "importStyle": "{nextTick}",
     "description": "",
-    "lineNumber": 324,
+    "lineNumber": 322,
     "return": {
       "nullable": null,
       "types": [
@@ -2168,7 +2167,7 @@
     "__docId__": 102,
     "kind": "file",
     "name": "source/utility/object.js",
-    "content": "/**\n * @param {*} object\n *\n * @return {string}\n */\nexport function classNameOf(object) {\n\n    return  Object.prototype.toString.call( object ).slice(8, -1);\n}\n\n\n/**\n * @param {*}      object\n * @param {string} key    - Property name\n *\n * @return {?Object} https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description\n */\nexport function getPropertyDescriptor(object, key) {\n\n    var descriptor;  object = Object.create( object );\n\n    while (object = Object.getPrototypeOf( object ))\n        if (descriptor = Object.getOwnPropertyDescriptor(object, key))\n            return descriptor;\n}\n\n\n/**\n * @typedef {Object} DecoratorDescriptor\n *\n * @property {String}                kind         - `class`, `field` or `method`\n * @property {String}                [key]        - Member name\n * @property {String}                [placement]  - `static` or `prototype`\n * @property {Object}                [descriptor] - Last parameter of `Object.defineProperty()`\n * @property {DecoratorDescriptor[]} [elements]   - Class members\n */\n\n/**\n * @param {Function|Object}   target                          - Class or its prototype\n * @param {String}            key                             - Member name\n * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors\n * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`\n *\n * @return {DecoratorDescriptor}\n */\nexport function decoratorOf(target, key, value, descriptor = {enumerable: true}) {\n\n    descriptor = {\n        key, descriptor,\n        placement:  (target instanceof Function) ? 'static' : 'prototype'\n    };\n\n    if (value instanceof Function)\n        descriptor.kind = 'method',  descriptor.descriptor.value = value;\n    else if (\n        (value.constructor === Object)  &&\n        ((value.set || value.get) instanceof Function)\n    )\n        descriptor.kind = 'method',  Object.assign(descriptor.descriptor, value);\n    else\n        descriptor.kind = 'field',  descriptor.initializer = () => value;\n\n    return descriptor;\n}\n\n\nconst Array_iterator = [ ][Symbol.iterator];\n\n/**\n * @param {Object} arrayLike\n *\n * @return {Iterable} `arrayLike`\n */\nexport function toIterable(arrayLike) {\n\n    if (!(arrayLike[Symbol.iterator] instanceof Function))\n        arrayLike[Symbol.iterator] = Array_iterator;\n\n    return arrayLike;\n}\n\n\n/**\n * Iteratable decorator for Class, Method or Getter\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function arrayLike(meta) {\n\n    const descriptor = meta.descriptor;\n\n    switch ( meta.kind ) {\n        case 'class':\n            meta.elements.push(\n                decoratorOf({ }, Symbol.iterator, Array_iterator)\n            );\n            break;\n        case 'method':\n            for (let key  of  ['value', 'get']) {\n\n                let origin;\n\n                if (origin = descriptor[key])\n                    descriptor[key] = function () {\n\n                        return  toIterable( origin.apply(this, arguments) );\n                    };\n            }\n    }\n}\n\n\n/**\n * Equivalent to the integration of Array's map() & filter() methods\n *\n * @param {Iterable}                                           list\n * @param {function(item: *, index: number, list:Iterable): *} filter\n *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.\n *\n * @return {Array}\n */\nexport function multipleMap(list, filter) {\n\n    toIterable( list );\n\n    filter = (filter instanceof Function)  &&  filter;\n\n    var result = [ ], i = 0;\n\n    for (let item of list) {\n\n        if ( filter )  item = filter(item, i, list);\n\n        if (item != null)\n            result.push[\n                (item instanceof Array)  ?  'apply'  :  'call'\n            ](result, item);\n    }\n\n    return result;\n}\n\n\n/**\n * Merge own properties of two or more objects together into the first object\n * by their descriptor\n *\n * @param {Object}    target - An object that will receive the new properties\n *                             if `source` are passed in\n * @param {...Object} source - Additional objects containing properties to merge in\n *                             (Value of `null` or `undefined` will be skipped)\n *\n * @return {Object} The `target` parameter\n */\nexport function extend(target, ...source) {\n\n    for (let object of source)  if (object instanceof Object) {\n\n        let descriptor = Object.getOwnPropertyDescriptors( object );\n\n        for (let key  of  Object.keys( descriptor ))\n            if (\n                ('value' in descriptor[key])  &&\n                !(descriptor[key].value != null)\n            )\n                delete descriptor[key];\n\n        if (object instanceof Function) {\n\n            delete descriptor.name;\n            delete descriptor.length;\n            delete descriptor.prototype;\n\n            let prototype = Object.getOwnPropertyDescriptors( object.prototype );\n\n            delete prototype.constructor;\n\n            Object.defineProperties(target.prototype, prototype);\n        }\n\n        Object.defineProperties(target, descriptor);\n    }\n\n    return target;\n}\n\n\nvar depth = 0;\n\n/**\n * Traverse Object-tree\n *\n * @param {Object} node     - Object tree\n * @param {String} fork_key - Key of children list\n *\n * @yield {Object}\n * @property {?Object} node   - Current node\n * @property {Object}  parent - Parent node\n * @property {Number}  index  - Index of current level\n * @property {Number}  depth  - Level count of current node\n */\nexport function* mapTree(node, fork_key) {\n\n    const children = node[fork_key];    depth++ ;\n\n    for (var i = 0;  i < children.length;  i++) {\n\n        yield {parent: node,  node: children[i],  index: i,  depth};\n\n        if ((children[i] != null)  &&  (children[i][fork_key] || '')[0])\n            yield* mapTree(children[i], fork_key);\n    }\n\n    depth-- ;\n}\n",
+    "content": "/**\n * @param {*} object\n *\n * @return {string}\n */\nexport function classNameOf(object) {\n\n    return  Object.prototype.toString.call( object ).slice(8, -1);\n}\n\n\n/**\n * @param {*}      object\n * @param {string} key    - Property name\n *\n * @return {?Object} https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/getOwnPropertyDescriptor#Description\n */\nexport function getPropertyDescriptor(object, key) {\n\n    var descriptor;  object = Object.create( object );\n\n    while (object = Object.getPrototypeOf( object ))\n        if (descriptor = Object.getOwnPropertyDescriptor(object, key))\n            return descriptor;\n}\n\n\n/**\n * @typedef {Object} DecoratorDescriptor\n *\n * @property {String}                kind         - `class`, `field` or `method`\n * @property {String}                [key]        - Member name\n * @property {String}                [placement]  - `static` or `prototype`\n * @property {Object}                [descriptor] - Last parameter of `Object.defineProperty()`\n * @property {DecoratorDescriptor[]} [elements]   - Class members\n */\n\n/**\n * @param {Function|Object}   target                          - Class or its prototype\n * @param {String}            key                             - Member name\n * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors\n * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`\n *\n * @return {DecoratorDescriptor}\n */\nexport function decoratorOf(target, key, value, descriptor = {enumerable: true}) {\n\n    descriptor = {\n        key, descriptor,\n        placement:  (target instanceof Function) ? 'static' : 'prototype'\n    };\n\n    if (value instanceof Function)\n        descriptor.kind = 'method',  descriptor.descriptor.value = value;\n    else if (\n        (value.constructor === Object)  &&\n        ((value.set || value.get) instanceof Function)\n    )\n        descriptor.kind = 'method',  Object.assign(descriptor.descriptor, value);\n    else\n        descriptor.kind = 'field',  descriptor.initializer = () => value;\n\n    return descriptor;\n}\n\n\nconst Array_iterator = [ ][Symbol.iterator];\n\n/**\n * @param {Object} arrayLike\n *\n * @return {Iterable} `arrayLike`\n */\nexport function toIterable(arrayLike) {\n\n    if (!(arrayLike[Symbol.iterator] instanceof Function))\n        arrayLike[Symbol.iterator] = Array_iterator;\n\n    return arrayLike;\n}\n\n\n/**\n * Iteratable decorator for Class, Method or Getter\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function arrayLike(meta) {\n\n    const descriptor = meta.descriptor;\n\n    switch ( meta.kind ) {\n        case 'class':\n            meta.elements.push(\n                decoratorOf({ }, Symbol.iterator, Array_iterator)\n            );\n            break;\n        case 'method':\n            for (let key  of  ['value', 'get']) {\n\n                let origin;\n\n                if (origin = descriptor[key])\n                    descriptor[key] = function () {\n\n                        return  toIterable( origin.apply(this, arguments) );\n                    };\n            }\n    }\n}\n\n\n/**\n * Equivalent to the integration of Array's map() & filter() methods\n *\n * @param {Iterable}                                           list\n * @param {function(item: *, index: number, list:Iterable): *} filter\n *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.\n *\n * @return {Array}\n */\nexport function multipleMap(list, filter) {\n\n    toIterable( list );\n\n    filter = (filter instanceof Function)  &&  filter;\n\n    var result = [ ], i = 0;\n\n    for (let item of list) {\n\n        if ( filter )  item = filter(item, i, list);\n\n        if (item != null)\n            result.push[\n                (item instanceof Array)  ?  'apply'  :  'call'\n            ](result, item);\n    }\n\n    return result;\n}\n\n\nfunction notEqual(A, B) {  return  A !== B;  }\n\n/**\n * Return `true` means that A is not equal B\n *\n * @typedef {function(A: *, B: *): Boolean} UniqueComparer\n */\n\n/**\n * @param {Array}                        list        - Original array\n * @param {String|Symbol|UniqueComparer} [condition]\n *\n * @return {Array} Deduplicated new array\n */\nexport function unique(list, condition) {\n\n    switch (typeof condition) {\n        case 'string':\n        case 'symbol':\n            condition = ((key, A, B) => A[key] !== B[key]).bind(null, condition);\n            break;\n        case 'function':\n            break;\n        default:\n            condition = notEqual;\n    }\n\n    const result = [ ];\n\n    function uniqueWith(item) {\n\n        for (let i = 0, length = result.length >>> 0;  i < length;  i++)\n            if (!condition(item, result[i]))  return false;\n\n        return true;\n    }\n\n    for (let i = 0, l = list.length >>> 0;  i < l;  i++)\n        if ((i === 0)  ||  uniqueWith( list[i] ))\n            result.push( list[i] );\n\n    return result;\n}\n\n\n/**\n * Merge own properties of two or more objects together into the first object\n * by their descriptor\n *\n * @param {Object}    target - An object that will receive the new properties\n *                             if `source` are passed in\n * @param {...Object} source - Additional objects containing properties to merge in\n *                             (Value of `null` or `undefined` will be skipped)\n *\n * @return {Object} The `target` parameter\n */\nexport function extend(target, ...source) {\n\n    for (let object of source)  if (object instanceof Object) {\n\n        let descriptor = Object.getOwnPropertyDescriptors( object );\n\n        for (let key  of  Object.keys( descriptor ))\n            if (\n                ('value' in descriptor[key])  &&\n                !(descriptor[key].value != null)\n            )\n                delete descriptor[key];\n\n        if (object instanceof Function) {\n\n            delete descriptor.name;\n            delete descriptor.length;\n            delete descriptor.prototype;\n\n            let prototype = Object.getOwnPropertyDescriptors( object.prototype );\n\n            delete prototype.constructor;\n\n            Object.defineProperties(target.prototype, prototype);\n        }\n\n        Object.defineProperties(target, descriptor);\n    }\n\n    return target;\n}\n\n\nvar depth = 0;\n\n/**\n * Traverse Object-tree\n *\n * @param {Object} node     - Object tree\n * @param {String} fork_key - Key of children list\n *\n * @yield {Object}\n * @property {?Object} node   - Current node\n * @property {Object}  parent - Parent node\n * @property {Number}  index  - Index of current level\n * @property {Number}  depth  - Level count of current node\n */\nexport function* mapTree(node, fork_key) {\n\n    const children = node[fork_key];    depth++ ;\n\n    for (var i = 0;  i < children.length;  i++) {\n\n        yield {parent: node,  node: children[i],  index: i,  depth};\n\n        if ((children[i] != null)  &&  (children[i][fork_key] || '')[0])\n            yield* mapTree(children[i], fork_key);\n    }\n\n    depth-- ;\n}\n",
     "static": true,
     "longname": "d:/OpenSource/WebCell/source/utility/object.js",
     "access": "public",
@@ -2532,6 +2531,108 @@
   {
     "__docId__": 111,
     "kind": "function",
+    "name": "notEqual",
+    "memberof": "source/utility/object.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/utility/object.js~notEqual",
+    "access": "public",
+    "export": false,
+    "importPath": "web-cell/source/utility/object.js",
+    "importStyle": null,
+    "description": null,
+    "lineNumber": 144,
+    "undocument": true,
+    "params": [
+      {
+        "name": "A",
+        "types": [
+          "*"
+        ]
+      },
+      {
+        "name": "B",
+        "types": [
+          "*"
+        ]
+      }
+    ],
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
+    "ignore": true
+  },
+  {
+    "__docId__": 112,
+    "kind": "typedef",
+    "name": "UniqueComparer",
+    "memberof": "source/utility/object.js",
+    "static": true,
+    "longname": "source/utility/object.js~UniqueComparer",
+    "access": "public",
+    "description": "Return `true` means that A is not equal B",
+    "type": {
+      "types": [
+        "function(A: *, B: *): Boolean"
+      ],
+      "optional": false,
+      "name": "UniqueComparer"
+    }
+  },
+  {
+    "__docId__": 113,
+    "kind": "function",
+    "name": "unique",
+    "memberof": "source/utility/object.js",
+    "generator": false,
+    "async": false,
+    "static": true,
+    "longname": "source/utility/object.js~unique",
+    "access": "public",
+    "export": true,
+    "importPath": "web-cell/source/utility/object.js",
+    "importStyle": "{unique}",
+    "description": "",
+    "lineNumber": 158,
+    "params": [
+      {
+        "nullable": null,
+        "types": [
+          "Array"
+        ],
+        "spread": false,
+        "optional": false,
+        "name": "list",
+        "description": "Original array"
+      },
+      {
+        "nullable": null,
+        "types": [
+          "String",
+          "Symbol",
+          "UniqueComparer"
+        ],
+        "spread": false,
+        "optional": true,
+        "name": "condition",
+        "description": ""
+      }
+    ],
+    "return": {
+      "nullable": null,
+      "types": [
+        "Array"
+      ],
+      "spread": false,
+      "description": "Deduplicated new array"
+    }
+  },
+  {
+    "__docId__": 114,
+    "kind": "function",
     "name": "extend",
     "memberof": "source/utility/object.js",
     "generator": false,
@@ -2543,7 +2644,7 @@
     "importPath": "web-cell/source/utility/object.js",
     "importStyle": "{extend}",
     "description": "Merge own properties of two or more objects together into the first object\nby their descriptor",
-    "lineNumber": 155,
+    "lineNumber": 200,
     "params": [
       {
         "nullable": null,
@@ -2576,7 +2677,7 @@
     }
   },
   {
-    "__docId__": 112,
+    "__docId__": 115,
     "kind": "variable",
     "name": "depth",
     "memberof": "source/utility/object.js",
@@ -2587,7 +2688,7 @@
     "importPath": "web-cell/source/utility/object.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 188,
+    "lineNumber": 233,
     "undocument": true,
     "type": {
       "types": [
@@ -2597,7 +2698,7 @@
     "ignore": true
   },
   {
-    "__docId__": 113,
+    "__docId__": 116,
     "kind": "function",
     "name": "mapTree",
     "memberof": "source/utility/object.js",
@@ -2610,7 +2711,7 @@
     "importPath": "web-cell/source/utility/object.js",
     "importStyle": "{mapTree}",
     "description": "Traverse Object-tree",
-    "lineNumber": 202,
+    "lineNumber": 247,
     "unknown": [
       {
         "tagName": "@yield",
@@ -2684,7 +2785,7 @@
     "return": null
   },
   {
-    "__docId__": 114,
+    "__docId__": 117,
     "kind": "file",
     "name": "source/utility/resource.js",
     "content": "import { $, stringifyDOM, parseDOM } from './DOM';\n\n\n/**\n * @param {String} raw\n *\n * @return {Number} Length in Half-width characters\n */\nexport function byteLength(raw) {\n\n    return  raw.replace(/[^\\u0021-\\u007e\\uff61-\\uffef]/g, 'xx').length;\n}\n\n\n/**\n * @param {string|URL} URI - Full URL of a resource\n *\n * @return {boolean} Whether it's cross domain to current page\n */\nexport function isXDomain(URI) {\n\n    return  ((new URL(URI, document.baseURI)).origin  !==  self.location.origin);\n}\n\n\n/**\n * @param {Element} form - `<form />` or `<fieldset />`\n *\n * @return {String|FormData|Object}\n */\nexport function serialize(form) {\n\n    if ( $('input[type=\"file\"][name]', form)[0] )  return new FormData( form );\n\n    const data = Array.from(\n        form.elements,\n        field  =>  (field.name && [field.name, field.value])\n    ).filter( Boolean );\n\n    if (\n        (form.form || form).getAttribute('enctype') !== 'application/json'\n    )\n        return  '' + new URLSearchParams( data );\n\n    form = { };\n\n    for (let [key, value]  of  data)  form[key] = value;\n\n    return form;\n}\n\n\n/**\n * @param {Object} data\n *\n * @return {String} JSON source code\n */\nexport function stringify(data) {\n\n    return  JSON.stringify(data,  (key, value) => {\n\n        if (value instanceof Node)  return stringifyDOM( value );\n\n        return value;\n    }, 4);\n}\n\n\n/**\n * @param {String} raw - JSON source code\n *\n * @return {Object}\n */\nexport function parse(raw) {\n\n    return  JSON.parse(raw,  (key, value) => {\n\n        if (/^\\d{4}(-\\d{2}){2}T\\d{2}(:\\d{2}){2}\\.\\d{3}Z$/.test( value ))\n            return  new Date( value );\n\n        if (/<[\\w-][\\s\\S]*?>/.test( value )) {\n\n            const node = parseDOM( value );\n\n            return  (node.childNodes.length < 2)  ?  node.firstChild  :  node;\n        }\n\n        return value;\n    });\n}\n\n\n/**\n * HTTP request\n *\n * @param {string}                URI            - HTTP URL\n * @param {string}                [method='GET']\n * @param {string|Object|Element} [body]         - Data to send\n * @param {Object}                [headers]\n * @param {Object}                [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters\n *\n * @return {string|Object|DocumentFragment|Blob} Parse response data automatically\n */\nexport async function request(URI, method = 'GET', body, headers, option) {\n\n    if (body instanceof Element)  body = serialize( body );\n\n    if (body instanceof Object)  try {\n\n        body = stringify( body.valueOf() );\n\n        headers = headers || { };\n\n        headers['Content-Type'] = headers['Content-Type'] || 'application/json';\n\n    } catch (error) {/* eslint-disable-line */}\n\n    const response = await self.fetch(URI, {\n        method,  headers,  body,\n        mode:         isXDomain( URI ) ? 'cors' : 'same-origin',\n        credentials:  'same-origin',\n        ... option\n    });\n\n    const type = response.headers.get('Content-Type').split(';')[0];\n\n    switch ( type ) {\n        case 'text/html':\n            return  parseDOM(await response.text());\n        case 'application/json':\n            return  await response.json();\n        default:\n            return  await response[\n                (type.split('/')[0] === 'text')  ?  'text'  :  'blob'\n            ]();\n    }\n}\n\n\n/**\n * @param {File}   file\n * @param {String} [type='DataURL']   - https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods\n * @param {String} [encoding='UTF-8'] - https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters\n *\n * @return {String|ArrayBuffer}\n */\nexport function readAs(file, type = 'DataURL', encoding = 'UTF-8') {\n\n    const reader = new FileReader();\n\n    return  new Promise((resolve, reject) => {\n\n        reader.onload = () => resolve( reader.result );\n\n        reader.onerror = reject;\n\n        reader[`readAs${type}`](file, encoding);\n    });\n}\n\n\n/**\n * @param {String} URI - Returned by `URL.createObjectURL()`\n *\n * @return {Promise<Blob>}\n */\nexport function blobOf(URI) {\n\n    const XHR = new XMLHttpRequest();\n\n    XHR.responseType = 'blob';\n\n    XHR.open('GET', URI);\n\n    return  new Promise((resolve, reject) => {\n\n        XHR.onload = () => resolve( XHR.response );\n\n        XHR.onerror = reject;\n\n        XHR.send();\n    });\n}\n\n\nconst schema_type = /^(?:(\\w+):)?.+?(?:\\.(\\w+))?$/,\n    DataURI = /^data:(.+?\\/(.+?))?(;base64)?,(\\S+)/;\n/**\n * @param {String} URI - HTTP(S) URL, Data URI or Object URL\n *\n * @return   {Object}\n * @property {String} schema - URI schema (`http`, `https`, `data` or `blob`)\n * @property {String} type   - File type (same as the Extension name of a file)\n */\nexport async function fileTypeOf(URI) {\n\n    const [_, schema, type] = schema_type.exec( URI )  ||  [ ];  // eslint-disable-line\n\n    switch ( schema ) {\n        case 'data':  return {\n            schema: 'data',  type: DataURI.exec( URI )[2]\n        };\n        case 'blob':  {\n            const blob = await blobOf( URI );\n\n            return  {schema: 'blob',  type: blob.type};\n        }\n        default:      return {schema, type};\n    }\n}\n\n\n/**\n * @param {String} URI - Data URI\n *\n * @return {Blob}\n */\nexport function blobFrom(URI) {\n\n    var [_, type, __, base64, data] = DataURI.exec( URI )  ||  [ ];  // eslint-disable-line\n\n    data = base64  ?  self.atob( data )  :  data;\n\n    const aBuffer = new ArrayBuffer( data.length );\n\n    const uBuffer = new Uint8Array( aBuffer );\n\n    for (let i = 0;  data[i];  i++)  uBuffer[i] = data.charCodeAt( i );\n\n    return new Blob([aBuffer],  { type });\n}\n",
@@ -2695,7 +2796,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 115,
+    "__docId__": 118,
     "kind": "function",
     "name": "byteLength",
     "memberof": "source/utility/resource.js",
@@ -2731,7 +2832,7 @@
     }
   },
   {
-    "__docId__": 116,
+    "__docId__": 119,
     "kind": "function",
     "name": "isXDomain",
     "memberof": "source/utility/resource.js",
@@ -2768,7 +2869,7 @@
     }
   },
   {
-    "__docId__": 117,
+    "__docId__": 120,
     "kind": "function",
     "name": "serialize",
     "memberof": "source/utility/resource.js",
@@ -2806,7 +2907,7 @@
     }
   },
   {
-    "__docId__": 118,
+    "__docId__": 121,
     "kind": "function",
     "name": "stringify",
     "memberof": "source/utility/resource.js",
@@ -2842,7 +2943,7 @@
     }
   },
   {
-    "__docId__": 119,
+    "__docId__": 122,
     "kind": "function",
     "name": "parse",
     "memberof": "source/utility/resource.js",
@@ -2878,7 +2979,7 @@
     }
   },
   {
-    "__docId__": 120,
+    "__docId__": 123,
     "kind": "function",
     "name": "request",
     "memberof": "source/utility/resource.js",
@@ -2961,7 +3062,7 @@
     }
   },
   {
-    "__docId__": 121,
+    "__docId__": 124,
     "kind": "function",
     "name": "readAs",
     "memberof": "source/utility/resource.js",
@@ -3022,7 +3123,7 @@
     }
   },
   {
-    "__docId__": 122,
+    "__docId__": 125,
     "kind": "function",
     "name": "blobOf",
     "memberof": "source/utility/resource.js",
@@ -3058,7 +3159,7 @@
     }
   },
   {
-    "__docId__": 123,
+    "__docId__": 126,
     "kind": "variable",
     "name": "schema_type",
     "memberof": "source/utility/resource.js",
@@ -3079,7 +3180,7 @@
     "ignore": true
   },
   {
-    "__docId__": 124,
+    "__docId__": 127,
     "kind": "function",
     "name": "fileTypeOf",
     "memberof": "source/utility/resource.js",
@@ -3137,7 +3238,7 @@
     }
   },
   {
-    "__docId__": 125,
+    "__docId__": 128,
     "kind": "function",
     "name": "blobFrom",
     "memberof": "source/utility/resource.js",
@@ -3173,7 +3274,7 @@
     }
   },
   {
-    "__docId__": 126,
+    "__docId__": 129,
     "kind": "file",
     "name": "source/view/ArrayView.js",
     "content": "import { arrayLike, multipleMap } from '../utility/object';\n\nimport View from './View';\n\nimport { parseDOM } from '../utility/DOM';\n\nimport ObjectView from './ObjectView';\n\nconst Array_find = [ ].find, Array_indexOf = [ ].indexOf;\n\n\n@arrayLike\n/**\n * View for Array model\n */\nexport default  class ArrayView extends View {\n    /**\n     * @param {Element} element\n     * @param {View}    [parent]\n     */\n    constructor(element, parent) {\n\n        super(element,  'array',  [ ],  parent);\n\n        if ( this.booted )  return;\n\n        const template = Array_find.call(element.childNodes,  node =>\n            (node.nodeType === 8)  ||  (node.tagName === 'TEMPLATE')\n        );\n\n        this.template = (template.nodeType === 1)  ?\n            template.content  :  parseDOM( template.nodeValue );\n\n        this.clear();\n    }\n\n    clear() {\n\n        Array.prototype.splice.call(this, 0, Infinity);\n\n        this.content.innerHTML = '';\n\n        return this;\n    }\n\n    valueOf() {  return  Array.from(this,  view => view.valueOf());  }\n\n    /**\n     * @protected\n     *\n     * @return {ArrayView}\n     */\n    update() {\n\n        for (let view of this)  view.render();\n\n        return this;\n    }\n\n    /**\n     * @param {Iterable} [list]\n     *\n     * @return {ArrayView}\n     */\n    render(list) {\n\n        if (! list)  return this.update();\n\n        const data = this.data;\n\n        this.content.append(... multipleMap(list,  item => {\n\n            const view = this[ this.length++ ] = new ObjectView(\n                this.template.cloneNode( true ),  this\n            );\n\n            data[ data.length ] = view.data;\n\n            if (! (item.index != null))\n                Object.defineProperty(item, 'index', {\n                    get:         function () {  return data.indexOf(this);  },\n                    enumerable:  true\n                });\n\n            return  view.render( item ).content;\n        }));\n\n        return this;\n    }\n\n    push(... item) {  return  this.render( item ).length;  }\n\n    indexOf(view, start) {  return  Array_indexOf.call(this, view, start);  }\n}\n",
@@ -3184,7 +3285,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 127,
+    "__docId__": 130,
     "kind": "variable",
     "name": "Array_find",
     "memberof": "source/view/ArrayView.js",
@@ -3205,7 +3306,7 @@
     "ignore": true
   },
   {
-    "__docId__": 128,
+    "__docId__": 131,
     "kind": "class",
     "name": "ArrayView",
     "memberof": "source/view/ArrayView.js",
@@ -3229,7 +3330,7 @@
     ]
   },
   {
-    "__docId__": 129,
+    "__docId__": 132,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3264,7 +3365,7 @@
     ]
   },
   {
-    "__docId__": 130,
+    "__docId__": 133,
     "kind": "member",
     "name": "template",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3281,7 +3382,7 @@
     }
   },
   {
-    "__docId__": 131,
+    "__docId__": 134,
     "kind": "method",
     "name": "clear",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3301,7 +3402,7 @@
     }
   },
   {
-    "__docId__": 132,
+    "__docId__": 135,
     "kind": "method",
     "name": "valueOf",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3321,7 +3422,7 @@
     }
   },
   {
-    "__docId__": 133,
+    "__docId__": 136,
     "kind": "method",
     "name": "update",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3343,7 +3444,7 @@
     "params": []
   },
   {
-    "__docId__": 134,
+    "__docId__": 137,
     "kind": "method",
     "name": "render",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3376,7 +3477,7 @@
     }
   },
   {
-    "__docId__": 135,
+    "__docId__": 138,
     "kind": "method",
     "name": "push",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3404,7 +3505,7 @@
     }
   },
   {
-    "__docId__": 136,
+    "__docId__": 139,
     "kind": "method",
     "name": "indexOf",
     "memberof": "source/view/ArrayView.js~ArrayView",
@@ -3437,7 +3538,7 @@
     }
   },
   {
-    "__docId__": 137,
+    "__docId__": 140,
     "kind": "file",
     "name": "source/view/ObjectView.js",
     "content": "import { arrayLike, mapTree, extend } from '../utility/object';\n\nimport View from './View';\n\nimport Template from './Template';\n\nimport { nextTick, trigger } from '../utility/DOM';\n\nimport ArrayView from './ArrayView';\n\nconst template_element = new WeakMap(), view_buffer = new WeakMap();\n\n\n@arrayLike\n/**\n * View for Object model\n */\nexport default  class ObjectView extends View {\n    /**\n     * @param {string|Element|DocumentFragment} template\n     * @param {View}                            [parent]\n     */\n    constructor(template, parent) {\n\n        super(template,  'object',  { },  parent);\n\n        if (! this.booted)  this.length = 0, this.scan();\n    }\n\n    valueOf() {\n\n        const data = {... this.data};\n\n        for (let template of this)\n            if (template instanceof View)\n                data[ template.name ] = template.valueOf();\n\n        return data;\n    }\n\n    /**\n     * @private\n     *\n     * @param {Node|Attr} node\n     * @param {function}  renderer\n     *\n     * @return {Template}\n     */\n    static templateOf(node, renderer) {\n\n        return  new Template(\n            node.value || node.nodeValue,  ['view', 'scope', 'host'],  renderer\n        );\n    }\n\n    /**\n     * Async render\n     *\n     * @protected\n     *\n     * @param {string} key\n     * @param {*}      value\n     */\n    async commit(key, value) {\n\n        var buffer;\n\n        if (! (buffer = view_buffer.get( this )))\n            view_buffer.set(this,  buffer = { });\n\n        buffer[key] = value;\n\n        await nextTick();\n\n        if (! view_buffer.get( this ))  return;\n\n        this.render( buffer );\n\n        view_buffer.delete( this );\n    }\n\n    /**\n     * Add a watched property to this view instance\n     *\n     * @param {string} key\n     * @param {*}      [value]\n     *\n     * @return {ObjectView} This view\n     */\n    watch(key, value) {\n\n        if (!(key in this))\n            Object.defineProperty(this,  key,  value ? {\n                value:       value,\n                enumerable:  true\n            } : {\n                get:         ()  =>  this.data[ key ],\n                set:         (value)  =>  this.commit(key, value),\n                enumerable:  true\n            });\n        else if (key  in  Object.getPrototypeOf( this ))\n            console.warn(`Don't overwrite Inset property \"${key}\" !`);\n\n        return this;\n    }\n\n    /**\n     * @private\n     *\n     * @param {Element}  element\n     * @param {Template} template\n     */\n    addTemplate(element, template) {\n\n        if (! template[0])  return;\n\n        template_element.set(this[ this.length++ ] = template,  element);\n\n        for (let key of template.reference.get('view'))  this.watch( key );\n    }\n\n    /**\n     * @private\n     *\n     * @param {string} name\n     * @param {View}   view\n     */\n    addView(name, view) {  this.watch(name, view)[ this.length++ ] = view;  }\n\n    /**\n     * @private\n     *\n     * @param {Element} element\n     */\n    parseTag(element) {\n\n        for (let attr  of  [... element.attributes]) {\n\n            let name = attr.name;\n\n            let template = ObjectView.templateOf(\n                attr,\n                (name in element)  ?\n                    (value  =>  element[ name ] = value)  :\n                    (value  =>  element.setAttribute(name, value))\n            );\n\n            if (template == '')  element.removeAttribute( name );\n\n            this.addTemplate(element, template);\n        }\n    }\n\n    /**\n     * @private\n     */\n    scan() {\n\n        var root = this.content;\n\n        root = (root instanceof Node)  ?  root  :  {childNodes: root};\n\n        for (let { node }  of  mapTree(root, 'childNodes'))\n            switch ( node.nodeType ) {\n                case 1:\n                    if ( node.dataset.object )\n                        this.addView(node.dataset.object,  new ObjectView( node ));\n                    else if ( node.dataset.array )\n                        this.addView(node.dataset.array,  new ArrayView( node ));\n                    else\n                        this.parseTag( node );\n                    break;\n                case 3:  {\n                    const template = ObjectView.templateOf(\n                            node,  value => node.nodeValue = value\n                        ),\n                        element = node.parentNode;\n\n                    if (! element.innerHTML.trim())\n                        template.onChange = value => element.innerHTML = value;\n\n                    this.addTemplate(element, template);\n                }\n            }\n    }\n\n    /**\n     * First ancestor scope which isn't `Array`\n     *\n     * @protected\n     *\n     * @type {?Object}\n     */\n    get scope() {\n\n        var view = this;\n\n        while (view = view.parent)\n            if (! (view instanceof ArrayView))  return view.data;\n    }\n\n    /**\n     * @param {Object} [data]\n     *\n     * @emits {CustomEvent} - `update` event (bubble & cancelable)\n     *                        with `oldData`, `newData` & `view` detail properties\n     * @return {ObjectView}\n     */\n    render(data) {\n\n        const target = this.content;\n\n        if (! trigger(\n            (target instanceof Node)  ?  target  :  target[0],\n            'update',\n            {\n                oldData:  this.valueOf(),\n                newData:  data,\n                view:     this\n            },\n            true,\n            true\n        ))\n            return this;\n\n        const _data_ = extend(this.data, data);\n\n        for (let key in data)  this.watch( key );\n\n        for (let template of this) {\n\n            let name = template.name;\n\n            if (template instanceof Template)\n                template.evaluate(\n                    template_element.get( template ),  _data_,  this.scope,  this.rootHost\n                );\n            else if (template instanceof View)\n                _data_[name] = template.render( data[ name ] ).data;\n        }\n\n        return this;\n    }\n\n    clear() {\n\n        for (let template of this)  template.clear();\n\n        return this;\n    }\n}\n",
@@ -3448,7 +3549,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 138,
+    "__docId__": 141,
     "kind": "variable",
     "name": "template_element",
     "memberof": "source/view/ObjectView.js",
@@ -3469,7 +3570,7 @@
     "ignore": true
   },
   {
-    "__docId__": 139,
+    "__docId__": 142,
     "kind": "class",
     "name": "ObjectView",
     "memberof": "source/view/ObjectView.js",
@@ -3493,7 +3594,7 @@
     ]
   },
   {
-    "__docId__": 140,
+    "__docId__": 143,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3530,7 +3631,7 @@
     ]
   },
   {
-    "__docId__": 141,
+    "__docId__": 144,
     "kind": "method",
     "name": "valueOf",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3550,7 +3651,7 @@
     }
   },
   {
-    "__docId__": 142,
+    "__docId__": 145,
     "kind": "method",
     "name": "templateOf",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3595,7 +3696,7 @@
     "ignore": true
   },
   {
-    "__docId__": 143,
+    "__docId__": 146,
     "kind": "method",
     "name": "commit",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3631,7 +3732,7 @@
     "return": null
   },
   {
-    "__docId__": 144,
+    "__docId__": 147,
     "kind": "method",
     "name": "watch",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3674,7 +3775,7 @@
     }
   },
   {
-    "__docId__": 145,
+    "__docId__": 148,
     "kind": "method",
     "name": "addTemplate",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3711,7 +3812,7 @@
     "return": null
   },
   {
-    "__docId__": 146,
+    "__docId__": 149,
     "kind": "method",
     "name": "addView",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3748,7 +3849,7 @@
     "return": null
   },
   {
-    "__docId__": 147,
+    "__docId__": 150,
     "kind": "method",
     "name": "parseTag",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3775,7 +3876,7 @@
     "return": null
   },
   {
-    "__docId__": 148,
+    "__docId__": 151,
     "kind": "method",
     "name": "scan",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3791,7 +3892,7 @@
     "return": null
   },
   {
-    "__docId__": 149,
+    "__docId__": 152,
     "kind": "get",
     "name": "scope",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3812,7 +3913,7 @@
     }
   },
   {
-    "__docId__": 150,
+    "__docId__": 153,
     "kind": "method",
     "name": "render",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3853,7 +3954,7 @@
     ]
   },
   {
-    "__docId__": 151,
+    "__docId__": 154,
     "kind": "method",
     "name": "clear",
     "memberof": "source/view/ObjectView.js~ObjectView",
@@ -3873,7 +3974,7 @@
     }
   },
   {
-    "__docId__": 152,
+    "__docId__": 155,
     "kind": "file",
     "name": "source/view/Template.js",
     "content": "import { arrayLike } from '../utility/object';\n\n\n@arrayLike\n/**\n * String template\n */\nexport default  class Template {\n    /**\n     * @param {string}          raw\n     * @param {stirng[]}        [varName]  - Name list of the Local variable\n     * @param {ChangedCallback} [onChange] - Call with New & Old value\n     * @param {Array}           [bindData] - The parameter bound to `onChange`\n     */\n    constructor(raw, varName, onChange, bindData) {\n\n        this.length = 0;\n\n        this.raw = raw;\n\n        /**\n         * Last evaluated value\n         *\n         * @type {*}\n         */\n        this.value = null;\n\n        if (varName instanceof Function)\n            bindData = onChange, onChange = varName, varName = null;\n\n        this.varName = varName || [ ];\n\n        /**\n         * Reference map of contexts\n         *\n         * @type {Map}\n         */\n        this.reference = new Map();\n\n        for (let scope  of  ['this'].concat( this.varName ))\n            this.reference.set(scope,  [ ]);\n\n        this.onChange = (onChange instanceof Function)  ?  onChange  :  null;\n\n        this.data = bindData || [ ];\n\n        this.parse().clear();\n    }\n\n    /**\n     * @type {RegExp}\n     */\n    static get Expression() {  return /\\$\\{([\\s\\S]+?)\\}/g;  }\n\n    /**\n     * @type {RegExp}\n     */\n    static get Reference() {  return /(\\w+)(?:\\.(\\w+)|\\[(?:'([^']+)|\"([^\"]+)))/g;  }\n\n    push() {  return  Array.prototype.push.apply(this, arguments);  }\n\n    /**\n     * @private\n     *\n     * @param {string} expression\n     *\n     * @return {number} Index of this Evaluation function\n     */\n    compile(expression) {\n\n        this[ this.length++ ] = new Function(\n            ... this.varName,  'return ' + expression.trim()\n        );\n\n        return  this.length - 1;\n    }\n\n    /**\n     * @private\n     *\n     * @return {Template}\n     */\n    parse() {\n\n        const addReference = (match, context, key1, key2, key3)  =>  {\n\n            if (this.reference.has( context ))\n                this.reference.get( context ).push(key1 || key2 || key3);\n        };\n\n        this.raw = this.raw.replace(\n            Template.Expression,  (_, expression) => {\n\n                expression.replace(Template.Reference, addReference);\n\n                return  '${' + this.compile( expression ) + '}';\n            }\n        );\n\n        return this;\n    }\n\n    /**\n     * @private\n     *\n     * @param {number}  index\n     * @param {?object} context\n     * @param {Array}   [parameter]\n     *\n     * @return {*}\n     */\n    eval(index, context, parameter) {\n\n        try {\n            const value = this[ index ].apply(context, parameter);\n\n            return  (value != null)  ?  value  :  '';\n\n        } catch (error) {\n\n            if (this.value !== null)  console.warn( error );\n\n            return '';\n        }\n    }\n\n    /**\n     * Evaluate expression\n     *\n     * @param {?object} context     - Value of `this` in the expression\n     * @param {...*}    [parameter] - One or more value of the Local variable\n     *\n     * @return {*}\n     */\n    evaluate(context, ...parameter) {\n\n        const value = (this.raw !== '${0}')  ?\n            this.raw.replace(\n                /\\$\\{(\\d+)\\}/g,  (_, index) => this.eval(index, context, parameter)\n            ) :\n            this.eval(0, context, parameter);\n\n        if (value !== this.value) {\n            /**\n             * Call back only on Value changed\n             *\n             * @typedef {function} ChangedCallback\n             *\n             * @param {*}    newValue\n             * @param {*}    oldValue\n             * @param {...*} bindData\n             */\n            if ( this.onChange )\n                this.onChange(... [value, this.value].concat( this.data ));\n\n            this.value = value;\n        }\n\n        return value;\n    }\n\n    /**\n     * @return {string} Value evaluated with empty data\n     */\n    clear() {\n\n        return  this.evaluate(... Array.from(\n            this.reference.entries(),  entry => {\n\n                const data = { };\n\n                for (let key of entry[1])  data[ key ] = '';\n\n                return data;\n            }\n        ));\n    }\n\n    toString() {  return  this.value + '';  }\n}\n",
@@ -3884,7 +3985,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 153,
+    "__docId__": 156,
     "kind": "class",
     "name": "Template",
     "memberof": "source/view/Template.js",
@@ -3905,7 +4006,7 @@
     "interface": false
   },
   {
-    "__docId__": 154,
+    "__docId__": 157,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "source/view/Template.js~Template",
@@ -3960,7 +4061,7 @@
     ]
   },
   {
-    "__docId__": 155,
+    "__docId__": 158,
     "kind": "member",
     "name": "length",
     "memberof": "source/view/Template.js~Template",
@@ -3977,7 +4078,7 @@
     }
   },
   {
-    "__docId__": 156,
+    "__docId__": 159,
     "kind": "member",
     "name": "raw",
     "memberof": "source/view/Template.js~Template",
@@ -3994,7 +4095,7 @@
     }
   },
   {
-    "__docId__": 157,
+    "__docId__": 160,
     "kind": "member",
     "name": "value",
     "memberof": "source/view/Template.js~Template",
@@ -4013,7 +4114,7 @@
     }
   },
   {
-    "__docId__": 158,
+    "__docId__": 161,
     "kind": "member",
     "name": "varName",
     "memberof": "source/view/Template.js~Template",
@@ -4030,7 +4131,7 @@
     }
   },
   {
-    "__docId__": 159,
+    "__docId__": 162,
     "kind": "member",
     "name": "reference",
     "memberof": "source/view/Template.js~Template",
@@ -4049,7 +4150,7 @@
     }
   },
   {
-    "__docId__": 160,
+    "__docId__": 163,
     "kind": "member",
     "name": "onChange",
     "memberof": "source/view/Template.js~Template",
@@ -4066,7 +4167,7 @@
     }
   },
   {
-    "__docId__": 161,
+    "__docId__": 164,
     "kind": "member",
     "name": "data",
     "memberof": "source/view/Template.js~Template",
@@ -4083,7 +4184,7 @@
     }
   },
   {
-    "__docId__": 162,
+    "__docId__": 165,
     "kind": "get",
     "name": "Expression",
     "memberof": "source/view/Template.js~Template",
@@ -4104,7 +4205,7 @@
     }
   },
   {
-    "__docId__": 163,
+    "__docId__": 166,
     "kind": "get",
     "name": "Reference",
     "memberof": "source/view/Template.js~Template",
@@ -4125,7 +4226,7 @@
     }
   },
   {
-    "__docId__": 164,
+    "__docId__": 167,
     "kind": "method",
     "name": "push",
     "memberof": "source/view/Template.js~Template",
@@ -4145,7 +4246,7 @@
     }
   },
   {
-    "__docId__": 165,
+    "__docId__": 168,
     "kind": "method",
     "name": "compile",
     "memberof": "source/view/Template.js~Template",
@@ -4179,7 +4280,7 @@
     "ignore": true
   },
   {
-    "__docId__": 166,
+    "__docId__": 169,
     "kind": "member",
     "name": "[.length++]",
     "memberof": "source/view/Template.js~Template",
@@ -4196,7 +4297,7 @@
     }
   },
   {
-    "__docId__": 167,
+    "__docId__": 170,
     "kind": "method",
     "name": "parse",
     "memberof": "source/view/Template.js~Template",
@@ -4219,7 +4320,7 @@
     "params": []
   },
   {
-    "__docId__": 169,
+    "__docId__": 172,
     "kind": "method",
     "name": "eval",
     "memberof": "source/view/Template.js~Template",
@@ -4273,7 +4374,7 @@
     "ignore": true
   },
   {
-    "__docId__": 170,
+    "__docId__": 173,
     "kind": "method",
     "name": "evaluate",
     "memberof": "source/view/Template.js~Template",
@@ -4316,7 +4417,7 @@
     }
   },
   {
-    "__docId__": 171,
+    "__docId__": 174,
     "kind": "typedef",
     "name": "ChangedCallback",
     "memberof": "source/view/Template.js~Template",
@@ -4366,7 +4467,7 @@
     }
   },
   {
-    "__docId__": 173,
+    "__docId__": 176,
     "kind": "method",
     "name": "clear",
     "memberof": "source/view/Template.js~Template",
@@ -4388,7 +4489,7 @@
     "params": []
   },
   {
-    "__docId__": 174,
+    "__docId__": 177,
     "kind": "method",
     "name": "toString",
     "memberof": "source/view/Template.js~Template",
@@ -4408,7 +4509,7 @@
     }
   },
   {
-    "__docId__": 175,
+    "__docId__": 178,
     "kind": "file",
     "name": "source/view/View.js",
     "content": "import { parseDOM, stringifyDOM } from '../utility/DOM';\n\nconst view_DOM = new WeakMap(), DOM_view = new WeakMap();\n\nconst view_data = new WeakMap(), view_parent = new WeakMap();\n\n\n/**\n * Abstract View\n */\nexport default  class View {\n    /**\n     * @param {string|Element|DocumentFragment} template\n     * @param {string}                          nameKey  - Key (littleCamelCase) of HTML `data-*`\n     *                                                     to get name of bound data\n     * @param {Object}                          data     - Empty Model for this view\n     * @param {View}                            [parent] - Parent view in the DOM tree\n     */\n    constructor(template, nameKey, data, parent) {\n\n        if (this.constructor === View)\n            throw TypeError('\"View\" is an abstract class');\n\n        switch ( template.nodeType ) {\n            case 1:\n                this.name = template.dataset[ nameKey ];  break;\n            case 11:\n                if (! (template.parentNode || template.host))\n                    template = [... template.childNodes];\n                break;\n            default:\n                template = [\n                    ... document.importNode(parseDOM( template ),  true).childNodes\n                ];\n        }\n\n        var _this_ = this.bindWith( template );\n\n        if (_this_ !== this) {\n\n            _this_.booted = true;\n\n            return _this_;\n        }\n\n        view_data.set(this, data),  view_parent.set(this, parent);\n    }\n\n    /**\n     * @protected\n     *\n     * @param {Element|Element[]|DocumentFragment} template\n     *\n     * @return {View} This view or the view bound before\n     */\n    bindWith(template) {\n\n        var _this_;\n\n        if (template instanceof Array)\n            template = template.filter(node => {\n\n                switch ( node.nodeType ) {\n                    case 1:\n                        if (! (_this_ = DOM_view.get( node )))\n                            DOM_view.set(node, this);\n                        break;\n                    case 3:\n                        if (! node.nodeValue.trim())  return;\n                }\n\n                return true;\n            });\n        else if (! (_this_ = DOM_view.get( template )))\n            DOM_view.set(template, this);\n\n        view_DOM.set(this, template);\n\n        return  _this_ || this;\n    }\n\n    /**\n     * @param {Element|DocumentFragment} node\n     *\n     * @return {View} View instance bound with `node`\n     */\n    static instanceOf(node) {  return  DOM_view.get( node );  }\n\n    /**\n     * @type {Element|Element[]|DocumentFragment}\n     */\n    get content() {  return  view_DOM.get( this );  }\n\n    /**\n     * @return {string} Full markup code of this view\n     */\n    toString() {\n\n        var fragment = this.content;\n\n        if (fragment instanceof Array) {\n\n            const temp = document.createDocumentFragment();\n\n            temp.append(... fragment);  fragment = temp;\n        }\n\n        return  stringifyDOM( fragment );\n    }\n\n    /**\n     * @protected\n     *\n     * @type {Object}\n     */\n    get data() {  return  view_data.get( this );  }\n\n    /**\n     * Parent view in current DOM tree\n     *\n     * @type {?View}\n     */\n    get parent() {\n\n        var view = view_parent.get( this );\n\n        if (view instanceof View)  return view;\n\n        var node = this.content[0] || this.content;\n\n        while (node = node.parentNode)\n            if (view = View.instanceOf( node ))\n                return  view_parent.set(this, view)  &&  view;\n    }\n\n    /**\n     * @protected\n     *\n     * @type {?Object}\n     */\n    get scope() {  return  (this.parent || '').data;  }\n\n    /**\n     * Host element of a view in a Shadow DOM tree\n     *\n     * @type {?Element}\n     */\n    get rootHost() {\n\n        var view = this;\n\n        while ( view.parent )  view = view.parent;\n\n        return view.content.host;\n    }\n\n    /**\n     * Get original data of this view\n     *\n     * @abstract\n     *\n     * @return {Object}\n     */\n    valueOf() {\n\n        throw TypeError('View.prototype.valueOf() must be overwriten');\n    }\n\n    /**\n     * Render this view with data or Update without data\n     *\n     * @abstract\n     *\n     * @return {View}\n     */\n    render() {\n\n        throw TypeError('View.prototype.render() must be overwriten');\n    }\n\n    /**\n     * Reset this view to empty data\n     *\n     * @abstract\n     *\n     * @return {View}\n     */\n    clear() {\n\n        throw TypeError('View.prototype.clear() must be overwriten');\n    }\n}\n",
@@ -4419,7 +4520,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 176,
+    "__docId__": 179,
     "kind": "variable",
     "name": "view_DOM",
     "memberof": "source/view/View.js",
@@ -4440,7 +4541,7 @@
     "ignore": true
   },
   {
-    "__docId__": 177,
+    "__docId__": 180,
     "kind": "variable",
     "name": "view_data",
     "memberof": "source/view/View.js",
@@ -4461,7 +4562,7 @@
     "ignore": true
   },
   {
-    "__docId__": 178,
+    "__docId__": 181,
     "kind": "class",
     "name": "View",
     "memberof": "source/view/View.js",
@@ -4476,7 +4577,7 @@
     "interface": false
   },
   {
-    "__docId__": 179,
+    "__docId__": 182,
     "kind": "constructor",
     "name": "constructor",
     "memberof": "source/view/View.js~View",
@@ -4533,7 +4634,7 @@
     ]
   },
   {
-    "__docId__": 180,
+    "__docId__": 183,
     "kind": "member",
     "name": "name",
     "memberof": "source/view/View.js~View",
@@ -4550,7 +4651,7 @@
     }
   },
   {
-    "__docId__": 181,
+    "__docId__": 184,
     "kind": "method",
     "name": "bindWith",
     "memberof": "source/view/View.js~View",
@@ -4585,7 +4686,7 @@
     }
   },
   {
-    "__docId__": 182,
+    "__docId__": 185,
     "kind": "method",
     "name": "instanceOf",
     "memberof": "source/view/View.js~View",
@@ -4619,7 +4720,7 @@
     }
   },
   {
-    "__docId__": 183,
+    "__docId__": 186,
     "kind": "get",
     "name": "content",
     "memberof": "source/view/View.js~View",
@@ -4642,7 +4743,7 @@
     }
   },
   {
-    "__docId__": 184,
+    "__docId__": 187,
     "kind": "method",
     "name": "toString",
     "memberof": "source/view/View.js~View",
@@ -4664,7 +4765,7 @@
     "params": []
   },
   {
-    "__docId__": 185,
+    "__docId__": 188,
     "kind": "get",
     "name": "data",
     "memberof": "source/view/View.js~View",
@@ -4685,7 +4786,7 @@
     }
   },
   {
-    "__docId__": 186,
+    "__docId__": 189,
     "kind": "get",
     "name": "parent",
     "memberof": "source/view/View.js~View",
@@ -4706,7 +4807,7 @@
     }
   },
   {
-    "__docId__": 187,
+    "__docId__": 190,
     "kind": "get",
     "name": "scope",
     "memberof": "source/view/View.js~View",
@@ -4727,7 +4828,7 @@
     }
   },
   {
-    "__docId__": 188,
+    "__docId__": 191,
     "kind": "get",
     "name": "rootHost",
     "memberof": "source/view/View.js~View",
@@ -4748,7 +4849,7 @@
     }
   },
   {
-    "__docId__": 189,
+    "__docId__": 192,
     "kind": "method",
     "name": "valueOf",
     "memberof": "source/view/View.js~View",
@@ -4771,7 +4872,7 @@
     "params": []
   },
   {
-    "__docId__": 190,
+    "__docId__": 193,
     "kind": "method",
     "name": "render",
     "memberof": "source/view/View.js~View",
@@ -4794,7 +4895,7 @@
     "params": []
   },
   {
-    "__docId__": 191,
+    "__docId__": 194,
     "kind": "method",
     "name": "clear",
     "memberof": "source/view/View.js~View",
@@ -4817,10 +4918,10 @@
     "params": []
   },
   {
-    "__docId__": 192,
+    "__docId__": 195,
     "kind": "file",
     "name": "source/WebCell.js",
-    "content": "import Component from './component/Component';\n\nimport { decoratorOf } from './utility/object';\n\nimport { delegate, stringifyDOM, parseDOM } from './utility/DOM';\n\nimport { blobFrom } from './utility/resource';\n\n\n/**\n * Decorator for `observedAttributes` getter\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function mapProperty(meta) {\n\n    const getter = meta.descriptor.get;\n\n    meta.descriptor.get = function () {\n\n        const list = getter.call( this );\n\n        for (let key of list)\n            if (\n                Object.getOwnPropertyDescriptor(HTMLElement.prototype, key)  &&\n                !Object.getOwnPropertyDescriptor(this.constructor.prototype, key)\n            )\n                throw ReferenceError(\n                    `HTML DOM property \"${key}\" getter should be overwritten`\n                );\n\n        return  this.linkDataOf( list );\n    };\n}\n\n\n/**\n * Decorator for `attributeChangedCallback()` method\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function mapData(meta) {\n\n    const origin = meta.descriptor.value,\n        onChange = Component.prototype.attributeChangedCallback;\n\n    meta.descriptor.value = function (name, oldValue) {\n\n        origin.call(this,  name,  oldValue,  onChange.apply(this, arguments));\n    };\n}\n\n\n/**\n * Decorator for Property getter which returns Data URI\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function blobURI(meta) {\n\n    var getter = meta.descriptor.get, blob;\n\n    meta.descriptor.get = function () {\n\n        return  blob || (\n            blob = URL.createObjectURL(\n                blobFrom( getter.apply(this, arguments) )\n            )\n        );\n    };\n}\n\n\n/**\n * @param {String} selector - CSS selector\n *\n * @return {Function} Decorator for Event handler\n */\nexport function at(selector) {\n\n    return  ({ descriptor }) => {\n\n        descriptor.value = delegate(selector, descriptor.value);\n    };\n}\n\n\n/**\n * @param {String} type\n * @param {String} selector\n *\n * @return {Function} Decorator for Event handler\n */\nexport function on(type, selector) {\n\n    return  meta => {\n\n        meta.finisher = Class => {\n\n            Class.on(type, selector, meta.descriptor.value);\n        };\n    };\n}\n\n\nconst skip_key = {\n    name:         1,\n    length:       1,\n    prototype:    1,\n    caller:       1,\n    arguments:    1,\n    call:         1,\n    apply:        1,\n    bind:         1,\n    constructor:  1\n};\n\nfunction decoratorMix(member, mixin) {\n\n    const isClass = mixin instanceof Function,\n        property = Object.getOwnPropertyDescriptors( mixin );\n\n    for (let [key, meta]  of  Object.entries( property ))\n        if (! (isClass  ?  skip_key[key]  :  (\n            (key === 'constructor')  &&  (meta.value instanceof Function)\n        ))) {\n            const item = decoratorOf(mixin,  key,  meta.value || meta);\n\n            if (! member.some(old =>\n                ((old.key === item.key) && (old.placement === item.placement))\n            ))\n                member.push( item );\n        }\n}\n\n\nfunction define(meta, template, style) {\n\n    if ( template ) {\n\n        if (template instanceof Node)  template = stringifyDOM( template );\n\n        template = parseDOM( (template + '').trim() );\n\n        if (template.firstChild.tagName !== 'TEMPLATE') {\n\n            let temp = document.createElement('template');\n\n            temp.content.appendChild( template );\n\n            template = temp;\n        } else\n            template = template.firstChild;\n    } else\n        template = document.createElement('template');\n\n    meta.push( decoratorOf(Component, 'template', template.content) );\n\n    if ( style ) {\n\n        if (!(style instanceof Node))\n            style = Object.assign(\n                document.createElement('style'),  {textContent: style}\n            );\n\n        meta.push( decoratorOf(Component, 'style', style) );\n\n        template.content.insertBefore(style, template.content.firstChild);\n    }\n\n    return template;\n}\n\n\n/**\n * Register a component\n *\n * @param {Object}         meta\n * @param {String|Node}    [meta.template] - HTML template source or sub DOM tree\n * @param {String|Element} [meta.style]    - CSS source or `<style />`\n * @param {Object}         [meta.data]     - Initial data\n * @param {String}         [meta.tagName]  - Name of an HTML original tag to extend\n *\n * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator\n */\nexport function component(meta = { }) {\n\n    var {template, style, data, tagName} = meta;\n\n    return  ({elements}) => {\n\n        const merged = (template || style)  &&\n            define(elements, template, style);\n\n        if ( data )  elements.push( decoratorOf(Component, 'data', data) );\n\n        decoratorMix(elements, Component);\n\n        decoratorMix(elements, Component.prototype);\n\n        return {\n            kind:  'class',\n            elements,\n            finisher(Class) {\n                if (\n                    merged  &&  self.ShadyCSS  &&\n                    !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)\n                )\n                    ShadyCSS.prepareTemplate(merged, Class.tagName);\n\n                self.customElements.define(\n                    Class.tagName,  Class,  tagName && {extends: tagName}\n                );\n            }\n        };\n    };\n}\n\nexport { Component };\n\nexport {default as InputComponent} from './component/InputComponent';\n\nexport * from './utility/object';\n\nexport * from './utility/DOM';\n\nexport * from './utility/resource';\n\nexport {default as Template} from './view/Template';\n\nexport {default as View} from './view/View';\n\nexport {default as ObjectView} from './view/ObjectView';\n\nexport {default as ArrayView} from './view/ArrayView';\n",
+    "content": "import Component from './component/Component';\n\nimport { multipleMap, decoratorOf, unique } from './utility/object';\n\nimport { delegate, stringifyDOM, parseDOM } from './utility/DOM';\n\nimport { blobFrom } from './utility/resource';\n\n\n/**\n * Decorator for `observedAttributes` getter\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function mapProperty(meta) {\n\n    const getter = meta.descriptor.get;\n\n    meta.descriptor.get = function () {\n\n        const list = getter.call( this );\n\n        for (let key of list)\n            if (\n                Object.getOwnPropertyDescriptor(HTMLElement.prototype, key)  &&\n                !Object.getOwnPropertyDescriptor(this.constructor.prototype, key)\n            )\n                throw ReferenceError(\n                    `HTML DOM property \"${key}\" getter should be overwritten`\n                );\n\n        return  this.linkDataOf( list );\n    };\n}\n\n\n/**\n * Decorator for `attributeChangedCallback()` method\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function mapData(meta) {\n\n    const origin = meta.descriptor.value,\n        onChange = Component.prototype.attributeChangedCallback;\n\n    meta.descriptor.value = function (name, oldValue) {\n\n        origin.call(this,  name,  oldValue,  onChange.apply(this, arguments));\n    };\n}\n\n\n/**\n * Decorator for Property getter which returns Data URI\n *\n * @param {DecoratorDescriptor} meta\n */\nexport function blobURI(meta) {\n\n    var getter = meta.descriptor.get, blob;\n\n    meta.descriptor.get = function () {\n\n        return  blob || (\n            blob = URL.createObjectURL(\n                blobFrom( getter.apply(this, arguments) )\n            )\n        );\n    };\n}\n\n\n/**\n * @param {String} selector - CSS selector\n *\n * @return {Function} Decorator for Event handler\n */\nexport function at(selector) {\n\n    return  ({ descriptor }) => {\n\n        descriptor.value = delegate(selector, descriptor.value);\n    };\n}\n\n\n/**\n * @param {String} type\n * @param {String} selector\n *\n * @return {Function} Decorator for Event handler\n */\nexport function on(type, selector) {\n\n    return  meta => {\n\n        meta.finisher = Class => {\n\n            Class.on(type, selector, meta.descriptor.value);\n        };\n    };\n}\n\n\nconst skip_key = {\n    name:         1,\n    length:       1,\n    prototype:    1,\n    caller:       1,\n    arguments:    1,\n    call:         1,\n    apply:        1,\n    bind:         1,\n    constructor:  1\n};\n\nfunction decoratorMix(mixin) {\n\n    const isClass = mixin instanceof Function;\n\n    return multipleMap(\n        Object.entries( Object.getOwnPropertyDescriptors( mixin ) ),\n        ([key, meta]) => {\n\n            if (! (isClass  ?  skip_key[key]  :  (\n                (key === 'constructor')  &&  (meta.value instanceof Function)\n            )))\n                return  decoratorOf(mixin,  key,  meta.value || meta);\n        }\n    );\n}\n\n\nfunction define(meta, template, style) {\n\n    if ( template ) {\n\n        if (template instanceof Node)  template = stringifyDOM( template );\n\n        template = parseDOM( (template + '').trim() );\n\n        if (template.firstChild.tagName !== 'TEMPLATE') {\n\n            let temp = document.createElement('template');\n\n            temp.content.appendChild( template );\n\n            template = temp;\n        } else\n            template = template.firstChild;\n    } else\n        template = document.createElement('template');\n\n    meta.push( decoratorOf(Component, 'template', template.content) );\n\n    if ( style ) {\n\n        if (!(style instanceof Node))\n            style = Object.assign(\n                document.createElement('style'),  {textContent: style}\n            );\n\n        meta.push( decoratorOf(Component, 'style', style) );\n\n        template.content.insertBefore(style, template.content.firstChild);\n    }\n\n    return template;\n}\n\n\n/**\n * Register a component\n *\n * @param {Object}         meta\n * @param {String|Node}    [meta.template] - HTML template source or sub DOM tree\n * @param {String|Element} [meta.style]    - CSS source or `<style />`\n * @param {Object}         [meta.data]     - Initial data\n * @param {String}         [meta.tagName]  - Name of an HTML original tag to extend\n *\n * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator\n */\nexport function component(meta = { }) {\n\n    var {template, style, data, tagName} = meta;\n\n    return  ({elements}) => {\n\n        const merged = (template || style)  &&\n            define(elements, template, style);\n\n        if ( data )  elements.push( decoratorOf(Component, 'data', data) );\n\n        elements.push(\n            ... decoratorMix( Component ),\n            ... decoratorMix( Component.prototype )\n        );\n\n        return {\n            kind:           'class',\n            elements:       unique(\n                elements,\n                (A, B)  =>  ((A.key !== B.key) || (A.placement !== B.placement))\n            ),\n            finisher(Class) {\n                if (\n                    merged  &&  self.ShadyCSS  &&\n                    !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)\n                )\n                    ShadyCSS.prepareTemplate(merged, Class.tagName);\n\n                self.customElements.define(\n                    Class.tagName,  Class,  tagName && {extends: tagName}\n                );\n            }\n        };\n    };\n}\n\nexport { Component };\n\nexport {default as InputComponent} from './component/InputComponent';\n\nexport * from './utility/object';\n\nexport * from './utility/DOM';\n\nexport * from './utility/resource';\n\nexport {default as Template} from './view/Template';\n\nexport {default as View} from './view/View';\n\nexport {default as ObjectView} from './view/ObjectView';\n\nexport {default as ArrayView} from './view/ArrayView';\n",
     "static": true,
     "longname": "d:/OpenSource/WebCell/source/WebCell.js",
     "access": "public",
@@ -4828,7 +4929,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 193,
+    "__docId__": 196,
     "kind": "function",
     "name": "mapProperty",
     "memberof": "source/WebCell.js",
@@ -4857,7 +4958,7 @@
     "return": null
   },
   {
-    "__docId__": 194,
+    "__docId__": 197,
     "kind": "function",
     "name": "mapData",
     "memberof": "source/WebCell.js",
@@ -4886,7 +4987,7 @@
     "return": null
   },
   {
-    "__docId__": 195,
+    "__docId__": 198,
     "kind": "function",
     "name": "blobURI",
     "memberof": "source/WebCell.js",
@@ -4915,7 +5016,7 @@
     "return": null
   },
   {
-    "__docId__": 196,
+    "__docId__": 199,
     "kind": "function",
     "name": "at",
     "memberof": "source/WebCell.js",
@@ -4951,7 +5052,7 @@
     }
   },
   {
-    "__docId__": 197,
+    "__docId__": 200,
     "kind": "function",
     "name": "on",
     "memberof": "source/WebCell.js",
@@ -4997,7 +5098,7 @@
     }
   },
   {
-    "__docId__": 198,
+    "__docId__": 201,
     "kind": "variable",
     "name": "skip_key",
     "memberof": "source/WebCell.js",
@@ -5018,7 +5119,7 @@
     "ignore": true
   },
   {
-    "__docId__": 199,
+    "__docId__": 202,
     "kind": "function",
     "name": "decoratorMix",
     "memberof": "source/WebCell.js",
@@ -5035,23 +5136,21 @@
     "undocument": true,
     "params": [
       {
-        "name": "member",
-        "types": [
-          "*"
-        ]
-      },
-      {
         "name": "mixin",
         "types": [
           "*"
         ]
       }
     ],
-    "return": null,
+    "return": {
+      "types": [
+        "*"
+      ]
+    },
     "ignore": true
   },
   {
-    "__docId__": 200,
+    "__docId__": 203,
     "kind": "function",
     "name": "define",
     "memberof": "source/WebCell.js",
@@ -5064,7 +5163,7 @@
     "importPath": "web-cell/source/WebCell.js",
     "importStyle": null,
     "description": null,
-    "lineNumber": 137,
+    "lineNumber": 135,
     "undocument": true,
     "params": [
       {
@@ -5094,7 +5193,7 @@
     "ignore": true
   },
   {
-    "__docId__": 201,
+    "__docId__": 204,
     "kind": "function",
     "name": "component",
     "memberof": "source/WebCell.js",
@@ -5107,7 +5206,7 @@
     "importPath": "web-cell/source/WebCell.js",
     "importStyle": "{component}",
     "description": "Register a component",
-    "lineNumber": 186,
+    "lineNumber": 184,
     "params": [
       {
         "nullable": null,
@@ -5181,7 +5280,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"web-cell\",\n  \"version\": \"0.10.10\",\n  \"description\": \"Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 & Decorator proposal\",\n  \"keywords\": [\n    \"WebApp\",\n    \"Web-component\",\n    \"SPA\",\n    \"MVVM\",\n    \"ECMAScript\",\n    \"decorator\"\n  ],\n  \"author\": \"shiy007@qq.com\",\n  \"license\": \"LGPL-3.0\",\n  \"homepage\": \"https://web-cell.tk/\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/WebCell.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/WebCell/issues\"\n  },\n  \"browser\": \"dist/web-cell.min.js\",\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^6.5.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint --fix source/ test/**/*.test.js\",\n    \"pack\": \"amd-bundle source/WebCell dist/web-cell -m\",\n    \"pack-test\": \"amd-bundle test/Component/source/cell-test test/Component/dist/cell-test\",\n    \"pack-input\": \"amd-bundle test/Component/source/cell-input test/Component/dist/cell-input\",\n    \"check\": \"npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"build\": \"npm run lint  &&  npm run pack  &&  npm test  &&  esdoc\",\n    \"prepublishOnly\": \"npm run build\",\n    \"start\": \"web-server docs/ -o\"\n  },\n  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"npm run build  &&  git add .\"\n    }\n  },\n  \"peerDependencies\": {\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@webcomponents/webcomponentsjs\": \"^2.1.3\",\n    \"whatwg-fetch\": \"^3.0.0\"\n  },\n  \"devDependencies\": {\n    \"@babel/core\": \"^7.1.6\",\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"@babel/register\": \"^7.0.0\",\n    \"@webcomponents/webcomponentsjs\": \"^2.1.3\",\n    \"amd-bundle\": \"^1.7.4\",\n    \"babel-eslint\": \"^10.0.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^5.9.0\",\n    \"husky\": \"^1.1.4\",\n    \"jsdom\": \"^13.0.0\",\n    \"koapache\": \"^1.0.4\",\n    \"mocha\": \"^5.2.0\",\n    \"node-fetch\": \"^2.3.0\",\n    \"puppeteer-browser\": \"^0.3.7\",\n    \"should\": \"^13.2.3\",\n    \"should-sinon\": \"0.0.6\",\n    \"sinon\": \"^7.1.1\",\n    \"whatwg-fetch\": \"^3.0.0\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"@babel/preset-env\"\n    ],\n    \"plugins\": [\n      [\n        \"@babel/plugin-proposal-decorators\",\n        {\n          \"decoratorsBeforeExport\": true\n        }\n      ]\n    ]\n  }\n}\n",
+    "content": "{\n  \"name\": \"web-cell\",\n  \"version\": \"0.10.10\",\n  \"description\": \"Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 & Decorator proposal\",\n  \"keywords\": [\n    \"WebApp\",\n    \"Web-component\",\n    \"SPA\",\n    \"MVVM\",\n    \"ECMAScript\",\n    \"decorator\"\n  ],\n  \"author\": \"shiy007@qq.com\",\n  \"license\": \"LGPL-3.0\",\n  \"homepage\": \"https://web-cell.tk/\",\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git+https://github.com/EasyWebApp/WebCell.git\"\n  },\n  \"bugs\": {\n    \"url\": \"https://github.com/EasyWebApp/WebCell/issues\"\n  },\n  \"browser\": \"dist/web-cell.min.js\",\n  \"directories\": {\n    \"lib\": \"source\",\n    \"doc\": \"docs\",\n    \"test\": \"test\"\n  },\n  \"engines\": {\n    \"node\": \"^6.5.0\"\n  },\n  \"scripts\": {\n    \"lint\": \"eslint --fix source/ test/**/*.test.js\",\n    \"pack\": \"amd-bundle source/WebCell dist/web-cell -m\",\n    \"pack-test\": \"amd-bundle test/Component/source/cell-test test/Component/dist/cell-test\",\n    \"pack-input\": \"amd-bundle test/Component/source/cell-input test/Component/dist/cell-input\",\n    \"check\": \"npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js\",\n    \"test\": \"npm run check -- --exit\",\n    \"debug\": \"npm run check -- --inspect-brk\",\n    \"build\": \"npm run lint  &&  npm run pack  &&  npm test  &&  esdoc\",\n    \"prepublishOnly\": \"npm run build\",\n    \"start\": \"web-server docs/ -o\"\n  },\n  \"husky\": {\n    \"hooks\": {\n      \"pre-commit\": \"npm run build  &&  git add .\"\n    }\n  },\n  \"peerDependencies\": {\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@webcomponents/webcomponentsjs\": \"^2.2.1\",\n    \"whatwg-fetch\": \"^3.0.0\"\n  },\n  \"devDependencies\": {\n    \"@babel/core\": \"^7.1.6\",\n    \"@babel/plugin-proposal-decorators\": \"^7.1.6\",\n    \"@babel/polyfill\": \"^7.0.0\",\n    \"@babel/preset-env\": \"^7.1.6\",\n    \"@babel/register\": \"^7.0.0\",\n    \"@webcomponents/webcomponentsjs\": \"^2.2.1\",\n    \"amd-bundle\": \"^1.7.4\",\n    \"babel-eslint\": \"^10.0.1\",\n    \"esdoc\": \"^1.1.0\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-external-webapi-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\",\n    \"eslint\": \"^5.9.0\",\n    \"husky\": \"^1.2.0\",\n    \"jsdom\": \"^13.0.0\",\n    \"koapache\": \"^1.0.4\",\n    \"mocha\": \"^5.2.0\",\n    \"node-fetch\": \"^2.3.0\",\n    \"puppeteer-browser\": \"^0.3.7\",\n    \"should\": \"^13.2.3\",\n    \"should-sinon\": \"0.0.6\",\n    \"sinon\": \"^7.1.1\",\n    \"whatwg-fetch\": \"^3.0.0\"\n  },\n  \"babel\": {\n    \"presets\": [\n      \"@babel/preset-env\"\n    ],\n    \"plugins\": [\n      [\n        \"@babel/plugin-proposal-decorators\",\n        {\n          \"decoratorsBeforeExport\": true\n        }\n      ]\n    ]\n  }\n}\n",
     "longname": "d:\\OpenSource\\WebCell\\package.json",
     "name": "package.json",
     "static": true,
@@ -5204,7 +5303,7 @@
     "access": "public"
   },
   {
-    "__docId__": 202,
+    "__docId__": 205,
     "kind": "testFile",
     "name": "test/ArrayView/index.test.js",
     "content": "import { readFileSync } from 'fs';\n\nimport JSDOM from '../DOM-polyfill';\n\nimport ArrayView from '../../source/view/ArrayView';\n\nimport ObjectView from '../../source/view/ObjectView';\n\n\nconst fragment = JSDOM.fragment(readFileSync('test/ArrayView/index.html') + ''),\n    data = JSON.parse( readFileSync('test/ArrayView/index.json') );\n\nvar single, multiple;\n\n\n/**\n * @test {ArrayView}\n */\ndescribe('ArrayView()',  () => {\n\n    describe('Single top element of item template',  () => {\n\n        var element = fragment.querySelector('ol');\n\n        /**\n         * @test {ArrayView#constructor}\n         */\n        it('Scan DOM',  () => {\n\n            single = new ArrayView( element );\n\n            single.content.textContent.should.be.equal('');\n        });\n\n        /**\n         * @test {ArrayView#render}\n         */\n        it('Render data',  () => {\n\n            single.render( data.view );\n\n            Array.from(\n                single.content.children,  item => item.textContent\n            ).should.be.eql([\n                'ObjectView', 'ArrayView', 'TreeView'\n            ]);\n        });\n\n        /**\n         * @test {ArrayView#valueOf}\n         */\n        it('Get data',  () => {\n\n            single.valueOf().should.be.eql( single.data );\n\n            single.valueOf().should.not.be.equal( single.data );\n\n            single.data[0].should.be.equal( single[0].data );\n        });\n    });\n\n    describe('Multiple top element of item template',  () => {\n        /**\n         * @test {ObjectView#scan}\n         * @test {View#bindWith}\n         */\n        it('Scan DOM with booted View',  () => {\n\n            multiple = new ObjectView( fragment );\n\n            multiple.should.have.length( 3 );\n\n            multiple.view.should.be.equal( single );\n\n            multiple.browser.should.be.instanceof( ArrayView );\n        });\n\n        /**\n         * @test {ObjectView#render}\n         */\n        it('Render part of data',  () => {\n\n            const _data_ = Object.assign({ },  data);\n\n            delete _data_.view;\n\n            multiple.render(_data_);\n\n            multiple.view[0].scope.should.be.equal( multiple.data );\n\n            multiple.toString().should.be.equal(`\n<main>\n    <h1>${data.title}</h1>\n\n    <ol data-array=\"view\">${\n    data.view.map(item => `<li>${item.name}</li>`).join('')\n}</ol>\n\n    <table>\n        <tbody data-array=\"browser\">${\n    data.browser.map((item, index)  =>  `\n            <tr>\n                <td>${index}</td>\n                <td>${item.brand}</td>\n                <td>${item.core}</td>\n                <td>v0</td>\n            </tr>`.trim()\n    ).join('')\n}</tbody>\n    </table>\n</main>`.trim()\n            );\n        });\n    });\n});\n",
@@ -5215,7 +5314,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 203,
+    "__docId__": 206,
     "kind": "test",
     "name": "describe0",
     "testId": 0,
@@ -5231,7 +5330,7 @@
     ]
   },
   {
-    "__docId__": 204,
+    "__docId__": 207,
     "kind": "test",
     "name": "describe1",
     "testId": 1,
@@ -5244,7 +5343,7 @@
     "lineNumber": 21
   },
   {
-    "__docId__": 205,
+    "__docId__": 208,
     "kind": "test",
     "name": "it2",
     "testId": 2,
@@ -5260,7 +5359,7 @@
     ]
   },
   {
-    "__docId__": 206,
+    "__docId__": 209,
     "kind": "test",
     "name": "it3",
     "testId": 3,
@@ -5276,7 +5375,7 @@
     ]
   },
   {
-    "__docId__": 207,
+    "__docId__": 210,
     "kind": "test",
     "name": "it4",
     "testId": 4,
@@ -5292,7 +5391,7 @@
     ]
   },
   {
-    "__docId__": 208,
+    "__docId__": 211,
     "kind": "test",
     "name": "describe5",
     "testId": 5,
@@ -5305,7 +5404,7 @@
     "lineNumber": 62
   },
   {
-    "__docId__": 209,
+    "__docId__": 212,
     "kind": "test",
     "name": "it6",
     "testId": 6,
@@ -5322,7 +5421,7 @@
     ]
   },
   {
-    "__docId__": 210,
+    "__docId__": 213,
     "kind": "test",
     "name": "it7",
     "testId": 7,
@@ -5338,7 +5437,7 @@
     ]
   },
   {
-    "__docId__": 211,
+    "__docId__": 214,
     "kind": "testFile",
     "name": "test/Component/index.test.js",
     "content": "import PuppeteerBrowser from 'puppeteer-browser';\n\nimport { delay } from '../../source/utility/DOM';\n\n\nvar page;\n\nfunction consoleText() {\n\n    return  new Promise(resolve =>\n        page.on('console',  message => resolve( message.text() ))\n    );\n}\n\n\n/**\n * @test {Component}\n */\ndescribe('Component mixin',  () => {\n\n    before(async ()  =>\n        page = await PuppeteerBrowser.getPage('', 'test/Component/')\n    );\n\n    /**\n     * @test {component}\n     * @test {Component.tagName}\n     */\n    it('Define Custom element',  () =>\n\n        page.$eval('cell-test',  element => [\n            element.constructor.name,\n            element.constructor.template.nodeType\n        ]).should.be.fulfilledWith([\n            'CellTest', 11\n        ])\n    );\n\n    /**\n     * @test {Component#buildDOM}\n     */\n    it('Build Shadow DOM',  () =>\n\n        page.$eval('cell-test',  element => {\n\n            const box = element.$('textarea')[0];\n\n            return Array.from(\n                element.shadowRoot.children,  element => element.tagName\n            ).concat(\n                box.value.trim(),  getComputedStyle( box ).fontStyle\n            );\n        }).should.be.fulfilledWith([\n            'STYLE',  'TEXTAREA',  'Hello, Web components!', 'italic'\n        ])\n    );\n\n    /**\n     * @test {mapProperty}\n     */\n    it('Map Attribute to Property',  async () => {\n\n        await page.$eval(\n            'cell-test',  element => element.setAttribute('value', 'example')\n        );\n\n        (await page.$eval('cell-test',  element => element.value))\n            .should.be.equal('example');\n    });\n\n    /**\n     * @test {mapData}\n     */\n    it('Map Property to Data',  async () => {\n\n        await page.$eval('cell-test',  element => element.name = 'WebCell');\n\n        await delay(0.05);\n\n        (await page.$eval(\n            'cell-test',\n            element  =>  element.$('textarea')[0].textContent.trim()\n        )).should.be.equal(\n            'Hello, WebCell!'\n        );\n    });\n\n    /**\n     * @test {targetOf}\n     * @test {indexOf}\n     */\n    it('Get the event target in Shadow DOM',  async () => {\n\n        const input = consoleText();\n\n        await page.focus('cell-test');\n\n        await page.$eval('cell-test',  element => element.value = '');\n\n        await page.type('cell-test', 'test');\n\n        (await input).should.be.equal('CELL-TEST TEXTAREA 1');\n    });\n\n    /**\n     * @test {trigger}\n     */\n    it('Dispatch events out of Shadow DOM',  async () => {\n\n        const changed = consoleText();\n\n        await page.click('body');\n\n        (await changed).should.be.equal('test');\n    });\n\n    /**\n     * @test {delegate}\n     */\n    it('Delegate DOM events',  async () => {\n\n        const input = consoleText();\n\n        await page.$eval('body',  body => body.addEventListener(\n            'focusin', self['web-cell'].delegate(\n                'textarea',\n                function ({ type }) {  console.info(this.tagName, type);  }\n            )\n        ));\n\n        await page.click('cell-test');\n\n        (await input).should.be.equal('TEXTAREA focusin');\n    });\n});\n\n\ndescribe('Form field components',  () => {\n    /**\n     * @test {InputComponent#changedPropertyOf}\n     * @test {watchAttributes}\n     */\n    it('Render inner field',  async () => {\n\n        const property = await page.$eval('cell-input',  input => {\n\n            const cursor = input.style.getPropertyValue('--input-cursor');\n\n            input = input.shadowRoot.children[0];\n\n            return {\n                type:         input.type,\n                value:        input.value,\n                readOnly:     input.readOnly,\n                placeholder:  input.placeholder,\n                cursor\n            };\n        });\n\n        property.should.be.eql({\n            type:         'text',\n            value:        '1',\n            readOnly:     true,\n            placeholder:  'test',\n            cursor:       'default'\n        });\n    });\n\n\n    it('Filter some data',  async () => {\n\n        const message = consoleText();\n\n        await page.$eval(\n            'cell-input input',\n            input  =>  input.setAttribute('value', 'wrong')\n        );\n\n        (await message).should.be.equal('Something goes wrong!');\n\n        (await page.$eval('cell-input',  input => input.$('input')[0].value))\n            .should.be.equal('1');\n    });\n\n    /**\n     * @test {on}\n     */\n    it('Auto event listener',  async () => {\n\n        const message = consoleText();\n\n        (await page.$eval(\n            'cell-input',\n            input => self['web-cell'].trigger(\n                input.$('input')[0],  'test',  {example: 'sample'},  true,  true\n            )\n        )).should.be.false();\n\n        (await message).should.be.equal('CustomEvent INPUT sample');\n    });\n\n/*\n    it('Update outer field while typing',  async () => {\n\n        var proxy = await page.$('cell-input');\n\n        proxy = await proxy.getProperty('shadowRoot');\n\n        proxy = await proxy.$('input');\n\n        await proxy.type('Hello, WebCell !');\n\n        (await page.$eval('cell-input input',  input => input.value))\n            .should.be.equal('Hello, WebCell !');\n    });*/\n});\n",
@@ -5349,7 +5448,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 212,
+    "__docId__": 215,
     "kind": "test",
     "name": "describe8",
     "testId": 8,
@@ -5365,7 +5464,7 @@
     ]
   },
   {
-    "__docId__": 213,
+    "__docId__": 216,
     "kind": "test",
     "name": "it9",
     "testId": 9,
@@ -5382,7 +5481,7 @@
     ]
   },
   {
-    "__docId__": 214,
+    "__docId__": 217,
     "kind": "test",
     "name": "it10",
     "testId": 10,
@@ -5398,7 +5497,7 @@
     ]
   },
   {
-    "__docId__": 215,
+    "__docId__": 218,
     "kind": "test",
     "name": "it11",
     "testId": 11,
@@ -5414,7 +5513,7 @@
     ]
   },
   {
-    "__docId__": 216,
+    "__docId__": 219,
     "kind": "test",
     "name": "it12",
     "testId": 12,
@@ -5430,7 +5529,7 @@
     ]
   },
   {
-    "__docId__": 217,
+    "__docId__": 220,
     "kind": "test",
     "name": "it13",
     "testId": 13,
@@ -5447,7 +5546,7 @@
     ]
   },
   {
-    "__docId__": 218,
+    "__docId__": 221,
     "kind": "test",
     "name": "it14",
     "testId": 14,
@@ -5463,7 +5562,7 @@
     ]
   },
   {
-    "__docId__": 219,
+    "__docId__": 222,
     "kind": "test",
     "name": "it15",
     "testId": 15,
@@ -5479,7 +5578,7 @@
     ]
   },
   {
-    "__docId__": 220,
+    "__docId__": 223,
     "kind": "test",
     "name": "describe16",
     "testId": 16,
@@ -5492,7 +5591,7 @@
     "lineNumber": 138
   },
   {
-    "__docId__": 221,
+    "__docId__": 224,
     "kind": "test",
     "name": "it17",
     "testId": 17,
@@ -5509,7 +5608,7 @@
     ]
   },
   {
-    "__docId__": 222,
+    "__docId__": 225,
     "kind": "test",
     "name": "it18",
     "testId": 18,
@@ -5522,7 +5621,7 @@
     "lineNumber": 170
   },
   {
-    "__docId__": 223,
+    "__docId__": 226,
     "kind": "test",
     "name": "it19",
     "testId": 19,
@@ -5538,7 +5637,7 @@
     ]
   },
   {
-    "__docId__": 224,
+    "__docId__": 227,
     "kind": "testFile",
     "name": "test/ObjectView/index.test.js",
     "content": "import { readFileSync } from 'fs';\n\nimport JSDOM from '../DOM-polyfill';\n\nimport View from '../../source/view/View';\n\nimport ObjectView from '../../source/view/ObjectView';\n\nimport Sinon from 'sinon';\n\nimport { nextTick } from '../../source/utility/DOM';\n\nvar HTML, fragment = `\n    <fieldset>\n        <legend title=\"Test field\">\n            <label>Test</label>\n            <input type=\"checkbox\">\n        </legend>\n    </fieldset>`.trim();\n\n\n/**\n * @test {ObjectView}\n */\ndescribe('ObjectView()',  () => {\n\n    before(()  =>  HTML = readFileSync('test/ObjectView/index.html') + '');\n\n    describe('Single view',  () => {\n\n        var view, element;\n\n        before(() => {\n\n            element = JSDOM.fragment( HTML ).querySelector('fieldset');\n\n            element.remove();\n        });\n\n        /**\n         * @test {ObjectView#scan}\n         */\n        it('Scan DOM',  () => {\n\n            view = new ObjectView( element );\n\n            view.should.have.length( 3 );\n        });\n\n        /**\n         * @test {ObjectView#watch}\n         * @test {ObjectView#render}\n         */\n        it('Render data',  () => {\n\n            view.render({\n                name:    'Test',\n                title:   'Test field',\n                enable:  true,\n                extra:   'test'\n            });\n\n            view.extra.should.be.equal('test');\n\n            view.toString().should.be.equal( fragment );\n\n            view.content.querySelector('input').checked.should.be.true();\n        });\n\n        /**\n         * @test {ObjectView#valueOf}\n         */\n        it('Get data',  () => {\n\n            view.valueOf().should.be.eql( view.data );\n\n            view.valueOf().should.not.be.equal( view.data );\n        });\n\n        /**\n         * @test {ObjectView#commit}\n         * @test {ObjectView#watch}\n         */\n        it('Async render',  async () => {\n\n            view.render = Sinon.spy( view.render );\n\n            view.commit('name', '<b>Example</b>');\n\n            view.title = 'Example field';\n\n            view.render.should.not.be.called();\n\n            view.toString().should.be.equal( fragment );\n\n            await nextTick();\n\n            view.render.should.be.calledOnce();\n\n            view.toString().should.be.equal(\n                fragment.replace(/Test(?= )/, 'Example')\n                    .replace('Test', '<b>Example</b>')\n            );\n        });\n    });\n\n    describe('Nested view',  () => {\n\n        var view;\n\n        /**\n         * @test {ObjectView#scan}\n         */\n        it('Scan DOM',  () => {\n\n            view = new ObjectView( HTML );\n\n            view.should.have.length( 4 );\n\n            view[3].should.be.instanceof( ObjectView );\n        });\n\n        /**\n         * @test {View#bindWith}\n         * @test {View.instanceOf}\n         * @test {ObjectView#watch}\n         */\n        it('Associate DOM',  () => {\n\n            View.instanceOf( view.content[0] ).should.be.equal( view );\n\n            view.tips.parent.should.be.equal( view );\n        });\n\n        /**\n         * @test {ObjectView#render}\n         */\n        it('Render data',  () => {\n\n            view.render({\n                name:    'Test',\n                title:   'Test field',\n                enable:  true,\n                tips:    {\n                    title:    'Test tips',\n                    content:  'Test content'\n                }\n            });\n\n            view.toString().trim().should.be.equal(`\n<form>\n    ${fragment}\n    <dl data-object=\"tips\">\n        <dt>Test tips</dt>\n        <dd>Test content</dd>\n    </dl>\n</form>`.trim()\n            );\n        });\n\n        /**\n         * @test {ObjectView#valueOf}\n         */\n        it('Get data',  () => {\n\n            view.valueOf().should.be.eql( view.data );\n\n            view.valueOf().should.not.be.equal( view.data );\n\n            view.data.tips.should.be.equal( view.tips.data );\n\n            view.tips.scope.should.be.equal( view.data );\n        });\n    });\n});\n",
@@ -5549,7 +5648,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 225,
+    "__docId__": 228,
     "kind": "test",
     "name": "describe20",
     "testId": 20,
@@ -5565,7 +5664,7 @@
     ]
   },
   {
-    "__docId__": 226,
+    "__docId__": 229,
     "kind": "test",
     "name": "describe21",
     "testId": 21,
@@ -5578,7 +5677,7 @@
     "lineNumber": 29
   },
   {
-    "__docId__": 227,
+    "__docId__": 230,
     "kind": "test",
     "name": "it22",
     "testId": 22,
@@ -5594,7 +5693,7 @@
     ]
   },
   {
-    "__docId__": 228,
+    "__docId__": 231,
     "kind": "test",
     "name": "it23",
     "testId": 23,
@@ -5611,7 +5710,7 @@
     ]
   },
   {
-    "__docId__": 229,
+    "__docId__": 232,
     "kind": "test",
     "name": "it24",
     "testId": 24,
@@ -5627,7 +5726,7 @@
     ]
   },
   {
-    "__docId__": 230,
+    "__docId__": 233,
     "kind": "test",
     "name": "it25",
     "testId": 25,
@@ -5644,7 +5743,7 @@
     ]
   },
   {
-    "__docId__": 231,
+    "__docId__": 234,
     "kind": "test",
     "name": "describe26",
     "testId": 26,
@@ -5657,7 +5756,7 @@
     "lineNumber": 107
   },
   {
-    "__docId__": 232,
+    "__docId__": 235,
     "kind": "test",
     "name": "it27",
     "testId": 27,
@@ -5673,7 +5772,7 @@
     ]
   },
   {
-    "__docId__": 233,
+    "__docId__": 236,
     "kind": "test",
     "name": "it28",
     "testId": 28,
@@ -5691,7 +5790,7 @@
     ]
   },
   {
-    "__docId__": 234,
+    "__docId__": 237,
     "kind": "test",
     "name": "it29",
     "testId": 29,
@@ -5707,7 +5806,7 @@
     ]
   },
   {
-    "__docId__": 235,
+    "__docId__": 238,
     "kind": "test",
     "name": "it30",
     "testId": 30,
@@ -5723,7 +5822,7 @@
     ]
   },
   {
-    "__docId__": 236,
+    "__docId__": 239,
     "kind": "testFile",
     "name": "test/Template.test.js",
     "content": "import Template from '../source/view/Template';\n\nimport sinon from 'sinon';\n\n\n/**\n * @test {Template}\n */\ndescribe('Template',  () => {\n\n    /**\n     * @test {Template#parse}\n     * @test {Template#clear}\n     */\n    it('Parsing',  () => {\n\n        const template = new Template(\n            '[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !'\n        );\n\n        template.should.have.length( 2 );\n\n        template.reference.get('this')[0].should.be.equal('name');\n\n        template.toString().should.be.equal(\n            `[ ${(new Date()).getFullYear()} ]  Hello,  !`\n        );\n    });\n\n    /**\n     * @test {Template#evaluate}\n     */\n    it('Evaluate text',  () => {\n\n        const template = new Template(\n            '[ ${this.time} ]  Hello, ${scope.creator}\\'s ${view.name} !',\n            ['view', 'scope']\n        );\n\n        template.should.have.length( 3 );\n\n        template.reference.size.should.be.equal( 3 );\n\n        template.evaluate(\n            {time: '2015-07-23'},  {name: 'EasyWebApp.js'},  {creator: 'TechQuery'}\n        ).should.be.equal(\n            '[ 2015-07-23 ]  Hello, TechQuery\\'s EasyWebApp.js !'\n        );\n    });\n\n    /**\n     * @test {Template#evaluate}\n     */\n    it('Evaluate non-text',  () => {\n\n        function method() { }\n\n        (new Template('${this.method}')).evaluate({ method })\n            .should.be.equal( method );\n    });\n\n    /**\n     * @test {Template#onChange}\n     */\n    it('Changed callback',  () => {\n\n        const empty = `[ ${(new Date()).getFullYear()} ]  Hello,  !`;\n\n        const onChange = sinon.spy((newValue, oldValue, ...bindData)  =>  {\n\n            if (oldValue === null)\n                newValue.should.be.equal( empty );\n            else {\n                oldValue.should.be.equal( empty );\n\n                newValue.should.be.equal(\n                    `[ ${(new Date()).getFullYear()} ]  Hello, EWA !`\n                );\n            }\n\n            bindData.should.be.eql([1, 2, 3]);\n        });\n\n        const template = new Template(\n            '[ ${(new Date()).getFullYear()} ]  Hello, ${this.name} !',\n            onChange,\n            [1, 2, 3]\n        );\n\n        template.evaluate({name: 'EWA'});\n\n        onChange.should.have.callCount(2);\n    });\n});\n",
@@ -5734,7 +5833,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 237,
+    "__docId__": 240,
     "kind": "test",
     "name": "describe31",
     "testId": 31,
@@ -5750,7 +5849,7 @@
     ]
   },
   {
-    "__docId__": 238,
+    "__docId__": 241,
     "kind": "test",
     "name": "it32",
     "testId": 32,
@@ -5767,7 +5866,7 @@
     ]
   },
   {
-    "__docId__": 239,
+    "__docId__": 242,
     "kind": "test",
     "name": "it33",
     "testId": 33,
@@ -5783,7 +5882,7 @@
     ]
   },
   {
-    "__docId__": 240,
+    "__docId__": 243,
     "kind": "test",
     "name": "it34",
     "testId": 34,
@@ -5799,7 +5898,7 @@
     ]
   },
   {
-    "__docId__": 241,
+    "__docId__": 244,
     "kind": "test",
     "name": "it35",
     "testId": 35,
@@ -5815,7 +5914,7 @@
     ]
   },
   {
-    "__docId__": 242,
+    "__docId__": 245,
     "kind": "testFile",
     "name": "test/utility/DOM.test.js",
     "content": "import { readFileSync } from 'fs';\n\nimport {\n    documentReady, parseDOM, stringifyDOM, $, $up, delay, nextTick\n} from '../../source/utility/DOM';\n\n\ndescribe('DOM utility',  () => {\n\n    var fragment;\n    /**\n     * @test {documentReady}\n     */\n    it('DOM ready',  () => documentReady.should.be.resolved());\n\n    /**\n     * @test {parseDOM}\n     * @test {stringifyDOM}\n     */\n    it('Parse & Stringify DOM',  () => {\n\n        const HTML = (readFileSync('test/ArrayView/index.html') + '')\n            .replace(/\\r\\n/g, '\\n').replace(/\\r/g, '\\n');\n\n        fragment = parseDOM( HTML );\n\n        fragment.should.be.class('DocumentFragment');\n\n        stringifyDOM( fragment ).should.be.equal( HTML );\n    });\n\n    /**\n     * @test {\\$}\n     * @test {\\$up}\n     */\n    it('Search elements up & down',  () => {\n\n        const template = $('template', fragment);\n\n        template.should.have.length(1);\n\n        $up('main', template[0]).should.be.instanceOf( Element );\n    });\n\n    /**\n     * @test {delay}\n     * @test {nextTick}\n     */\n    it('Await next tick',  async () => {\n\n        const tick = nextTick();\n\n        tick.should.be.equal( nextTick() );\n\n        await delay(0.1);\n\n        tick.should.not.be.equal( nextTick() );\n    });\n});\n",
@@ -5826,7 +5925,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 243,
+    "__docId__": 246,
     "kind": "test",
     "name": "describe36",
     "testId": 36,
@@ -5839,7 +5938,7 @@
     "lineNumber": 8
   },
   {
-    "__docId__": 244,
+    "__docId__": 247,
     "kind": "test",
     "name": "it37",
     "testId": 37,
@@ -5855,7 +5954,7 @@
     ]
   },
   {
-    "__docId__": 245,
+    "__docId__": 248,
     "kind": "test",
     "name": "it38",
     "testId": 38,
@@ -5872,7 +5971,7 @@
     ]
   },
   {
-    "__docId__": 246,
+    "__docId__": 249,
     "kind": "test",
     "name": "it39",
     "testId": 39,
@@ -5889,7 +5988,7 @@
     ]
   },
   {
-    "__docId__": 247,
+    "__docId__": 250,
     "kind": "test",
     "name": "it40",
     "testId": 40,
@@ -5906,10 +6005,10 @@
     ]
   },
   {
-    "__docId__": 248,
+    "__docId__": 251,
     "kind": "testFile",
     "name": "test/utility/object.test.js",
-    "content": "import {\n    getPropertyDescriptor, multipleMap, extend, mapTree, decoratorOf\n} from '../../source/utility/object';\n\n\ndescribe('Object utility',  () => {\n    /**\n     * @test {getPropertyDescriptor}\n     */\n    describe('Get the property descriptor',  () => {\n\n        const object = {test: 1},\n            descriptor = {\n                value:         1,\n                writable:      true,\n                enumerable:    true,\n                configurable:  true\n            };\n\n        it(\n            'Own property',\n            ()  =>  getPropertyDescriptor(object,  'test')\n                .should.be.eql( descriptor )\n        );\n\n        it(\n            'Property on the prototype chain',\n            ()  =>  getPropertyDescriptor(\n                Object.create( object ),  'test'\n            ).should.be.eql( descriptor )\n        );\n    });\n\n    /**\n     * @test {multipleMap}\n     */\n    describe('Map & filter',  () => {\n\n        it('Filter `null` & `undefined`',  () => {\n\n            multipleMap(\n                [null, undefined, NaN, false, 0, 1],  item => item\n            ).should.be.eql([\n                NaN, false, 0, 1\n            ]);\n        });\n\n        it('Merge Array elements into result',  () => {\n\n            multipleMap([[1], [2, 3]],  item => item).should.be.eql([1, 2, 3]);\n        });\n    });\n\n    /**\n     * @test {extend}\n     */\n    describe('Mixin objects',  () => {\n\n        it('Ordinary objects',  () => {\n\n            const data = {\n                example:   1,\n                get test() { },\n                null:       null,\n                undefined:  undefined\n            };\n\n            Object.defineProperty(data,  'hidden',  {value: 1});\n\n            Object.getOwnPropertyNames(\n                extend({ },  null,  data)\n            ).should.be.eql([\n                'example', 'test', 'hidden'\n            ]);\n        });\n\n        it('Function or Class',  () => {\n\n            function Test() { }\n\n            class Example {\n                constructor(test) {  test;  }\n\n                static test() { }\n\n                test() { }\n            }\n\n            extend(Test, Example).should.have.properties({\n                name:    'Test',\n                length:  0,\n                test:    Example.test\n            });\n\n            Test.prototype.should.not.be.equal( Example );\n\n            Test.prototype.should.have.property('test', Example.prototype.test);\n        });\n    });\n\n    /**\n     *  @test {mapTree}\n     */\n    it('Filter object tree',  () => {\n\n        multipleMap(\n            mapTree(\n                {\n                    id:        0,\n                    children:  [\n                        {\n                            id:        1,\n                            children:  [\n                                {\n                                    id:        3,\n                                    children:  []\n                                }\n                            ]\n                        },\n                        {\n                            id:        2,\n                            children:  []\n                        }\n                    ]\n                },\n                'children'\n            ),\n            ({node, depth}) => {\n\n                if (depth < 2)  return node.id;\n            }\n        ).should.be.eql([1, 2]);\n    });\n\n    /**\n     * @test {decoratorOf}\n     */\n    describe('Create decorator descriptor',  () => {\n\n        it('Static fields',  () => {\n\n            const descriptor = {\n                kind:        'field',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  'sample');\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.enumerable.should.be.true();\n\n            meta.initializer().should.be.equal('sample');\n        });\n\n        it('Static methods',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  () => 'sample',  {\n                enumerable:  false\n            });\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.enumerable.should.be.false();\n\n            meta.descriptor.value().should.be.equal('sample');\n        });\n\n        it('Static accessors',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  {get: () => 'sample'});\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.get().should.be.equal('sample');\n        });\n\n        it('Prototype methods',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'prototype'\n            };\n\n            const meta = decoratorOf(\n                (class Test { }).prototype,  'example',  () => 'sample'\n            );\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.value().should.be.equal('sample');\n        });\n    });\n});\n",
+    "content": "import {\n    getPropertyDescriptor, multipleMap, unique, extend, mapTree, decoratorOf\n} from '../../source/utility/object';\n\n\ndescribe('Object utility',  () => {\n    /**\n     * @test {getPropertyDescriptor}\n     */\n    describe('Get the property descriptor',  () => {\n\n        const object = {test: 1},\n            descriptor = {\n                value:         1,\n                writable:      true,\n                enumerable:    true,\n                configurable:  true\n            };\n\n        it(\n            'Own property',\n            ()  =>  getPropertyDescriptor(object,  'test')\n                .should.be.eql( descriptor )\n        );\n\n        it(\n            'Property on the prototype chain',\n            ()  =>  getPropertyDescriptor(\n                Object.create( object ),  'test'\n            ).should.be.eql( descriptor )\n        );\n    });\n\n    /**\n     * @test {multipleMap}\n     */\n    describe('Map & filter',  () => {\n\n        it('Filter `null` & `undefined`',  () => {\n\n            multipleMap(\n                [null, undefined, NaN, false, 0, 1],  item => item\n            ).should.be.eql([\n                NaN, false, 0, 1\n            ]);\n        });\n\n        it('Merge Array elements into result',  () => {\n\n            multipleMap([[1], [2, 3]],  item => item).should.be.eql([1, 2, 3]);\n        });\n    });\n\n    /**\n     * @test {extend}\n     */\n    describe('Mixin objects',  () => {\n\n        it('Ordinary objects',  () => {\n\n            const data = {\n                example:   1,\n                get test() { },\n                null:       null,\n                undefined:  undefined\n            };\n\n            Object.defineProperty(data,  'hidden',  {value: 1});\n\n            Object.getOwnPropertyNames(\n                extend({ },  null,  data)\n            ).should.be.eql([\n                'example', 'test', 'hidden'\n            ]);\n        });\n\n        it('Function or Class',  () => {\n\n            function Test() { }\n\n            class Example {\n                constructor(test) {  test;  }\n\n                static test() { }\n\n                test() { }\n            }\n\n            extend(Test, Example).should.have.properties({\n                name:    'Test',\n                length:  0,\n                test:    Example.test\n            });\n\n            Test.prototype.should.not.be.equal( Example );\n\n            Test.prototype.should.have.property('test', Example.prototype.test);\n        });\n    });\n\n    /**\n     *  @test {mapTree}\n     */\n    it('Filter object tree',  () => {\n\n        multipleMap(\n            mapTree(\n                {\n                    id:        0,\n                    children:  [\n                        {\n                            id:        1,\n                            children:  [\n                                {\n                                    id:        3,\n                                    children:  []\n                                }\n                            ]\n                        },\n                        {\n                            id:        2,\n                            children:  []\n                        }\n                    ]\n                },\n                'children'\n            ),\n            ({node, depth}) => {\n\n                if (depth < 2)  return node.id;\n            }\n        ).should.be.eql([1, 2]);\n    });\n\n    /**\n     * @test {unique}\n     */\n    describe('Array deduplication',  () => {\n\n        it('should return new Array',  () => {\n\n            const origin = [ ];\n\n            unique( origin ).should.not.be.equal( origin );\n        });\n\n        it(\n            'should compare items using \"!==\" while 0 parameter passed in',\n            ()  =>  unique([1, 2, 3, 3, 2, 1]).should.be.eql([1, 2, 3])\n        );\n\n        const symbol = Symbol.for('test');\n\n        const origin = [\n            {\n                id:   1,\n                uid:  10000,\n            },\n            {\n                id:        2,\n                uid:       10000,\n                [symbol]:  'example'\n            },\n            {\n                id:        3,\n                uid:       10001,\n                [symbol]:  'example'\n            }\n        ];\n\n        it('should compare items using \"!==\" by a String or Symbol key',  () => {\n\n            unique(origin, 'uid').should.be.eql([\n                {\n                    id:   1,\n                    uid:  10000,\n                },\n                {\n                    id:   3,\n                    uid:  10001,\n                }\n            ]);\n\n            unique(origin, symbol).should.be.eql([\n                {\n                    id:   1,\n                    uid:  10000,\n                },\n                {\n                    id:        2,\n                    uid:       10000,\n                    [symbol]:  'example'\n                }\n            ]);\n        });\n\n        it(\n            'should reserve an item while the Custom callback return `true`',\n            () => unique(\n                origin,\n                (A, B)  =>  ((A.uid !== B.uid) || (A[symbol] !== B[symbol]))\n            ).should.be.eql(\n                origin\n            )\n        );\n    });\n\n    /**\n     * @test {decoratorOf}\n     */\n    describe('Create decorator descriptor',  () => {\n\n        it('Static fields',  () => {\n\n            const descriptor = {\n                kind:        'field',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  'sample');\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.enumerable.should.be.true();\n\n            meta.initializer().should.be.equal('sample');\n        });\n\n        it('Static methods',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  () => 'sample',  {\n                enumerable:  false\n            });\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.enumerable.should.be.false();\n\n            meta.descriptor.value().should.be.equal('sample');\n        });\n\n        it('Static accessors',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'static'\n            };\n\n            const meta = decoratorOf(class Test { },  'example',  {get: () => 'sample'});\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.get().should.be.equal('sample');\n        });\n\n        it('Prototype methods',  () => {\n\n            const descriptor = {\n                kind:        'method',\n                key:         'example',\n                placement:   'prototype'\n            };\n\n            const meta = decoratorOf(\n                (class Test { }).prototype,  'example',  () => 'sample'\n            );\n\n            meta.should.containEql( descriptor );\n\n            meta.descriptor.value().should.be.equal('sample');\n        });\n    });\n});\n",
     "static": true,
     "longname": "d:/OpenSource/WebCell/test/utility/object.test.js",
     "access": null,
@@ -5917,7 +6016,7 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 249,
+    "__docId__": 252,
     "kind": "test",
     "name": "describe41",
     "testId": 41,
@@ -5930,7 +6029,7 @@
     "lineNumber": 6
   },
   {
-    "__docId__": 250,
+    "__docId__": 253,
     "kind": "test",
     "name": "describe42",
     "testId": 42,
@@ -5946,7 +6045,7 @@
     ]
   },
   {
-    "__docId__": 251,
+    "__docId__": 254,
     "kind": "test",
     "name": "it43",
     "testId": 43,
@@ -5959,7 +6058,7 @@
     "lineNumber": 20
   },
   {
-    "__docId__": 252,
+    "__docId__": 255,
     "kind": "test",
     "name": "it44",
     "testId": 44,
@@ -5972,7 +6071,7 @@
     "lineNumber": 26
   },
   {
-    "__docId__": 253,
+    "__docId__": 256,
     "kind": "test",
     "name": "describe45",
     "testId": 45,
@@ -5988,7 +6087,7 @@
     ]
   },
   {
-    "__docId__": 254,
+    "__docId__": 257,
     "kind": "test",
     "name": "it46",
     "testId": 46,
@@ -6001,7 +6100,7 @@
     "lineNumber": 39
   },
   {
-    "__docId__": 255,
+    "__docId__": 258,
     "kind": "test",
     "name": "it47",
     "testId": 47,
@@ -6014,7 +6113,7 @@
     "lineNumber": 48
   },
   {
-    "__docId__": 256,
+    "__docId__": 259,
     "kind": "test",
     "name": "describe48",
     "testId": 48,
@@ -6030,7 +6129,7 @@
     ]
   },
   {
-    "__docId__": 257,
+    "__docId__": 260,
     "kind": "test",
     "name": "it49",
     "testId": 49,
@@ -6043,7 +6142,7 @@
     "lineNumber": 59
   },
   {
-    "__docId__": 258,
+    "__docId__": 261,
     "kind": "test",
     "name": "it50",
     "testId": 50,
@@ -6056,7 +6155,7 @@
     "lineNumber": 77
   },
   {
-    "__docId__": 259,
+    "__docId__": 262,
     "kind": "test",
     "name": "it51",
     "testId": 51,
@@ -6072,7 +6171,7 @@
     ]
   },
   {
-    "__docId__": 260,
+    "__docId__": 263,
     "kind": "test",
     "name": "describe52",
     "testId": 52,
@@ -6081,14 +6180,14 @@
     "static": true,
     "longname": "test/utility/object.test.js~describe41.describe52",
     "access": null,
-    "description": "Create decorator descriptor",
+    "description": "Array deduplication",
     "lineNumber": 138,
     "testTargets": [
-      "decoratorOf"
+      "unique"
     ]
   },
   {
-    "__docId__": 261,
+    "__docId__": 264,
     "kind": "test",
     "name": "it53",
     "testId": 53,
@@ -6097,11 +6196,11 @@
     "static": true,
     "longname": "test/utility/object.test.js~describe41.describe52.it53",
     "access": null,
-    "description": "Static fields",
+    "description": "should return new Array",
     "lineNumber": 140
   },
   {
-    "__docId__": 262,
+    "__docId__": 265,
     "kind": "test",
     "name": "it54",
     "testId": 54,
@@ -6110,11 +6209,11 @@
     "static": true,
     "longname": "test/utility/object.test.js~describe41.describe52.it54",
     "access": null,
-    "description": "Static methods",
-    "lineNumber": 157
+    "description": "should compare items using \"!==\" while 0 parameter passed in",
+    "lineNumber": 147
   },
   {
-    "__docId__": 263,
+    "__docId__": 266,
     "kind": "test",
     "name": "it55",
     "testId": 55,
@@ -6123,11 +6222,11 @@
     "static": true,
     "longname": "test/utility/object.test.js~describe41.describe52.it55",
     "access": null,
-    "description": "Static accessors",
-    "lineNumber": 176
+    "description": "should compare items using \"!==\" by a String or Symbol key",
+    "lineNumber": 171
   },
   {
-    "__docId__": 264,
+    "__docId__": 267,
     "kind": "test",
     "name": "it56",
     "testId": 56,
@@ -6136,11 +6235,79 @@
     "static": true,
     "longname": "test/utility/object.test.js~describe41.describe52.it56",
     "access": null,
-    "description": "Prototype methods",
-    "lineNumber": 191
+    "description": "should reserve an item while the Custom callback return `true`",
+    "lineNumber": 197
   },
   {
-    "__docId__": 265,
+    "__docId__": 268,
+    "kind": "test",
+    "name": "describe57",
+    "testId": 57,
+    "memberof": "test/utility/object.test.js~describe41",
+    "testDepth": 1,
+    "static": true,
+    "longname": "test/utility/object.test.js~describe41.describe57",
+    "access": null,
+    "description": "Create decorator descriptor",
+    "lineNumber": 211,
+    "testTargets": [
+      "decoratorOf"
+    ]
+  },
+  {
+    "__docId__": 269,
+    "kind": "test",
+    "name": "it58",
+    "testId": 58,
+    "memberof": "test/utility/object.test.js~describe41.describe57",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/utility/object.test.js~describe41.describe57.it58",
+    "access": null,
+    "description": "Static fields",
+    "lineNumber": 213
+  },
+  {
+    "__docId__": 270,
+    "kind": "test",
+    "name": "it59",
+    "testId": 59,
+    "memberof": "test/utility/object.test.js~describe41.describe57",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/utility/object.test.js~describe41.describe57.it59",
+    "access": null,
+    "description": "Static methods",
+    "lineNumber": 230
+  },
+  {
+    "__docId__": 271,
+    "kind": "test",
+    "name": "it60",
+    "testId": 60,
+    "memberof": "test/utility/object.test.js~describe41.describe57",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/utility/object.test.js~describe41.describe57.it60",
+    "access": null,
+    "description": "Static accessors",
+    "lineNumber": 249
+  },
+  {
+    "__docId__": 272,
+    "kind": "test",
+    "name": "it61",
+    "testId": 61,
+    "memberof": "test/utility/object.test.js~describe41.describe57",
+    "testDepth": 2,
+    "static": true,
+    "longname": "test/utility/object.test.js~describe41.describe57.it61",
+    "access": null,
+    "description": "Prototype methods",
+    "lineNumber": 264
+  },
+  {
+    "__docId__": 273,
     "kind": "testFile",
     "name": "test/utility/resource.test.js",
     "content": "import JSDOM from '../DOM-polyfill';\n\nimport {\n    serialize, stringify, parse, request, fileTypeOf, blobFrom\n} from '../../source/utility/resource';\n\nimport WebServer from 'koapache';\n\nimport { readFileSync } from 'fs';\n\n\ndescribe('Resource utility',  () => {\n    /**\n     * @test {serialize}\n     */\n    describe('Serialize \"form\" or \"fieldset\" element',  () => {\n\n        const form = JSDOM.fragment(`\n<form enctype=\"application/json\">\n    <input type=\"text\" name=\"text\" value=\"example\">\n    <textarea name=\"content\">sample</textarea>\n    <input type=\"file\" name=\"file\">\n    <input type=\"submit\">\n</form>`\n        ).children[0];\n\n        it(\n            'Multiple part data',\n            ()  =>  serialize( form ).should.be.instanceOf( FormData )\n        );\n\n        it('JSON',  () => {\n\n            form.elements.file.remove();\n\n            serialize( form ).should.be.eql({\n                text:     'example',\n                content:  'sample'\n            });\n        });\n\n        it('URL encode',  () => {\n\n            form.removeAttribute('enctype');\n\n            serialize( form ).should.be.equal('text=example&content=sample');\n        });\n    });\n\n    describe('JSON parser',  () => {\n\n        const object = {\n                name:     'WebCell',\n                time:     new Date('2018-11-10'),\n                content:  document.createElement('a')\n            },\n            string = `{\n    \"name\": \"WebCell\",\n    \"time\": \"2018-11-10T00:00:00.000Z\",\n    \"content\": \"<a></a>\"\n}`;\n        /**\n         * @test {stringify}\n         */\n        it('Serialization',  () => {\n\n            stringify( object.content ).should.be.equal('\"<a></a>\"');\n\n            stringify( object ).should.be.equal( string );\n        });\n\n        /**\n         * @test {parse}\n         */\n        describe('Parsing',  () => {\n\n            it('Date()',  () => {\n\n                const result = parse('\"2018-11-10T00:00:00.000Z\"');\n\n                result.should.be.instanceOf( Date );\n\n                result.should.be.eql( object.time );\n            });\n\n            it('Element()',  () => {\n\n                const result = parse('\"<a />\"');\n\n                result.should.be.instanceOf( Element );\n\n                result.should.be.eql( object.content );\n            });\n\n            it('Mixin',  () => parse( string ).should.be.eql( object ));\n        });\n    });\n\n    /**\n     * @test {request}\n     */\n    describe('HTTP request',  () => {\n\n        var server;\n\n        before(async () => {\n\n            server = await (new WebServer()).workerHost();\n\n            server = `http://${server.address}:${server.port}`;\n        });\n\n        it('Get Plain text',  () => request(\n            `${server}/ReadMe.md`,\n        ).should.be.fulfilledWith(\n            readFileSync('ReadMe.md') + ''\n        ));\n\n        it('Get JSON object',  () => request(\n            `${server}/package.json`,\n        ).should.be.fulfilledWith(\n            JSON.parse( readFileSync('package.json') )\n        ));\n\n        it(\n            'Get HTML document',\n            async ()  =>  (await request(\n                `${server}/test/ObjectView/index.html`,\n            )).should.be.class(\n                'DocumentFragment'\n            )\n        );\n\n        it(\n            'Get Binary file',\n            async ()  =>  (await request(`${server}/docs/image/github.png`))\n                .should.be.class('Blob')\n        );\n    });\n\n    describe('Binary',  () => {\n\n        const data = `data:image/png;base64,${\n            readFileSync('docs/image/github.png').toString('base64')\n        }`;\n\n        /**\n         * @test {fileTypeOf}\n         */\n        it(\n            'Parse Data URI',\n            ()  =>  fileTypeOf( data ).should.be.fulfilledWith({\n                schema:  'data',\n                type:    'png'\n            })\n        );\n\n        /**\n         * @test {blobFrom}\n         */\n        it(\n            'Convert DataURI to Blob',\n            ()  =>  blobFrom( data ).should.be.class('Blob')\n        );\n    });\n});\n",
@@ -6151,27 +6318,27 @@
     "lineNumber": 1
   },
   {
-    "__docId__": 266,
+    "__docId__": 274,
     "kind": "test",
-    "name": "describe57",
-    "testId": 57,
+    "name": "describe62",
+    "testId": 62,
     "memberof": "test/utility/resource.test.js",
     "testDepth": 0,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57",
+    "longname": "test/utility/resource.test.js~describe62",
     "access": null,
     "description": "Resource utility",
     "lineNumber": 12
   },
   {
-    "__docId__": 267,
+    "__docId__": 275,
     "kind": "test",
-    "name": "describe58",
-    "testId": 58,
-    "memberof": "test/utility/resource.test.js~describe57",
+    "name": "describe63",
+    "testId": 63,
+    "memberof": "test/utility/resource.test.js~describe62",
     "testDepth": 1,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe58",
+    "longname": "test/utility/resource.test.js~describe62.describe63",
     "access": null,
     "description": "Serialize \"form\" or \"fieldset\" element",
     "lineNumber": 16,
@@ -6180,66 +6347,66 @@
     ]
   },
   {
-    "__docId__": 268,
+    "__docId__": 276,
     "kind": "test",
-    "name": "it59",
-    "testId": 59,
-    "memberof": "test/utility/resource.test.js~describe57.describe58",
+    "name": "it64",
+    "testId": 64,
+    "memberof": "test/utility/resource.test.js~describe62.describe63",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe58.it59",
+    "longname": "test/utility/resource.test.js~describe62.describe63.it64",
     "access": null,
     "description": "Multiple part data",
     "lineNumber": 27
   },
   {
-    "__docId__": 269,
+    "__docId__": 277,
     "kind": "test",
-    "name": "it60",
-    "testId": 60,
-    "memberof": "test/utility/resource.test.js~describe57.describe58",
+    "name": "it65",
+    "testId": 65,
+    "memberof": "test/utility/resource.test.js~describe62.describe63",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe58.it60",
+    "longname": "test/utility/resource.test.js~describe62.describe63.it65",
     "access": null,
     "description": "JSON",
     "lineNumber": 32
   },
   {
-    "__docId__": 270,
+    "__docId__": 278,
     "kind": "test",
-    "name": "it61",
-    "testId": 61,
-    "memberof": "test/utility/resource.test.js~describe57.describe58",
+    "name": "it66",
+    "testId": 66,
+    "memberof": "test/utility/resource.test.js~describe62.describe63",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe58.it61",
+    "longname": "test/utility/resource.test.js~describe62.describe63.it66",
     "access": null,
     "description": "URL encode",
     "lineNumber": 42
   },
   {
-    "__docId__": 271,
+    "__docId__": 279,
     "kind": "test",
-    "name": "describe62",
-    "testId": 62,
-    "memberof": "test/utility/resource.test.js~describe57",
+    "name": "describe67",
+    "testId": 67,
+    "memberof": "test/utility/resource.test.js~describe62",
     "testDepth": 1,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62",
+    "longname": "test/utility/resource.test.js~describe62.describe67",
     "access": null,
     "description": "JSON parser",
     "lineNumber": 50
   },
   {
-    "__docId__": 272,
+    "__docId__": 280,
     "kind": "test",
-    "name": "it63",
-    "testId": 63,
-    "memberof": "test/utility/resource.test.js~describe57.describe62",
+    "name": "it68",
+    "testId": 68,
+    "memberof": "test/utility/resource.test.js~describe62.describe67",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62.it63",
+    "longname": "test/utility/resource.test.js~describe62.describe67.it68",
     "access": null,
     "description": "Serialization",
     "lineNumber": 65,
@@ -6248,14 +6415,14 @@
     ]
   },
   {
-    "__docId__": 273,
+    "__docId__": 281,
     "kind": "test",
-    "name": "describe64",
-    "testId": 64,
-    "memberof": "test/utility/resource.test.js~describe57.describe62",
+    "name": "describe69",
+    "testId": 69,
+    "memberof": "test/utility/resource.test.js~describe62.describe67",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62.describe64",
+    "longname": "test/utility/resource.test.js~describe62.describe67.describe69",
     "access": null,
     "description": "Parsing",
     "lineNumber": 75,
@@ -6264,53 +6431,53 @@
     ]
   },
   {
-    "__docId__": 274,
+    "__docId__": 282,
     "kind": "test",
-    "name": "it65",
-    "testId": 65,
-    "memberof": "test/utility/resource.test.js~describe57.describe62.describe64",
+    "name": "it70",
+    "testId": 70,
+    "memberof": "test/utility/resource.test.js~describe62.describe67.describe69",
     "testDepth": 3,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62.describe64.it65",
+    "longname": "test/utility/resource.test.js~describe62.describe67.describe69.it70",
     "access": null,
     "description": "Date()",
     "lineNumber": 77
   },
   {
-    "__docId__": 275,
+    "__docId__": 283,
     "kind": "test",
-    "name": "it66",
-    "testId": 66,
-    "memberof": "test/utility/resource.test.js~describe57.describe62.describe64",
+    "name": "it71",
+    "testId": 71,
+    "memberof": "test/utility/resource.test.js~describe62.describe67.describe69",
     "testDepth": 3,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62.describe64.it66",
+    "longname": "test/utility/resource.test.js~describe62.describe67.describe69.it71",
     "access": null,
     "description": "Element()",
     "lineNumber": 86
   },
   {
-    "__docId__": 276,
+    "__docId__": 284,
     "kind": "test",
-    "name": "it67",
-    "testId": 67,
-    "memberof": "test/utility/resource.test.js~describe57.describe62.describe64",
+    "name": "it72",
+    "testId": 72,
+    "memberof": "test/utility/resource.test.js~describe62.describe67.describe69",
     "testDepth": 3,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe62.describe64.it67",
+    "longname": "test/utility/resource.test.js~describe62.describe67.describe69.it72",
     "access": null,
     "description": "Mixin",
     "lineNumber": 95
   },
   {
-    "__docId__": 277,
+    "__docId__": 285,
     "kind": "test",
-    "name": "describe68",
-    "testId": 68,
-    "memberof": "test/utility/resource.test.js~describe57",
+    "name": "describe73",
+    "testId": 73,
+    "memberof": "test/utility/resource.test.js~describe62",
     "testDepth": 1,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe68",
+    "longname": "test/utility/resource.test.js~describe62.describe73",
     "access": null,
     "description": "HTTP request",
     "lineNumber": 102,
@@ -6319,79 +6486,79 @@
     ]
   },
   {
-    "__docId__": 278,
+    "__docId__": 286,
     "kind": "test",
-    "name": "it69",
-    "testId": 69,
-    "memberof": "test/utility/resource.test.js~describe57.describe68",
+    "name": "it74",
+    "testId": 74,
+    "memberof": "test/utility/resource.test.js~describe62.describe73",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe68.it69",
+    "longname": "test/utility/resource.test.js~describe62.describe73.it74",
     "access": null,
     "description": "Get Plain text",
     "lineNumber": 113
   },
   {
-    "__docId__": 279,
+    "__docId__": 287,
     "kind": "test",
-    "name": "it70",
-    "testId": 70,
-    "memberof": "test/utility/resource.test.js~describe57.describe68",
+    "name": "it75",
+    "testId": 75,
+    "memberof": "test/utility/resource.test.js~describe62.describe73",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe68.it70",
+    "longname": "test/utility/resource.test.js~describe62.describe73.it75",
     "access": null,
     "description": "Get JSON object",
     "lineNumber": 119
   },
   {
-    "__docId__": 280,
+    "__docId__": 288,
     "kind": "test",
-    "name": "it71",
-    "testId": 71,
-    "memberof": "test/utility/resource.test.js~describe57.describe68",
+    "name": "it76",
+    "testId": 76,
+    "memberof": "test/utility/resource.test.js~describe62.describe73",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe68.it71",
+    "longname": "test/utility/resource.test.js~describe62.describe73.it76",
     "access": null,
     "description": "Get HTML document",
     "lineNumber": 125
   },
   {
-    "__docId__": 281,
+    "__docId__": 289,
     "kind": "test",
-    "name": "it72",
-    "testId": 72,
-    "memberof": "test/utility/resource.test.js~describe57.describe68",
+    "name": "it77",
+    "testId": 77,
+    "memberof": "test/utility/resource.test.js~describe62.describe73",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe68.it72",
+    "longname": "test/utility/resource.test.js~describe62.describe73.it77",
     "access": null,
     "description": "Get Binary file",
     "lineNumber": 134
   },
   {
-    "__docId__": 282,
+    "__docId__": 290,
     "kind": "test",
-    "name": "describe73",
-    "testId": 73,
-    "memberof": "test/utility/resource.test.js~describe57",
+    "name": "describe78",
+    "testId": 78,
+    "memberof": "test/utility/resource.test.js~describe62",
     "testDepth": 1,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe73",
+    "longname": "test/utility/resource.test.js~describe62.describe78",
     "access": null,
     "description": "Binary",
     "lineNumber": 141
   },
   {
-    "__docId__": 283,
+    "__docId__": 291,
     "kind": "test",
-    "name": "it74",
-    "testId": 74,
-    "memberof": "test/utility/resource.test.js~describe57.describe73",
+    "name": "it79",
+    "testId": 79,
+    "memberof": "test/utility/resource.test.js~describe62.describe78",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe73.it74",
+    "longname": "test/utility/resource.test.js~describe62.describe78.it79",
     "access": null,
     "description": "Parse Data URI",
     "lineNumber": 150,
@@ -6400,14 +6567,14 @@
     ]
   },
   {
-    "__docId__": 284,
+    "__docId__": 292,
     "kind": "test",
-    "name": "it75",
-    "testId": 75,
-    "memberof": "test/utility/resource.test.js~describe57.describe73",
+    "name": "it80",
+    "testId": 80,
+    "memberof": "test/utility/resource.test.js~describe62.describe78",
     "testDepth": 2,
     "static": true,
-    "longname": "test/utility/resource.test.js~describe57.describe73.it75",
+    "longname": "test/utility/resource.test.js~describe62.describe78.it80",
     "access": null,
     "description": "Convert DataURI to Blob",
     "lineNumber": 161,

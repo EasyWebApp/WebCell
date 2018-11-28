@@ -141,6 +141,51 @@ export function multipleMap(list, filter) {
 }
 
 
+function notEqual(A, B) {  return  A !== B;  }
+
+/**
+ * Return `true` means that A is not equal B
+ *
+ * @typedef {function(A: *, B: *): Boolean} UniqueComparer
+ */
+
+/**
+ * @param {Array}                        list        - Original array
+ * @param {String|Symbol|UniqueComparer} [condition]
+ *
+ * @return {Array} Deduplicated new array
+ */
+export function unique(list, condition) {
+
+    switch (typeof condition) {
+        case 'string':
+        case 'symbol':
+            condition = ((key, A, B) => A[key] !== B[key]).bind(null, condition);
+            break;
+        case 'function':
+            break;
+        default:
+            condition = notEqual;
+    }
+
+    const result = [ ];
+
+    function uniqueWith(item) {
+
+        for (let i = 0, length = result.length >>> 0;  i < length;  i++)
+            if (!condition(item, result[i]))  return false;
+
+        return true;
+    }
+
+    for (let i = 0, l = list.length >>> 0;  i < l;  i++)
+        if ((i === 0)  ||  uniqueWith( list[i] ))
+            result.push( list[i] );
+
+    return result;
+}
+
+
 /**
  * Merge own properties of two or more objects together into the first object
  * by their descriptor
