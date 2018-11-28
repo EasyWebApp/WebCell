@@ -1098,6 +1098,12 @@ window.esdocSearchIndex = [
     "external"
   ],
   [
+    "source/dom-polyfill.js",
+    "file/source/DOM-polyfill.js.html",
+    "source/DOM-polyfill.js",
+    "file"
+  ],
+  [
     "source/webcell.js",
     "file/source/WebCell.js.html",
     "source/WebCell.js",

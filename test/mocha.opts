@@ -2,8 +2,8 @@
 --require @babel/polyfill
 --require should
 --require should-sinon
---require ./test/DOM-polyfill
+--require ./source/DOM-polyfill
 --recursive
---timeout 3000
+--timeout 3500
 --colors
 --inline-diffs

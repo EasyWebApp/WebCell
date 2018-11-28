@@ -20,7 +20,7 @@
   "bugs": {
     "url": "https://github.com/EasyWebApp/WebCell/issues"
   },
-  "browser": "dist/web-cell.min.js",
+  "main": "dist/web-cell.min.js",
   "directories": {
     "lib": "source",
     "doc": "docs",
@@ -32,12 +32,13 @@
   "scripts": {
     "lint": "eslint --fix source/ test/**/*.test.js",
     "pack": "amd-bundle source/WebCell dist/web-cell -m",
+    "pack-patch": "amd-bundle source/DOM-polyfill dist/polyfill",
     "pack-test": "amd-bundle test/Component/source/cell-test test/Component/dist/cell-test",
     "pack-input": "amd-bundle test/Component/source/cell-input test/Component/dist/cell-input",
     "check": "npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js",
     "test": "npm run check -- --exit",
     "debug": "npm run check -- --inspect-brk",
-    "build": "npm run lint  &&  npm run pack  &&  npm test  &&  esdoc",
+    "build": "npm run lint  &&  npm run pack  &&  npm run pack-patch  &&  npm test  &&  esdoc",
     "prepublishOnly": "npm run build",
     "start": "web-server docs/ -o"
   },

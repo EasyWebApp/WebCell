@@ -1,6 +1,6 @@
 import { readFileSync } from 'fs';
 
-import JSDOM from '../DOM-polyfill';
+import JSDOM from '../../source/DOM-polyfill';
 
 import View from '../../source/view/View';
 

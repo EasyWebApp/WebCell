@@ -1,6 +1,6 @@
 {
-  "coverage": "74.04%",
-  "expectCount": 131,
+  "coverage": "73.48%",
+  "expectCount": 132,
   "actualCount": 97,
   "files": {
     "source/component/Component.js": {
@@ -16,6 +16,13 @@
       "actualCount": 5,
       "undocumentLines": [
         6
+      ]
+    },
+    "source/DOM-polyfill.js": {
+      "expectCount": 1,
+      "actualCount": 0,
+      "undocumentLines": [
+        8
       ]
     },
     "source/utility/DOM.js": {
