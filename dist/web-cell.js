@@ -3581,13 +3581,20 @@ var _module_ = {
                                 {
                                     kind: 'method',
                                     key: 'render',
-                                    value: function value(data) {
+                                    value: function value() {
+                                        var data =
+                                            arguments.length > 0 &&
+                                            arguments[0] !== undefined
+                                                ? arguments[0]
+                                                : {};
                                         var target = this.content;
+                                        target =
+                                            target instanceof Node
+                                                ? target
+                                                : target[0];
                                         if (
                                             !(0, _DOM.trigger)(
-                                                target instanceof Node
-                                                    ? target
-                                                    : target[0],
+                                                target,
                                                 'update',
                                                 {
                                                     oldData: this.valueOf(),
@@ -3665,6 +3672,15 @@ var _module_ = {
                                             }
                                         }
 
+                                        (0, _DOM.trigger)(
+                                            target,
+                                            'updated',
+                                            {
+                                                data: data,
+                                                view: this
+                                            },
+                                            true
+                                        );
                                         return this;
                                     }
                                 },
@@ -3777,8 +3793,6 @@ var _module_ = {
                                  * @return {HTMLElement} This custom element
                                  */
                                 value: function buildDOM(option) {
-                                    var _this12 = this;
-
                                     if (
                                         self.ShadyCSS &&
                                         !(
@@ -3803,18 +3817,77 @@ var _module_ = {
                                         shadow.appendChild(
                                             document.importNode(template, true)
                                         );
+                                    this.bootHook();
+                                    var view = new _ObjectView.default(shadow);
+                                    if (view[0]) view.render(data || {});
+                                    var map =
+                                        event_handler.get(this.constructor) ||
+                                        '';
+                                    var _iteratorNormalCompletion14 = true;
+                                    var _didIteratorError14 = false;
+                                    var _iteratorError14 = undefined;
+
+                                    try {
+                                        for (
+                                            var _iterator14 = map[
+                                                    Symbol.iterator
+                                                ](),
+                                                _step14;
+                                            !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next())
+                                                .done);
+                                            _iteratorNormalCompletion14 = true
+                                        ) {
+                                            var _step14$value = _step14.value,
+                                                type = _step14$value.type,
+                                                selector =
+                                                    _step14$value.selector,
+                                                handler = _step14$value.handler;
+                                            this.on(
+                                                type,
+                                                selector,
+                                                handler.bind(this)
+                                            );
+                                        }
+                                    } catch (err) {
+                                        _didIteratorError14 = true;
+                                        _iteratorError14 = err;
+                                    } finally {
+                                        try {
+                                            if (
+                                                !_iteratorNormalCompletion14 &&
+                                                _iterator14.return != null
+                                            ) {
+                                                _iterator14.return();
+                                            }
+                                        } finally {
+                                            if (_didIteratorError14) {
+                                                throw _iteratorError14;
+                                            }
+                                        }
+                                    }
+
+                                    return this;
+                                }
+                                /**
+                                 * @private
+                                 */
+                            },
+                            {
+                                key: 'bootHook',
+                                value: function bootHook() {
+                                    var _this12 = this;
 
                                     if (
                                         this.slotChangedCallback instanceof
                                         Function
                                     ) {
-                                        var _iteratorNormalCompletion14 = true;
-                                        var _didIteratorError14 = false;
-                                        var _iteratorError14 = undefined;
+                                        var _iteratorNormalCompletion15 = true;
+                                        var _didIteratorError15 = false;
+                                        var _iteratorError15 = undefined;
 
                                         try {
                                             var _loop4 = function _loop4() {
-                                                var slot = _step14.value;
+                                                var slot = _step15.value;
                                                 slot.addEventListener(
                                                     'slotchange',
                                                     function() {
@@ -3830,30 +3903,30 @@ var _module_ = {
                                             };
 
                                             for (
-                                                var _iterator14 = this.$(
+                                                var _iterator15 = this.$(
                                                         'slot'
                                                     )[Symbol.iterator](),
-                                                    _step14;
-                                                !(_iteratorNormalCompletion14 = (_step14 = _iterator14.next())
+                                                    _step15;
+                                                !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next())
                                                     .done);
-                                                _iteratorNormalCompletion14 = true
+                                                _iteratorNormalCompletion15 = true
                                             ) {
                                                 _loop4();
                                             }
                                         } catch (err) {
-                                            _didIteratorError14 = true;
-                                            _iteratorError14 = err;
+                                            _didIteratorError15 = true;
+                                            _iteratorError15 = err;
                                         } finally {
                                             try {
                                                 if (
-                                                    !_iteratorNormalCompletion14 &&
-                                                    _iterator14.return != null
+                                                    !_iteratorNormalCompletion15 &&
+                                                    _iterator15.return != null
                                                 ) {
-                                                    _iterator14.return();
+                                                    _iterator15.return();
                                                 }
                                             } finally {
-                                                if (_didIteratorError14) {
-                                                    throw _iteratorError14;
+                                                if (_didIteratorError15) {
+                                                    throw _iteratorError15;
                                                 }
                                             }
                                         }
@@ -3883,55 +3956,22 @@ var _module_ = {
                                                     event.preventDefault();
                                             }
                                         );
-                                    var view = new _ObjectView.default(shadow);
-                                    if (view[0]) view.render(data || {});
-                                    var map =
-                                        event_handler.get(this.constructor) ||
-                                        '';
-                                    var _iteratorNormalCompletion15 = true;
-                                    var _didIteratorError15 = false;
-                                    var _iteratorError15 = undefined;
-
-                                    try {
-                                        for (
-                                            var _iterator15 = map[
-                                                    Symbol.iterator
-                                                ](),
-                                                _step15;
-                                            !(_iteratorNormalCompletion15 = (_step15 = _iterator15.next())
-                                                .done);
-                                            _iteratorNormalCompletion15 = true
-                                        ) {
-                                            var _step15$value = _step15.value,
-                                                type = _step15$value.type,
-                                                selector =
-                                                    _step15$value.selector,
-                                                handler = _step15$value.handler;
-                                            this.on(
-                                                type,
-                                                selector,
-                                                handler.bind(this)
-                                            );
-                                        }
-                                    } catch (err) {
-                                        _didIteratorError15 = true;
-                                        _iteratorError15 = err;
-                                    } finally {
-                                        try {
-                                            if (
-                                                !_iteratorNormalCompletion15 &&
-                                                _iterator15.return != null
-                                            ) {
-                                                _iterator15.return();
+                                    if (
+                                        this.viewChangedCallback instanceof
+                                        Function
+                                    )
+                                        this.shadowRoot.addEventListener(
+                                            'updated',
+                                            function(_ref6) {
+                                                var _ref6$detail = _ref6.detail,
+                                                    data = _ref6$detail.data,
+                                                    view = _ref6$detail.view;
+                                                return _this12.viewChangedCallback(
+                                                    data,
+                                                    view
+                                                );
                                             }
-                                        } finally {
-                                            if (_didIteratorError15) {
-                                                throw _iteratorError15;
-                                            }
-                                        }
-                                    }
-
-                                    return this;
+                                        );
                                 }
                                 /**
                                  * Main view of this component
@@ -4473,8 +4513,8 @@ var _module_ = {
              */
 
             function at(selector) {
-                return function(_ref6) {
-                    var descriptor = _ref6.descriptor;
+                return function(_ref7) {
+                    var descriptor = _ref7.descriptor;
                     descriptor.value = (0, _DOM.delegate)(
                         selector,
                         descriptor.value
@@ -4512,10 +4552,10 @@ var _module_ = {
                 var isClass = mixin instanceof Function;
                 return (0, _object.multipleMap)(
                     Object.entries(Object.getOwnPropertyDescriptors(mixin)),
-                    function(_ref7) {
-                        var _ref8 = _slicedToArray(_ref7, 2),
-                            key = _ref8[0],
-                            meta = _ref8[1];
+                    function(_ref8) {
+                        var _ref9 = _slicedToArray(_ref8, 2),
+                            key = _ref9[0],
+                            meta = _ref9[1];
 
                         if (
                             !(isClass
@@ -4594,8 +4634,8 @@ var _module_ = {
                     style = meta.style,
                     data = meta.data,
                     tagName = meta.tagName;
-                return function(_ref9) {
-                    var elements = _ref9.elements;
+                return function(_ref10) {
+                    var elements = _ref10.elements;
                     var merged =
                         (template || style) &&
                         define(elements, template, style);

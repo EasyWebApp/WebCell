@@ -105,14 +105,9 @@
 <li><p><a href="https://github.com/tc39/proposal-decorators#decorators">Decorator</a></p>
 </li>
 </ol>
-<h2 id="basic-usage">Basic Usage</h2><h3 id="quick-start">Quick start</h3><pre><code class="lang-Shell"><code class="source-code prettyprint"># Only first time in a computer
-npm install web-cell-cli -g --production
-
-mkdir my_project  &amp;&amp;  cd my_project
-
-web-cell boot</code>
+<h2 id="basic-usage">Basic Usage</h2><h3 id="quick-start">Quick start</h3><pre><code class="lang-Shell"><code class="source-code prettyprint">npm init web-cell path/to/your_project</code>
 </code></pre>
-<p>(More configuration &amp; template files can be found in the document of <a href="https://easywebapp.github.io/DevCLI/">WebCell DevCLI</a>)</p>
+<p>(More configuration &amp; template files can be found in the document of <a href="https://web-cell.tk/DevCLI/">WebCell DevCLI</a>)</p>
 <h3 id="component">Component</h3><p>Create <a href="https://github.com/EasyWebApp/DevCLI/tree/master/test/example-js">files as shown below</a> in <code>path/to/your-component</code> directory:</p>
 <h4 id="-code-index-html--code-"><code>index.html</code></h4><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
     &lt;textarea onchange=&quot;${host.trigger.bind( host )}&quot;&gt;
@@ -187,10 +182,17 @@ export default  class YourComponent extends HTMLElement {
     /**
      * @param {Object} newData
      * @param {Object} oldData
+     * @param {View}   view
      *
      * @return {?Boolean} `false` can prevent the view of this Component to rerender
      */
-    viewUpdateCallback(newData, oldData) { }
+    viewUpdateCallback(newData, oldData, view) { }
+
+    /**
+     * @param {Object} data
+     * @param {View}   view
+     */
+    viewChangedCallback(data, view) { }
 
     @on(&apos;input&apos;,  &apos;:host textarea&apos;)
     countLength(event, target) {
@@ -219,7 +221,7 @@ export default  class YourComponent extends HTMLElement {
 </li>
 </ul>
 <h2 id="component-library">Component library</h2><ol>
-<li><p><a href="https://easywebapp.github.io/cell-router/">cell-router</a></p>
+<li><p><a href="https://web-cell.tk/cell-router/">cell-router</a></p>
 </li>
 <li><p><a href="https://github.com/EasyWebApp/BootCell">BootCell</a> based on <strong>BootStrap v4</strong></p>
 </li>

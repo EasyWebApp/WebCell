@@ -9,7 +9,7 @@
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
 <meta name="description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="web-cell"><meta property="twitter:description" content="Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 &amp; Decorator proposal"></head>
-<body class="layout-container manual-root manual-index" data-ice="rootContainer">
+<body class="layout-container manual-root" data-ice="rootContainer">
 
 <header>
   <a href="./">Home</a>
@@ -55,17 +55,9 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><div class="github-markdown">
-  
-
-  
-
-  <div class="manual-cards">
-    
-  <div class="manual-card-wrap" data-ice="cards">
-      <div class="manual-card">
-        <div data-ice="card"><h1>API</h1><h2>Template variable</h2><p>All global variables on <code>window</code> are available in <strong>WebCell Template expression</strong>,
-including <strong>Scoped variables</strong> shown below:</p><table>
+<div class="content" data-ice="content"><div class="github-markdown" data-ice="content"><h1 id="api">API</h1><h2 id="template-variable">Template variable</h2><p>All global variables on <code>window</code> are available in <strong>WebCell Template expression</strong>,
+including <strong>Scoped variables</strong> shown below:</p>
+<table>
 <thead>
 <tr>
 <th style="text-align:center">Name</th>
@@ -95,8 +87,10 @@ including <strong>Scoped variables</strong> shown below:</p><table>
 <td>The parent view which current Template expression locates at</td>
 </tr>
 </tbody>
-</table><h2>Life-cycle hook</h2><p>All <a href="https://developers.google.com/web/fundamentals/web-components/customelements#reactions">life-cycle hooks defined in Web components specification</a> are available in WebCell,
-including <strong>Extension hooks</strong> shown below:</p><table>
+</table>
+<h2 id="life-cycle-hook">Life-cycle hook</h2><p>All <a href="https://developers.google.com/web/fundamentals/web-components/customelements#reactions">life-cycle hooks defined in Web components specification</a> are available in WebCell,
+including <strong>Extension hooks</strong> shown below:</p>
+<table>
 <thead>
 <tr>
 <th>Signature</th>
@@ -117,84 +111,7 @@ including <strong>Extension hooks</strong> shown below:</p><table>
 <td>After current component rendered</td>
 </tr>
 </tbody>
-</table></div>
-        <a data-ice="link" href="manual/API.html"></a>
-      </div>
-    </div>
-<div class="manual-card-wrap" data-ice="cards">
-      <div class="manual-card">
-        <div data-ice="card"><h1>Node.JS like environment</h1><p><strong>WebCell</strong> can run in any <em>Non-browser</em> environment which supports <strong>CommonJS</strong> or <strong>ECMAScript module</strong> based on <a href="https://github.com/jsdom/jsdom"><strong>JSDOM</strong></a>.</p><h2>Import</h2><pre><code class="lang-Shell"><code class="source-code prettyprint">npm install web-cell jsdom node-fetch</code>
-</code></pre><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import &apos;regenerator-runtime/runtime&apos;;          //  Export `regeneratorRuntime` to `global`
-
-import JSDOM from &apos;web-cell/dist/polyfill&apos;;    //  Export `self` &amp; some DOM API to `global`
-
-import * as WebCell from &apos;web-cell&apos;;</code>
-</code></pre><h2>Typical cases</h2><ol>
-<li><a href="https://web-cell.tk/DevCLI/"><strong>WebCell DevCLI</strong></a> uses <a href="https://web-cell.tk/WebCell/file/source/utility/DOM.js.html">DOM utility</a> methods of WebCell</li>
-</ol></div>
-        <a data-ice="link" href="manual/Node.JS.html"></a>
-      </div>
-    </div>
-<div class="manual-card-wrap" data-ice="cards">
-      <div class="manual-card">
-        <div data-ice="card"><h1>Integration</h1><h2>webpack configuration</h2><p>You can use <code>webpack</code> instead of <code>web-cell</code> command.</p><pre><code class="lang-Shell"><code class="source-code prettyprint">npm install --save-dev \
-    webpack webpack-cli \
-    html-loader posthtml-loader \
-    to-string-loader css-loader</code>
-</code></pre><p><code>webpack.config.js</code></p><pre><code class="lang-JavaScript"><code class="source-code prettyprint">const path = require(&apos;path&apos;);
-
-module.exports = {
-    entry: &apos;path/to/your-component/index.js&apos;,
-    output: {
-        filename: &apos;your-component.js&apos;,
-        path: path.resolve(__dirname, &apos;dist&apos;)
-    },
-    module: {
-        rules: [
-            {
-                test: /\.html$/,
-                use: [
-                    &apos;html-loader&apos;,
-                    {
-                        loader: &apos;posthtml-loader&apos;,
-                        options: {
-                            ident: &apos;posthtml&apos;
-                        }
-                    }
-                ]
-            },
-            {
-                test: /\.css$/,
-                use: [
-                    &apos;to-string-loader&apos;,
-                    &apos;css-loader&apos;
-                ]
-            }
-        ]
-    }
-};</code>
-</code></pre><h2>Import to other frameworks</h2><p><code>your-component-wrapper.vue</code></p><pre><code class="lang-HTML"><code class="source-code prettyprint">&lt;template&gt;
-    &lt;your-component v-model=&quot;message&quot;&gt;&lt;/your-component&gt;
-    &lt;p&gt;
-        Text from Web component: {{message}}
-    &lt;/p&gt;
-&lt;/template&gt;
-
-&lt;script&gt;
-    import &apos;path/to/your-component&apos;;
-
-    export default {
-        data() {
-
-            return  {message: &apos;Come from Vue!&apos;};
-        }
-    }
-&lt;/script&gt;</code>
-</code></pre></div>
-        <a data-ice="link" href="manual/Integration.html"></a>
-      </div>
-    </div>
-</div>
+</table>
 </div>
 </div>
 

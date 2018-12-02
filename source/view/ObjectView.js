@@ -200,18 +200,20 @@ export default  class ObjectView extends View {
     }
 
     /**
-     * @param {Object} [data]
+     * @param {Object} [data={}]
      *
      * @emits {CustomEvent} - `update` event (bubble & cancelable)
      *                        with `oldData`, `newData` & `view` detail properties
      * @return {ObjectView}
      */
-    render(data) {
+    render(data = { }) {
 
-        const target = this.content;
+        var target = this.content;
+
+        target = (target instanceof Node)  ?  target  :  target[0];
 
         if (! trigger(
-            (target instanceof Node)  ?  target  :  target[0],
+            target,
             'update',
             {
                 oldData:  this.valueOf(),
@@ -238,6 +240,8 @@ export default  class ObjectView extends View {
             else if (template instanceof View)
                 _data_[name] = template.render( data[ name ] ).data;
         }
+
+        trigger(target,  'updated',  {data, view: this},  true);
 
         return this;
     }

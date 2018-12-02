@@ -16,6 +16,8 @@
                 },
                 "manual": {
                     "files": [
+                        "./manual/API.md",
+                        "./manual/Node.JS.md",
                         "./manual/Integration.md"
                     ]
                 }

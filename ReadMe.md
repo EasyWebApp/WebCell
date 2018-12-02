@@ -36,14 +36,9 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with M
 ### Quick start
 
 ```Shell
-# Only first time in a computer
-npm install web-cell-cli -g --production
-
-mkdir my_project  &&  cd my_project
-
-web-cell boot
+npm init web-cell path/to/your_project
 ```
-(More configuration & template files can be found in the document of [WebCell DevCLI](https://easywebapp.github.io/DevCLI/))
+(More configuration & template files can be found in the document of [WebCell DevCLI](https://web-cell.tk/DevCLI/))
 
 
 ### Component
@@ -142,10 +137,17 @@ export default  class YourComponent extends HTMLElement {
     /**
      * @param {Object} newData
      * @param {Object} oldData
+     * @param {View}   view
      *
      * @return {?Boolean} `false` can prevent the view of this Component to rerender
      */
-    viewUpdateCallback(newData, oldData) { }
+    viewUpdateCallback(newData, oldData, view) { }
+
+    /**
+     * @param {Object} data
+     * @param {View}   view
+     */
+    viewChangedCallback(data, view) { }
 
     @on('input',  ':host textarea')
     countLength(event, target) {
@@ -185,7 +187,7 @@ web-cell pack
 
 ## Component library
 
- 1. [cell-router](https://easywebapp.github.io/cell-router/)
+ 1. [cell-router](https://web-cell.tk/cell-router/)
 
  2. [BootCell](https://github.com/EasyWebApp/BootCell) based on **BootStrap v4**
 

@@ -69,6 +69,25 @@ export default  class Component {
         if ( template )
             shadow.appendChild( document.importNode(template, true) );
 
+        this.bootHook();
+
+        const view = new ObjectView( shadow );
+
+        if ( view[0] )  view.render(data || { });
+
+        const map = event_handler.get( this.constructor )  ||  '';
+
+        for (let {type, selector, handler}  of  map)
+            this.on(type,  selector,  handler.bind( this ));
+
+        return this;
+    }
+
+    /**
+     * @private
+     */
+    bootHook() {
+
         if (this.slotChangedCallback instanceof Function)
             for (let slot of this.$('slot'))
                 slot.addEventListener(
@@ -86,16 +105,11 @@ export default  class Component {
                     event.preventDefault();
             });
 
-        const view = new ObjectView( shadow );
-
-        if ( view[0] )  view.render(data || { });
-
-        const map = event_handler.get( this.constructor )  ||  '';
-
-        for (let {type, selector, handler}  of  map)
-            this.on(type,  selector,  handler.bind( this ));
-
-        return this;
+        if (this.viewChangedCallback instanceof Function)
+            this.shadowRoot.addEventListener(
+                'updated',
+                ({detail: {data, view}})  =>  this.viewChangedCallback(data, view)
+            );
     }
 
     /**

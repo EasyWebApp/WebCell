@@ -1,11 +1,11 @@
 {
-  "coverage": "73.48%",
-  "expectCount": 132,
-  "actualCount": 97,
+  "coverage": "73.68%",
+  "expectCount": 133,
+  "actualCount": 98,
   "files": {
     "source/component/Component.js": {
-      "expectCount": 14,
-      "actualCount": 12,
+      "expectCount": 15,
+      "actualCount": 13,
       "undocumentLines": [
         12,
         34
@@ -69,7 +69,7 @@
       "undocumentLines": [
         11,
         30,
-        245
+        249
       ]
     },
     "source/view/Template.js": {
