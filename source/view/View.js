@@ -1,5 +1,7 @@
 import { parseDOM, stringifyDOM } from '../utility/DOM';
 
+import { likeArray, multipleMap } from '../utility/object';
+
 const view_DOM = new WeakMap(), DOM_view = new WeakMap();
 
 const view_data = new WeakMap(), view_parent = new WeakMap();
@@ -26,12 +28,10 @@ export default  class View {
                 this.name = template.dataset[ nameKey ];  break;
             case 11:
                 if (! (template.parentNode || template.host))
-                    template = [... template.childNodes];
+                    template = template.childNodes;
                 break;
             default:
-                template = [
-                    ... document.importNode(parseDOM( template ),  true).childNodes
-                ];
+                template = parseDOM( template ).childNodes;
         }
 
         var _this_ = this.bindWith( template );
@@ -57,8 +57,8 @@ export default  class View {
 
         var _this_;
 
-        if (template instanceof Array)
-            template = template.filter(node => {
+        if (likeArray( template ))
+            template = multipleMap(template,  node => {
 
                 switch ( node.nodeType ) {
                     case 1:
@@ -69,7 +69,7 @@ export default  class View {
                         if (! node.nodeValue.trim())  return;
                 }
 
-                return true;
+                return node;
             });
         else if (! (_this_ = DOM_view.get( template )))
             DOM_view.set(template, this);

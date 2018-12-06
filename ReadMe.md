@@ -193,6 +193,10 @@ web-cell pack
 
  3. [Material Cell](https://web-cell-ht.ml/) based on **Material Design lite v1.3**
 
+ 4. [GitHub Web widget](https://techquery.github.io/GitHub-Web-Widget/) forked from [GitHub jQuery Repo widget](https://github.com/JoelSutherland/GitHub-jQuery-Repo-Widget)
+
+ 5. [Month picker](https://techquery.github.io/month-picker/)
+
 
 
 ## Standard specification

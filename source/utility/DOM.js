@@ -170,6 +170,54 @@ export function trigger(element, event, detail, bubbles, cancelable, composed) {
 }
 
 
+function customInput(detail) {
+
+    return  new CustomEvent('input', {
+        bubbles:   true,
+        composed:  true,
+        detail
+    });
+}
+
+/**
+ * @param {HTMLElement}                                 element
+ * @param {function(event: Event, input: String): void} handler
+ */
+export function inputOf(element, handler) {
+
+    var IME, clipBoard;
+
+    element.addEventListener('compositionstart',  () => IME = true);
+
+    element.addEventListener('compositionend',  ({ data }) => {
+
+        handler.call(element,  customInput( data ));
+
+        IME = false;
+    });
+
+    element.addEventListener('input',  ({ data }) => {
+
+        if ( clipBoard )
+            clipBoard = false;
+        else if (! IME)
+            handler.call(element,  customInput( data ));
+    });
+
+    element.addEventListener('paste',  ({ clipboardData }) => {
+
+        if (! IME)
+            clipBoard = true,
+            handler.call(element,  customInput( clipboardData.getData('text') ));
+    });
+
+    element.addEventListener('cut',  () => {
+
+        if (! IME)  clipBoard = true, handler.call(element, customInput());
+    });
+}
+
+
 /**
  * @param {string} markup - Code of an markup fragment
  *

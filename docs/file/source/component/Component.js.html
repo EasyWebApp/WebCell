@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inputOf">inputOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -58,6 +59,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-likeArray">likeArray</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
@@ -92,7 +94,7 @@ import View from &apos;../view/View&apos;;
 
 import { parse } from &apos;../utility/resource&apos;;
 
-import { $ as $_,  $up as $_up,  delegate, trigger } from &apos;../utility/DOM&apos;;
+import { $ as $_,  $up as $_up,  delegate, inputOf, trigger } from &apos;../utility/DOM&apos;;
 
 import { multipleMap } from &apos;../utility/object&apos;;
 
@@ -299,9 +301,7 @@ export default  class Component {
 
                 if (node.matches( selector ))  list[0] = node;
 
-                list.push(... $_(selector, node));
-
-                return list;
+                return  list.concat( $_(selector, node) );
             }
         );
     }
@@ -319,9 +319,14 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = &apos;&apos;;
 
-        (/^:host/.test( selector )  ?  this.shadowRoot  :  this).addEventListener(
-            type,  selector ? delegate(selector, callback) : callback
-        );
+        const node = /^:host/.test( selector )  ?  this.shadowRoot  :  this;
+
+        callback = selector  ?  delegate(selector, callback)  :  callback;
+
+        if (type === &apos;input&apos;)
+            inputOf(node, callback);
+        else
+            node.addEventListener(type, callback);
 
         return this;
     }

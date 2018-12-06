@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inputOf">inputOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -58,6 +59,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-likeArray">likeArray</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
@@ -255,6 +257,54 @@ export function trigger(element, event, detail, bubbles, cancelable, composed) {
                 bubbles, cancelable, composed, detail
             })
     );
+}
+
+
+function customInput(detail) {
+
+    return  new CustomEvent(&apos;input&apos;, {
+        bubbles:   true,
+        composed:  true,
+        detail
+    });
+}
+
+/**
+ * @param {HTMLElement}                                 element
+ * @param {function(event: Event, input: String): void} handler
+ */
+export function inputOf(element, handler) {
+
+    var IME, clipBoard;
+
+    element.addEventListener(&apos;compositionstart&apos;,  () =&gt; IME = true);
+
+    element.addEventListener(&apos;compositionend&apos;,  ({ data }) =&gt; {
+
+        handler.call(element,  customInput( data ));
+
+        IME = false;
+    });
+
+    element.addEventListener(&apos;input&apos;,  ({ data }) =&gt; {
+
+        if ( clipBoard )
+            clipBoard = false;
+        else if (! IME)
+            handler.call(element,  customInput( data ));
+    });
+
+    element.addEventListener(&apos;paste&apos;,  ({ clipboardData }) =&gt; {
+
+        if (! IME)
+            clipBoard = true,
+            handler.call(element,  customInput( clipboardData.getData(&apos;text&apos;) ));
+    });
+
+    element.addEventListener(&apos;cut&apos;,  () =&gt; {
+
+        if (! IME)  clipBoard = true, handler.call(element, customInput());
+    });
 }
 
 

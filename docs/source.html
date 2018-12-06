@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inputOf">inputOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -58,6 +59,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-likeArray">likeArray</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
@@ -85,7 +87,7 @@
 </div>
 </nav>
 
-<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">98/133</span></h1>
+<div class="content" data-ice="content"><h1>Source <img data-ice="coverageBadge" src="./badge.svg"><span data-ice="totalCoverageCount" class="total-coverage-count">100/136</span></h1>
 
 <table class="files-summary" data-ice="files" data-use-coverage="true">
   <thead>
@@ -125,9 +127,9 @@
       <td data-ice="filePath"><span><a href="file/source/component/Component.js.html#errorLines=12,34">source/component/Component.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/source/component/Component.js~Component.html">Component</a></span></td>
       <td class="coverage"><span data-ice="coverage">86 %</span><span data-ice="coverageCount" class="coverage-count">13/15</span></td>
-      <td style="display: none;" data-ice="size">6912 byte</td>
-      <td style="display: none;" data-ice="lines">259</td>
-      <td style="display: none;" data-ice="updated">2018-12-01 16:52:15 (UTC)</td>
+      <td style="display: none;" data-ice="size">7020 byte</td>
+      <td style="display: none;" data-ice="lines">262</td>
+      <td style="display: none;" data-ice="updated">2018-12-05 17:14:31 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/source/component/InputComponent.js.html#errorLines=6">source/component/InputComponent.js</a></span></td>
@@ -138,7 +140,7 @@
       <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/utility/DOM.js.html#errorLines=201,204,238,49">source/utility/DOM.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/utility/DOM.js.html#errorLines=173,249,252,286,49">source/utility/DOM.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-$">$</a></span>
 <span><a href="function/index.html#static-function-$up">$up</a></span>
 <span><a href="function/index.html#static-function-decodeMarkup">decodeMarkup</a></span>
@@ -147,6 +149,7 @@
 <span><a href="variable/index.html#static-variable-documentReady">documentReady</a></span>
 <span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span>
 <span><a href="function/index.html#static-function-indexOf">indexOf</a></span>
+<span><a href="function/index.html#static-function-inputOf">inputOf</a></span>
 <span><a href="function/index.html#static-function-isHTML">isHTML</a></span>
 <span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span>
 <span><a href="function/index.html#static-function-nextTick">nextTick</a></span>
@@ -155,26 +158,27 @@
 <span><a href="function/index.html#static-function-targetOf">targetOf</a></span>
 <span><a href="function/index.html#static-function-trigger">trigger</a></span>
 <span><a href="function/index.html#static-function-watchAttributes">watchAttributes</a></span></td>
-      <td class="coverage"><span data-ice="coverage">80 %</span><span data-ice="coverageCount" class="coverage-count">16/20</span></td>
-      <td style="display: none;" data-ice="size">7593 byte</td>
-      <td style="display: none;" data-ice="lines">331</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">77 %</span><span data-ice="coverageCount" class="coverage-count">17/22</span></td>
+      <td style="display: none;" data-ice="size">8706 byte</td>
+      <td style="display: none;" data-ice="lines">379</td>
+      <td style="display: none;" data-ice="updated">2018-12-05 18:01:06 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/utility/object.js.html#errorLines=144,233,67">source/utility/object.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/utility/object.js.html#errorLines=165,256,86">source/utility/object.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="function/index.html#static-function-arrayLike">arrayLike</a></span>
 <span><a href="function/index.html#static-function-classNameOf">classNameOf</a></span>
 <span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span>
 <span><a href="function/index.html#static-function-extend">extend</a></span>
 <span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span>
+<span><a href="function/index.html#static-function-likeArray">likeArray</a></span>
 <span><a href="function/index.html#static-function-mapTree">mapTree</a></span>
 <span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span>
 <span><a href="function/index.html#static-function-toIterable">toIterable</a></span>
 <span><a href="function/index.html#static-function-unique">unique</a></span></td>
-      <td class="coverage"><span data-ice="coverage">75 %</span><span data-ice="coverageCount" class="coverage-count">9/12</span></td>
-      <td style="display: none;" data-ice="size">6948 byte</td>
-      <td style="display: none;" data-ice="lines">260</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
+      <td class="coverage"><span data-ice="coverage">76 %</span><span data-ice="coverageCount" class="coverage-count">10/13</span></td>
+      <td style="display: none;" data-ice="size">7378 byte</td>
+      <td style="display: none;" data-ice="lines">283</td>
+      <td style="display: none;" data-ice="updated">2018-12-05 17:21:11 (UTC)</td>
     </tr>
 <tr data-ice="file">
       <td data-ice="filePath"><span><a href="file/source/utility/resource.js.html#errorLines=186">source/utility/resource.js</a></span></td>
@@ -197,33 +201,33 @@
       <td data-ice="filePath"><span><a href="file/source/view/ArrayView.js.html#errorLines=31,37,46,9,91,93">source/view/ArrayView.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/source/view/ArrayView.js~ArrayView.html">ArrayView</a></span></td>
       <td class="coverage"><span data-ice="coverage">40 %</span><span data-ice="coverageCount" class="coverage-count">4/10</span></td>
-      <td style="display: none;" data-ice="size">2085 byte</td>
+      <td style="display: none;" data-ice="size">2074 byte</td>
       <td style="display: none;" data-ice="lines">94</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2018-12-04 12:39:19 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/view/ObjectView.js.html#errorLines=11,249,30">source/view/ObjectView.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/view/ObjectView.js.html#errorLines=11,251,30">source/view/ObjectView.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/source/view/ObjectView.js~ObjectView.html">ObjectView</a></span></td>
       <td class="coverage"><span data-ice="coverage">78 %</span><span data-ice="coverageCount" class="coverage-count">11/14</span></td>
-      <td style="display: none;" data-ice="size">6141 byte</td>
-      <td style="display: none;" data-ice="lines">255</td>
-      <td style="display: none;" data-ice="updated">2018-12-01 17:19:08 (UTC)</td>
+      <td style="display: none;" data-ice="size">6190 byte</td>
+      <td style="display: none;" data-ice="lines">257</td>
+      <td style="display: none;" data-ice="updated">2018-12-02 12:41:56 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/view/Template.js.html#errorLines=17,179,19,31,43,45,60,71">source/view/Template.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/view/Template.js.html#errorLines=17,181,19,31,43,45,62,73">source/view/Template.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/source/view/Template.js~Template.html">Template</a></span></td>
       <td class="coverage"><span data-ice="coverage">57 %</span><span data-ice="coverageCount" class="coverage-count">11/19</span></td>
-      <td style="display: none;" data-ice="size">4191 byte</td>
-      <td style="display: none;" data-ice="lines">180</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
+      <td style="display: none;" data-ice="size">4222 byte</td>
+      <td style="display: none;" data-ice="lines">182</td>
+      <td style="display: none;" data-ice="updated">2018-12-02 12:42:41 (UTC)</td>
     </tr>
 <tr data-ice="file">
-      <td data-ice="filePath"><span><a href="file/source/view/View.js.html#errorLines=26,3,5">source/view/View.js</a></span></td>
+      <td data-ice="filePath"><span><a href="file/source/view/View.js.html#errorLines=28,5,7">source/view/View.js</a></span></td>
       <td data-ice="identifier" class="identifiers"><span><a href="class/source/view/View.js~View.html">View</a></span></td>
       <td class="coverage"><span data-ice="coverage">81 %</span><span data-ice="coverageCount" class="coverage-count">13/16</span></td>
-      <td style="display: none;" data-ice="size">4508 byte</td>
+      <td style="display: none;" data-ice="size">4494 byte</td>
       <td style="display: none;" data-ice="lines">192</td>
-      <td style="display: none;" data-ice="updated">2018-11-06 18:02:05 (UTC)</td>
+      <td style="display: none;" data-ice="updated">2018-12-05 16:57:21 (UTC)</td>
     </tr>
 </tbody>
 </table>

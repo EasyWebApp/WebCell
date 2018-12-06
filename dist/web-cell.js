@@ -1473,10 +1473,10 @@ var _module_ = {
                                     );
                                     _this2.template =
                                         template.nodeType === 1
-                                            ? template.content
-                                            : (0, _DOM.parseDOM)(
-                                                  template.nodeValue
-                                              );
+                                            ? (0, _DOM.stringifyDOM)(
+                                                  template.content
+                                              )
+                                            : template.nodeValue;
 
                                     _this2.clear();
 
@@ -1573,9 +1573,7 @@ var _module_ = {
                                                         var view = (_this3[
                                                             _this3.length++
                                                         ] = new _ObjectView.default(
-                                                            _this3.template.cloneNode(
-                                                                true
-                                                            ),
+                                                            _this3.template,
                                                             _this3
                                                         ));
                                                         data[data.length] =
@@ -1733,7 +1731,8 @@ var _module_ = {
                             this.onChange =
                                 onChange instanceof Function ? onChange : null;
                             this.data = bindData || [];
-                            this.parse().clear();
+                            this.parse();
+                            if (this[0]) this.clear();
                         };
                     /**
                      * @type {RegExp}
@@ -1980,6 +1979,7 @@ var _module_ = {
             exports.targetOf = targetOf;
             exports.delegate = delegate;
             exports.trigger = trigger;
+            exports.inputOf = inputOf;
             exports.parseDOM = parseDOM;
             exports.isHTML = isHTML;
             exports.stringifyDOM = stringifyDOM;
@@ -2182,6 +2182,49 @@ var _module_ = {
                               detail: detail
                           })
                 );
+            }
+
+            function customInput(detail) {
+                return new CustomEvent('input', {
+                    bubbles: true,
+                    composed: true,
+                    detail: detail
+                });
+            }
+            /**
+             * @param {HTMLElement}                                 element
+             * @param {function(event: Event, input: String): void} handler
+             */
+
+            function inputOf(element, handler) {
+                var IME, clipBoard;
+                element.addEventListener('compositionstart', function() {
+                    return (IME = true);
+                });
+                element.addEventListener('compositionend', function(_ref6) {
+                    var data = _ref6.data;
+                    handler.call(element, customInput(data));
+                    IME = false;
+                });
+                element.addEventListener('input', function(_ref7) {
+                    var data = _ref7.data;
+                    if (clipBoard) clipBoard = false;
+                    else if (!IME) handler.call(element, customInput(data));
+                });
+                element.addEventListener('paste', function(_ref8) {
+                    var clipboardData = _ref8.clipboardData;
+                    if (!IME)
+                        (clipBoard = true),
+                            handler.call(
+                                element,
+                                customInput(clipboardData.getData('text'))
+                            );
+                });
+                element.addEventListener('cut', function() {
+                    if (!IME)
+                        (clipBoard = true),
+                            handler.call(element, customInput());
+                });
             }
             /**
              * @param {string} markup - Code of an markup fragment
@@ -2439,6 +2482,8 @@ var _module_ = {
 
             var _DOM = require('../utility/DOM');
 
+            var _object = require('../utility/object');
+
             var view_DOM = new WeakMap(),
                 DOM_view = new WeakMap();
             var view_data = new WeakMap(),
@@ -2470,18 +2515,12 @@ var _module_ = {
 
                             case 11:
                                 if (!(template.parentNode || template.host))
-                                    template = _toConsumableArray(
-                                        template.childNodes
-                                    );
+                                    template = template.childNodes;
                                 break;
 
                             default:
-                                template = _toConsumableArray(
-                                    document.importNode(
-                                        (0, _DOM.parseDOM)(template),
-                                        true
-                                    ).childNodes
-                                );
+                                template = (0, _DOM.parseDOM)(template)
+                                    .childNodes;
                         }
 
                         var _this_ = this.bindWith(template);
@@ -2512,30 +2551,33 @@ var _module_ = {
 
                                     var _this_;
 
-                                    if (template instanceof Array)
-                                        template = template.filter(function(
-                                            node
-                                        ) {
-                                            switch (node.nodeType) {
-                                                case 1:
-                                                    if (
-                                                        !(_this_ = DOM_view.get(
-                                                            node
-                                                        ))
-                                                    )
-                                                        DOM_view.set(
-                                                            node,
-                                                            _this7
-                                                        );
-                                                    break;
+                                    if ((0, _object.likeArray)(template))
+                                        template = (0, _object.multipleMap)(
+                                            template,
+                                            function(node) {
+                                                switch (node.nodeType) {
+                                                    case 1:
+                                                        if (
+                                                            !(_this_ = DOM_view.get(
+                                                                node
+                                                            ))
+                                                        )
+                                                            DOM_view.set(
+                                                                node,
+                                                                _this7
+                                                            );
+                                                        break;
 
-                                                case 3:
-                                                    if (!node.nodeValue.trim())
-                                                        return;
+                                                    case 3:
+                                                        if (
+                                                            !node.nodeValue.trim()
+                                                        )
+                                                            return;
+                                                }
+
+                                                return node;
                                             }
-
-                                            return true;
-                                        });
+                                        );
                                     else if (!(_this_ = DOM_view.get(template)))
                                         DOM_view.set(template, this);
                                     view_DOM.set(this, template);
@@ -2715,6 +2757,7 @@ var _module_ = {
             exports.classNameOf = classNameOf;
             exports.getPropertyDescriptor = getPropertyDescriptor;
             exports.decoratorOf = decoratorOf;
+            exports.likeArray = likeArray;
             exports.toIterable = toIterable;
             exports.arrayLike = arrayLike;
             exports.multipleMap = multipleMap;
@@ -2799,6 +2842,21 @@ var _module_ = {
                         });
                 return descriptor;
             }
+            /**
+             * @param {*} object
+             *
+             * @return {Boolean}
+             */
+
+            function likeArray(object) {
+                object = Object(object);
+                return (
+                    !(object instanceof Function) &&
+                    !(object instanceof Node) &&
+                    (object[Symbol.iterator] instanceof Function ||
+                        typeof object.length === 'number')
+                );
+            }
 
             var Array_iterator = [][Symbol.iterator];
             /**
@@ -2855,6 +2913,8 @@ var _module_ = {
              *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
              *
              * @return {Array}
+             *
+             * @see https://api.jquery.com/jQuery.map
              */
 
             function multipleMap(list, filter) {
@@ -2874,7 +2934,7 @@ var _module_ = {
                         _iteratorNormalCompletion8 = true
                     ) {
                         var item = _step8.value;
-                        if (filter) item = filter(item, i, list);
+                        if (filter) item = filter(item, i++, list);
                         if (item != null)
                             result.push[
                                 item instanceof Array ? 'apply' : 'call'
@@ -2964,6 +3024,8 @@ var _module_ = {
              *                             (Value of `null` or `undefined` will be skipped)
              *
              * @return {Object} The `target` parameter
+             *
+             * @see https://api.jquery.com/jQuery.extend
              */
 
             function extend(target) {
@@ -3420,7 +3482,10 @@ var _module_ = {
 
                                         var _loop2 = function _loop2() {
                                             var attr = _arr4[_i5];
-                                            var name = attr.name;
+                                            var name = attr.name,
+                                                value = attr.value;
+                                            if (!value.trim())
+                                                return 'continue';
                                             var template = ObjectView.templateOf(
                                                 attr,
                                                 name in element
@@ -3450,7 +3515,9 @@ var _module_ = {
                                             _i5 < _arr4.length;
                                             _i5++
                                         ) {
-                                            _loop2();
+                                            var _ret = _loop2();
+
+                                            if (_ret === 'continue') continue;
                                         }
                                     }
                                 },
@@ -3962,10 +4029,10 @@ var _module_ = {
                                     )
                                         this.shadowRoot.addEventListener(
                                             'updated',
-                                            function(_ref6) {
-                                                var _ref6$detail = _ref6.detail,
-                                                    data = _ref6$detail.data,
-                                                    view = _ref6$detail.view;
+                                            function(_ref9) {
+                                                var _ref9$detail = _ref9.detail,
+                                                    data = _ref9$detail.data,
+                                                    view = _ref9$detail.view;
                                                 return _this12.viewChangedCallback(
                                                     data,
                                                     view
@@ -4064,13 +4131,9 @@ var _module_ = {
                                             var list = [];
                                             if (node.matches(selector))
                                                 list[0] = node;
-                                            list.push.apply(
-                                                list,
-                                                _toConsumableArray(
-                                                    (0, _DOM.$)(selector, node)
-                                                )
+                                            return list.concat(
+                                                (0, _DOM.$)(selector, node)
                                             );
-                                            return list;
                                         }
                                     );
                                 }
@@ -4089,18 +4152,15 @@ var _module_ = {
                                 value: function on(type, selector, callback) {
                                     if (selector instanceof Function)
                                         (callback = selector), (selector = '');
-                                    (/^:host/.test(selector)
+                                    var node = /^:host/.test(selector)
                                         ? this.shadowRoot
-                                        : this
-                                    ).addEventListener(
-                                        type,
-                                        selector
-                                            ? (0, _DOM.delegate)(
-                                                  selector,
-                                                  callback
-                                              )
-                                            : callback
-                                    );
+                                        : this;
+                                    callback = selector
+                                        ? (0, _DOM.delegate)(selector, callback)
+                                        : callback;
+                                    if (type === 'input')
+                                        (0, _DOM.inputOf)(node, callback);
+                                    else node.addEventListener(type, callback);
                                     return this;
                                 }
                                 /**
@@ -4513,8 +4573,8 @@ var _module_ = {
              */
 
             function at(selector) {
-                return function(_ref7) {
-                    var descriptor = _ref7.descriptor;
+                return function(_ref10) {
+                    var descriptor = _ref10.descriptor;
                     descriptor.value = (0, _DOM.delegate)(
                         selector,
                         descriptor.value
@@ -4552,10 +4612,10 @@ var _module_ = {
                 var isClass = mixin instanceof Function;
                 return (0, _object.multipleMap)(
                     Object.entries(Object.getOwnPropertyDescriptors(mixin)),
-                    function(_ref8) {
-                        var _ref9 = _slicedToArray(_ref8, 2),
-                            key = _ref9[0],
-                            meta = _ref9[1];
+                    function(_ref11) {
+                        var _ref12 = _slicedToArray(_ref11, 2),
+                            key = _ref12[0],
+                            meta = _ref12[1];
 
                         if (
                             !(isClass
@@ -4634,8 +4694,8 @@ var _module_ = {
                     style = meta.style,
                     data = meta.data,
                     tagName = meta.tagName;
-                return function(_ref10) {
-                    var elements = _ref10.elements;
+                return function(_ref13) {
+                    var elements = _ref13.elements;
                     var merged =
                         (template || style) &&
                         define(elements, template, style);

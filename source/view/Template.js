@@ -44,7 +44,9 @@ export default  class Template {
 
         this.data = bindData || [ ];
 
-        this.parse().clear();
+        this.parse();
+
+        if ( this[0] )  this.clear();
     }
 
     /**

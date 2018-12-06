@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inputOf">inputOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -58,6 +59,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-likeArray">likeArray</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
@@ -152,6 +154,25 @@ export function decoratorOf(target, key, value, descriptor = {enumerable: true})
 }
 
 
+/**
+ * @param {*} object
+ *
+ * @return {Boolean}
+ */
+export function likeArray(object) {
+
+    object = Object( object );
+
+    return (
+        !(object instanceof Function)  &amp;&amp;
+        !(object instanceof Node)
+    ) &amp;&amp; (
+        (object[Symbol.iterator] instanceof Function)  ||
+        (typeof object.length === &apos;number&apos;)
+    );
+}
+
+
 const Array_iterator = [ ][Symbol.iterator];
 
 /**
@@ -206,6 +227,8 @@ export function arrayLike(meta) {
  *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
  *
  * @return {Array}
+ *
+ * @see https://api.jquery.com/jQuery.map
  */
 export function multipleMap(list, filter) {
 
@@ -217,7 +240,7 @@ export function multipleMap(list, filter) {
 
     for (let item of list) {
 
-        if ( filter )  item = filter(item, i, list);
+        if ( filter )  item = filter(item, i++, list);
 
         if (item != null)
             result.push[
@@ -284,6 +307,8 @@ export function unique(list, condition) {
  *                             (Value of `null` or `undefined` will be skipped)
  *
  * @return {Object} The `target` parameter
+ *
+ * @see https://api.jquery.com/jQuery.extend
  */
 export function extend(target, ...source) {
 

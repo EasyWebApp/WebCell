@@ -1,7 +1,7 @@
 {
-  "coverage": "73.68%",
-  "expectCount": 133,
-  "actualCount": 98,
+  "coverage": "73.52%",
+  "expectCount": 136,
+  "actualCount": 100,
   "files": {
     "source/component/Component.js": {
       "expectCount": 15,
@@ -26,22 +26,23 @@
       ]
     },
     "source/utility/DOM.js": {
-      "expectCount": 20,
-      "actualCount": 16,
+      "expectCount": 22,
+      "actualCount": 17,
       "undocumentLines": [
         49,
-        201,
-        204,
-        238
+        173,
+        249,
+        252,
+        286
       ]
     },
     "source/utility/object.js": {
-      "expectCount": 12,
-      "actualCount": 9,
+      "expectCount": 13,
+      "actualCount": 10,
       "undocumentLines": [
-        67,
-        144,
-        233
+        86,
+        165,
+        256
       ]
     },
     "source/utility/resource.js": {
@@ -69,7 +70,7 @@
       "undocumentLines": [
         11,
         30,
-        249
+        251
       ]
     },
     "source/view/Template.js": {
@@ -81,18 +82,18 @@
         31,
         43,
         45,
-        60,
-        71,
-        179
+        62,
+        73,
+        181
       ]
     },
     "source/view/View.js": {
       "expectCount": 16,
       "actualCount": 13,
       "undocumentLines": [
-        3,
         5,
-        26
+        7,
+        28
       ]
     },
     "source/WebCell.js": {

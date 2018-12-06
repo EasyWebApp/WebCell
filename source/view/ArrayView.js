@@ -2,7 +2,7 @@ import { arrayLike, multipleMap } from '../utility/object';
 
 import View from './View';
 
-import { parseDOM } from '../utility/DOM';
+import { stringifyDOM } from '../utility/DOM';
 
 import ObjectView from './ObjectView';
 
@@ -29,7 +29,7 @@ export default  class ArrayView extends View {
         );
 
         this.template = (template.nodeType === 1)  ?
-            template.content  :  parseDOM( template.nodeValue );
+            stringifyDOM( template.content )  :  template.nodeValue;
 
         this.clear();
     }
@@ -71,7 +71,7 @@ export default  class ArrayView extends View {
         this.content.append(... multipleMap(list,  item => {
 
             const view = this[ this.length++ ] = new ObjectView(
-                this.template.cloneNode( true ),  this
+                this.template, this
             );
 
             data[ data.length ] = view.data;

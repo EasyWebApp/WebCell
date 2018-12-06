@@ -4,7 +4,7 @@ import View from '../view/View';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_,  $up as $_up,  delegate, trigger } from '../utility/DOM';
+import { $ as $_,  $up as $_up,  delegate, inputOf, trigger } from '../utility/DOM';
 
 import { multipleMap } from '../utility/object';
 
@@ -211,9 +211,7 @@ export default  class Component {
 
                 if (node.matches( selector ))  list[0] = node;
 
-                list.push(... $_(selector, node));
-
-                return list;
+                return  list.concat( $_(selector, node) );
             }
         );
     }
@@ -231,9 +229,14 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = '';
 
-        (/^:host/.test( selector )  ?  this.shadowRoot  :  this).addEventListener(
-            type,  selector ? delegate(selector, callback) : callback
-        );
+        const node = /^:host/.test( selector )  ?  this.shadowRoot  :  this;
+
+        callback = selector  ?  delegate(selector, callback)  :  callback;
+
+        if (type === 'input')
+            inputOf(node, callback);
+        else
+            node.addEventListener(type, callback);
 
         return this;
     }

@@ -64,6 +64,25 @@ export function decoratorOf(target, key, value, descriptor = {enumerable: true})
 }
 
 
+/**
+ * @param {*} object
+ *
+ * @return {Boolean}
+ */
+export function likeArray(object) {
+
+    object = Object( object );
+
+    return (
+        !(object instanceof Function)  &&
+        !(object instanceof Node)
+    ) && (
+        (object[Symbol.iterator] instanceof Function)  ||
+        (typeof object.length === 'number')
+    );
+}
+
+
 const Array_iterator = [ ][Symbol.iterator];
 
 /**
@@ -118,6 +137,8 @@ export function arrayLike(meta) {
  *     - Return `item` itself to reserve, `undefined` or `null` to ignore, or Array to merge in.
  *
  * @return {Array}
+ *
+ * @see https://api.jquery.com/jQuery.map
  */
 export function multipleMap(list, filter) {
 
@@ -129,7 +150,7 @@ export function multipleMap(list, filter) {
 
     for (let item of list) {
 
-        if ( filter )  item = filter(item, i, list);
+        if ( filter )  item = filter(item, i++, list);
 
         if (item != null)
             result.push[
@@ -196,6 +217,8 @@ export function unique(list, condition) {
  *                             (Value of `null` or `undefined` will be skipped)
  *
  * @return {Object} The `target` parameter
+ *
+ * @see https://api.jquery.com/jQuery.extend
  */
 export function extend(target, ...source) {
 

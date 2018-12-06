@@ -156,6 +156,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/dom.js~inputof",
+    "function/index.html#static-function-inputOf",
+    "<span>inputOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~ishtml",
     "function/index.html#static-function-isHTML",
     "<span>isHTML</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -165,6 +171,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/resource.js~isxdomain",
     "function/index.html#static-function-isXDomain",
     "<span>isXDomain</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/object.js~likearray",
+    "function/index.html#static-function-likeArray",
+    "<span>likeArray</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
     "function"
   ],
   [
@@ -433,127 +445,145 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber6",
+    "test-file/test/utility/object.test.js.html#lineNumber8",
     "Object utility",
     "test"
   ],
   [
     "unique source/utility/object.js~unique,unique",
-    "test-file/test/utility/object.test.js.html#lineNumber138",
+    "test-file/test/utility/object.test.js.html#lineNumber186",
     "Object utility Array deduplication",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber171",
+    "test-file/test/utility/object.test.js.html#lineNumber219",
     "Object utility Array deduplication should compare items using \"!==\" by a String or Symbol key",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber147",
+    "test-file/test/utility/object.test.js.html#lineNumber195",
     "Object utility Array deduplication should compare items using \"!==\" while 0 parameter passed in",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber197",
+    "test-file/test/utility/object.test.js.html#lineNumber245",
     "Object utility Array deduplication should reserve an item while the Custom callback return `true`",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber140",
+    "test-file/test/utility/object.test.js.html#lineNumber188",
     "Object utility Array deduplication should return new Array",
     "test"
   ],
   [
+    "",
+    "test-file/test/utility/object.test.js.html#lineNumber36",
+    "Object utility Array-like objects",
+    "test"
+  ],
+  [
+    "arraylike source/utility/object.js~arraylike,arraylike",
+    "test-file/test/utility/object.test.js.html#lineNumber58",
+    "Object utility Array-like objects Decoration",
+    "test"
+  ],
+  [
+    "likearray source/utility/object.js~likearray,likearray",
+    "test-file/test/utility/object.test.js.html#lineNumber40",
+    "Object utility Array-like objects Detection",
+    "test"
+  ],
+  [
     "decoratorof source/utility/object.js~decoratorof,decoratorof",
-    "test-file/test/utility/object.test.js.html#lineNumber211",
+    "test-file/test/utility/object.test.js.html#lineNumber259",
     "Object utility Create decorator descriptor",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber264",
+    "test-file/test/utility/object.test.js.html#lineNumber312",
     "Object utility Create decorator descriptor Prototype methods",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber249",
+    "test-file/test/utility/object.test.js.html#lineNumber297",
     "Object utility Create decorator descriptor Static accessors",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber213",
+    "test-file/test/utility/object.test.js.html#lineNumber261",
     "Object utility Create decorator descriptor Static fields",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber230",
+    "test-file/test/utility/object.test.js.html#lineNumber278",
     "Object utility Create decorator descriptor Static methods",
     "test"
   ],
   [
     "maptree source/utility/object.js~maptree,maptree",
-    "test-file/test/utility/object.test.js.html#lineNumber104",
+    "test-file/test/utility/object.test.js.html#lineNumber152",
     "Object utility Filter object tree",
     "test"
   ],
   [
     "getpropertydescriptor source/utility/object.js~getpropertydescriptor,getpropertydescriptor",
-    "test-file/test/utility/object.test.js.html#lineNumber10",
+    "test-file/test/utility/object.test.js.html#lineNumber12",
     "Object utility Get the property descriptor",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber20",
+    "test-file/test/utility/object.test.js.html#lineNumber22",
     "Object utility Get the property descriptor Own property",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber26",
+    "test-file/test/utility/object.test.js.html#lineNumber28",
     "Object utility Get the property descriptor Property on the prototype chain",
     "test"
   ],
   [
     "multiplemap source/utility/object.js~multiplemap,multiplemap",
-    "test-file/test/utility/object.test.js.html#lineNumber37",
+    "test-file/test/utility/object.test.js.html#lineNumber85",
     "Object utility Map & filter",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber39",
+    "test-file/test/utility/object.test.js.html#lineNumber87",
     "Object utility Map & filter Filter `null` & `undefined`",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber48",
+    "test-file/test/utility/object.test.js.html#lineNumber96",
     "Object utility Map & filter Merge Array elements into result",
     "test"
   ],
   [
     "extend source/utility/object.js~extend,extend",
-    "test-file/test/utility/object.test.js.html#lineNumber57",
+    "test-file/test/utility/object.test.js.html#lineNumber105",
     "Object utility Mixin objects",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber77",
+    "test-file/test/utility/object.test.js.html#lineNumber125",
     "Object utility Mixin objects Function or Class",
     "test"
   ],
   [
     "",
-    "test-file/test/utility/object.test.js.html#lineNumber59",
+    "test-file/test/utility/object.test.js.html#lineNumber107",
     "Object utility Mixin objects Ordinary objects",
     "test"
   ],

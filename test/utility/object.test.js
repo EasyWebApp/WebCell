@@ -1,5 +1,7 @@
 import {
-    getPropertyDescriptor, multipleMap, unique, extend, mapTree, decoratorOf
+    getPropertyDescriptor,
+    likeArray, arrayLike, multipleMap, unique,
+    extend, mapTree, decoratorOf
 } from '../../source/utility/object';
 
 
@@ -29,6 +31,52 @@ describe('Object utility',  () => {
                 Object.create( object ),  'test'
             ).should.be.eql( descriptor )
         );
+    });
+
+    describe('Array-like objects',  () => {
+        /**
+         * @test {likeArray}
+         */
+        it('Detection',  () => {
+
+            likeArray( false ).should.be.false();
+            likeArray( null ).should.be.false();
+            likeArray( undefined ).should.be.false();
+            likeArray( NaN ).should.be.false();
+
+            likeArray( '' ).should.be.true();
+            likeArray( [] ).should.be.true();
+            likeArray( {length: 0} ).should.be.true();
+
+            likeArray( () => { } ).should.be.false();
+            likeArray( document.createElement('form') ).should.be.false();
+        });
+
+        /**
+         * @test {arrayLike}
+         */
+        it('Decoration',  () => {
+
+            @arrayLike
+            class List {
+
+                constructor() {  this.length = 0;  }
+
+                @arrayLike
+                valueOf() {  return {length: this.length};  }
+
+                @arrayLike
+                get items() {  return {length: this.length};  }
+            }
+
+            const list = new List(), Array_iterator = [ ][Symbol.iterator];
+
+            list[ Symbol.iterator ].should.equal( Array_iterator );
+
+            list.valueOf()[ Symbol.iterator ].should.equal( Array_iterator );
+
+            list.items[ Symbol.iterator ].should.equal( Array_iterator );
+        });
     });
 
     /**

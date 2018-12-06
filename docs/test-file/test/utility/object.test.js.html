@@ -45,6 +45,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-delegate">delegate</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-encodeMarkup">encodeMarkup</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-indexOf">indexOf</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-inputOf">inputOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-isHTML">isHTML</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mediaReady">mediaReady</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-nextTick">nextTick</a></span></span></li>
@@ -58,6 +59,7 @@
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-decoratorOf">decoratorOf</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-extend">extend</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-getPropertyDescriptor">getPropertyDescriptor</a></span></span></li>
+<li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-likeArray">likeArray</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-mapTree">mapTree</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-multipleMap">multipleMap</a></span></span></li>
 <li data-ice="doc"><span data-ice="kind" class="kind-function">F</span><span data-ice="name"><span><a href="function/index.html#static-function-toIterable">toIterable</a></span></span></li>
@@ -87,7 +89,9 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">test/utility/object.test.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import {
-    getPropertyDescriptor, multipleMap, unique, extend, mapTree, decoratorOf
+    getPropertyDescriptor,
+    likeArray, arrayLike, multipleMap, unique,
+    extend, mapTree, decoratorOf
 } from &apos;../../source/utility/object&apos;;
 
 
@@ -117,6 +121,52 @@ describe(&apos;Object utility&apos;,  () =&gt; {
                 Object.create( object ),  &apos;test&apos;
             ).should.be.eql( descriptor )
         );
+    });
+
+    describe(&apos;Array-like objects&apos;,  () =&gt; {
+        /**
+         * @test {likeArray}
+         */
+        it(&apos;Detection&apos;,  () =&gt; {
+
+            likeArray( false ).should.be.false();
+            likeArray( null ).should.be.false();
+            likeArray( undefined ).should.be.false();
+            likeArray( NaN ).should.be.false();
+
+            likeArray( &apos;&apos; ).should.be.true();
+            likeArray( [] ).should.be.true();
+            likeArray( {length: 0} ).should.be.true();
+
+            likeArray( () =&gt; { } ).should.be.false();
+            likeArray( document.createElement(&apos;form&apos;) ).should.be.false();
+        });
+
+        /**
+         * @test {arrayLike}
+         */
+        it(&apos;Decoration&apos;,  () =&gt; {
+
+            @arrayLike
+            class List {
+
+                constructor() {  this.length = 0;  }
+
+                @arrayLike
+                valueOf() {  return {length: this.length};  }
+
+                @arrayLike
+                get items() {  return {length: this.length};  }
+            }
+
+            const list = new List(), Array_iterator = [ ][Symbol.iterator];
+
+            list[ Symbol.iterator ].should.equal( Array_iterator );
+
+            list.valueOf()[ Symbol.iterator ].should.equal( Array_iterator );
+
+            list.items[ Symbol.iterator ].should.equal( Array_iterator );
+        });
     });
 
     /**

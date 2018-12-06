@@ -136,7 +136,9 @@ export default  class ObjectView extends View {
 
         for (let attr  of  [... element.attributes]) {
 
-            let name = attr.name;
+            let { name, value } = attr;
+
+            if (! value.trim()) continue;
 
             let template = ObjectView.templateOf(
                 attr,
