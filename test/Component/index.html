@@ -3,16 +3,13 @@
     <script src="../../node_modules/@babel/polyfill/dist/polyfill.min.js"></script>
     <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js"></script>
     <script src="../../node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js"></script>
-    <script src="../../node_modules/whatwg-fetch/dist/fetch.umd.js"></script>
 
     <script src="../../dist/web-cell.js"></script>
 
     <script src="dist/cell-test.js"></script>
     <script src="dist/cell-input.js"></script>
 </head><body>
-    <cell-test oninput="this.testInput( event )"
-        onchange="console.log( this.value )">
-    </cell-test>
+    <cell-test onchange="console.log( this.value )"></cell-test>
 
     <cell-input>
         <input value="1" readonly placeholder="test">

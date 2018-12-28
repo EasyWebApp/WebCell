@@ -94,19 +94,7 @@ export default  class View {
     /**
      * @return {string} Full markup code of this view
      */
-    toString() {
-
-        var fragment = this.content;
-
-        if (fragment instanceof Array) {
-
-            const temp = document.createDocumentFragment();
-
-            temp.append(... fragment);  fragment = temp;
-        }
-
-        return  stringifyDOM( fragment );
-    }
+    toString() {  return  stringifyDOM( this.content );  }
 
     /**
      * @protected

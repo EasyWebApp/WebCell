@@ -95,7 +95,7 @@ textarea {
 #### `index.js`
 
 ```JavaScript
-import { component, blobURI, mapProperty, mapData, on } from 'web-cell';
+import { component, blobURI, mapProperty, mapData, on, at } from 'web-cell';
 
 import template from './index.html';
 

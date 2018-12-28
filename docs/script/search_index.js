@@ -96,6 +96,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~decodebase64",
+    "function/index.html#static-function-decodeBase64",
+    "<span>decodeBase64</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~decodemarkup",
     "function/index.html#static-function-decodeMarkup",
     "<span>decodeMarkup</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -126,6 +132,12 @@ window.esdocSearchIndex = [
     "variable"
   ],
   [
+    "web-cell/source/utility/resource.js~encodebase64",
+    "function/index.html#static-function-encodeBase64",
+    "<span>encodeBase64</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/dom.js~encodemarkup",
     "function/index.html#static-function-encodeMarkup",
     "<span>encodeMarkup</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
@@ -135,6 +147,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/object.js~extend",
     "function/index.html#static-function-extend",
     "<span>extend</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/resource.js~fetch",
+    "function/index.html#static-function-fetch",
+    "<span>fetch</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
     "function"
   ],
   [
@@ -153,12 +171,6 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~indexof",
     "function/index.html#static-function-indexOf",
     "<span>indexOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
-    "function"
-  ],
-  [
-    "web-cell/source/utility/dom.js~inputof",
-    "function/index.html#static-function-inputOf",
-    "<span>inputOf</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -270,6 +282,12 @@ window.esdocSearchIndex = [
     "function"
   ],
   [
+    "web-cell/source/utility/resource.js~todatauri",
+    "function/index.html#static-function-toDataURI",
+    "<span>toDataURI</span> <span class=\"search-result-import-path\">web-cell/source/utility/resource.js</span>",
+    "function"
+  ],
+  [
     "web-cell/source/utility/object.js~toiterable",
     "function/index.html#static-function-toIterable",
     "<span>toIterable</span> <span class=\"search-result-import-path\">web-cell/source/utility/object.js</span>",
@@ -291,6 +309,12 @@ window.esdocSearchIndex = [
     "web-cell/source/utility/dom.js~watchattributes",
     "function/index.html#static-function-watchAttributes",
     "<span>watchAttributes</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
+    "function"
+  ],
+  [
+    "web-cell/source/utility/dom.js~watchinput",
+    "function/index.html#static-function-watchInput",
+    "<span>watchInput</span> <span class=\"search-result-import-path\">web-cell/source/utility/DOM.js</span>",
     "function"
   ],
   [
@@ -361,19 +385,19 @@ window.esdocSearchIndex = [
   ],
   [
     "delegate source/utility/dom.js~delegate,delegate",
-    "test-file/test/Component/index.test.js.html#lineNumber120",
+    "test-file/test/Component/index.test.js.html#lineNumber121",
     "Component mixin Delegate DOM events",
     "test"
   ],
   [
     "trigger source/component/component.js~component#trigger,trigger",
-    "test-file/test/Component/index.test.js.html#lineNumber108",
+    "test-file/test/Component/index.test.js.html#lineNumber109",
     "Component mixin Dispatch events out of Shadow DOM",
     "test"
   ],
   [
-    "targetof indexof source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
-    "test-file/test/Component/index.test.js.html#lineNumber92",
+    "watchinput targetof indexof source/utility/dom.js~watchinput,watchinput source/utility/dom.js~targetof,targetof source/utility/dom.js~indexof,indexof",
+    "test-file/test/Component/index.test.js.html#lineNumber93",
     "Component mixin Get the event target in Shadow DOM",
     "test"
   ],
@@ -421,25 +445,25 @@ window.esdocSearchIndex = [
   ],
   [
     "",
-    "test-file/test/Component/index.test.js.html#lineNumber138",
+    "test-file/test/Component/index.test.js.html#lineNumber139",
     "Form field components",
     "test"
   ],
   [
     "on source/component/component.js~component#on,on",
-    "test-file/test/Component/index.test.js.html#lineNumber188",
+    "test-file/test/Component/index.test.js.html#lineNumber189",
     "Form field components Auto event listener",
     "test"
   ],
   [
     "",
-    "test-file/test/Component/index.test.js.html#lineNumber170",
+    "test-file/test/Component/index.test.js.html#lineNumber171",
     "Form field components Filter some data",
     "test"
   ],
   [
     "inputcomponent#changedpropertyof watchattributes source/component/inputcomponent.js~inputcomponent#changedpropertyof,inputcomponent#changedpropertyof source/utility/dom.js~watchattributes,watchattributes",
-    "test-file/test/Component/index.test.js.html#lineNumber143",
+    "test-file/test/Component/index.test.js.html#lineNumber144",
     "Form field components Render inner field",
     "test"
   ],
@@ -1206,9 +1230,9 @@ window.esdocSearchIndex = [
     "member"
   ],
   [
-    "source/component/component.js~domeventhandler",
-    "typedef/index.html#static-typedef-DOMEventHandler",
-    "source/component/Component.js~DOMEventHandler",
+    "source/component/component.js~eventhandler",
+    "typedef/index.html#static-typedef-EventHandler",
+    "source/component/Component.js~EventHandler",
     "typedef"
   ],
   [

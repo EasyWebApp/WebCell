@@ -86,6 +86,7 @@ describe('Component mixin',  () => {
     });
 
     /**
+     * @test {watchInput}
      * @test {targetOf}
      * @test {indexOf}
      */

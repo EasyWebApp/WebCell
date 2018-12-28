@@ -9,6 +9,7 @@
 ```Shell
 npm install web-cell jsdom node-fetch
 ```
+Add these `import` before any **Non-inset packages**:
 
 ```JavaScript
 import 'regenerator-runtime/runtime';          //  Export `regeneratorRuntime` to `global`

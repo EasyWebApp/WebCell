@@ -4,7 +4,7 @@ import View from '../view/View';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_,  $up as $_up,  delegate, inputOf, trigger } from '../utility/DOM';
+import { $ as $_,  $up as $_up,  delegate, watchInput, trigger } from '../utility/DOM';
 
 import { multipleMap } from '../utility/object';
 
@@ -219,9 +219,9 @@ export default  class Component {
     /**
      * Delegate listener for DOM events
      *
-     * @param {string}          type       - Name of a DOM event
-     * @param {string}          [selector] - CSS selector of delegate elements
-     * @param {DOMEventHandler} callback
+     * @param {string}       type       - Name of a DOM event
+     * @param {string}       [selector] - CSS selector of delegate elements
+     * @param {EventHandler} callback
      *
      * @return {Element} This element
      */
@@ -233,10 +233,19 @@ export default  class Component {
 
         callback = selector  ?  delegate(selector, callback)  :  callback;
 
-        if (type === 'input')
-            inputOf(node, callback);
-        else
-            node.addEventListener(type, callback);
+        if (type === 'input') {
+
+            const origin = callback;
+
+            callback = function (event) {
+
+                if (event instanceof CustomEvent)  origin.apply(this, arguments);
+            };
+        }
+
+        node.addEventListener(type, callback);
+
+        if (type === 'input')  watchInput( node );
 
         return this;
     }
@@ -258,5 +267,5 @@ export default  class Component {
 }
 
 /**
- * @typedef {function(event: Event): *} DOMEventHandler
+ * @typedef {function(event: Event): *} EventHandler
  */

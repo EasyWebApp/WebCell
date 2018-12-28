@@ -1,7 +1,5 @@
 import { JSDOM } from 'jsdom';
 
-import fetch from 'node-fetch';
-
 export default JSDOM;
 
 
@@ -15,8 +13,6 @@ for (let key of [
     'Node', 'Element', 'HTMLElement', 'DocumentFragment', 'HTMLDocument',
     'DOMParser', 'XMLSerializer',
     'Event', 'CustomEvent',
-    'URL', 'URLSearchParams', 'FormData', 'Blob'
+    'URL', 'URLSearchParams', 'FormData', 'Blob', 'XMLHttpRequest'
 ])
     global[key] = window[key];
-
-self.fetch = fetch;

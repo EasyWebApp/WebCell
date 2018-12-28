@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "0.10.12",
+  "version": "0.10.13",
   "description": "Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 & Decorator proposal",
   "keywords": [
     "WebApp",
@@ -35,10 +35,10 @@
     "pack-patch": "amd-bundle source/DOM-polyfill dist/polyfill",
     "pack-test": "amd-bundle test/Component/source/cell-test test/Component/dist/cell-test",
     "pack-input": "amd-bundle test/Component/source/cell-input test/Component/dist/cell-input",
-    "check": "npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js",
+    "check": "npm run pack  &&  npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js",
     "test": "npm run check -- --exit",
     "debug": "npm run check -- --inspect-brk",
-    "build": "npm run lint  &&  npm run pack  &&  npm run pack-patch  &&  npm test  &&  esdoc",
+    "build": "npm run lint  &&  npm run pack-patch  &&  npm test  &&  esdoc",
     "prepublishOnly": "npm run build",
     "start": "web-server docs/ -o"
   },
@@ -48,15 +48,14 @@
     }
   },
   "peerDependencies": {
-    "@babel/polyfill": "^7.0.0",
-    "@webcomponents/webcomponentsjs": "^2.2.1",
-    "whatwg-fetch": "^3.0.0"
+    "@babel/polyfill": "^7.2.5",
+    "@webcomponents/webcomponentsjs": "^2.2.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.6",
-    "@babel/plugin-proposal-decorators": "^7.1.6",
-    "@babel/polyfill": "^7.0.0",
-    "@babel/preset-env": "^7.1.6",
+    "@babel/core": "^7.2.2",
+    "@babel/plugin-proposal-decorators": "^7.2.3",
+    "@babel/polyfill": "^7.2.5",
+    "@babel/preset-env": "^7.2.3",
     "@babel/register": "^7.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.1",
     "amd-bundle": "^1.7.4",
@@ -65,17 +64,15 @@
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^5.9.0",
-    "husky": "^1.2.0",
-    "jsdom": "^13.0.0",
+    "eslint": "^5.11.1",
+    "husky": "^1.3.1",
+    "jsdom": "^13.1.0",
     "koapache": "^1.0.4",
     "mocha": "^5.2.0",
-    "node-fetch": "^2.3.0",
     "puppeteer-browser": "^0.3.7",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^7.1.1",
-    "whatwg-fetch": "^3.0.0"
+    "sinon": "^7.2.2"
   },
   "babel": {
     "presets": [

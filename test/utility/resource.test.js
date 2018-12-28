@@ -105,7 +105,7 @@ describe('Resource utility',  () => {
 
         before(async () => {
 
-            server = await (new WebServer()).workerHost();
+            server = await (new WebServer('.', 0, true)).workerHost();
 
             server = `http://${server.address}:${server.port}`;
         });

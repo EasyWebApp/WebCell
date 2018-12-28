@@ -1,3 +1,5 @@
+import { likeArray } from './object';
+
 import Template from '../view/Template';
 
 
@@ -28,20 +30,30 @@ export const documentReady = new Promise(resolve => {
  */
 export function $(selector, context) {
 
-    return  [... (context || document).querySelectorAll( selector )];
+    return  Array.from( (context || document).querySelectorAll( selector ) );
 }
 
 
 /**
- * @param {string} selector - CSS selector
- * @param {Node}   context
+ * @param {string}                    selector    - CSS selector
+ * @param {Node}                      context
+ * @param {function(parent: Node): *} [condition]
  *
- * @return {?Element} Matched parent
+ * @return {?Node} Matched parent
  */
-export function $up(selector, context) {
+export function $up(selector, context, condition) {
+
+    condition = (condition instanceof Function)  &&  condition;
 
     while (context = context.parentNode)
-        if (context.matches  &&  context.matches( selector ))
+        if ( condition ) {
+
+            let result = condition( context );
+
+            if ( result )
+                return  (result === true)  ?  context  :  result;
+
+        } else if (context.matches  &&  context.matches( selector ))
             return context;
 }
 
@@ -170,50 +182,59 @@ export function trigger(element, event, detail, bubbles, cancelable, composed) {
 }
 
 
-function customInput(detail) {
+class CustomInputEvent extends CustomEvent {
 
-    return  new CustomEvent('input', {
+    get target() {
+
+        return $up(
+            '*',
+            super.target,
+            node  =>  ((node instanceof DocumentFragment) && node.host)
+        );
+    }
+}
+
+function customInput(element, detail) {
+
+    element.dispatchEvent(new CustomInputEvent('input', {
         bubbles:   true,
         composed:  true,
         detail
-    });
+    }));
 }
 
 /**
- * @param {HTMLElement}                                 element
- * @param {function(event: Event, input: String): void} handler
+ * @param {HTMLElement} element
  */
-export function inputOf(element, handler) {
+export function watchInput(element) {
 
     var IME, clipBoard;
 
     element.addEventListener('compositionstart',  () => IME = true);
 
-    element.addEventListener('compositionend',  ({ data }) => {
+    element.addEventListener(
+        'compositionend',
+        ({ target, data })  =>  (IME = false, customInput(target, data))
+    );
 
-        handler.call(element,  customInput( data ));
-
-        IME = false;
-    });
-
-    element.addEventListener('input',  ({ data }) => {
+    element.addEventListener('input',  ({ target, data }) => {
 
         if ( clipBoard )
             clipBoard = false;
         else if (! IME)
-            handler.call(element,  customInput( data ));
+            customInput(target, data);
     });
 
-    element.addEventListener('paste',  ({ clipboardData }) => {
+    element.addEventListener('paste',  ({ target, clipboardData }) => {
 
         if (! IME)
             clipBoard = true,
-            handler.call(element,  customInput( clipboardData.getData('text') ));
+            customInput(target, clipboardData.getData('text'));
     });
 
-    element.addEventListener('cut',  () => {
+    element.addEventListener('cut',  ({ target }) => {
 
-        if (! IME)  clipBoard = true, handler.call(element, customInput());
+        if (! IME)  clipBoard = true, customInput( target );
     });
 }
 
@@ -221,9 +242,12 @@ export function inputOf(element, handler) {
 /**
  * @param {string} markup - Code of an markup fragment
  *
- * @return {DocumentFragment}
+ * @return {DocumentFragment|Document}
  */
 export function parseDOM(markup) {
+
+    if (/<(!DocType|html|head|body)[\s\S]*?>/.test( markup ))
+        return  (new DOMParser()).parseFromString(markup, 'text/html');
 
     const box = document.createElement('template');
 
@@ -252,23 +276,35 @@ const serializer = new XMLSerializer(),
 function stringOf(document) {
 
     if (document instanceof HTMLDocument)
-        for (let element of $(
-            'style:not(:empty), script:not(:empty)',  document
-        ))
-            if ( element.textContent.trim() )
-                element.firstChild.replaceWith(
-                    documentXML.createCDATASection( element.textContent )
-                );
+        $('style:not(:empty), script:not(:empty)',  document).forEach(
+            ({ textContent, firstChild }) => (
+                textContent.trim() &&
+                firstChild.replaceWith(
+                    documentXML.createCDATASection( textContent )
+                )
+            )
+        );
 
     return  serializer.serializeToString( document );
 }
 
 /**
- * @param {Node} fragment
+ * @param {Node|Node[]} fragment
  *
  * @return {string} HTML/XML source code
  */
 export function stringifyDOM(fragment) {
+
+    if (likeArray( fragment )) {
+
+        let node = document.createDocumentFragment();
+
+        node.append.apply(
+            node,  Array.from(fragment,  item => item.cloneNode(true))
+        );
+
+        fragment = node;
+    }
 
     if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))
         return stringOf( fragment );
@@ -328,16 +364,14 @@ export function decodeMarkup(source) {
  */
 export function watchAttributes(element, names, callback) {
 
-    const observer = new MutationObserver(list => {
-
-        for (let mutation of list)
-            callback.call(
-                this,
-                mutation.attributeName,
-                mutation.oldValue,
-                element.getAttribute( mutation.attributeName )
-            );
-    });
+    const observer = new MutationObserver(list =>
+        list.forEach(({ attributeName, oldValue }) => callback.call(
+            this,
+            attributeName,
+            oldValue,
+            element.getAttribute( attributeName )
+        ))
+    );
 
     observer.observe(element, {
         attributes:         true,
@@ -345,8 +379,10 @@ export function watchAttributes(element, names, callback) {
         attributeFilter:    names
     });
 
-    for (let attribute of element.attributes)
-        callback.call(this, attribute.name, null, attribute.value);
+    Array.from(
+        element.attributes,
+        ({ name, value })  =>  callback.call(this, name, null, value)
+    );
 
     return observer;
 }

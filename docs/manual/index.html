@@ -124,7 +124,7 @@ including <strong>Extension hooks</strong> shown below:</p><table>
 <div class="manual-card-wrap" data-ice="cards">
       <div class="manual-card">
         <div data-ice="card"><h1>Node.JS like environment</h1><p><strong>WebCell</strong> can run in any <em>Non-browser</em> environment which supports <strong>CommonJS</strong> or <strong>ECMAScript module</strong> based on <a href="https://github.com/jsdom/jsdom"><strong>JSDOM</strong></a>.</p><h2>Import</h2><pre><code class="lang-Shell"><code class="source-code prettyprint">npm install web-cell jsdom node-fetch</code>
-</code></pre><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import &apos;regenerator-runtime/runtime&apos;;          //  Export `regeneratorRuntime` to `global`
+</code></pre><p>Add these <code>import</code> before any <strong>Non-inset packages</strong>:</p><pre><code class="lang-JavaScript"><code class="source-code prettyprint">import &apos;regenerator-runtime/runtime&apos;;          //  Export `regeneratorRuntime` to `global`
 
 import JSDOM from &apos;web-cell/dist/polyfill&apos;;    //  Export `self` &amp; some DOM API to `global`
 

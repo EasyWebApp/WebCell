@@ -1,4 +1,4 @@
-import { component, mapProperty, mapData, targetOf, indexOf } from 'web-cell';
+import { component, mapProperty, mapData, on, targetOf, indexOf } from 'web-cell';
 
 
 @component({
@@ -31,6 +31,7 @@ export class CellTest extends HTMLElement {
 
     set value(raw) {  this.$('textarea')[0].value = raw;  }
 
+    @on('input', ':host textarea')
     testInput(event) {
 
         const innerTarget = targetOf( event );

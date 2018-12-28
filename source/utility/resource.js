@@ -1,5 +1,7 @@
 import { $, stringifyDOM, parseDOM } from './DOM';
 
+import { extend } from './object';
+
 
 /**
  * @param {String} raw
@@ -33,18 +35,15 @@ export function serialize(form) {
     if ( $('input[type="file"][name]', form)[0] )  return new FormData( form );
 
     const data = Array.from(
-        form.elements,
-        field  =>  (field.name && [field.name, field.value])
+        form.elements,  ({name, value}) => (name && [name, value])
     ).filter( Boolean );
 
-    if (
-        (form.form || form).getAttribute('enctype') !== 'application/json'
-    )
+    if ((form.form || form).getAttribute('enctype')  !==  'application/json')
         return  '' + new URLSearchParams( data );
 
     form = { };
 
-    for (let [key, value]  of  data)  form[key] = value;
+    data.forEach(([key, value])  =>  form[key] = value);
 
     return form;
 }
@@ -91,71 +90,85 @@ export function parse(raw) {
 
 
 /**
- * HTTP request
+ * Enhanced `fetch()` with **Progress handlers** based on `XMLHttpRequest()`
  *
- * @param {string}                URI            - HTTP URL
- * @param {string}                [method='GET']
- * @param {string|Object|Element} [body]         - Data to send
- * @param {Object}                [headers]
- * @param {Object}                [option]       - https://developer.mozilla.org/en-US/docs/Web/API/WindowOrWorkerGlobalScope/fetch#Parameters
+ * @param {String|URL} URI
  *
- * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
+ * @param {Object}        [request={ }]
+ * @param {String}        [request.method='GET']
+ * @param {String|Object} [request.body]
+ * @param {Object}        [request.headers]
+ * @param {Object}        [request.upload={ }]
+ *     - [Event handlers of `XMLHttpRequestUpload()`](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/upload)
+ * @param {...Object}     [request.extra]
+ *     - [Writable properties of XHR object](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest#Properties)
+ *
+ * @return {Promise<XMLHttpRequest>} Resolved on `load` event or
+ *                                   Rejected on `error` event
  */
-export async function request(URI, method = 'GET', body, headers, option) {
+export function fetch(
+    URI,
+    {method = 'GET', body, headers, upload = { }, ...extra}  =  { }
+) {
+    const XHR = new XMLHttpRequest();
 
-    if (body instanceof Element)  body = serialize( body );
+    if ( extra )  extend(XHR, extra);
 
-    if (body instanceof Object)  try {
+    if ( upload )  extend(XHR.upload, upload);
 
-        body = stringify( body.valueOf() );
+    XHR.open(method, URI);
 
-        headers = headers || { };
+    for (let key in headers)  XHR.setRequestHeader(key, headers[key]);
 
-        headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+    return  new Promise((resolve, reject) => {
 
-    } catch (error) {/* eslint-disable-line */}
+        XHR.onload = ({ target }) => resolve( target ),
+        XHR.onerror = ({ target }) => reject( target );
 
-    const response = await self.fetch(URI, {
-        method,  headers,  body,
-        mode:         isXDomain( URI ) ? 'cors' : 'same-origin',
-        credentials:  'same-origin',
-        ... option
+        XHR.send( body );
     });
-
-    const type = response.headers.get('Content-Type').split(';')[0];
-
-    switch ( type ) {
-        case 'text/html':
-            return  parseDOM(await response.text());
-        case 'application/json':
-            return  await response.json();
-        default:
-            return  await response[
-                (type.split('/')[0] === 'text')  ?  'text'  :  'blob'
-            ]();
-    }
 }
 
 
 /**
- * @param {File}   file
- * @param {String} [type='DataURL']   - https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods
- * @param {String} [encoding='UTF-8'] - https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters
+ * @param {String} raw - Binary data
  *
- * @return {String|ArrayBuffer}
+ * @return {String} Base64 encoded data
  */
-export function readAs(file, type = 'DataURL', encoding = 'UTF-8') {
+export function encodeBase64(raw) {
 
-    const reader = new FileReader();
+    return self.btoa(
+        encodeURIComponent( raw ).replace(
+            /%([0-9A-F]{2})/g,  (_, p1) => String.fromCharCode('0x' + p1)
+        )
+    );
+}
 
-    return  new Promise((resolve, reject) => {
 
-        reader.onload = () => resolve( reader.result );
+/**
+ * @param {String} raw - Base64 encoded data
+ *
+ * @return {String} Binary data
+ */
+export function decodeBase64(raw) {
 
-        reader.onerror = reject;
+    return decodeURIComponent(
+        self.atob( raw ).split('').map(
+            char  =>  '%' + ('00' + char.charCodeAt(0).toString(16)).slice(-2)
+        ).join('')
+    );
+}
 
-        reader[`readAs${type}`](file, encoding);
-    });
+
+/**
+ * @param {String} raw       - Binary data
+ * @param {String} [type=''] - MIME type
+ *
+ * @return {String}
+ */
+export function toDataURI(raw, type = '') {
+
+    return  `data:${type};base64,${encodeBase64( raw )}`;
 }
 
 
@@ -164,22 +177,9 @@ export function readAs(file, type = 'DataURL', encoding = 'UTF-8') {
  *
  * @return {Promise<Blob>}
  */
-export function blobOf(URI) {
+export  async function blobOf(URI) {
 
-    const XHR = new XMLHttpRequest();
-
-    XHR.responseType = 'blob';
-
-    XHR.open('GET', URI);
-
-    return  new Promise((resolve, reject) => {
-
-        XHR.onload = () => resolve( XHR.response );
-
-        XHR.onerror = reject;
-
-        XHR.send();
-    });
+    return  (await fetch(URI, {responseType: 'blob'})).response;
 }
 
 
@@ -228,4 +228,73 @@ export function blobFrom(URI) {
     for (let i = 0;  data[i];  i++)  uBuffer[i] = data.charCodeAt( i );
 
     return new Blob([aBuffer],  { type });
+}
+
+
+/**
+ * HTTP request
+ *
+ * @param {string}                URI            - HTTP URL
+ * @param {string}                [method='GET']
+ * @param {string|Object|Element} [body]         - Data to send
+ * @param {Object}                [headers]
+ * @param {Object}                [option]       - Parameters of {@link fetch} about `XMLHttpRequest()`
+ *
+ * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
+ */
+export async function request(URI, method = 'GET', body, headers, option) {
+
+    if (body instanceof Element)  body = serialize( body );
+
+    if (body instanceof Object)  try {
+
+        body = stringify( body.valueOf() );
+
+        headers = headers || { };
+
+        headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+
+    } catch (error) {/* eslint-disable-line */}
+
+    const XHR = await fetch(
+        URI,  Object.assign({method, headers, body}, option)
+    );
+
+    const type = XHR.getResponseHeader('Content-Type').split(';')[0];
+
+    switch ( type ) {
+        case 'application/xml':
+        case 'image/svg':
+            return  XHR.responseXML;
+        case 'text/html':
+            return  parseDOM( XHR.responseText );
+        case 'application/json':
+            return  parse( XHR.responseText );
+        default:
+            return  (type.split('/')[0] === 'text')  ?  XHR.responseText  :  (
+                blobFrom( toDataURI( XHR.response ) )
+            );
+    }
+}
+
+
+/**
+ * @param {File}   file
+ * @param {String} [type='DataURL']   - https://developer.mozilla.org/en-US/docs/Web/API/FileReader#Methods
+ * @param {String} [encoding='UTF-8'] - https://developer.mozilla.org/en-US/docs/Web/API/FileReader/readAsText#Parameters
+ *
+ * @return {String|ArrayBuffer}
+ */
+export function readAs(file, type = 'DataURL', encoding = 'UTF-8') {
+
+    const reader = new FileReader();
+
+    return  new Promise((resolve, reject) => {
+
+        reader.onload = () => resolve( reader.result );
+
+        reader.onerror = reject;
+
+        reader[`readAs${type}`](file, encoding);
+    });
 }

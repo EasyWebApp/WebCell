@@ -4,13 +4,13 @@
 (function (factory) {
 
     if ((typeof define === 'function')  &&  define.amd)
-        define('polyfill', ["jsdom","node-fetch"], factory);
+        define('polyfill', ["jsdom"], factory);
     else if (typeof module === 'object')
-        return  module.exports = factory.call(global,require('jsdom'),require('node-fetch'));
+        return  module.exports = factory.call(global,require('jsdom'));
     else
-        return  this['polyfill'] = factory.call(self,this['jsdom'],this['node-fetch']);
+        return  this['polyfill'] = factory.call(self,this['jsdom']);
 
-})(function (jsdom,node_fetch) {
+})(function (jsdom) {
 
 function merge(base, path) {
   return (base + '/' + path).replace(/\/\//g, '/').replace(/[^/.]+\/\.\.\//g, '').replace(/\.\//g, function (match, index, input) {
@@ -80,16 +80,6 @@ var _module_ = {
 
             var _jsdom = require('jsdom');
 
-            var _nodeFetch = _interopRequireDefault(require('node-fetch'));
-
-            function _interopRequireDefault(obj) {
-                return obj && obj.__esModule
-                    ? obj
-                    : {
-                          default: obj
-                      };
-            }
-
             var _default = _jsdom.JSDOM;
             exports.default = _default;
 
@@ -114,22 +104,18 @@ var _module_ = {
                 'URL',
                 'URLSearchParams',
                 'FormData',
-                'Blob'
+                'Blob',
+                'XMLHttpRequest'
             ];
 
             for (var _i = 0; _i < _arr.length; _i++) {
                 var key = _arr[_i];
                 global[key] = window[key];
             }
-
-            self.fetch = _nodeFetch.default;
         }
     },
     jsdom: {
         exports: jsdom
-    },
-    'node-fetch': {
-        exports: node_fetch
     }
 };
 
