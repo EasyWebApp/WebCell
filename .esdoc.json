@@ -1,4 +1,5 @@
 {
+    "index": "./ReadMe.md",
     "source": "./source",
     "destination": "./docs",
     "plugins": [

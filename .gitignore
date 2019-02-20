@@ -61,5 +61,7 @@ typings/
 .vscode/
 .idea/
 
-# Test build
+# Project building
 test/**/dist/
+dist/
+docs/

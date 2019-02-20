@@ -38,9 +38,10 @@
     "check": "npm run pack  &&  npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js",
     "test": "npm run check -- --exit",
     "debug": "npm run check -- --inspect-brk",
-    "build": "npm run lint  &&  npm run pack-patch  &&  npm test  &&  esdoc",
+    "build": "npm run lint  &&  npm run pack-patch  &&  esdoc  &&  npm test",
     "prepublishOnly": "npm run build",
-    "start": "web-server docs/ -o"
+    "document": "esdoc",
+    "start": "esdoc  &&  web-server docs/ -o"
   },
   "husky": {
     "hooks": {
@@ -49,30 +50,30 @@
   },
   "peerDependencies": {
     "@babel/polyfill": "^7.2.5",
-    "@webcomponents/webcomponentsjs": "^2.2.1"
+    "@webcomponents/webcomponentsjs": "^2.2.7"
   },
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/plugin-proposal-decorators": "^7.2.3",
+    "@babel/core": "^7.3.3",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.2.3",
+    "@babel/preset-env": "^7.3.1",
     "@babel/register": "^7.0.0",
-    "@webcomponents/webcomponentsjs": "^2.2.1",
+    "@webcomponents/webcomponentsjs": "^2.2.7",
     "amd-bundle": "^1.7.4",
     "babel-eslint": "^10.0.1",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^5.11.1",
+    "eslint": "^5.14.1",
     "husky": "^1.3.1",
-    "jsdom": "^13.1.0",
-    "koapache": "^1.0.4",
-    "mocha": "^5.2.0",
+    "jsdom": "^13.2.0",
+    "koapache": "^1.0.5",
+    "mocha": "^6.0.0",
     "puppeteer-browser": "^0.3.7",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^7.2.2"
+    "sinon": "^7.2.4"
   },
   "babel": {
     "presets": [

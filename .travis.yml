@@ -1,0 +1,22 @@
+branches:
+    only:
+        - master
+
+language: node_js
+node_js:
+    - lts/*
+cache:
+    directories:
+        - node_modules
+
+install:
+    - npm install
+script:
+    - npm run document
+    - cd ${FOLDER}
+    - git init
+    - git config user.name ${UID}
+    - git config user.email ${EMAIL}
+    - git add .
+    - git commit -m "${MESSAGE}"
+    - git push --force --quiet https://${TOKEN}@${GIT_URI}.git master:gh-pages
