@@ -30,9 +30,14 @@ describe('Component mixin',  () => {
 
         page.$eval('cell-test',  element => [
             element.constructor.name,
-            element.constructor.template.nodeType
+            element.constructor.template
         ]).should.be.fulfilledWith([
-            'CellTest', 11
+            'CellTest',
+            `<style>
+        textarea {
+            font-style: italic;
+        }</style><textarea onchange="\${host.trigger.bind( host )}">            Hello, \${view.name}!
+        </textarea>`
         ])
     );
 
@@ -86,7 +91,6 @@ describe('Component mixin',  () => {
     });
 
     /**
-     * @test {watchInput}
      * @test {targetOf}
      * @test {indexOf}
      */

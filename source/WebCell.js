@@ -1,8 +1,10 @@
+import { parseDOM } from 'dom-renderer';
+
 import Component from './component/Component';
 
 import { multipleMap, decoratorOf, unique } from './utility/object';
 
-import { delegate, stringifyDOM, parseDOM } from './utility/DOM';
+import { delegate } from './utility/DOM';
 
 import { blobFrom } from './utility/resource';
 
@@ -136,34 +138,39 @@ function define(meta, template, style) {
 
     if ( template ) {
 
-        if (template instanceof Node)  template = stringifyDOM( template );
-
         template = parseDOM( (template + '').trim() );
 
-        if (template.firstChild.tagName !== 'TEMPLATE') {
+        let _temp_ = template.querySelector('template');
 
-            let temp = document.createElement('template');
+        if (! _temp_) {
 
-            temp.content.appendChild( template );
+            _temp_ = document.createElement('template');
 
-            template = temp;
-        } else
-            template = template.firstChild;
-    } else
-        template = document.createElement('template');
+            _temp_.content.appendChild( template );
+        }
 
-    meta.push( decoratorOf(Component, 'template', template.content) );
+        template = _temp_;
+    }
 
     if ( style ) {
 
-        if (!(style instanceof Node))
-            style = Object.assign(
+        template = template || document.createElement('template');
+
+        template.content.insertBefore(
+            Object.assign(
                 document.createElement('style'),  {textContent: style}
-            );
+            ),
+            template.content.firstChild
+        );
 
         meta.push( decoratorOf(Component, 'style', style) );
+    }
 
-        template.content.insertBefore(style, template.content.firstChild);
+    if ( template ) {
+
+        template = template.innerHTML;
+
+        meta.push( decoratorOf(Component, 'template', template) );
     }
 
     return template;
@@ -227,11 +234,3 @@ export * from './utility/object';
 export * from './utility/DOM';
 
 export * from './utility/resource';
-
-export {default as Template} from './view/Template';
-
-export {default as View} from './view/View';
-
-export {default as ObjectView} from './view/ObjectView';
-
-export {default as ArrayView} from './view/ArrayView';

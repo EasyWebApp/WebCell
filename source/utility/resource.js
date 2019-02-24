@@ -1,4 +1,6 @@
-import { $, stringifyDOM, parseDOM } from './DOM';
+import { stringifyDOM, parseDOM } from 'dom-renderer';
+
+import { $ } from './DOM';
 
 import { extend } from './object';
 

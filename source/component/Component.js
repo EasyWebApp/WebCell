@@ -1,20 +1,13 @@
-import ObjectView from '../view/ObjectView';
-
-import View from '../view/View';
+import View, { attributeMap, watchInput } from 'dom-renderer';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_,  $up as $_up,  delegate, watchInput, trigger } from '../utility/DOM';
+import { $ as $_, delegate, trigger, makeNode } from '../utility/DOM';
 
 import { multipleMap } from '../utility/object';
 
 
-const attr_prop = {
-        class:     'className',
-        for:       'htmlFor',
-        readonly:  'readOnly'
-    },
-    event_handler = new Map();
+const shadow_root = Symbol('Shadow root'), event_handler = new Map();
 
 
 /**
@@ -51,36 +44,37 @@ export default  class Component {
 
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
-     *
-     * @return {HTMLElement} This custom element
      */
-    buildDOM(option) {
+    async buildDOM(option) {
 
         if (self.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
-        const shadow = this.attachShadow({
-                mode:            'open',
-                delegatesFocus:  true,
-                ...option
-            }),
-            {template, data} = this.constructor;
+        const {template, data} = this.constructor;
 
-        if ( template )
-            shadow.appendChild( document.importNode(template, true) );
+        if ( template ) {
 
-        this.bootHook();
+            const view = new View(template,  null,  {host: this});
 
-        const view = new ObjectView( shadow );
+            this[shadow_root] = this.attachShadow(Object.assign(
+                {
+                    mode:            'open',
+                    delegatesFocus:  true
+                },
+                option
+            ));
 
-        if ( view[0] )  view.render(data || { });
+            this[shadow_root].appendChild( makeNode( view.topNodes ) );
+
+            this.bootHook();
+
+            await view.render(data || { });
+        }
 
         const map = event_handler.get( this.constructor )  ||  '';
 
         for (let {type, selector, handler}  of  map)
             this.on(type,  selector,  handler.bind( this ));
-
-        return this;
     }
 
     /**
@@ -97,7 +91,7 @@ export default  class Component {
                 );
 
         if (this.viewUpdateCallback instanceof Function)
-            this.shadowRoot.addEventListener('update',  event => {
+            this[shadow_root].addEventListener('render',  event => {
 
                 const {oldData, newData, view} = event.detail;
 
@@ -106,8 +100,8 @@ export default  class Component {
             });
 
         if (this.viewChangedCallback instanceof Function)
-            this.shadowRoot.addEventListener(
-                'updated',
+            this[shadow_root].addEventListener(
+                'rendered',
                 ({detail: {data, view}})  =>  this.viewChangedCallback(data, view)
             );
     }
@@ -117,7 +111,7 @@ export default  class Component {
      *
      * @type {View}
      */
-    get view() {  return  View.instanceOf( this.shadowRoot );  }
+    get view() {  return  View.instanceOf( this[shadow_root].firstChild );  }
 
     /**
      * Set the getter & setter of the DOM property
@@ -132,7 +126,7 @@ export default  class Component {
 
         for (let key of attributes) {
 
-            key = attr_prop[key] || key;
+            key = attributeMap[key] || key;
 
             if (! (key in this.prototype))
                 Object.defineProperty(this.prototype, key, {
@@ -165,7 +159,7 @@ export default  class Component {
      */
     attributeChangedCallback(name, oldValue, newValue) {
 
-        name = attr_prop[name] || name;
+        name = attributeMap[name] || name;
 
         switch ( newValue ) {
             case '':      return  this[ name ] = true;
@@ -185,14 +179,7 @@ export default  class Component {
      *
      * @return {Element[]} Element set which matches `selector` in this Shadow DOM
      */
-    $(selector) {  return  $_(selector, this.shadowRoot);  }
-
-    /**
-     * @param {string} selector - CSS selector
-     *
-     * @return {?Element} Matched parent
-     */
-    $up(selector) {  return  $_up(selector, this);  }
+    $(selector) {  return  $_(selector, this[shadow_root]);  }
 
     /**
      * @param {string} selector - CSS selector
@@ -229,7 +216,7 @@ export default  class Component {
 
         if (selector instanceof Function)  callback = selector, selector = '';
 
-        const node = /^:host/.test( selector )  ?  this.shadowRoot  :  this;
+        const node = /^:host/.test( selector )  ?  this[shadow_root]  :  this;
 
         callback = selector  ?  delegate(selector, callback)  :  callback;
 

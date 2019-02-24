@@ -125,9 +125,9 @@ describe('Resource utility',  () => {
         it(
             'Get HTML document',
             async ()  =>  (await request(
-                `${server}/test/ObjectView/index.html`,
+                `${server}/test/Component/index.html`,
             )).should.be.class(
-                'DocumentFragment'
+                'Document'
             )
         );
 

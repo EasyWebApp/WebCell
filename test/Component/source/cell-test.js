@@ -16,10 +16,7 @@ import { component, mapProperty, mapData, on, targetOf, indexOf } from 'web-cell
 })
 export class CellTest extends HTMLElement {
 
-    constructor() {
-
-        super().buildDOM();
-    }
+    constructor() {  super().buildDOM();  }
 
     @mapProperty
     static get observedAttributes() {  return ['value', 'name'];  }

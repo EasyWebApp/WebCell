@@ -1,6 +1,6 @@
-import { likeArray } from './object';
+import { Template, parseDOM } from 'dom-renderer';
 
-import Template from '../view/Template';
+import { likeArray } from './object';
 
 
 /**
@@ -182,78 +182,27 @@ export function trigger(element, event, detail, bubbles, cancelable, composed) {
 }
 
 
-class CustomInputEvent extends CustomEvent {
-
-    get target() {
-
-        return $up(
-            '*',
-            super.target,
-            node  =>  ((node instanceof DocumentFragment) && node.host)
-        );
-    }
-}
-
-function customInput(element, detail) {
-
-    element.dispatchEvent(new CustomInputEvent('input', {
-        bubbles:   true,
-        composed:  true,
-        detail
-    }));
-}
-
 /**
- * @param {HTMLElement} element
+ * @param {String|Node[]} fragment
+ *
+ * @return {?DocumentFragment}
  */
-export function watchInput(element) {
+export function makeNode(fragment) {
 
-    var IME, clipBoard;
+    if (fragment instanceof Node)  return fragment;
 
-    element.addEventListener('compositionstart',  () => IME = true);
+    if (! likeArray( fragment ))  return parseDOM( fragment );
 
-    element.addEventListener(
-        'compositionend',
-        ({ target, data })  =>  (IME = false, customInput(target, data))
+    let node = document.createDocumentFragment();
+
+    node.append.apply(
+        node,
+        Array.from(
+            fragment,  item => item.parentNode ? item.cloneNode(true) : item
+        )
     );
 
-    element.addEventListener('input',  ({ target, data }) => {
-
-        if ( clipBoard )
-            clipBoard = false;
-        else if (! IME)
-            customInput(target, data);
-    });
-
-    element.addEventListener('paste',  ({ target, clipboardData }) => {
-
-        if (! IME)
-            clipBoard = true,
-            customInput(target, clipboardData.getData('text'));
-    });
-
-    element.addEventListener('cut',  ({ target }) => {
-
-        if (! IME)  clipBoard = true, customInput( target );
-    });
-}
-
-
-/**
- * @param {string} markup - Code of an markup fragment
- *
- * @return {DocumentFragment|Document}
- */
-export function parseDOM(markup) {
-
-    if (/<(!DocType|html|head|body)[\s\S]*?>/.test( markup ))
-        return  (new DOMParser()).parseFromString(markup, 'text/html');
-
-    const box = document.createElement('template');
-
-    box.innerHTML = markup;
-
-    return box.content;
+    return node;
 }
 
 
@@ -267,55 +216,6 @@ export function isHTML(DOM) {
     return  (DOM instanceof HTMLDocument)  ||
         (DOM instanceof DocumentFragment)  ||
         (DOM instanceof HTMLElement);
-}
-
-
-const serializer = new XMLSerializer(),
-    documentXML = document.implementation.createDocument(null, 'xml');
-
-function stringOf(document) {
-
-    if (document instanceof HTMLDocument)
-        $('style:not(:empty), script:not(:empty)',  document).forEach(
-            ({ textContent, firstChild }) => (
-                textContent.trim() &&
-                firstChild.replaceWith(
-                    documentXML.createCDATASection( textContent )
-                )
-            )
-        );
-
-    return  serializer.serializeToString( document );
-}
-
-/**
- * @param {Node|Node[]} fragment
- *
- * @return {string} HTML/XML source code
- */
-export function stringifyDOM(fragment) {
-
-    if (likeArray( fragment )) {
-
-        let node = document.createDocumentFragment();
-
-        node.append.apply(
-            node,  Array.from(fragment,  item => item.cloneNode(true))
-        );
-
-        fragment = node;
-    }
-
-    if ((fragment instanceof HTMLDocument)  ||  !isHTML( fragment ))
-        return stringOf( fragment );
-
-    if (fragment instanceof HTMLElement)  return fragment.outerHTML;
-
-    const box = document.createElement('template');
-
-    box.content.append( fragment.cloneNode( true ) );
-
-    return box.innerHTML;
 }
 
 
@@ -396,20 +296,4 @@ export function watchAttributes(element, names, callback) {
 export function delay(second) {
 
     return  new Promise(resolve  =>  setTimeout(resolve, (second || 0) * 1000));
-}
-
-
-var tick;
-/**
- * @return {Promise<number>} [Time stamp](https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp)
- */
-export function nextTick() {
-
-    return  tick || (
-        tick = new Promise(
-            resolve => self.requestAnimationFrame(
-                time  =>  (tick = null, resolve( time ))
-            )
-        )
-    );
 }
