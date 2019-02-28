@@ -14,7 +14,7 @@ Add these `import` before any **Non-inset packages**:
 ```JavaScript
 import 'regenerator-runtime/runtime';          //  Export `regeneratorRuntime` to `global`
 
-import JSDOM from 'web-cell/dist/polyfill';    //  Export `self` & some DOM API to `global`
+import JSDOM from 'web-cell/source/polyfill';    //  Export `self` & some DOM API to `global`
 
 import * as WebCell from 'web-cell';
 ```

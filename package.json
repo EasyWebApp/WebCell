@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha",
   "description": "Light-weight Web Components engine (with MVVM support) based on ECMAScript 2018 & Decorator proposal",
   "keywords": [
     "WebApp",
@@ -20,6 +20,7 @@
   "bugs": {
     "url": "https://github.com/EasyWebApp/WebCell/issues"
   },
+  "module": "source/index.js",
   "main": "dist/web-cell.js",
   "browser": "dist/web-cell.min.js",
   "directories": {
@@ -32,16 +33,14 @@
   },
   "scripts": {
     "lint": "eslint --fix source/ test/**/*.test.js",
-    "pack": "amd-bundle source/WebCell dist/web-cell -m",
-    "pack-patch": "babel source/DOM-polyfill.js -o dist/polyfill.js",
+    "pack": "amd-bundle source/index dist/web-cell -m",
     "pack-test": "amd-bundle test/Component/source/cell-test test/Component/dist/cell-test",
     "pack-input": "amd-bundle test/Component/source/cell-input test/Component/dist/cell-input",
     "check": "npm run pack  &&  npm run pack-test  &&  npm run pack-input  &&  mocha test/**/*.test.js",
     "test": "npm run check -- --exit",
     "debug": "npm run check -- --inspect-brk",
-    "build": "npm run lint  &&  npm run pack-patch  &&  esdoc  &&  npm test",
+    "build": "npm run lint  &&  esdoc  &&  npm test",
     "prepublishOnly": "npm run build",
-    "document": "esdoc",
     "start": "esdoc  &&  web-server docs/ -o"
   },
   "husky": {
@@ -57,14 +56,12 @@
     "@webcomponents/webcomponentsjs": "^2.2.7"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.3.3",
     "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/polyfill": "^7.2.5",
-    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-env": "^7.3.4",
     "@babel/register": "^7.0.0",
     "@webcomponents/webcomponentsjs": "^2.2.7",
-    "amd-bundle": "^1.7.5",
+    "amd-bundle": "^1.7.7",
     "babel-eslint": "^10.0.1",
     "babel-plugin-inline-import": "^3.0.0",
     "esdoc": "^1.1.0",
@@ -75,33 +72,10 @@
     "husky": "^1.3.1",
     "jsdom": "^13.2.0",
     "koapache": "^1.0.5",
-    "mocha": "^6.0.1",
+    "mocha": "^6.0.2",
     "puppeteer-browser": "^0.3.7",
     "should": "^13.2.3",
     "should-sinon": "0.0.6",
-    "sinon": "^7.2.4"
-  },
-  "babel": {
-    "presets": [
-      "@babel/preset-env"
-    ],
-    "plugins": [
-      [
-        "babel-plugin-inline-import",
-        {
-          "extensions": [
-            ".html",
-            ".css",
-            ".json"
-          ]
-        }
-      ],
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "decoratorsBeforeExport": true
-        }
-      ]
-    ]
+    "sinon": "^7.2.5"
   }
 }

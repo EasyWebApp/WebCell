@@ -43,8 +43,8 @@ describe('Object utility',  () => {
             likeArray( null ).should.be.false();
             likeArray( undefined ).should.be.false();
             likeArray( NaN ).should.be.false();
+            likeArray( '' ).should.be.false();
 
-            likeArray( '' ).should.be.true();
             likeArray( [] ).should.be.true();
             likeArray( {length: 0} ).should.be.true();
 

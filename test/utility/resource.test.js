@@ -1,4 +1,4 @@
-import JSDOM from '../../source/DOM-polyfill';
+import JSDOM from '../../source/polyfill';
 
 import {
     serialize, stringify, parse, request, fileTypeOf, blobFrom
@@ -98,6 +98,7 @@ describe('Resource utility',  () => {
 
     /**
      * @test {request}
+     * @test {bodyOf}
      */
     describe('HTTP request',  () => {
 
@@ -110,32 +111,33 @@ describe('Resource utility',  () => {
             server = `http://${server.address}:${server.port}`;
         });
 
-        it('Get Plain text',  () => request(
-            `${server}/ReadMe.md`,
-        ).should.be.fulfilledWith(
-            readFileSync('ReadMe.md') + ''
-        ));
+        it('Get Plain text',  async () => {
 
-        it('Get JSON object',  () => request(
-            `${server}/package.json`,
-        ).should.be.fulfilledWith(
-            JSON.parse( readFileSync('package.json') )
-        ));
+            const { body } = await request(`${server}/ReadMe.md`);
 
-        it(
-            'Get HTML document',
-            async ()  =>  (await request(
-                `${server}/test/Component/index.html`,
-            )).should.be.class(
-                'Document'
-            )
-        );
+            body.should.be.equal(readFileSync('ReadMe.md') + '');
+        });
 
-        it(
-            'Get Binary file',
-            async ()  =>  (await request(`${server}/docs/image/github.png`))
-                .should.be.class('Blob')
-        );
+        it('Get JSON object',  async () => {
+
+            const { body } = await request(`${server}/package.json`);
+
+            body.should.be.eql( JSON.parse( readFileSync('package.json') ) );
+        });
+
+        it('Get HTML document',  async () => {
+
+            const { body } = await request(`${server}/test/Component/index.html`);
+
+            body.should.be.class('Document');
+        });
+
+        it('Get Binary file',  async () => {
+
+            const { body } = await request(`${server}/docs/image/github.png`);
+
+            body.should.be.class('Blob');
+        });
     });
 
     describe('Binary',  () => {

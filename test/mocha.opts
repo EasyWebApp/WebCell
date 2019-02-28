@@ -2,7 +2,7 @@
 --require @babel/polyfill
 --require should
 --require should-sinon
---require ./source/DOM-polyfill
+--require ./source/polyfill
 --recursive
 --timeout 3500
 --colors

@@ -1,9 +1,13 @@
-import { documentReady, $, $up } from '../../source/utility/DOM';
+import { documentReady } from '../../source/utility/event';
+
+import { $, insertTo, documentTypeOf } from '../../source/utility/DOM';
 
 import page from '../Component/index.html';
 
-import { parseDOM } from 'dom-renderer';
+import { parseDOM, stringifyDOM } from 'dom-renderer';
 
+
+var document;
 
 describe('DOM utility',  () => {
     /**
@@ -13,14 +17,39 @@ describe('DOM utility',  () => {
 
     /**
      * @test {\$}
-     * @test {\$up}
      */
     it('Search elements up & down',  () => {
 
-        const input = $('input', parseDOM( page ));
+        document = parseDOM( page );
 
-        input.should.have.length(1);
+        $('input', document).should.have.length(1);
+    });
 
-        $up('body', input[0]).should.be.instanceOf( Element );
+    /**
+     * @test {insertTo}
+     */
+    it('Insert a Node to DOM by index',  () => {
+
+        insertTo(document.body, 'test', -1);
+
+        insertTo(document.body, 'test', 10);
+
+        stringifyDOM( document.body.childNodes ).should.be.equal(`
+    <cell-test onchange="console.log( this.value )"></cell-test>
+
+    test<cell-input>
+        <input value="1" readonly="" placeholder="test">
+    </cell-input>
+
+test`);
+    });
+
+    /**
+     * @test {documentTypeOf}
+     */
+    it('Get Document type of a Node',  () => {
+
+        documentTypeOf( document.createComment('test') )
+            .should.be.equal('application/xhtml');
     });
 });

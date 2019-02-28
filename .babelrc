@@ -1,0 +1,30 @@
+{
+    "presets": [
+        [
+            "@babel/preset-env",
+            {
+                "targets": {
+                    "ie": 11
+                }
+            }
+        ]
+    ],
+    "plugins": [
+        [
+            "babel-plugin-inline-import",
+            {
+                "extensions": [
+                    ".html",
+                    ".css",
+                    ".json"
+                ]
+            }
+        ],
+        [
+            "@babel/plugin-proposal-decorators",
+            {
+                "decoratorsBeforeExport": true
+            }
+        ]
+    ]
+}

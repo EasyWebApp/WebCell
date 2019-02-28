@@ -1,23 +1,6 @@
-import { Template, parseDOM } from 'dom-renderer';
+import { parseDOM } from 'dom-renderer';
 
 import { likeArray } from './object';
-
-
-/**
- * @type {Promise}
- */
-export const documentReady = new Promise(resolve => {
-
-    document.addEventListener('DOMContentLoaded', resolve);
-
-    self.addEventListener('load', resolve);
-
-    (function check() {
-
-        (document.readyState === 'complete')  ?
-            resolve()  :  setTimeout( check );
-    })();
-});
 
 
 /**
@@ -35,150 +18,57 @@ export function $(selector, context) {
 
 
 /**
- * @param {string}                    selector    - CSS selector
- * @param {Node}                      context
- * @param {function(parent: Node): *} [condition]
+ * @param {Node}    node
+ * @param {Boolean} [inNodes] - Seek in all kinds of `Node`
  *
- * @return {?Node} Matched parent
+ * @return {Number} The index of `node` in its siblings
  */
-export function $up(selector, context, condition) {
+export function indexOf(node, inNodes) {
 
-    condition = (condition instanceof Function)  &&  condition;
+    var key = `previous${inNodes ? '' : 'Element'}Sibling`,  index = 0;
 
-    while (context = context.parentNode)
-        if ( condition ) {
-
-            let result = condition( context );
-
-            if ( result )
-                return  (result === true)  ?  context  :  result;
-
-        } else if (context.matches  &&  context.matches( selector ))
-            return context;
-}
-
-
-function mediaLoad(media, condition) {
-
-    return  new Promise((resolve, reject) => {
-
-        if ( condition() )
-            resolve();
-        else
-            media.onload = resolve,
-            media.onerror = reject;
-    });
-}
-
-/**
- * @param {Element|Document} [context]
- *
- * @return {Promise} Resolved when all media elements in `context` are loaded
- */
-export function mediaReady(context) {
-
-    return Promise.all($(
-        'img[src], iframe[src], audio[src], video[src]',  context
-    ).map(media => {
-
-        if (Template.Expression.test( media.getAttribute('src') ))  return;
-
-        switch ( media.tagName.toLowerCase() ) {
-            case 'img':
-                return  mediaLoad(media, () => media.complete);
-            case 'iframe':
-                return  new Promise((resolve, reject) => {
-                    try {
-                        if (media.contentDocument.readyState === 'complete')
-                            resolve();
-                        else
-                            media.onload = resolve,
-                            media.onerror = reject;
-
-                    } catch (error) {  resolve();  }
-                });
-            case 'audio':
-            case 'video':
-                return  mediaLoad(media, () => (media.readyState > 0));
-        }
-    }));
-}
-
-
-/**
- * @param {Element} element
- *
- * @return {number} The index of `element` in its siblings
- */
-export function indexOf(element) {
-
-    var index = 0;
-
-    while (element = element.previousElementSibling)  index++;
+    while (node = node[key])  index++;
 
     return index;
 }
 
 
 /**
- * @param {Event} event
+ * @param {Node[]} list
+ * @param {Number} [index]
  *
- * @return {Element} The target of `event` object (**Shadow DOM** is in account)
+ * @return {Number}
  */
-export function targetOf(event) {
+export function insertableIndexOf(list, index) {
 
-    const target = event.composedPath ? event.composedPath() : event.path;
-
-    return  (target || '')[0]  ||  event.target;
+    return  (!(index != null) || (index > list.length))  ?
+        list.length  :  (
+            (index < 0)  ?  (list.length + index)  :  index
+        );
 }
 
 
 /**
- * DOM event delegate
- *
- * @param {string}          selector
- * @param {DOMEventHandler} handler
- *
- * @return {Function} Handler wrapper
+ * @param {ParentNode}  parent
+ * @param {Node|String} child      - https://developer.mozilla.org/en-US/docs/Web/API/ParentNode/append#Parameters
+ * @param {Number|Node} [position]
+ * @param {Boolean}     [inNodes]  - Seek in all kinds of `Node`
  */
-export function delegate(selector, handler) {
+export function insertTo(parent, child, position, inNodes) {
 
-    return  function (event) {
+    const list = Array.from( parent[`child${inNodes ? 'Nodes' : 'ren'}`] );
 
-        var target = targetOf( event );
+    if (position instanceof Node)
+        position = indexOf(position, inNodes);
+    else
+        position = insertableIndexOf(list, position);
 
-        if (! target.matches( selector ))
-            target = $up(selector, target);
+    const point = list.slice( position )[0];
 
-        if ( target )
-            return  handler.call(target, event, target, event.detail);
-    };
-}
-
-
-/**
- * @param {Element}      element
- * @param {String|Event} event
- * @param {?*}           detail     - Additional data
- * @param {?Boolean}     bubbles
- * @param {?Boolean}     cancelable
- * @param {?Boolean}     composed   - Whether the event will cross
- *                                    from the shadow DOM into the standard DOM
- *                                    after reaching the shadow root
- * @return {Boolean} Event be canceled or not
- */
-export function trigger(element, event, detail, bubbles, cancelable, composed) {
-
-    return element.dispatchEvent(
-        (event instanceof Event)  ?
-            new event.constructor(event.type, {
-                bubbles:     event.bubbles,
-                cancelable:  event.cancelable
-            }) :
-            new CustomEvent(event, {
-                bubbles, cancelable, composed, detail
-            })
-    );
+    if ( point )
+        point.before( child );
+    else
+        parent.append( child );
 }
 
 
@@ -206,16 +96,32 @@ export function makeNode(fragment) {
 }
 
 
-/**
- * @param {*} DOM
- *
- * @return {Boolean}
- */
-export function isHTML(DOM) {
+const type_map = {
+    html:   'text/html',
+    xhtml:  'application/xhtml',
+    xml:    'application/xml',
+    svg:    'image/svg'
+};
 
-    return  (DOM instanceof HTMLDocument)  ||
-        (DOM instanceof DocumentFragment)  ||
-        (DOM instanceof HTMLElement);
+/**
+ * @param {Node} node
+ *
+ * @return {?String} https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_Types
+ */
+export function documentTypeOf(node) {
+
+    if ((node instanceof Document) || (node instanceof DocumentFragment))
+        node = node.firstElementChild;
+
+    if (node instanceof Element) {
+
+        const type = node.namespaceURI.split('/').slice(-1)[0];
+
+        return  type_map[type] || type;
+    }
+
+    if (node instanceof Node)
+        return  documentTypeOf(node.parentNode || node.ownerDocument);
 }
 
 
@@ -285,15 +191,4 @@ export function watchAttributes(element, names, callback) {
     );
 
     return observer;
-}
-
-
-/**
- * @param {number} [second=0]
- *
- * @return {Promise} Wait seconds in Macro tasks
- */
-export function delay(second) {
-
-    return  new Promise(resolve  =>  setTimeout(resolve, (second || 0) * 1000));
 }

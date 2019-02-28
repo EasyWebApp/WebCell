@@ -1,4 +1,4 @@
-import { component, mapProperty, mapData, on, targetOf, indexOf } from 'web-cell';
+import { component, mapProperty, mapData, on, indexOf } from 'web-cell';
 
 
 @component({
@@ -16,7 +16,7 @@ import { component, mapProperty, mapData, on, targetOf, indexOf } from 'web-cell
 })
 export class CellTest extends HTMLElement {
 
-    constructor() {  super().buildDOM();  }
+    constructor() {  super().construct();  }
 
     @mapProperty
     static get observedAttributes() {  return ['value', 'name'];  }
@@ -31,7 +31,7 @@ export class CellTest extends HTMLElement {
     @on('input', ':host textarea')
     testInput(event) {
 
-        const innerTarget = targetOf( event );
+        const innerTarget = event.composedPath()[0];
 
         console.info(
             event.target.tagName,

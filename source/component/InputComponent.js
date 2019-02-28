@@ -22,10 +22,7 @@ export default  class InputComponent extends HTMLElement {
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      */
-    constructor(option) {
-
-        super().buildDOM( option );
-    }
+    constructor(option) {  super().construct( option );  }
 
     /**
      * @protected
@@ -77,11 +74,11 @@ export default  class InputComponent extends HTMLElement {
         const style = CSS_map[ attribute ];
 
         if ( style )
-            for (let [key, value]  of  Object.entries( style ))
+            for (let key in style)
                 this.style[
                     newValue ? 'setProperty' : 'removeProperty'
                 ](
-                    `--input-${key}`, value
+                    `--input-${key}`,  style[ key ]
                 );
     }
 

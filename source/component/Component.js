@@ -2,7 +2,9 @@ import View, { attributeMap, watchInput } from 'dom-renderer';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_, delegate, trigger, makeNode } from '../utility/DOM';
+import { $ as $_, makeNode } from '../utility/DOM';
+
+import { delegate, trigger } from '../utility/event';
 
 import { multipleMap } from '../utility/object';
 
@@ -45,7 +47,7 @@ export default  class Component {
     /**
      * @param {?Object} option - https://developer.mozilla.org/en-US/docs/Web/API/element/attachShadow#Parameters
      */
-    async buildDOM(option) {
+    async construct(option) {
 
         if (self.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
@@ -71,10 +73,10 @@ export default  class Component {
             await view.render(data || { });
         }
 
-        const map = event_handler.get( this.constructor )  ||  '';
-
-        for (let {type, selector, handler}  of  map)
-            this.on(type,  selector,  handler.bind( this ));
+        (event_handler.get( this.constructor )  ||  [ ]).forEach(
+            ({type, selector, handler})  =>
+                this.on(type,  selector,  handler.bind( this ))
+        );
     }
 
     /**
@@ -83,12 +85,13 @@ export default  class Component {
     bootHook() {
 
         if (this.slotChangedCallback instanceof Function)
-            for (let slot of this.$('slot'))
-                slot.addEventListener(
+            this.$('slot').forEach(
+                slot => slot.addEventListener(
                     'slotchange',  () => this.slotChangedCallback(
-                        [... slot.assignedNodes()],  slot,  slot.name
+                        Array.from( slot.assignedNodes() ),  slot,  slot.name
                     )
-                );
+                )
+            );
 
         if (this.viewUpdateCallback instanceof Function)
             this[shadow_root].addEventListener('render',  event => {
@@ -118,13 +121,11 @@ export default  class Component {
      *
      * @private
      *
-     * @param {string[]} attributes - Names of HTML attributes
-     *
-     * @return {string[]} `attributes`
+     * @param {String[]} attributes - Names of HTML attributes
      */
     static linkDataOf(attributes) {
 
-        for (let key of attributes) {
+        attributes.forEach(key => {
 
             key = attributeMap[key] || key;
 
@@ -140,9 +141,7 @@ export default  class Component {
                     },
                     enumerable:  true
                 });
-        }
-
-        return attributes;
+        });
     }
 
     /**

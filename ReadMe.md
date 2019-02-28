@@ -1,4 +1,4 @@
-![WebCell logo](https://web-cell.tk/WebCell/image/WebCell.svg)
+![WebCell logo](https://web-cell.tk/image/WebCell-0.png)
 
 # WebCell
 
@@ -36,7 +36,8 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with M
 ### Quick start
 
 ```Shell
-npm init web-cell path/to/your_project
+npm init web-cell path/to/your_project \
+    --remote https://git-example.com/your_id/repo_name.git
 ```
 (More configuration & template files can be found in the document of [WebCell DevCLI](https://web-cell.tk/DevCLI/))
 
@@ -47,6 +48,8 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
 
 #### `index.html`
 
+[Template syntax of Data binding](https://web-cell.tk/DOM-Renderer/manual/Template.html)
+
 ```HTML
 <template>
     <textarea onchange="${host.trigger.bind( host )}">
@@ -56,7 +59,7 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
     <table>
         <tbody data-array="specification"><template>
             <tr>
-                <td>${view.index}</td><td>${view.name}</td>
+                <td></td><td>${view.name}</td>
             </tr>
         <template></tbody>
     </table>
@@ -69,6 +72,14 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
 ```CSS
 textarea {
     font-style: italic;
+}
+
+tbody {
+    counter-reset:  index;
+}
+tr > td:first-child::before {
+    counter-increment:  index;
+    content:            counter( index );
 }
 ```
 
@@ -113,7 +124,7 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super().buildDOM();    //  This method is necessary when @component or @on is used
+        super().construct();    //  This method is necessary when @component or @on is used
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it
@@ -193,9 +204,9 @@ web-cell pack
 
  3. [Material Cell](https://web-cell-ht.ml/) based on **Material Design lite v1.3**
 
- 4. [GitHub Web widget](https://techquery.github.io/GitHub-Web-Widget/) forked from [GitHub jQuery Repo widget](https://github.com/JoelSutherland/GitHub-jQuery-Repo-Widget)
+ 4. [GitHub Web widget](https://tech-query.me/GitHub-Web-Widget/) forked from [GitHub jQuery Repo widget](https://github.com/JoelSutherland/GitHub-jQuery-Repo-Widget)
 
- 5. [Month picker](https://techquery.github.io/month-picker/)
+ 5. [Month picker](https://tech-query.me/month-picker/)
 
 
 

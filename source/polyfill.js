@@ -1,6 +1,6 @@
-import { JSDOM } from 'jsdom';
+const { JSDOM } = require('jsdom');
 
-export default JSDOM;
+module.exports = JSDOM;
 
 
 const { window } = (new JSDOM('', {
@@ -10,7 +10,7 @@ const { window } = (new JSDOM('', {
 
 [
     'self', 'document',
-    'Node', 'Element', 'HTMLElement', 'DocumentFragment', 'HTMLDocument',
+    'Node', 'Element', 'HTMLElement', 'DocumentFragment', 'Document',
     'DOMParser', 'XMLSerializer',
     'Event', 'CustomEvent',
     'URL', 'URLSearchParams', 'FormData', 'Blob', 'XMLHttpRequest'

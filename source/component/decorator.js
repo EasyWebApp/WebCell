@@ -1,12 +1,12 @@
 import { parseDOM } from 'dom-renderer';
 
-import Component from './component/Component';
+import Component from './Component';
 
-import { multipleMap, decoratorOf, unique } from './utility/object';
+import { multipleMap, decoratorOf, unique } from '../utility/object';
 
-import { delegate } from './utility/DOM';
+import { delegate } from '../utility/event';
 
-import { blobFrom } from './utility/resource';
+import { blobFrom } from '../utility/resource';
 
 
 /**
@@ -22,7 +22,7 @@ export function mapProperty(meta) {
 
         const list = getter.call( this );
 
-        for (let key of list)
+        list.forEach(key => {
             if (
                 Object.getOwnPropertyDescriptor(HTMLElement.prototype, key)  &&
                 !Object.getOwnPropertyDescriptor(this.constructor.prototype, key)
@@ -30,8 +30,9 @@ export function mapProperty(meta) {
                 throw ReferenceError(
                     `HTML DOM property "${key}" getter should be overwritten`
                 );
+        });
 
-        return  this.linkDataOf( list );
+        return  this.linkDataOf( list ) || list;
     };
 }
 
@@ -199,9 +200,11 @@ export function component(meta = { }) {
 
         if ( data )  elements.push( decoratorOf(Component, 'data', data) );
 
-        elements.push(
-            ... decoratorMix( Component ),
-            ... decoratorMix( Component.prototype )
+        elements.push.apply(
+            elements,
+            decoratorMix( Component ).concat(
+                decoratorMix( Component.prototype )
+            )
         );
 
         return {
@@ -224,13 +227,3 @@ export function component(meta = { }) {
         };
     };
 }
-
-export { Component };
-
-export {default as InputComponent} from './component/InputComponent';
-
-export * from './utility/object';
-
-export * from './utility/DOM';
-
-export * from './utility/resource';

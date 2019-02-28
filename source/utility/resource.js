@@ -1,8 +1,6 @@
 import { stringifyDOM, parseDOM } from 'dom-renderer';
 
-import { $ } from './DOM';
-
-import { extend } from './object';
+import { $, documentTypeOf } from './DOM';
 
 
 /**
@@ -40,14 +38,16 @@ export function serialize(form) {
         form.elements,  ({name, value}) => (name && [name, value])
     ).filter( Boolean );
 
-    if ((form.form || form).getAttribute('enctype')  !==  'application/json')
-        return  '' + new URLSearchParams( data );
+    form = form.form || form;
 
-    form = { };
-
-    data.forEach(([key, value])  =>  form[key] = value);
-
-    return form;
+    switch (form.getAttribute('enctype') || form.enctype) {
+        case 'text/plain':
+            return  data.map(([name, value]) => `${name}=${value}`).join('\n');
+        case 'application/x-www-form-urlencoded':
+            return  '' + new URLSearchParams( data );
+        case 'application/json':
+            return  Object.fromEntries( data );
+    }
 }
 
 
@@ -114,9 +114,9 @@ export function fetch(
 ) {
     const XHR = new XMLHttpRequest();
 
-    if ( extra )  extend(XHR, extra);
+    if ( extra )  Object.assign(XHR, extra);
 
-    if ( upload )  extend(XHR.upload, upload);
+    if ( upload )  Object.assign(XHR.upload, upload);
 
     XHR.open(method, URI);
 
@@ -187,6 +187,7 @@ export  async function blobOf(URI) {
 
 const schema_type = /^(?:(\w+):)?.+?(?:\.(\w+))?$/,
     DataURI = /^data:(.+?\/(.+?))?(;base64)?,(\S+)/;
+
 /**
  * @param {String} URI - HTTP(S) URL, Data URI or Object URL
  *
@@ -234,25 +235,86 @@ export function blobFrom(URI) {
 
 
 /**
+ * @param {String} raw
+ *
+ * @return {Object}
+ */
+export function parseHeader(raw) {
+
+    return  Object.fromEntries(raw.split( /\r\n/ ).map(item => {
+
+        item = item.split(':');
+
+        return  [item.shift(), item.join(':')];
+    }));
+}
+
+
+/**
+ * @param {XMLHttpRequest} XHR
+ *
+ * @return {String|Document|DocumentFragment|Object|Blob}
+ */
+export function bodyOf(XHR) {
+
+    const [scope, type] = (
+        (XHR.getResponseHeader('Content-Type') || '').split(';')[0]  ||  ''
+    ).split('/');
+
+    switch ( type ) {
+        case 'xml':
+        case 'xhtml':
+        case 'svg':
+            return  XHR.responseXML;
+        case 'html':
+            return  parseDOM( XHR.responseText );
+        case 'json':
+            return  parse( XHR.responseText );
+        default:
+            return  (scope === 'text')  ?  XHR.responseText  :  (
+                blobFrom( toDataURI( XHR.response ) )
+            );
+    }
+}
+
+
+/**
  * HTTP request
  *
- * @param {string}                URI            - HTTP URL
- * @param {string}                [method='GET']
- * @param {string|Object|Element} [body]         - Data to send
- * @param {Object}                [headers]
- * @param {Object}                [option]       - Parameters of {@link fetch} about `XMLHttpRequest()`
+ * @param {string}             URI            - HTTP URL
+ * @param {string}             [method='GET']
+ * @param {String|Object|Node} [body]         - Data to send
+ * @param {Object}             [headers]
+ * @param {Object}             [option]       - Parameters of {@link fetch} about `XMLHttpRequest()`
  *
- * @return {string|Object|DocumentFragment|Blob} Parse response data automatically
+ * @return {Object}
+ * @property {Number} status  - https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ * @property {Object} headers - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+ * @property {*}      body    - {@link bodyOf}
+ *
+ * @throws {URIError} - `status` < 400
  */
 export async function request(URI, method = 'GET', body, headers, option) {
 
-    if (body instanceof Element)  body = serialize( body );
+    headers = headers || { };
 
-    if (body instanceof Object)  try {
+    if (body instanceof Node)
+        if (['form', 'fieldset'].includes( body.nodeName.toLowerCase() )) {
+
+            body = serialize( body );
+
+            headers['Content-Type'] =
+                ((typeof body === 'string')  &&  body.includes('\n'))  ?
+                    'text/plain' : 'application/x-www-form-urlencoded';
+        } else {
+            headers['Content-Type'] = documentTypeOf( body );
+
+            body = stringifyDOM( body );
+        }
+
+    if ((body instanceof Object) && !(body instanceof FormData))  try {
 
         body = stringify( body.valueOf() );
-
-        headers = headers || { };
 
         headers['Content-Type'] = headers['Content-Type'] || 'application/json';
 
@@ -262,21 +324,15 @@ export async function request(URI, method = 'GET', body, headers, option) {
         URI,  Object.assign({method, headers, body}, option)
     );
 
-    const type = XHR.getResponseHeader('Content-Type').split(';')[0];
+    const response = {
+        status:   XHR.status,
+        headers:  parseHeader(XHR.getAllResponseHeaders() || ''),
+        body:     bodyOf( XHR )
+    };
 
-    switch ( type ) {
-        case 'application/xml':
-        case 'image/svg':
-            return  XHR.responseXML;
-        case 'text/html':
-            return  parseDOM( XHR.responseText );
-        case 'application/json':
-            return  parse( XHR.responseText );
-        default:
-            return  (type.split('/')[0] === 'text')  ?  XHR.responseText  :  (
-                blobFrom( toDataURI( XHR.response ) )
-            );
-    }
+    if (XHR.status < 400)  return response;
+
+    throw Object.assign(new URIError( XHR.statusText ),  response);
 }
 
 

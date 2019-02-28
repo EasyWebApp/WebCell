@@ -1,3 +1,13 @@
+Object.fromEntries = Object.fromEntries  ||  (list => {
+
+    const object = { };
+
+    Array.from(list,  ([key, value]) => object[key] = value);
+
+    return object;
+});
+
+
 /**
  * @param {*} object
  *
@@ -74,6 +84,7 @@ export function likeArray(object) {
     object = Object( object );
 
     return (
+        !(object instanceof String)  &&
         !(object instanceof Function)  &&
         !(object instanceof Node)
     ) && (
@@ -115,16 +126,16 @@ export function arrayLike(meta) {
             );
             break;
         case 'method':
-            for (let key  of  ['value', 'get']) {
+            ['value', 'get'].forEach(key => {
 
-                let origin;
+                const origin = descriptor[ key ];
 
-                if (origin = descriptor[key])
+                if ( origin )
                     descriptor[key] = function () {
 
                         return  toIterable( origin.apply(this, arguments) );
                     };
-            }
+            });
     }
 }
 
@@ -146,17 +157,17 @@ export function multipleMap(list, filter) {
 
     filter = (filter instanceof Function)  &&  filter;
 
-    var result = [ ], i = 0;
+    const result = [ ];
 
-    for (let item of list) {
+    Array.from(list,  (item, index) => {
 
-        if ( filter )  item = filter(item, i++, list);
+        if ( filter )  item = filter(item, index, list);
 
         if (item != null)
             result.push[
                 (item instanceof Array)  ?  'apply'  :  'call'
             ](result, item);
-    }
+    });
 
     return result;
 }
@@ -222,11 +233,13 @@ export function unique(list, condition) {
  */
 export function extend(target, ...source) {
 
-    for (let object of source)  if (object instanceof Object) {
+    source.forEach(object => {
 
-        let descriptor = Object.getOwnPropertyDescriptors( object );
+        if (!(object instanceof Object))  return;
 
-        for (let key  of  Object.keys( descriptor ))
+        const descriptor = Object.getOwnPropertyDescriptors( object );
+
+        for (let key in descriptor)
             if (
                 ('value' in descriptor[key])  &&
                 !(descriptor[key].value != null)
@@ -247,7 +260,7 @@ export function extend(target, ...source) {
         }
 
         Object.defineProperties(target, descriptor);
-    }
+    });
 
     return target;
 }

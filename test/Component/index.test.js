@@ -1,6 +1,6 @@
 import PuppeteerBrowser from 'puppeteer-browser';
 
-import { delay } from '../../source/utility/DOM';
+import { delay } from '../../source/utility/event';
 
 
 var page;
@@ -42,7 +42,7 @@ describe('Component mixin',  () => {
     );
 
     /**
-     * @test {Component#buildDOM}
+     * @test {Component#construct}
      */
     it('Build Shadow DOM',  () =>
 
@@ -91,7 +91,6 @@ describe('Component mixin',  () => {
     });
 
     /**
-     * @test {targetOf}
      * @test {indexOf}
      */
     it('Get the event target in Shadow DOM',  async () => {

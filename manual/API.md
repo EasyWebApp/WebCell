@@ -2,7 +2,7 @@
 
 
 
-## Template variable
+## Template syntax
 
 All global variables on `window` are available in **WebCell Template expression**,
 including **Scoped variables** shown below:
@@ -10,9 +10,8 @@ including **Scoped variables** shown below:
 | Name    | Class         | Reference                                                    |
 |:-------:|:-------------:|--------------------------------------------------------------|
 | `host`  | `HTMLElement` | Current component                                            |
-| `this`  | `HTMLElement` | The element which current Template expression locates at     |
-| `view`  | `View`        | The view which current Template expression locates at        |
-| `scope` | `View`        | The parent view which current Template expression locates at |
+
+([More details](https://web-cell.tk/DOM-Renderer/manual/Template.html))
 
 
 
