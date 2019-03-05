@@ -12,7 +12,7 @@ const CSS_map = {
             'point-events':  'none'
         }
     },
-    attributeChanged = Component.prototype.attributeChangedCallback;
+    { attributeChangedCallback } = Component.prototype;
 
 
 /**
@@ -67,7 +67,7 @@ export default  class InputComponent extends HTMLElement {
 
         if ((attribute === 'type')  &&  !newValue)  newValue = 'text';
 
-        newValue = attributeChanged.call(
+        newValue = attributeChangedCallback.call(
             this.view, attribute, oldValue, newValue
         );
 

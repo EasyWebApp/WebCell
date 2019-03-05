@@ -9,7 +9,9 @@ import { delegate, trigger } from '../utility/event';
 import { multipleMap } from '../utility/object';
 
 
-const shadow_root = Symbol('Shadow root'), event_handler = new Map();
+const shadow_root = Symbol('Shadow root'),
+    event_handler = new Map(),
+    tag_store = new WeakMap();
 
 
 /**
@@ -52,7 +54,7 @@ export default  class Component {
         if (self.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
-        const {template, data} = this.constructor;
+        const {template, data, store} = this.constructor;
 
         if ( template ) {
 
@@ -77,6 +79,11 @@ export default  class Component {
             ({type, selector, handler})  =>
                 this.on(type,  selector,  handler.bind( this ))
         );
+
+        if ( store )
+            tag_store.set(
+                this,  (store instanceof Function) ? new store() : store
+            );
     }
 
     /**
@@ -107,6 +114,43 @@ export default  class Component {
                 'rendered',
                 ({detail: {data, view}})  =>  this.viewChangedCallback(data, view)
             );
+    }
+
+    /**
+     * Get the closest parent Component instance from a Node
+     *
+     * @param {Node} node
+     *
+     * @return {?HTMLElement}
+     */
+    static instanceOf(node) {
+        do {
+            if (node instanceof this)  return node;
+
+        } while (node = node.parentNode || node.host);
+    }
+
+    /**
+     * Shared State manager
+     *
+     * @type {Object}
+     */
+    get store() {  return  tag_store.get( this );  }
+
+    /**
+     * @protected
+     */
+    connectedCallback() {
+
+        if ( this.constructor.store )  return;
+
+        var node = this;
+
+        while (node = node.parentNode || node.host)
+            if (node.constructor.store) {
+
+                tag_store.set(this, node.store);  break;
+            }
     }
 
     /**

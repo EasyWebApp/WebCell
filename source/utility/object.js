@@ -46,18 +46,21 @@ export function getPropertyDescriptor(object, key) {
  */
 
 /**
- * @param {Function|Object}   target                          - Class or its prototype
- * @param {String}            key                             - Member name
- * @param {Function|Object|*} value                           - `{ set, get }` for Field accessors
- * @param {Object}            [descriptor={enumerable: true}] - Use for `Object.defineProperty()`
+ * @param {Function|Object}   target       - Class or its prototype
+ * @param {String}            key          - Member name
+ * @param {Function|Object|*} value        - `{ set, get }` for Field accessors
+ * @param {Object}            [descriptor] - Use for `Object.defineProperty()`
  *
  * @return {DecoratorDescriptor}
  */
-export function decoratorOf(target, key, value, descriptor = {enumerable: true}) {
+export function decoratorOf(target, key, value, descriptor) {
 
     descriptor = {
-        key, descriptor,
-        placement:  (target instanceof Function) ? 'static' : 'prototype'
+        key,
+        descriptor:  Object.assign(
+            {enumerable: true, configurable: true},  descriptor
+        ),
+        placement:   (target instanceof Function) ? 'static' : 'prototype'
     };
 
     if (value instanceof Function)

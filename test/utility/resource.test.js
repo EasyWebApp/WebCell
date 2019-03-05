@@ -1,51 +1,11 @@
-import JSDOM from '../../source/polyfill';
-
 import {
-    serialize, stringify, parse, request, fileTypeOf, blobFrom
+    stringify, parse, fileTypeOf, blobFrom, parseHash
 } from '../../source/utility/resource';
-
-import WebServer from 'koapache';
 
 import { readFileSync } from 'fs';
 
 
 describe('Resource utility',  () => {
-    /**
-     * @test {serialize}
-     */
-    describe('Serialize "form" or "fieldset" element',  () => {
-
-        const form = JSDOM.fragment(`
-<form enctype="application/json">
-    <input type="text" name="text" value="example">
-    <textarea name="content">sample</textarea>
-    <input type="file" name="file">
-    <input type="submit">
-</form>`
-        ).children[0];
-
-        it(
-            'Multiple part data',
-            ()  =>  serialize( form ).should.be.instanceOf( FormData )
-        );
-
-        it('JSON',  () => {
-
-            form.elements.file.remove();
-
-            serialize( form ).should.be.eql({
-                text:     'example',
-                content:  'sample'
-            });
-        });
-
-        it('URL encode',  () => {
-
-            form.removeAttribute('enctype');
-
-            serialize( form ).should.be.equal('text=example&content=sample');
-        });
-    });
 
     describe('JSON parser',  () => {
 
@@ -97,46 +57,16 @@ describe('Resource utility',  () => {
     });
 
     /**
-     * @test {request}
-     * @test {bodyOf}
+     * @test {parseHash}
      */
-    describe('HTTP request',  () => {
+    it('Parse Key-Value string',  () => {
 
-        var server;
-
-        before(async () => {
-
-            server = await (new WebServer('.', 0, true)).workerHost();
-
-            server = `http://${server.address}:${server.port}`;
-        });
-
-        it('Get Plain text',  async () => {
-
-            const { body } = await request(`${server}/ReadMe.md`);
-
-            body.should.be.equal(readFileSync('ReadMe.md') + '');
-        });
-
-        it('Get JSON object',  async () => {
-
-            const { body } = await request(`${server}/package.json`);
-
-            body.should.be.eql( JSON.parse( readFileSync('package.json') ) );
-        });
-
-        it('Get HTML document',  async () => {
-
-            const { body } = await request(`${server}/test/Component/index.html`);
-
-            body.should.be.class('Document');
-        });
-
-        it('Get Binary file',  async () => {
-
-            const { body } = await request(`${server}/docs/image/github.png`);
-
-            body.should.be.class('Blob');
+        parseHash(
+            '=',  ';',  'a=1; a=2; b=3',
+            (key, value) => [key.toUpperCase(), value + '']
+        ).should.be.eql({
+            A:  ['1', '2'],
+            B:  '3'
         });
     });
 

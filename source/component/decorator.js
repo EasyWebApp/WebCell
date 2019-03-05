@@ -9,6 +9,9 @@ import { delegate } from '../utility/event';
 import { blobFrom } from '../utility/resource';
 
 
+const { attributeChangedCallback } = Component.prototype;
+
+
 /**
  * Decorator for `observedAttributes` getter
  *
@@ -44,12 +47,13 @@ export function mapProperty(meta) {
  */
 export function mapData(meta) {
 
-    const origin = meta.descriptor.value,
-        onChange = Component.prototype.attributeChangedCallback;
+    const origin = meta.descriptor.value;
 
     meta.descriptor.value = function (name, oldValue) {
 
-        origin.call(this,  name,  oldValue,  onChange.apply(this, arguments));
+        origin.call(
+            this,  name,  oldValue,  attributeChangedCallback.apply(this, arguments)
+        );
     };
 }
 
@@ -135,7 +139,7 @@ function decoratorMix(mixin) {
 }
 
 
-function define(meta, template, style) {
+function defineTemplate(meta, template, style) {
 
     if ( template ) {
 
@@ -177,6 +181,34 @@ function define(meta, template, style) {
     return template;
 }
 
+function appendMixin(Sub, mixin, key) {
+
+    const origin = Sub[key];
+
+    if (origin === mixin[key]) {
+
+        const Super = Object.getPrototypeOf( Sub );
+
+        if ( Super[key] )
+            Object.defineProperty(Sub, key, {
+                value:         function () {
+
+                    mixin[key].call(this, arguments),
+                    Super[key].call(this, arguments);
+                },
+                enumerable:    true,
+                configurable:  true
+            });
+    } else
+        Object.defineProperty(Sub, key, {
+            value:         function () {
+
+                mixin[key].call(this, arguments), origin.call(this, arguments);
+            },
+            enumerable:    true,
+            configurable:  true
+        });
+}
 
 /**
  * Register a component
@@ -191,14 +223,16 @@ function define(meta, template, style) {
  */
 export function component(meta = { }) {
 
-    var {template, style, data, tagName} = meta;
+    var {template, style, data, tagName, store} = meta;
 
-    return  ({elements}) => {
+    return  ({ elements }) => {
 
         const merged = (template || style)  &&
-            define(elements, template, style);
+            defineTemplate(elements, template, style);
 
         if ( data )  elements.push( decoratorOf(Component, 'data', data) );
+
+        if ( store )  elements.push( decoratorOf(Component, 'store', store) );
 
         elements.push.apply(
             elements,
@@ -219,6 +253,10 @@ export function component(meta = { }) {
                     !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow)
                 )
                     ShadyCSS.prepareTemplate(merged, Class.tagName);
+
+                appendMixin(
+                    Class.prototype, Component.prototype, 'connectedCallback'
+                );
 
                 self.customElements.define(
                     Class.tagName,  Class,  tagName && {extends: tagName}

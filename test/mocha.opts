@@ -4,6 +4,6 @@
 --require should-sinon
 --require ./source/polyfill
 --recursive
---timeout 3500
+--timeout 4000
 --colors
 --inline-diffs

@@ -35,7 +35,9 @@ describe('DOM utility',  () => {
         insertTo(document.body, 'test', 10);
 
         stringifyDOM( document.body.childNodes ).should.be.equal(`
-    <cell-test onchange="console.log( this.value )"></cell-test>
+    <cell-main>
+        <cell-test onchange="console.log( this.value )"></cell-test>
+    </cell-main>
 
     test<cell-input>
         <input value="1" readonly="" placeholder="test">

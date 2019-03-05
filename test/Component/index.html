@@ -7,10 +7,13 @@
     <script src="../../node_modules/dom-renderer/dist/dom-renderer.js"></script>
     <script src="../../dist/web-cell.js"></script>
 
+    <script src="dist/cell-main.js"></script>
     <script src="dist/cell-test.js"></script>
     <script src="dist/cell-input.js"></script>
 </head><body>
-    <cell-test onchange="console.log( this.value )"></cell-test>
+    <cell-main>
+        <cell-test onchange="console.log( this.value )"></cell-test>
+    </cell-main>
 
     <cell-input>
         <input value="1" readonly placeholder="test">

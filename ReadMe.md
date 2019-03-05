@@ -2,7 +2,7 @@
 
 # WebCell
 
-Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with MVVM support) based on [ECMAScript 2018][1] & [Decorator proposal][2], powered by the practice & experience from developing [EWA v1.0 ~ 4.0](https://gitee.com/Tech_Query/EasyWebApp/).
+Light-weight **[Web Components](https://www.webcomponents.org/) framework** (with MVVM support) based on [ECMAScript 2018][1] & [Decorator proposal][2], powered by the practice & experience from developing [EWA v1.0 ~ 4.0](https://gitee.com/Tech_Query/EasyWebApp/).
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)](https://david-dm.org/EasyWebApp/WebCell)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FEasyWebApp%2FWebCell?ref=badge_shield)
@@ -38,6 +38,8 @@ Light-weight **[Web Components](https://www.webcomponents.org/) engine** (with M
 ```Shell
 npm init web-cell path/to/your_project \
     --remote https://git-example.com/your_id/repo_name.git
+
+web-cell new your-tag attr1,attr2
 ```
 (More configuration & template files can be found in the document of [WebCell DevCLI](https://web-cell.tk/DevCLI/))
 
@@ -57,7 +59,7 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
     </textarea>
     <img src="${host.constructor.icon}">
     <table>
-        <tbody data-array="specification"><template>
+        <tbody data-view="specification"><template>
             <tr>
                 <td></td><td>${view.name}</td>
             </tr>
@@ -124,7 +126,8 @@ export default  class YourComponent extends HTMLElement {
 
     constructor() {
 
-        super().construct();    //  This method is necessary when @component or @on is used
+        super().construct();    //  This method is required,
+                                //  it makes building Shadow DOM easier.
     }
 
     @blobURI    //  Convert Data URL to Object URL, then cache it

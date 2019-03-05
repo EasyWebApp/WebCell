@@ -18,6 +18,7 @@
                 "manual": {
                     "files": [
                         "./manual/API.md",
+                        "./manual/Router.md",
                         "./manual/Node.JS.md",
                         "./manual/Integration.md"
                     ]

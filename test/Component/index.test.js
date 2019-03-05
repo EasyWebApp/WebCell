@@ -61,6 +61,16 @@ describe('Component mixin',  () => {
     );
 
     /**
+     * @test {Component#connectedCallback}
+     */
+    it('Inject Shared state',  async () =>
+
+        (await page.$eval('cell-test',  tag => tag.store)).should.be.eql({
+            test:  'example'
+        })
+    );
+
+    /**
      * @test {mapProperty}
      */
     it('Map Attribute to Property',  async () => {

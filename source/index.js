@@ -11,3 +11,5 @@ export * from './utility/DOM';
 export * from './utility/event';
 
 export * from './utility/resource';
+
+export * from './utility/HTTP';
