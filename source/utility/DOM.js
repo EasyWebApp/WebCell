@@ -1,6 +1,8 @@
-import { parseDOM } from 'dom-renderer';
+import { parseDOM, walkDOM } from 'dom-renderer';
 
 import { likeArray } from './object';
+
+import { clearPath } from './resource';
 
 
 /**
@@ -191,4 +193,61 @@ export function watchAttributes(element, names, callback) {
     );
 
     return observer;
+}
+
+
+/**
+ * @param {String|URL} URI
+ * @param {?Boolean}   ESM
+ *
+ * @return {Promise<Event>}
+ */
+export function loadModule(URI, ESM) {
+
+    return  new Promise((onload, onerror) => {
+
+        const script = Object.assign(document.createElement('script'), {
+            onload, onerror
+        });
+
+        if ( ESM )  script.type = 'module';
+
+        script.src = clearPath( URI );
+
+        document.head.append( script );
+    });
+}
+
+
+const { pathname } = self.location,
+    ESM = (! document.querySelector(
+        'script[src$="custom-elements-es5-adapter.js"]'
+    ));
+
+/**
+ * @param {Node}   tree
+ * @param {String} [base] - Base path after `location.pathname`
+ *
+ * @return {Node} The `tree`
+ */
+export async function loadDOM(tree, base) {
+
+    const task = [ ];
+
+    Array.from(walkDOM(tree, null, true),  ({ tagName }) => {
+
+        tagName = (tagName || '').toLowerCase();
+
+        if (
+            /^\w+-\w+$/.test( tagName )  &&
+            !self.customElements.get( tagName )
+        )
+            task.push(loadModule(
+                `${pathname}/${base}/${tagName}.js`, ESM
+            ));
+    });
+
+    await Promise.all( task );
+
+    return tree;
 }

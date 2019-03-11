@@ -2,7 +2,7 @@ import { stringifyDOM, parseDOM } from 'dom-renderer';
 
 import { $, documentTypeOf } from './DOM';
 
-import { parseHash, parse, blobFrom, toDataURI, stringify } from './resource';
+import { clearPath, parseHash, parse, blobFrom, toDataURI, stringify } from './resource';
 
 
 /**
@@ -68,6 +68,10 @@ export function fetch(
     if ( extra )  Object.assign(XHR, extra);
 
     if ( upload )  Object.assign(XHR.upload, upload);
+
+    URI = new URL(URI, document.baseURI);
+
+    URI.pathname = clearPath( URI.pathname );
 
     XHR.open(method, URI);
 

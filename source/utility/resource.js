@@ -123,6 +123,20 @@ export function decodeBase64(raw) {
 
 
 /**
+ * @param {String} raw
+ *
+ * @return {String}
+ */
+export function clearPath(raw) {
+
+    return  raw.replace(/[/\\]+/g, '/')
+        .replace(/\/\.\//g, '/')
+        .replace(/^\.\//g, '')
+        .replace(/[^/]+\/\.\.\//g, '');
+}
+
+
+/**
  * @param {String} raw       - Binary data
  * @param {String} [type=''] - MIME type
  *

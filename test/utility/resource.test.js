@@ -1,5 +1,5 @@
 import {
-    stringify, parse, fileTypeOf, blobFrom, parseHash
+    stringify, parse, parseHash, clearPath, fileTypeOf, blobFrom
 } from '../../source/utility/resource';
 
 import { readFileSync } from 'fs';
@@ -69,6 +69,13 @@ describe('Resource utility',  () => {
             B:  '3'
         });
     });
+
+    /**
+     * @test {clearPath}
+     */
+    it('Clear path',  () =>
+        clearPath('./a/\\./b/../c').should.be.equal('a/c')
+    );
 
     describe('Binary',  () => {
 

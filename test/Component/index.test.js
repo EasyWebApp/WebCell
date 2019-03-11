@@ -61,13 +61,31 @@ describe('Component mixin',  () => {
     );
 
     /**
+     * @test {loadDOM}
+     */
+    it('Load nested Component',  () =>
+
+        page.$eval('cell-main',  tag => {
+
+            tag = tag.shadowRoot.firstChild;
+
+            return tag.ready.constructor.name;
+
+        }).should.be.fulfilledWith('Promise')
+    );
+
+    /**
      * @test {Component#connectedCallback}
      */
-    it('Inject Shared state',  async () =>
+    it('Inject Shared state',  () =>
 
-        (await page.$eval('cell-test',  tag => tag.store)).should.be.eql({
-            test:  'example'
-        })
+        page.$eval('cell-main',  tag => {
+
+            tag = tag.shadowRoot.firstChild;
+
+            return tag.store;
+
+        }).should.be.fulfilledWith({test: 'example'})
     );
 
     /**

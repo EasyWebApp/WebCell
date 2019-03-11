@@ -2,14 +2,17 @@ import View, { attributeMap, watchInput } from 'dom-renderer';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_, makeNode } from '../utility/DOM';
+import { $ as $_, makeNode, loadDOM } from '../utility/DOM';
 
 import { delegate, trigger } from '../utility/event';
 
 import { multipleMap } from '../utility/object';
 
 
-const shadow_root = Symbol('Shadow root'),
+const tag_ready = new WeakMap(),
+    tag_defer = Symbol('Tag defer'),
+    shadow_root = Symbol('Shadow root'),
+    tag_view = new WeakMap(),
     event_handler = new Map(),
     tag_store = new WeakMap();
 
@@ -51,28 +54,27 @@ export default  class Component {
      */
     async construct(option) {
 
+        tag_ready.set(this,  new Promise(
+            (resolve, reject)  =>  this[tag_defer] = [resolve, reject]
+        ));
+
         if (self.ShadyCSS  &&  !(ShadyCSS.nativeCss && ShadyCSS.nativeShadow))
             ShadyCSS.styleElement( this );
 
-        const {template, data, store} = this.constructor;
+        const {template, store} = this.constructor;
 
-        if ( template ) {
+        if ( store )
+            tag_store.set(
+                this,  (store instanceof Function) ? new store() : store
+            );
 
-            const view = new View(template,  null,  {host: this});
+        if ( template )  try {
 
-            this[shadow_root] = this.attachShadow(Object.assign(
-                {
-                    mode:            'open',
-                    delegatesFocus:  true
-                },
-                option
-            ));
+            await this.buildInner( option );
 
-            this[shadow_root].appendChild( makeNode( view.topNodes ) );
+        } catch (error) {
 
-            this.bootHook();
-
-            await view.render(data || { });
+            this[tag_defer][1]( error );
         }
 
         (event_handler.get( this.constructor )  ||  [ ]).forEach(
@@ -80,10 +82,42 @@ export default  class Component {
                 this.on(type,  selector,  handler.bind( this ))
         );
 
-        if ( store )
-            tag_store.set(
-                this,  (store instanceof Function) ? new store() : store
-            );
+        this[tag_defer][0]();
+    }
+
+    /**
+     * @type {Promise}
+     */
+    get ready() {  return  tag_ready.get( this );  }
+
+    /**
+     * @private
+     *
+     * @param {?Object} option
+     */
+    async buildInner(option) {
+
+        const {template, data} = this.constructor;
+
+        const view = new View(template,  null,  {host: this});
+
+        tag_view.set(this, view);
+
+        this[shadow_root] = this.attachShadow(Object.assign(
+            {
+                mode:            'open',
+                delegatesFocus:  true
+            },
+            option
+        ));
+
+        this[shadow_root].appendChild(await loadDOM(
+            makeNode( view.topNodes ),  this.constructor.moduleBase || 'dist/'
+        ));
+
+        this.bootHook();
+
+        await view.render(data || { });
     }
 
     /**
@@ -158,7 +192,14 @@ export default  class Component {
      *
      * @type {View}
      */
-    get view() {  return  View.instanceOf( this[shadow_root].firstChild );  }
+    get view() {  return  tag_view.get( this );  }
+
+    /**
+     * @param {Object} data
+     *
+     * @return {Promise}
+     */
+    render(data) {  return  this.view.render( data );  }
 
     /**
      * Set the getter & setter of the DOM property
