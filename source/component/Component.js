@@ -117,7 +117,7 @@ export default  class Component {
 
         this.bootHook();
 
-        await view.render(data || { });
+        if ( data )  await view.render( data );
     }
 
     /**
@@ -210,17 +210,21 @@ export default  class Component {
      */
     static linkDataOf(attributes) {
 
+        const { prototype } = this;
+
         attributes.forEach(key => {
 
             key = attributeMap[key] || key;
 
-            if (! (key in this.prototype))
-                Object.defineProperty(this.prototype, key, {
-                    set:         function (value) {
+            const {get, set} = Object.getOwnPropertyDescriptor(prototype, key) || { };
+
+            if (!get || !set)
+                Object.defineProperty(prototype, key, {
+                    set:         set  ||  function (value) {
 
                         this.view.commit(key, value);
                     },
-                    get:         function () {
+                    get:         get  ||  function () {
 
                         return  this.view.data[ key ];
                     },

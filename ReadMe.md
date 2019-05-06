@@ -11,6 +11,7 @@ Light-weight **[Web Components](https://www.webcomponents.org/) framework** (wit
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell/)
 
+[![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)](https://github.com/996icu/996.ICU/blob/master/LICENSE)
 [![Join the chat at https://gitter.im/EasyWebApp-js/Lobby](https://badges.gitter.im/EasyWebApp-js/Lobby.svg)](https://gitter.im/EasyWebApp-js/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
@@ -26,7 +27,7 @@ Light-weight **[Web Components](https://www.webcomponents.org/) framework** (wit
 
  5. [ECMAScript 6+](http://es6-features.org/)
 
- 6. [Decorator](https://github.com/tc39/proposal-decorators#decorators)
+ 6. [Decorator](https://github.com/tc39/proposal-decorators/tree/master/previous#decorators)
 
 
 
@@ -108,7 +109,9 @@ tr > td:first-child::before {
 #### `index.js`
 
 ```JavaScript
-import { component, blobURI, mapProperty, mapData, on, at } from 'web-cell';
+import {
+    component, blobURI, mapProperty, mapData, on, at, debounce
+} from 'web-cell';
 
 import template from './index.html';
 
@@ -164,6 +167,7 @@ export default  class YourComponent extends HTMLElement {
     viewChangedCallback(data, view) { }
 
     @on('input',  ':host textarea')
+    @debounce()
     countLength(event, target) {
 
         console.log(`Input length: ${target.value.length}`);
@@ -229,7 +233,7 @@ web-cell pack
 
 [1]: https://www.ecma-international.org/publications/standards/Ecma-262.htm
 
-[2]: https://tc39.github.io/proposal-decorators/
+[2]: https://github.com/tc39/proposal-decorators/tree/master/previous#readme
 
 
 

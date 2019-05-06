@@ -46,6 +46,14 @@ export function getPropertyDescriptor(object, key) {
  */
 
 /**
+ * @typedef {Function} Decorator
+ *
+ * @param {DecoratorDescriptor} meta
+ *
+ * @return {?DecoratorDescriptor}
+ */
+
+/**
  * @param {Function|Object}   target       - Class or its prototype
  * @param {String}            key          - Member name
  * @param {Function|Object|*} value        - `{ set, get }` for Field accessors

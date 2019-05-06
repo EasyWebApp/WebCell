@@ -112,14 +112,3 @@ export function trigger(element, event, detail, bubbles, cancelable, composed) {
             })
     );
 }
-
-
-/**
- * @param {number} [second=0]
- *
- * @return {Promise} Wait seconds in Macro tasks
- */
-export function delay(second) {
-
-    return  new Promise(resolve  =>  setTimeout(resolve, (second || 0) * 1000));
-}

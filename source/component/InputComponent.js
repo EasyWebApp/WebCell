@@ -29,7 +29,7 @@ export default  class InputComponent extends HTMLElement {
      */
     slotChangedCallback() {
 
-        const origin = this.$slot('input')[0];
+        const origin = this.$slot('input, textarea, select')[0];
 
         if (! origin)  return;
 
@@ -45,14 +45,17 @@ export default  class InputComponent extends HTMLElement {
             this.changedPropertyOf
         );
 
+        var selector = origin.tagName.toLowerCase();
+
+        if (selector === 'input')  selector += `[type="${origin.type}"]`;
+
+        selector = ':host ' + selector;
+
         this.on(
-            'input',
-            `:host input[type="${origin.type}"]`,
-            ({ target })  =>  origin.value = target.value
+            'input',  selector,  ({ target: {value} }) =>
+                (value != null)  &&  (origin.value = value)
         ).on(
-            'change',
-            `:host input[type="${origin.type}"]`,
-            this.trigger.bind( this )
+            'change',  selector,  this.trigger.bind( this )
         );
     }
 

@@ -13,9 +13,9 @@ import { clearPath } from './resource';
  *
  * @return {Element[]}
  */
-export function $(selector, context) {
+export function $(selector, context = document) {
 
-    return  Array.from( (context || document).querySelectorAll( selector ) );
+    return  Array.from( context.querySelectorAll( selector ) );
 }
 
 

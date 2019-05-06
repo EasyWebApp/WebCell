@@ -1,6 +1,6 @@
 import PuppeteerBrowser from 'puppeteer-browser';
 
-import { delay } from '../../source/utility/event';
+import { delay } from 'dom-renderer';
 
 
 var page;

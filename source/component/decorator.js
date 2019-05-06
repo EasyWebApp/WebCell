@@ -1,4 +1,4 @@
-import { parseDOM } from 'dom-renderer';
+import { parseDOM, debounce as _debounce, throttle as _throttle } from 'dom-renderer';
 
 import Component from './Component';
 
@@ -81,7 +81,7 @@ export function blobURI(meta) {
 /**
  * @param {String} selector - CSS selector
  *
- * @return {Function} Decorator for Event handler
+ * @return {Decorator} Decorator for Event handler
  */
 export function at(selector) {
 
@@ -96,7 +96,7 @@ export function at(selector) {
  * @param {String} type
  * @param {String} selector
  *
- * @return {Function} Decorator for Event handler
+ * @return {Decorator} Decorator for Event handler
  */
 export function on(type, selector) {
 
@@ -106,6 +106,44 @@ export function on(type, selector) {
 
             Class.on(type, selector, meta.descriptor.value);
         };
+    };
+}
+
+
+/**
+ * Wrap a method or setter to debounce
+ *
+ * @param {Number} [seconds=0.25]
+ *
+ * @return {Decorator}
+ */
+export function debounce(seconds = 0.25) {
+
+    return  ({ descriptor }) => {
+
+        if (descriptor.value instanceof Function)
+            descriptor.value = _debounce(descriptor.value, seconds);
+        else if (descriptor.set instanceof Function)
+            descriptor.set = _debounce(descriptor.set, seconds);
+    };
+}
+
+
+/**
+ * Wrap a method or getter to throttle
+ *
+ * @param {Number} [seconds=0.25]
+ *
+ * @return {Decorator}
+ */
+export function throttle(seconds) {
+
+    return  ({ descriptor }) => {
+
+        if (descriptor.value instanceof Function)
+            descriptor.value = _throttle(descriptor.value, seconds);
+        else if (descriptor.get instanceof Function)
+            descriptor.get = _throttle(descriptor.get, seconds);
     };
 }
 
@@ -219,7 +257,7 @@ function appendMixin(Sub, mixin, key) {
  * @param {Object}         [meta.data]     - Initial data
  * @param {String}         [meta.tagName]  - Name of an HTML original tag to extend
  *
- * @return {function(elements: DecoratorDescriptor[]): Object} Component class decorator
+ * @return {Decorator} Component Class decorator
  */
 export function component(meta = { }) {
 
