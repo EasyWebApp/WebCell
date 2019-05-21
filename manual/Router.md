@@ -3,7 +3,7 @@
 
 ## Create an App
 
-[More details](https://web-cell.tk/DevCLI/)
+[More details](https://web-cell.dev/DevCLI/)
 
 ```Shell
 npm init web-cell path/to/your_project \
@@ -14,7 +14,7 @@ npm init web-cell path/to/your_project \
 
 ## Create a Router component
 
-[More details](https://web-cell.tk/cell-router/)
+[More details](https://web-cell.dev/cell-router/)
 
 `source/app-router/index.js`
 

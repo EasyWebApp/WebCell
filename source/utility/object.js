@@ -85,26 +85,6 @@ export function decoratorOf(target, key, value, descriptor) {
 }
 
 
-/**
- * @param {*} object
- *
- * @return {Boolean}
- */
-export function likeArray(object) {
-
-    object = Object( object );
-
-    return (
-        !(object instanceof String)  &&
-        !(object instanceof Function)  &&
-        !(object instanceof Node)
-    ) && (
-        (object[Symbol.iterator] instanceof Function)  ||
-        (typeof object.length === 'number')
-    );
-}
-
-
 const Array_iterator = [ ][Symbol.iterator];
 
 /**

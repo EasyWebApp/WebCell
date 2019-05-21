@@ -119,7 +119,7 @@ describe('Component mixin',  () => {
     });
 
     /**
-     * @test {indexOf}
+     * @test {Component#on}
      */
     it('Get the event target in Shadow DOM',  async () => {
 
@@ -131,7 +131,7 @@ describe('Component mixin',  () => {
 
         await page.type('cell-test', 'test');
 
-        (await input).should.be.equal('CELL-TEST TEXTAREA 1');
+        (await input).should.be.equal('CELL-TEST TEXTAREA');
     });
 
     /**

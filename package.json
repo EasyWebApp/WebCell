@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Light-weight Web Components framework (with MVVM support) based on ECMAScript 2018 & Decorator proposal",
   "keywords": [
     "WebApp",
@@ -12,7 +12,7 @@
   ],
   "author": "shiy2008@gmail.com",
   "license": "LGPL-3.0",
-  "homepage": "https://web-cell.tk/",
+  "homepage": "https://web-cell.dev/",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EasyWebApp/WebCell.git"
@@ -49,7 +49,7 @@
     }
   },
   "dependencies": {
-    "dom-renderer": "^0.9.0"
+    "dom-renderer": "^1.0.0-beta"
   },
   "peerDependencies": {
     "@babel/polyfill": "^7.4.4",
@@ -69,8 +69,8 @@
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
     "eslint": "^5.16.0",
-    "husky": "^2.2.0",
-    "jsdom": "^15.0.0",
+    "husky": "^2.3.0",
+    "jsdom": "^15.1.0",
     "koapache": "^1.0.6",
     "mocha": "^6.1.4",
     "puppeteer-browser": "^0.3.8",

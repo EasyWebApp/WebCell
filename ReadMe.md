@@ -1,4 +1,4 @@
-![WebCell logo](https://web-cell.tk/image/WebCell-0.png)
+![WebCell logo](https://web-cell.dev/image/WebCell-0.png)
 
 # WebCell
 
@@ -42,7 +42,7 @@ npm init web-cell path/to/your_project \
 
 web-cell new your-tag attr1,attr2
 ```
-(More configuration & template files can be found in the document of [WebCell DevCLI](https://web-cell.tk/DevCLI/))
+(More configuration & template files can be found in the document of [WebCell DevCLI](https://web-cell.dev/DevCLI/))
 
 
 ### Component
@@ -51,7 +51,7 @@ Create [files as shown below](https://github.com/EasyWebApp/DevCLI/tree/master/t
 
 #### `index.html`
 
-[Template syntax of Data binding](https://web-cell.tk/DOM-Renderer/manual/Template.html)
+[Template syntax of Data binding](https://web-cell.dev/DOM-Renderer/manual/Template.html)
 
 ```HTML
 <template>
@@ -197,15 +197,15 @@ web-cell pack
 
 ## Documentation
 
- - [API](https://web-cell.tk/WebCell/): `npm docs` or `npm start`
+ - [API](https://web-cell.dev/WebCell/): `npm docs` or `npm start`
 
- - [Guide](https://web-cell.tk/WebCell/manual/): `npm start manual`
+ - [Guide](https://web-cell.dev/WebCell/manual/): `npm start manual`
 
 
 
 ## Component library
 
- 1. [cell-router](https://web-cell.tk/cell-router/)
+ 1. [cell-router](https://web-cell.dev/cell-router/)
 
  2. [BootCell](https://github.com/EasyWebApp/BootCell) based on **BootStrap v4**
 
@@ -254,7 +254,7 @@ web-cell pack
 by
 <a xmlns:cc="http://creativecommons.org/ns#"
    property="cc:attributionName" rel="cc:attributionURL"
-   href="https://web-cell.tk/">
+   href="https://web-cell.dev/">
    Shi Yao  &  Xie JiaQi
 </a>
 is licensed under a
@@ -264,6 +264,6 @@ is licensed under a
 
 Based on a work at
 <a xmlns:dct="http://purl.org/dc/terms/" rel="dct:source"
-   href="https://web-cell.tk/WebCell/">
-    https://web-cell.tk/WebCell/
+   href="https://web-cell.dev/WebCell/">
+    https://web-cell.dev/WebCell/
 </a>.

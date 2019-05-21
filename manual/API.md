@@ -11,7 +11,7 @@ including **Scoped variables** shown below:
 |:-------:|:-------------:|--------------------------------------------------------------|
 | `host`  | `HTMLElement` | Current component                                            |
 
-([More details](https://web-cell.tk/DOM-Renderer/manual/Template.html))
+([More details](https://web-cell.dev/DOM-Renderer/manual/Template.html))
 
 
 

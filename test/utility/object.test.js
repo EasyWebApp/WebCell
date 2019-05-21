@@ -1,6 +1,6 @@
 import {
     getPropertyDescriptor,
-    likeArray, arrayLike, multipleMap, unique,
+    arrayLike, multipleMap, unique,
     extend, mapTree, decoratorOf
 } from '../../source/utility/object';
 
@@ -33,50 +33,30 @@ describe('Object utility',  () => {
         );
     });
 
-    describe('Array-like objects',  () => {
-        /**
-         * @test {likeArray}
-         */
-        it('Detection',  () => {
+    /**
+     * @test {arrayLike}
+     */
+    it('Array-like Decoration',  () => {
 
-            likeArray( false ).should.be.false();
-            likeArray( null ).should.be.false();
-            likeArray( undefined ).should.be.false();
-            likeArray( NaN ).should.be.false();
-            likeArray( '' ).should.be.false();
+        @arrayLike
+        class List {
 
-            likeArray( [] ).should.be.true();
-            likeArray( {length: 0} ).should.be.true();
-
-            likeArray( () => { } ).should.be.false();
-            likeArray( document.createElement('form') ).should.be.false();
-        });
-
-        /**
-         * @test {arrayLike}
-         */
-        it('Decoration',  () => {
+            constructor() {  this.length = 0;  }
 
             @arrayLike
-            class List {
+            valueOf() {  return {length: this.length};  }
 
-                constructor() {  this.length = 0;  }
+            @arrayLike
+            get items() {  return {length: this.length};  }
+        }
 
-                @arrayLike
-                valueOf() {  return {length: this.length};  }
+        const list = new List(), Array_iterator = [ ][Symbol.iterator];
 
-                @arrayLike
-                get items() {  return {length: this.length};  }
-            }
+        list[ Symbol.iterator ].should.equal( Array_iterator );
 
-            const list = new List(), Array_iterator = [ ][Symbol.iterator];
+        list.valueOf()[ Symbol.iterator ].should.equal( Array_iterator );
 
-            list[ Symbol.iterator ].should.equal( Array_iterator );
-
-            list.valueOf()[ Symbol.iterator ].should.equal( Array_iterator );
-
-            list.items[ Symbol.iterator ].should.equal( Array_iterator );
-        });
+        list.items[ Symbol.iterator ].should.equal( Array_iterator );
     });
 
     /**

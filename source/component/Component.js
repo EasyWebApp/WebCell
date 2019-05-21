@@ -1,8 +1,8 @@
-import View, { attributeMap, watchInput } from 'dom-renderer';
+import View, { makeNode, attributeMap, watchInput } from 'dom-renderer';
 
 import { parse } from '../utility/resource';
 
-import { $ as $_, makeNode, loadDOM } from '../utility/DOM';
+import { $ as $_, loadDOM } from '../utility/DOM';
 
 import { delegate, trigger } from '../utility/event';
 

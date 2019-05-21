@@ -22,4 +22,4 @@ import * as WebCell from 'web-cell';
 
 ## Typical cases
 
- 1. [**WebCell DevCLI**](https://web-cell.tk/DevCLI/) uses [DOM utility](https://web-cell.tk/WebCell/file/source/utility/DOM.js.html) methods of WebCell
+ 1. [**WebCell DevCLI**](https://web-cell.dev/DevCLI/) uses [DOM utility](https://web-cell.dev/WebCell/file/source/utility/DOM.js.html) methods of WebCell

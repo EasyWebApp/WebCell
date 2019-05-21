@@ -1,4 +1,4 @@
-import { component, mapProperty, mapData, on, indexOf } from 'web-cell';
+import { component, mapProperty, mapData, on } from 'web-cell';
 
 
 @component({
@@ -35,8 +35,7 @@ export class CellTest extends HTMLElement {
 
         console.info(
             event.target.tagName,
-            innerTarget.tagName,
-            indexOf( innerTarget )
+            innerTarget.tagName
         );
     }
 }
