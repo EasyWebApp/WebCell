@@ -1,0 +1,17 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "strict": true,
+        "noImplicitReturns": true,
+        "noImplicitAny": true,
+        "module": "es2015",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "target": "es5",
+        "allowJs": true,
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "jsxFactory": "WebCell.create"
+    },
+    "include": ["./source/**/*"]
+}
