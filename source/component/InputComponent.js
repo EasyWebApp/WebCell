@@ -51,12 +51,14 @@ export default  class InputComponent extends HTMLElement {
 
         selector = ':host ' + selector;
 
-        this.on(
-            'input',  selector,  ({ target: {value} }) =>
-                (value != null)  &&  (origin.value = value)
-        ).on(
-            'change',  selector,  this.trigger.bind( this )
-        );
+        this.on('input',  selector,  (_, {value, checked}) => {
+
+            if (checked != null)
+                origin.checked = checked;
+            else if (value != null)
+                origin.value = value;
+
+        }).on('change',  selector,  this.trigger.bind( this ));
     }
 
     /**

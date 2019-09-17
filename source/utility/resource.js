@@ -160,7 +160,7 @@ export  async function blobOf(URI) {
 
 
 const schema_type = /^(?:(\w+):)?.+?(?:\.(\w+))?$/,
-    DataURI = /^data:(.+?\/(.+?))?(;base64)?,(\S+)/;
+    DataURI = /^data:(.+?\/(.+?))?(;base64)?,([\s\S]+)/;
 
 /**
  * @param {String} URI - HTTP(S) URL, Data URI or Object URL
@@ -227,4 +227,35 @@ export function readAs(file, type = 'DataURL', encoding = 'UTF-8') {
 
         reader[`readAs${type}`](file, encoding);
     });
+}
+
+
+/**
+ * @param {ArrayBuffer} buffer
+ *
+ * @return {String}
+ */
+export function toHexString(buffer) {
+
+    return  [... new Uint8Array( buffer )]
+        .map(value  =>  value.toString( 16 ).padStart(2, '0'))
+        .join('');
+}
+
+
+/**
+ * @param {String|Blob|ArrayBuffer} data
+ * @param {Number}                  [version=1] - https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest#Supported_algorithms
+ *
+ * @return {String} Hex string
+ */
+export async function toSHAString(data, version = 1) {
+
+    return toHexString(await self.crypto.subtle.digest(
+        'SHA-' + version,
+        await readAs(
+            (data instanceof Blob)  ?  data  :  new Blob( [data] ),
+            'ArrayBuffer'
+        )
+    ));
 }

@@ -17,6 +17,32 @@ export function isXDomain(URI) {
 
 
 /**
+ * @param {String} [raw=window.location.search]
+ *
+ * @return {Object}
+ */
+export function parseURLData(raw = window.location.search) {
+
+    const data = { };
+
+    Array.from(
+        new URLSearchParams( /(?:\?|#)?(\S+)/.exec( raw )[1] ),
+        ([key, value]) => {
+            try {  value = JSON.parse( value );  } catch (error) {/**/}
+
+            if (!(data[key] != null))  return data[key] = value;
+
+            if (!(data[key] instanceof Array))  data[key] = [ data[key] ];
+
+            data[key].push(value);
+        }
+    );
+
+    return data;
+}
+
+
+/**
  * @param {Element} form - `<form />` or `<fieldset />`
  *
  * @return {String|FormData|Object}
@@ -122,7 +148,7 @@ export const headerParser = {
 export function parseHeader(raw) {
 
     return  parseHash(':',  '\r\n',  raw,  (key, value) => [
-        key.replace(/^\w|-\w/g,  char => char.toUpperCase()),
+        key = key.replace(/^\w|-\w/g,  char => char.toUpperCase()),
         (headerParser[key] instanceof Function)  ?
             headerParser[key]( value )  :  value
     ]);

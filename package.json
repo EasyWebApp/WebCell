@@ -1,6 +1,6 @@
 {
   "name": "web-cell",
-  "version": "1.2.0",
+  "version": "1.2.3",
   "description": "Light-weight Web Components framework (with MVVM support) based on ECMAScript 2018 & Decorator proposal",
   "keywords": [
     "WebApp",
@@ -32,7 +32,7 @@
     "node": "^6.3.0"
   },
   "scripts": {
-    "lint": "eslint --fix source/ test/**/*.test.js",
+    "lint": "lint-staged",
     "pack": "amd-bundle source/index dist/web-cell -m",
     "pack-test": "cd test/Component/  &&  web-cell pack",
     "check": "npm run pack  &&  npm run pack-test  &&  mocha test/**/*.test.js",
@@ -43,40 +43,48 @@
     "docs": "esdoc",
     "start": "esdoc  &&  web-server docs/ -o"
   },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
+  },
   "husky": {
     "hooks": {
-      "pre-commit": "npm run build  &&  git add ."
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run build"
     }
   },
   "dependencies": {
-    "dom-renderer": "^1.0.0-beta"
+    "dom-renderer": "^1.0.3"
   },
   "peerDependencies": {
-    "@babel/polyfill": "^7.4.4",
+    "@babel/polyfill": "^7.6.0",
     "@webcomponents/webcomponentsjs": "^2.2.10"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-decorators": "^7.4.4",
-    "@babel/polyfill": "^7.4.4",
-    "@babel/preset-env": "^7.4.4",
-    "@babel/register": "^7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.6.0",
+    "@babel/polyfill": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "@babel/register": "^7.6.0",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "amd-bundle": "^1.7.8",
-    "babel-eslint": "^10.0.1",
+    "babel-eslint": "^10.0.3",
     "babel-plugin-inline-import": "^3.0.0",
     "esdoc": "^1.1.0",
     "esdoc-ecmascript-proposal-plugin": "^1.0.0",
     "esdoc-external-webapi-plugin": "^1.0.0",
     "esdoc-standard-plugin": "^1.0.0",
-    "eslint": "^5.16.0",
-    "husky": "^2.3.0",
-    "jsdom": "^15.1.0",
+    "eslint": "^6.4.0",
+    "husky": "^3.0.5",
+    "jsdom": "^15.1.1",
     "koapache": "^1.0.6",
-    "mocha": "^6.1.4",
+    "lint-staged": "^9.2.5",
+    "mocha": "^6.2.0",
     "puppeteer-browser": "^0.3.8",
     "should": "^13.2.3",
-    "should-sinon": "0.0.6",
-    "sinon": "^7.3.2",
-    "web-cell-cli": "^1.0.0-beta"
+    "should-sinon": "^0.0.6",
+    "sinon": "^7.4.2",
+    "web-cell-cli": "^1.0.0"
   }
 }

@@ -1,13 +1,36 @@
 import { readFileSync } from 'fs';
-
 import JSDOM from '../../source/polyfill';
-
 import WebServer from 'koapache';
-
-import { serialize, parseHeader, request } from '../../source/utility/HTTP';
+import {
+    parseURLData, serialize, parseHeader, request
+} from '../../source/utility/HTTP';
 
 
 describe('HTTP utility',  () => {
+    /**
+     * @test {parseURLData}
+     */
+    describe('Parse URL data',  () => {
+
+        it('should accept ? or # prefix',  () => {
+
+            parseURLData('?').should.be.an.Object();
+            parseURLData('#').should.be.an.Object();
+        });
+
+        it('should parse Primitive values',  () =>
+
+            parseURLData('?a=A&b=2&c=false').should.eql({
+                a: 'A',  b: 2,  c: false
+            })
+        );
+
+        it('should parse Multiple key to Array',  () =>
+
+            parseURLData('?a=1&b=2&b=3').should.eql({a: 1,  b: [2, 3]})
+        );
+    });
+
     /**
      * @test {serialize}
      */
