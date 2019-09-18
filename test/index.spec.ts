@@ -1,5 +1,5 @@
 import { Page } from 'puppeteer-core';
-import { getPage } from './browser';
+import { getPage, delay } from './browser';
 
 var page: Page;
 
@@ -31,10 +31,15 @@ describe('Web Component', () => {
             tag.shadowRoot!.querySelector('img')!.click()
         );
 
+        await delay();
+
         expect(
-            await page.$eval('test-tag', tag =>
-                tag.shadowRoot!.querySelector('img')
+            await page.$eval(
+                'test-tag',
+                tag => tag.shadowRoot!.firstElementChild!.outerHTML
             )
-        ).toBeFalsy();
+        ).toBe(
+            '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag></sub-tag></h1>'
+        );
     });
 });

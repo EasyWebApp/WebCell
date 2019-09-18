@@ -1,11 +1,14 @@
 import { VNode } from 'snabbdom/vnode';
-import { patch } from './utility';
+import { patch, PlainObject } from './utility';
 
 export function mixin(superClass = HTMLElement) {
     abstract class WebCell extends superClass {
         static tagName = '';
 
         private root: DocumentFragment;
+        private tick?: Promise<any>;
+
+        protected readonly props: PlainObject = {};
 
         constructor({ mode }: any = {}) {
             super();
@@ -36,6 +39,21 @@ export function mixin(superClass = HTMLElement) {
             patch(element, node);
 
             this.root.appendChild(element);
+        }
+
+        commit(key: string, value: any) {
+            this.props[key] = value;
+
+            return (this.tick =
+                this.tick ||
+                new Promise(resolve =>
+                    self.requestAnimationFrame(() => {
+                        this.update();
+
+                        this.tick = undefined;
+                        resolve();
+                    })
+                ));
         }
     }
 

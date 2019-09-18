@@ -6,13 +6,16 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag'
 })
 export default class TestTag extends WebCell.mixin() {
-    onClick = ({ target }) => target.remove();
+    @WebCell.watch
+    title = 'Test';
+
+    onClick = () => (this.title = 'Example');
 
     render() {
         return (
-            <h1 title="Test" class="title">
-                Test
-                <img alt="Test" onclick={this.onClick} />
+            <h1 title={this.title} class="title">
+                {this.title}
+                <img alt={this.title} onclick={this.onClick} />
                 <SubTag />
             </h1>
         );

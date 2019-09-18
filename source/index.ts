@@ -19,6 +19,19 @@ export function component(meta: ComponentMeta) {
     };
 }
 
+export function watch(component: HTMLElement, key: string) {
+    Object.defineProperty(component, key, {
+        set(value) {
+            this.commit(key, value);
+        },
+        get() {
+            return this.props[key];
+        },
+        configurable: true,
+        enumerable: true
+    });
+}
+
 export function create(
     tag: string | Function,
     data?: any,

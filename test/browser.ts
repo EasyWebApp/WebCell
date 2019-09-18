@@ -14,3 +14,7 @@ export async function getPage(path = './test/index.html') {
 
     return page;
 }
+
+export function delay(seconds = 0.1) {
+    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
+}
