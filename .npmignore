@@ -1,0 +1,4 @@
+test/
+docs/
+.eslintrc.json
+jest.config.js

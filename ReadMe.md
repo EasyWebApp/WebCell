@@ -1,6 +1,10 @@
+![WebCell logo](https://web-cell.dev/image/WebCell-0.png)
+
 # WebCell
 
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
+
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell/)
 
 ## Usage
 
@@ -93,6 +97,12 @@ export default class TestTag extends WebCell.mixin() {
     }
 }
 ```
+
+## Roadmap
+
+-   [ ] [Template] Document Fragment node
+-   [ ] [Style] Scoped CSS
+-   [ ] [Decorator] DOM Event delegation
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
