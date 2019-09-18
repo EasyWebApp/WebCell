@@ -1,4 +1,6 @@
-import morphDOM from 'morphdom';
+import createElement from 'snabbdom/h';
+import { VNode } from 'snabbdom/vnode';
+import { patch, fromEntries } from './utility';
 
 interface ComponentMeta {
     tagName: string;
@@ -23,34 +25,40 @@ export function mixin(superClass = HTMLElement) {
             this.update();
         }
 
-        abstract render(): Element;
+        abstract render(): VNode;
 
         protected update() {
             const node = this.render(),
-                { childNodes } = this.root;
+                { firstElementChild } = this.root;
 
-            if (!childNodes[0]) this.root.appendChild(node);
-            else morphDOM(childNodes[0], node);
+            if (firstElementChild) {
+                patch(firstElementChild, node);
+                return;
+            }
+
+            const element =
+                node.sel && document.createElement(node.sel.split(/[#.:]/)[0]);
+
+            if (!element) return;
+
+            patch(element, node);
+
+            this.root.appendChild(element);
         }
     }
 
     return WebCell;
 }
 
-const spawn = document.createElement('template');
-
 export function create(
     name: string,
-    props: any = {},
-    ...children: (string | Element)[]
+    { class: className, style, ...props }: any = {},
+    ...children: (string | VNode)[]
 ) {
-    spawn.innerHTML = `<${name} />`;
+    className =
+        typeof className === 'string'
+            ? fromEntries(className.split(/\s+/).map(name => [name, true]))
+            : null;
 
-    const element = spawn.content.firstElementChild!;
-    // @ts-ignore
-    for (const key in props) element[key] = props[key];
-
-    element.append(...children);
-
-    return element;
+    return createElement(name, { props, class: className, style }, children);
 }

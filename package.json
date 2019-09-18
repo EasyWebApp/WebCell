@@ -19,9 +19,9 @@
     "bugs": {
         "url": "https://github.com/EasyWebApp/WebCell/issues"
     },
-    "module": "source/index.js",
+    "module": "source/index.ts",
     "dependencies": {
-        "morphdom": "^2.5.6"
+        "snabbdom": "^0.7.3"
     },
     "devDependencies": {
         "@types/jest": "^24.0.18",
@@ -53,7 +53,7 @@
             "git add"
         ],
         "*.{js,ts,tsx}": [
-            "eslint --fix --rule 'no-unused-vars: 1' --rule 'require-atomic-updates: 1'",
+            "eslint --fix --rule 'require-atomic-updates: 1'",
             "git add"
         ],
         "*.{html,md,json,yml}": [

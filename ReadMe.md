@@ -49,9 +49,9 @@ import * as WebCell from 'web-cell';
 export default class TestTag extends WebCell.mixin() {
     render() {
         return (
-            <h1 title="Test">
+            <h1 title="Test" class="title">
                 Test
-                <img />
+                <img alt="Test" />
             </h1>
         );
     }
