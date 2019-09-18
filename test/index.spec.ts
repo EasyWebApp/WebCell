@@ -6,12 +6,35 @@ var page: Page;
 describe('Web Component', () => {
     beforeAll(async () => (page = await getPage()));
 
-    it('should build Shadow DOM', async () => {
+    it('should build Shadow DOM & combine Function Component', async () => {
+        expect(
+            await page.$eval(
+                'sub-tag',
+                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+            )
+        ).toBe('<div><span></span></div>');
+    });
+
+    it('should build Shadow DOM & create Class Component', async () => {
         expect(
             await page.$eval(
                 'test-tag',
                 tag => tag.shadowRoot!.firstElementChild!.outerHTML
             )
-        ).toBe('<h1 title="Test" class="title">Test<img alt="Test"></h1>');
+        ).toBe(
+            '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag></sub-tag></h1>'
+        );
+    });
+
+    it('should bind Event Handler', async () => {
+        await page.$eval('test-tag', tag =>
+            tag.shadowRoot!.querySelector('img')!.click()
+        );
+
+        expect(
+            await page.$eval('test-tag', tag =>
+                tag.shadowRoot!.querySelector('img')
+            )
+        ).toBeFalsy();
     });
 });

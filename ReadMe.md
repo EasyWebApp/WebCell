@@ -31,27 +31,59 @@ npm install parcel-bundler -D
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.2.10/webcomponents-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.2.10/custom-elements-es5-adapter.js"></script>
 
+<script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
 
+<sub-tag></sub-tag>
 <test-tag></test-tag>
 ```
 
 ### Simple component
+
+[`source/SubTag.tsx`](test/source/SubTag.tsx)
+
+```jsx
+import * as WebCell from 'web-cell';
+
+export function InlineTag() {
+    return <span />;
+}
+
+@WebCell.component({
+    tagName: 'sub-tag'
+})
+export class SubTag extends WebCell.mixin() {
+    render() {
+        return (
+            <div>
+                <InlineTag />
+            </div>
+        );
+    }
+}
+```
+
+### Nested component
 
 [`source/TestTag.tsx`](test/source/TestTag.tsx)
 
 ```jsx
 import * as WebCell from 'web-cell';
 
+import { SubTag } from './SubTag';
+
 @WebCell.component({
     tagName: 'test-tag'
 })
 export default class TestTag extends WebCell.mixin() {
+    onClick = ({ target }) => target.remove();
+
     render() {
         return (
             <h1 title="Test" class="title">
                 Test
-                <img alt="Test" />
+                <img alt="Test" onclick={this.onClick} />
+                <SubTag />
             </h1>
         );
     }

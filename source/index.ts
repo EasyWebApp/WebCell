@@ -1,6 +1,8 @@
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
-import { patch, fromEntries } from './utility';
+import { fromEntries, PlainObject } from './utility';
+
+export * from './WebCell';
 
 interface ComponentMeta {
     tagName: string;
@@ -9,56 +11,40 @@ interface ComponentMeta {
 
 export function component(meta: ComponentMeta) {
     return (Class: Function) => {
+        Object.defineProperty(Class, 'tagName', {
+            value: meta.tagName
+        });
+
         customElements.define(meta.tagName, Class, { extends: meta.extends });
     };
 }
 
-export function mixin(superClass = HTMLElement) {
-    abstract class WebCell extends superClass {
-        private root: DocumentFragment;
-
-        constructor({ mode }: any = {}) {
-            super();
-
-            this.root = this.attachShadow({ mode: mode || 'open' });
-
-            this.update();
-        }
-
-        abstract render(): VNode;
-
-        protected update() {
-            const node = this.render(),
-                { firstElementChild } = this.root;
-
-            if (firstElementChild) {
-                patch(firstElementChild, node);
-                return;
-            }
-
-            const element =
-                node.sel && document.createElement(node.sel.split(/[#.:]/)[0]);
-
-            if (!element) return;
-
-            patch(element, node);
-
-            this.root.appendChild(element);
-        }
-    }
-
-    return WebCell;
-}
-
 export function create(
-    name: string,
-    { class: className, style, ...props }: any = {},
+    tag: string | Function,
+    data?: any,
     ...children: (string | VNode)[]
 ) {
+    // @ts-ignore
+    tag = typeof tag === 'string' ? tag : tag.tagName || tag;
+
+    if (tag instanceof Function) return tag({ ...data, children });
+
+    var { class: className, style, ...rest }: any = data || {};
+
     className =
         typeof className === 'string'
             ? fromEntries(className.split(/\s+/).map(name => [name, true]))
             : null;
 
-    return createElement(name, { props, class: className, style }, children);
+    const [props, on] = Object.entries(rest).reduce(
+        (objects, [key, value]) => {
+            if (/^on\w+/.test(key)) objects[1][key.slice(2)] = value;
+            else objects[0][key] = value;
+
+            return objects;
+        },
+        [{}, {}] as PlainObject[]
+    );
+
+    return createElement(tag, { props, class: className, style, on }, children);
 }
