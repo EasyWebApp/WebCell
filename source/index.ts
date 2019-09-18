@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 import { fromEntries, PlainObject } from './utility';
@@ -11,9 +13,7 @@ interface ComponentMeta {
 
 export function component(meta: ComponentMeta) {
     return (Class: Function) => {
-        Object.defineProperty(Class, 'tagName', {
-            value: meta.tagName
-        });
+        Reflect.defineMetadata('tagName', meta.tagName, Class);
 
         customElements.define(meta.tagName, Class, { extends: meta.extends });
     };
@@ -32,13 +32,21 @@ export function watch(component: HTMLElement, key: string) {
     });
 }
 
+export function attribute({ constructor }: HTMLElement, key: string) {
+    const list = Reflect.getMetadata('attributes', constructor) || [];
+
+    list.push(key.toLowerCase());
+
+    Reflect.defineMetadata('attributes', list, constructor);
+}
+
 export function create(
     tag: string | Function,
     data?: any,
     ...children: (string | VNode)[]
 ) {
-    // @ts-ignore
-    tag = typeof tag === 'string' ? tag : tag.tagName || tag;
+    if (typeof tag !== 'string')
+        tag = Reflect.getMetadata('tagName', tag) || tag;
 
     if (tag instanceof Function) return tag({ ...data, children });
 

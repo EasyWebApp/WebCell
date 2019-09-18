@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-alpha.3",
+    "version": "2.0.0-alpha.4",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -21,6 +21,7 @@
     },
     "module": "source/index.ts",
     "dependencies": {
+        "reflect-metadata": "^0.1.13",
         "snabbdom": "^0.7.3"
     },
     "devDependencies": {

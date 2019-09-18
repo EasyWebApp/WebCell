@@ -3,7 +3,17 @@ import { patch, PlainObject } from './utility';
 
 export function mixin(superClass = HTMLElement) {
     abstract class WebCell extends superClass {
-        static tagName = '';
+        static get observedAttributes() {
+            return Reflect.getMetadata('attributes', this);
+        }
+
+        attributeChangedCallback(name: string, _: string, value: string) {
+            try {
+                value = JSON.parse(value);
+            } finally {
+                this.commit(name, value);
+            }
+        }
 
         private root: DocumentFragment;
         private tick?: Promise<any>;

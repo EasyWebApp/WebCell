@@ -6,6 +6,7 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag'
 })
 export default class TestTag extends WebCell.mixin() {
+    @WebCell.attribute
     @WebCell.watch
     title = 'Test';
 

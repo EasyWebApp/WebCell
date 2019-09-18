@@ -42,4 +42,21 @@ describe('Web Component', () => {
             '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag></sub-tag></h1>'
         );
     });
+
+    it('should observe Attribute', async () => {
+        await page.$eval('test-tag', tag =>
+            tag.setAttribute('title', 'Sample')
+        );
+
+        await delay();
+
+        expect(
+            await page.$eval(
+                'test-tag',
+                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+            )
+        ).toBe(
+            '<h1 title="Sample" class="title">Sample<img alt="Sample"><sub-tag></sub-tag></h1>'
+        );
+    });
 });
