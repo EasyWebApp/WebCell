@@ -9,11 +9,14 @@ export * from './WebCell';
 interface ComponentMeta {
     tagName: string;
     extends?: string;
+    style?: string;
 }
 
 export function component(meta: ComponentMeta) {
     return (Class: Function) => {
         Reflect.defineMetadata('tagName', meta.tagName, Class);
+
+        if (meta.style) Reflect.defineMetadata('style', meta.style, Class);
 
         customElements.define(meta.tagName, Class, { extends: meta.extends });
     };

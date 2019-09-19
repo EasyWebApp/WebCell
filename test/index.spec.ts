@@ -1,6 +1,8 @@
 import { Page } from 'puppeteer-core';
 import { getPage, delay } from './browser';
 
+import { WebCellComponent } from '../source';
+
 var page: Page;
 
 describe('Web Component', () => {
@@ -10,7 +12,7 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'sub-tag',
-                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe('<div><span></span></div>');
     });
@@ -19,11 +21,18 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'test-tag',
-                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
             '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag></sub-tag></h1>'
         );
+
+        expect(
+            await page.$eval(
+                'test-tag',
+                tag => tag.shadowRoot!.firstElementChild!.textContent
+            )
+        ).toMatch('lightblue');
     });
 
     it('should bind Event Handler', async () => {
@@ -36,7 +45,7 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'test-tag',
-                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
             '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag></sub-tag></h1>'
@@ -53,7 +62,7 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'test-tag',
-                tag => tag.shadowRoot!.firstElementChild!.outerHTML
+                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
             '<h1 title="Sample" class="title">Sample<img alt="Sample"><sub-tag></sub-tag></h1>'

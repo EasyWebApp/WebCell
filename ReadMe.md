@@ -15,7 +15,7 @@ Command
 ```shell
 npm init -y
 npm install web-cell
-npm install parcel-bundler -D
+npm install parcel-bundler parcel-plugin-text -D
 ```
 
 `package.json`
@@ -25,6 +25,9 @@ npm install parcel-bundler -D
     "scripts": {
         "start": "parcel source/index.html",
         "build": "parcel build source/index.html"
+    },
+    "parcel-plugin-text": {
+        "extensions": ["css"]
     }
 }
 ```
@@ -69,15 +72,25 @@ export class SubTag extends WebCell.mixin() {
 
 ### Advanced component
 
+[`source/TestTag.css`](test/source/TestTag.css)
+
+```css
+.title {
+    color: lightblue;
+}
+```
+
 [`source/TestTag.tsx`](test/source/TestTag.tsx)
 
 ```jsx
 import * as WebCell from 'web-cell';
 
+import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
 @WebCell.component({
-    tagName: 'test-tag'
+    tagName: 'test-tag',
+    style
 })
 export default class TestTag extends WebCell.mixin() {
     @WebCell.attribute
@@ -101,7 +114,6 @@ export default class TestTag extends WebCell.mixin() {
 ## Roadmap
 
 -   [ ] [Template] Document Fragment node
--   [ ] [Style] Scoped CSS
 -   [ ] [Decorator] DOM Event delegation
 
 [1]: https://www.webcomponents.org/

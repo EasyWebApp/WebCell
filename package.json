@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-alpha.4",
+    "version": "2.0.0-alpha.5",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -38,6 +38,7 @@
         "lint-staged": "^9.2.5",
         "open-cli": "^5.0.0",
         "parcel-bundler": "^1.12.3",
+        "parcel-plugin-text": "^0.9.5",
         "prettier": "^1.18.2",
         "puppeteer-core": "^1.20.0",
         "ts-jest": "^24.1.0",
@@ -63,7 +64,7 @@
             "eslint --fix --rule 'require-atomic-updates: 1'",
             "git add"
         ],
-        "*.{html,md,json,yml}": [
+        "*.{html,md,css,json,yml}": [
             "prettier --write",
             "git add"
         ]
@@ -77,5 +78,10 @@
     "prettier": {
         "singleQuote": true,
         "tabWidth": 4
+    },
+    "parcel-plugin-text": {
+        "extensions": [
+            "css"
+        ]
     }
 }
