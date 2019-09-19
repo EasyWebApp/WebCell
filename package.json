@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-alpha.5",
+    "version": "2.0.0-alpha.9",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -20,6 +20,9 @@
         "url": "https://github.com/EasyWebApp/WebCell/issues"
     },
     "module": "source/index.ts",
+    "main": "dist/index.js",
+    "browser": "dist/index.js",
+    "types": "dist/index.d.ts",
     "dependencies": {
         "reflect-metadata": "^0.1.13",
         "snabbdom": "^0.7.3"
@@ -47,13 +50,16 @@
     },
     "scripts": {
         "lint": "lint-staged",
-        "install": "app-find chrome -c",
+        "set-chrome": "app-find chrome -c",
         "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.ts",
-        "test": "npm run pack-test  &&  jest --forceExit",
+        "test": "npm run lint  &&  npm run pack-test  &&  jest --forceExit",
         "debug": "npm run pack-test  &&  open-cli test/index.html",
-        "build": "typedoc --name WebCell --out docs/ source/",
-        "help": "npm run build  &&  open-cli docs/index.html",
-        "prepublishOnly": "npm run lint  &&  npm test"
+        "pack-type": "tsc -p DTS.json  &&  rm -f dist/*.{js,map}",
+        "pack-dist": "parcel build source/index.ts",
+        "pack-docs": "typedoc --name WebCell --out docs/ source/",
+        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
+        "help": "npm run pack-docs  &&  open-cli docs/index.html",
+        "prepublishOnly": "npm test  &&  npm run build"
     },
     "lint-staged": {
         "source/**/*.{ts,tsx}": [
@@ -72,7 +78,7 @@
     "husky": {
         "hooks": {
             "pre-commit": "npm run lint",
-            "pre-push": "npm test"
+            "pre-push": "npm test  &&  npm run build"
         }
     },
     "prettier": {

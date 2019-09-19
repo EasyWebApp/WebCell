@@ -14,7 +14,7 @@ Command
 
 ```shell
 npm init -y
-npm install web-cell
+npm install web-cell@next
 npm install parcel-bundler parcel-plugin-text -D
 ```
 
@@ -113,9 +113,13 @@ export default class TestTag extends WebCell.mixin() {
 
 ## Roadmap
 
--   [ ] [Template] Document Fragment node
--   [ ] [Decorator] DOM Event delegation
+-   [ ] (Template) [Document Fragment node][4]
+-   [ ] (Decorator) DOM Event delegation
+
+Go to [contribute]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
+[4]: https://github.com/Microsoft/TypeScript/issues/20469
+[5]: ./Contributing.md

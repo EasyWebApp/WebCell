@@ -9,7 +9,7 @@ export interface WebCellComponent extends Element {
     visibleRoot?: Element;
 }
 
-export function mixin(superClass = HTMLElement) {
+export function mixin(superClass = HTMLElement): Function {
     abstract class WebCell extends superClass implements WebCellComponent {
         static get observedAttributes() {
             return Reflect.getMetadata('attributes', this);
