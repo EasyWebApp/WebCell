@@ -16,9 +16,9 @@ export default class TestTag extends WebCell.mixin() {
 
     render() {
         return (
-            <h1 title={this.title} class="title">
+            <h1 title={this.title} className="title">
                 {this.title}
-                <img alt={this.title} onclick={this.onClick} />
+                <img alt={this.title} onClick={this.onClick} />
                 <SubTag />
             </h1>
         );

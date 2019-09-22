@@ -1,5 +1,6 @@
 import { init } from 'snabbdom';
 import PropsHelper from 'snabbdom/modules/props';
+import DataHelper from 'snabbdom/modules/dataset';
 import ClassHelper from 'snabbdom/modules/class';
 import StyleHelper from 'snabbdom/modules/style';
 import EventHelper from 'snabbdom/modules/eventlisteners';
@@ -7,7 +8,13 @@ import { VNode } from 'snabbdom/vnode';
 
 const { find } = Array.prototype;
 
-export const patch = init([PropsHelper, ClassHelper, StyleHelper, EventHelper]);
+export const patch = init([
+    PropsHelper,
+    DataHelper,
+    ClassHelper,
+    StyleHelper,
+    EventHelper
+]);
 
 const hiddenTag = ['style', 'link', 'script'];
 

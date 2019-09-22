@@ -2,7 +2,9 @@ import 'reflect-metadata';
 
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
-import { fromEntries, PlainObject } from './utility';
+import { PlainObject, fromEntries } from './utility';
+
+const { concat } = Array.prototype;
 
 export * from './utility';
 export * from './WebCell';
@@ -23,7 +25,7 @@ export function component(meta: ComponentMeta) {
     };
 }
 
-export function watch(component: HTMLElement, key: string) {
+export function watch(component: PlainObject, key: string) {
     Object.defineProperty(component, key, {
         set(value) {
             this.commit(key, value);
@@ -36,7 +38,7 @@ export function watch(component: HTMLElement, key: string) {
     });
 }
 
-export function attribute({ constructor }: HTMLElement, key: string) {
+export function attribute({ constructor }: PlainObject, key: string) {
     const list = Reflect.getMetadata('attributes', constructor) || [];
 
     list.push(key.toLowerCase());
@@ -52,24 +54,37 @@ export function create(
     if (typeof tag !== 'string')
         tag = Reflect.getMetadata('tagName', tag) || tag;
 
+    children = concat.apply([], children);
+
     if (tag instanceof Function) return tag({ ...data, children });
 
-    var { class: className, style, ...rest }: any = data || {};
+    var { className, style, ...rest }: any = data || {};
 
     className =
         typeof className === 'string'
             ? fromEntries(className.split(/\s+/).map(name => [name, true]))
             : null;
 
-    const [props, on] = Object.entries(rest).reduce(
+    const [props, dataset, on] = Object.entries(rest).reduce(
         (objects, [key, value]) => {
-            if (/^on\w+/.test(key)) objects[1][key.slice(2)] = value;
+            const data = /^data-(.+)/.exec(key);
+
+            if (data)
+                objects[1][
+                    data[1].replace(/-\w/g, char => char[1].toUpperCase())
+                ] = value;
+            else if (/^on\w+/.test(key))
+                objects[2][key.slice(2).toLowerCase()] = value;
             else objects[0][key] = value;
 
             return objects;
         },
-        [{}, {}] as PlainObject[]
+        [{}, {}, {}] as PlainObject[]
     );
 
-    return createElement(tag, { props, class: className, style, on }, children);
+    return createElement(
+        tag,
+        { props, dataset, class: className, style, on },
+        children
+    );
 }

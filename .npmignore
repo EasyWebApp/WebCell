@@ -1,3 +1,4 @@
+type/
 .eslintrc.json
 jest.config.js
 test/
