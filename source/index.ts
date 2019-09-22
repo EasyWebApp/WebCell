@@ -4,6 +4,7 @@ import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 import { fromEntries, PlainObject } from './utility';
 
+export * from './utility';
 export * from './WebCell';
 
 interface ComponentMeta {

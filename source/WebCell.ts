@@ -1,15 +1,11 @@
 import { VNode } from 'snabbdom/vnode';
-import { patch, PlainObject } from './utility';
-
-const { find } = Array.prototype;
-
-const hiddenTag = ['style', 'link', 'script'];
+import { PlainObject, render, visibleFirstOf } from './utility';
 
 export interface WebCellComponent extends Element {
     visibleRoot?: Element;
 }
 
-export function mixin(superClass = HTMLElement): Function {
+export function mixin(superClass = HTMLElement): any {
     abstract class WebCell extends superClass implements WebCellComponent {
         static get observedAttributes() {
             return Reflect.getMetadata('attributes', this);
@@ -44,13 +40,8 @@ export function mixin(superClass = HTMLElement): Function {
             this.root.appendChild(style);
         }
 
-        get visibleRoot(): Element | undefined {
-            return find.call(
-                this.root.childNodes,
-                ({ nodeType, nodeName }) =>
-                    nodeType === 1 &&
-                    !hiddenTag.includes(nodeName.toLowerCase())
-            );
+        get visibleRoot() {
+            return visibleFirstOf(this.root);
         }
 
         connectedCallback() {
@@ -60,22 +51,7 @@ export function mixin(superClass = HTMLElement): Function {
         abstract render(): VNode;
 
         protected update() {
-            const node = this.render(),
-                { visibleRoot } = this;
-
-            if (visibleRoot) {
-                patch(visibleRoot, node);
-                return;
-            }
-
-            const element =
-                node.sel && document.createElement(node.sel.split(/[#.:]/)[0]);
-
-            if (!element) return;
-
-            patch(element, node);
-
-            this.root.appendChild(element);
+            render(this.render(), this.root);
         }
 
         commit(key: string, value: any) {

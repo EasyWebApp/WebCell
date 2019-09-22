@@ -4,7 +4,7 @@
 
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
-[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/web-cell/)
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][4]
 
 ## Usage
 
@@ -31,6 +31,8 @@ npm install parcel-bundler parcel-plugin-text -D
     }
 }
 ```
+
+[`tsconfig.json`](./tsconfig.json)
 
 [`source/index.html`](test/index.html)
 
@@ -113,13 +115,14 @@ export default class TestTag extends WebCell.mixin() {
 
 ## Roadmap
 
--   [ ] (Template) [Document Fragment node][4]
+-   [ ] (Template) [Document Fragment node][5]
+-   [ ] (Template) SVG element
 -   [ ] (Decorator) DOM Event delegation
 
-Go to [contribute]!
+Go to [contribute](./Contributing.md)!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://github.com/Microsoft/TypeScript/issues/20469
-[5]: ./Contributing.md
+[4]: https://nodei.co/npm/web-cell/
+[5]: https://github.com/Microsoft/TypeScript/issues/20469

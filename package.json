@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-alpha.9",
+    "version": "2.0.0-alpha.10",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
