@@ -1,4 +1,5 @@
-import { Reflect, PlainObject } from './utility';
+import { Reflect, PlainObject, delegate } from './utility';
+import { DOMEventDelegateHandler } from './decorator';
 import { visibleFirstOf, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
@@ -25,14 +26,34 @@ export function mixin(superClass = HTMLElement): any {
 
         protected readonly props: PlainObject = {};
 
+        [key: string]: any;
+
         constructor({ mode }: any = {}) {
             super();
 
-            this.root =
+            const renderChildren =
                 Reflect.getMetadata('renderTarget', this.constructor) ===
-                'children'
-                    ? this
-                    : this.attachShadow({ mode: mode || 'open' });
+                'children';
+
+            const root = (this.root = renderChildren
+                ? this
+                : this.attachShadow({ mode: mode || 'open' }));
+
+            const events: DOMEventDelegateHandler[] =
+                Reflect.getMetadata('DOM-Event', Object.getPrototypeOf(this)) ||
+                [];
+
+            for (const { type, selector, method } of events) {
+                if (renderChildren && /^:host/.test(selector))
+                    console.warn(
+                        `[WebCell] DOM Event delegation of "${selector}" won't work if you don't invoke "this.attachShadow()" manually.`
+                    );
+
+                root.addEventListener(
+                    type,
+                    delegate(selector, this[method]).bind(this)
+                );
+            }
 
             const CSS = Reflect.getMetadata('style', this.constructor);
 
@@ -42,7 +63,7 @@ export function mixin(superClass = HTMLElement): any {
 
             style.textContent = CSS;
 
-            this.root.appendChild(style);
+            root.appendChild(style);
         }
 
         get visibleRoot() {

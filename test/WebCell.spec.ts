@@ -40,12 +40,16 @@ describe('Web Component', () => {
         await delay();
 
         expect(
-            await page.$eval(
-                'test-tag',
-                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
-            )
-        ).toBe(
-            '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag><span>test</span></sub-tag></h1>'
+            await page.$eval('test-tag', (tag: WebCellComponent) => {
+                const root = tag.visibleRoot!;
+
+                return [root.outerHTML, getComputedStyle(root).color];
+            })
+        ).toStrictEqual(
+            expect.arrayContaining([
+                '<h1 title="Example" class="title active">Example<img alt="Example"><sub-tag><span>test</span></sub-tag></h1>',
+                'rgb(255, 182, 193)'
+            ])
         );
     });
 
@@ -62,7 +66,7 @@ describe('Web Component', () => {
                 (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
-            '<h1 title="Sample" class="title">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
+            '<h1 title="Sample" class="title active">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
         );
     });
 });

@@ -63,7 +63,12 @@ export function create(
 
     className =
         typeof className === 'string'
-            ? fromEntries(className.split(/\s+/).map(name => [name, true]))
+            ? fromEntries(
+                  className
+                      .trim()
+                      .split(/\s+/)
+                      .map(name => [name, true])
+              )
             : null;
 
     const [props, dataset, on] = Object.entries(rest).reduce(

@@ -1,4 +1,4 @@
-import { Reflect, PlainObject } from './utility';
+import { Reflect } from './utility';
 
 interface ComponentMeta {
     tagName: string;
@@ -22,8 +22,8 @@ export function component(meta: ComponentMeta) {
     };
 }
 
-export function watch(component: PlainObject, key: string) {
-    Object.defineProperty(component, key, {
+export function watch(prototype: Object, key: string) {
+    Object.defineProperty(prototype, key, {
         set(value) {
             this.commit(key, value);
         },
@@ -35,10 +35,27 @@ export function watch(component: PlainObject, key: string) {
     });
 }
 
-export function attribute({ constructor }: PlainObject, key: string) {
+export function attribute({ constructor }: Object, key: string) {
     const list = Reflect.getMetadata('attributes', constructor) || [];
 
     list.push(key.toLowerCase());
 
     Reflect.defineMetadata('attributes', list, constructor);
+}
+
+export interface DOMEventDelegateHandler {
+    type: string;
+    selector: string;
+    method: string;
+}
+
+export function on(type: string, selector: string) {
+    return (prototype: Object, method: string) => {
+        const events: DOMEventDelegateHandler[] =
+            Reflect.getMetadata('DOM-Event', prototype) || [];
+
+        events.push({ type, selector, method });
+
+        Reflect.defineMetadata('DOM-Event', events, prototype);
+    };
 }

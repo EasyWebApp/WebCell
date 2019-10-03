@@ -12,11 +12,19 @@ export default class TestTag extends WebCell.mixin() {
     @WebCell.watch
     title = 'Test';
 
+    @WebCell.watch
+    status = '';
+
     onClick = () => (this.title = 'Example');
+
+    @WebCell.on('click', ':host h1')
+    onDelegate() {
+        this.status = 'active';
+    }
 
     render() {
         return (
-            <h1 title={this.title} className="title">
+            <h1 title={this.title} className={`title ${this.status}`}>
                 {this.title}
                 <img alt={this.title} onClick={this.onClick} />
                 <SubTag />
