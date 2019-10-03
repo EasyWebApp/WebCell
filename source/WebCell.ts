@@ -1,5 +1,6 @@
+import { Reflect, PlainObject } from './utility';
+import { visibleFirstOf, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
-import { PlainObject, render, visibleFirstOf } from './utility';
 
 export interface WebCellComponent extends Element {
     visibleRoot?: Element;
@@ -19,7 +20,7 @@ export function mixin(superClass = HTMLElement): any {
             }
         }
 
-        private root: DocumentFragment;
+        private root: DocumentFragment | HTMLElement;
         private tick?: Promise<any>;
 
         protected readonly props: PlainObject = {};
@@ -27,7 +28,11 @@ export function mixin(superClass = HTMLElement): any {
         constructor({ mode }: any = {}) {
             super();
 
-            this.root = this.attachShadow({ mode: mode || 'open' });
+            this.root =
+                Reflect.getMetadata('renderTarget', this.constructor) ===
+                'children'
+                    ? this
+                    : this.attachShadow({ mode: mode || 'open' });
 
             const CSS = Reflect.getMetadata('style', this.constructor);
 

@@ -8,13 +8,10 @@ var page: Page;
 describe('Web Component', () => {
     beforeAll(async () => (page = await getPage()));
 
-    it('should build Shadow DOM & combine Function Component', async () => {
+    it('should render Children & combine Function Component', async () => {
         expect(
-            await page.$eval(
-                'sub-tag',
-                (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
-            )
-        ).toBe('<div><span></span></div>');
+            await page.$eval('sub-tag', (tag: Element) => tag.innerHTML)
+        ).toBe('<span>test</span>');
     });
 
     it('should build Shadow DOM & create Class Component', async () => {
@@ -24,7 +21,7 @@ describe('Web Component', () => {
                 (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
-            '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag></sub-tag></h1>'
+            '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag><span>test</span></sub-tag></h1>'
         );
 
         expect(
@@ -48,7 +45,7 @@ describe('Web Component', () => {
                 (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
-            '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag></sub-tag></h1>'
+            '<h1 title="Example" class="title">Example<img alt="Example"><sub-tag><span>test</span></sub-tag></h1>'
         );
     });
 
@@ -65,7 +62,7 @@ describe('Web Component', () => {
                 (tag: WebCellComponent) => tag.visibleRoot!.outerHTML
             )
         ).toBe(
-            '<h1 title="Sample" class="title">Sample<img alt="Sample"><sub-tag></sub-tag></h1>'
+            '<h1 title="Sample" class="title">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
         );
     });
 });
