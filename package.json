@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-alpha.13",
+    "version": "2.0.0-beta.0",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -56,7 +56,7 @@
         "test": "npm run lint  &&  npm run pack-test  &&  jest --forceExit",
         "debug": "npm run pack-test  &&  open-cli test/index.html",
         "pack-type": "tsc -p DTS.json  &&  rm -f dist/*.{js,map}",
-        "pack-dist": "parcel build source/index.ts",
+        "pack-dist": "parcel build source/index.ts --global WebCell",
         "copy-type": "cp type/index.d.ts dist/type.d.ts",
         "pack-docs": "typedoc --name WebCell --out docs/ source/",
         "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run copy-type  &&  npm run pack-docs",

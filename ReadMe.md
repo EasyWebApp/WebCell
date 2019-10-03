@@ -124,7 +124,6 @@ export default class TestTag extends WebCell.mixin() {
 ## Roadmap
 
 -   [ ] (Template) [Document Fragment node][5]
--   [ ] (Template) SVG element
 
 Go to [contribute](./Contributing.md)!
 

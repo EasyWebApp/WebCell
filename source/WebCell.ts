@@ -94,6 +94,21 @@ export function mixin(superClass = HTMLElement): any {
                     })
                 ));
         }
+
+        emit(
+            event: string,
+            detail: any,
+            { cancelable, bubbles, composed }: EventInit = {}
+        ) {
+            return this.dispatchEvent(
+                new CustomEvent(event, {
+                    detail,
+                    cancelable,
+                    bubbles,
+                    composed
+                })
+            );
+        }
     }
 
     return WebCell;

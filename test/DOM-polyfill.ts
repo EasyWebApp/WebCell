@@ -2,5 +2,7 @@ import { JSDOM } from 'jsdom';
 
 const { window } = new JSDOM();
 
-// @ts-ignore
-for (const key of ['document']) global[key] = window[key];
+for (const key of ['document', 'HTMLElement', 'HTMLUnknownElement']) {
+    // @ts-ignore
+    global[key] = window[key];
+}

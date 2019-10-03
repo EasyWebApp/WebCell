@@ -1,4 +1,5 @@
 import { init } from 'snabbdom';
+import AttrsHelper from 'snabbdom/modules/attributes';
 import PropsHelper from 'snabbdom/modules/props';
 import DataHelper from 'snabbdom/modules/dataset';
 import ClassHelper from 'snabbdom/modules/class';
@@ -7,11 +8,12 @@ import EventHelper from 'snabbdom/modules/eventlisteners';
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 
-import { Reflect, fromEntries, PlainObject } from './utility';
+import { Reflect, fromEntries, PlainObject, elementTypeOf } from './utility';
 
 const { find, concat } = Array.prototype;
 
 const patch = init([
+    AttrsHelper,
     PropsHelper,
     DataHelper,
     ClassHelper,
@@ -59,17 +61,7 @@ export function create(
 
     if (typeof tag === 'function') return tag({ ...data, children });
 
-    var { className, style, ...rest }: any = data || {};
-
-    className =
-        typeof className === 'string'
-            ? fromEntries(
-                  className
-                      .trim()
-                      .split(/\s+/)
-                      .map(name => [name, true])
-              )
-            : null;
+    const { className, style, ...rest }: any = data || {};
 
     const [props, dataset, on] = Object.entries(rest).reduce(
         (objects, [key, value]) => {
@@ -88,9 +80,29 @@ export function create(
         [{}, {}, {}] as PlainObject[]
     );
 
-    return createElement(
-        tag,
-        { props, dataset, class: className, style, on },
-        children
-    );
+    return elementTypeOf(tag) === 'xml'
+        ? createElement(
+              tag,
+              { attrs: { ...props, class: className }, dataset, style, on },
+              children
+          )
+        : createElement(
+              tag,
+              {
+                  props,
+                  dataset,
+                  class:
+                      typeof className === 'string'
+                          ? fromEntries(
+                                className
+                                    .trim()
+                                    .split(/\s+/)
+                                    .map(name => [name, true])
+                            )
+                          : undefined,
+                  style,
+                  on
+              },
+              children
+          );
 }

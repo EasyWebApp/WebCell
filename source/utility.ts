@@ -25,6 +25,22 @@ function getMetadata(key: string, target: Object) {
 
 export const Reflect = { defineMetadata, getMetadata };
 
+const spawn = document.createElement('template'),
+    cache: PlainObject = {};
+
+export function elementTypeOf(tagName: string) {
+    if (cache[tagName]) return cache[tagName];
+
+    spawn.innerHTML = `<${tagName} />`;
+
+    const { firstElementChild: node } = spawn.content;
+
+    return (cache[tagName] =
+        node instanceof HTMLElement && !(node instanceof HTMLUnknownElement)
+            ? 'html'
+            : 'xml');
+}
+
 export function delegate(selector: string, handler: Function) {
     return function(this: Node, event: Event) {
         var node,
