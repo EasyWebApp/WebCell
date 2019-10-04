@@ -1,14 +1,14 @@
-import * as WebCell from '../../source';
+import { createCell, component, mixin } from '../../source';
 
 export function InlineTag({ children }: any) {
     return <span>{children}</span>;
 }
 
-@WebCell.component({
+@component({
     tagName: 'sub-tag',
     renderTarget: 'children'
 })
-export class SubTag extends WebCell.mixin() {
+export class SubTag extends mixin() {
     render() {
         return <InlineTag>test</InlineTag>;
     }

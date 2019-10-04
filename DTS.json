@@ -13,7 +13,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "jsx": "react",
-        "jsxFactory": "WebCell.create"
+        "jsxFactory": "createCell"
     },
     "include": ["./source/**/*"]
 }

@@ -8,11 +8,17 @@ import EventHelper from 'snabbdom/modules/eventlisteners';
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 
-import { Reflect, fromEntries, PlainObject, elementTypeOf } from './utility';
+import {
+    Reflect,
+    fromEntries,
+    PlainObject,
+    templateOf,
+    elementTypeOf
+} from './utility';
 
 const { find, concat } = Array.prototype;
 
-const patch = init([
+export const patch = init([
     AttrsHelper,
     PropsHelper,
     DataHelper,
@@ -31,39 +37,30 @@ export function visibleFirstOf(root: Node) {
     );
 }
 
-export function render(node: VNode, root: Node = document.body) {
-    const visibleRoot = visibleFirstOf(root);
+const vTree_cache = new WeakMap();
 
-    if (visibleRoot) {
-        patch(visibleRoot, node);
-        return;
+export function render(node: VNode, root: Node = document.body) {
+    var element = visibleFirstOf(root);
+
+    if (!element && node.sel) {
+        element = document.createElement(node.sel.split(/[#.:]/)[0]);
+
+        root.appendChild(element);
     }
 
-    const element =
-        node.sel && document.createElement(node.sel.split(/[#.:]/)[0]);
+    if (!element) throw ReferenceError('No Element to render');
 
-    if (!element) return;
+    var vTree = vTree_cache.get(element);
 
-    patch(element, node);
+    vTree = patch(vTree || element, node);
 
-    root.appendChild(element);
+    vTree_cache.set(element, vTree);
+
+    return vTree;
 }
 
-export function create(
-    tag: string | Function,
-    data?: any,
-    ...children: (string | VNode)[]
-) {
-    if (typeof tag !== 'string')
-        tag = Reflect.getMetadata('tagName', tag) || tag;
-
-    children = concat.apply([], children);
-
-    if (typeof tag === 'function') return tag({ ...data, children });
-
-    const { className, style, ...rest }: any = data || {};
-
-    const [props, dataset, on] = Object.entries(rest).reduce(
+function splitProps(raw: any) {
+    const [attrs, dataset, on] = Object.entries(raw).reduce(
         (objects, [key, value]) => {
             const data = /^data-(.+)/.exec(key);
 
@@ -80,29 +77,67 @@ export function create(
         [{}, {}, {}] as PlainObject[]
     );
 
-    return elementTypeOf(tag) === 'xml'
-        ? createElement(
-              tag,
-              { attrs: { ...props, class: className }, dataset, style, on },
-              children
-          )
-        : createElement(
-              tag,
-              {
-                  props,
-                  dataset,
-                  class:
-                      typeof className === 'string'
-                          ? fromEntries(
-                                className
-                                    .trim()
-                                    .split(/\s+/)
-                                    .map(name => [name, true])
-                            )
-                          : undefined,
-                  style,
-                  on
-              },
-              children
-          );
+    return { attrs, dataset, on };
+}
+
+function splitAttrs(tagName: string, raw: any) {
+    const { prototype } = templateOf(tagName).constructor;
+
+    const [props, attrs] = Object.entries(raw).reduce(
+        (objects, [key, value]) => {
+            objects[key in prototype ? 0 : 1][key] = value;
+
+            return objects;
+        },
+        [{}, {}] as PlainObject[]
+    );
+
+    return { props, attrs };
+}
+
+export function createCell(
+    tag: string | Function,
+    data?: any,
+    ...children: (string | VNode)[]
+) {
+    if (typeof tag !== 'string')
+        tag = Reflect.getMetadata('tagName', tag) || tag;
+
+    children = concat.apply([], children);
+
+    if (typeof tag === 'function') return tag({ ...data, children });
+
+    const { className, style, ...rest }: any = data || {};
+
+    const { attrs, dataset, on } = splitProps(rest);
+
+    if (elementTypeOf(tag) === 'xml')
+        return createElement(
+            tag,
+            { attrs: { ...attrs, class: className }, dataset, style, on },
+            children
+        );
+
+    const maps = splitAttrs(tag, attrs);
+
+    return createElement(
+        tag,
+        {
+            attrs: maps.attrs,
+            props: maps.props,
+            dataset,
+            class:
+                typeof className === 'string'
+                    ? fromEntries(
+                          className
+                              .trim()
+                              .split(/\s+/)
+                              .map(name => [name, true])
+                      )
+                    : undefined,
+            style,
+            on
+        },
+        children
+    );
 }

@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-beta.0",
+    "version": "2.0.0-beta.1",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -9,7 +9,7 @@
         "jsx",
         "typescript"
     ],
-    "license": "AGPL-3.0",
+    "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "homepage": "https://web-cell.dev/",
     "repository": {

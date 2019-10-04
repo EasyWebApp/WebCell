@@ -52,17 +52,17 @@ npm install parcel-bundler parcel-plugin-text -D
 [`source/SubTag.tsx`](test/source/SubTag.tsx)
 
 ```jsx
-import * as WebCell from 'web-cell';
+import { createCell, component, mixin } from 'web-cell';
 
 export function InlineTag({ children }: any) {
     return <span>{children}</span>;
 }
 
-@WebCell.component({
+@component({
     tagName: 'sub-tag',
     renderTarget: 'children'
 })
-export class SubTag extends WebCell.mixin() {
+export class SubTag extends mixin() {
     render() {
         return <InlineTag>test</InlineTag>;
     }
@@ -85,26 +85,26 @@ export class SubTag extends WebCell.mixin() {
 [`source/TestTag.tsx`](test/source/TestTag.tsx)
 
 ```jsx
-import * as WebCell from 'web-cell';
+import { createCell, component, mixin, attribute, watch, on } from 'web-cell';
 
 import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
-@WebCell.component({
+@component({
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends WebCell.mixin() {
-    @WebCell.attribute
-    @WebCell.watch
+export default class TestTag extends mixin() {
+    @attribute
+    @watch
     title = 'Test';
 
-    @WebCell.watch
+    @watch
     status = '';
 
     onClick = () => (this.title = 'Example');
 
-    @WebCell.on('click', ':host h1')
+    @on('click', ':host h1')
     onDelegate() {
         this.status = 'active';
     }

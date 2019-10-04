@@ -28,17 +28,20 @@ export const Reflect = { defineMetadata, getMetadata };
 const spawn = document.createElement('template'),
     cache: PlainObject = {};
 
-export function elementTypeOf(tagName: string) {
+export function templateOf(tagName: string) {
     if (cache[tagName]) return cache[tagName];
 
     spawn.innerHTML = `<${tagName} />`;
 
-    const { firstElementChild: node } = spawn.content;
+    return (cache[tagName] = spawn.content.firstElementChild!);
+}
 
-    return (cache[tagName] =
-        node instanceof HTMLElement && !(node instanceof HTMLUnknownElement)
-            ? 'html'
-            : 'xml');
+export function elementTypeOf(tagName: string) {
+    const node = templateOf(tagName);
+
+    return node instanceof HTMLElement && !(node instanceof HTMLUnknownElement)
+        ? 'html'
+        : 'xml';
 }
 
 export function delegate(selector: string, handler: Function) {

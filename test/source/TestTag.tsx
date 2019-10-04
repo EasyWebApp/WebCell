@@ -1,23 +1,30 @@
-import * as WebCell from '../../source';
+import {
+    createCell,
+    component,
+    mixin,
+    attribute,
+    watch,
+    on
+} from '../../source';
 
 import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
-@WebCell.component({
+@component({
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends WebCell.mixin() {
-    @WebCell.attribute
-    @WebCell.watch
+export default class TestTag extends mixin() {
+    @attribute
+    @watch
     title = 'Test';
 
-    @WebCell.watch
+    @watch
     status = '';
 
     onClick = () => (this.title = 'Example');
 
-    @WebCell.on('click', ':host h1')
+    @on('click', ':host h1')
     onDelegate() {
         this.status = 'active';
     }
