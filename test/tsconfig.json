@@ -1,8 +1,6 @@
 {
     "compilerOptions": {
-        "outDir": "dist/",
         "sourceMap": true,
-        "declaration": true,
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
@@ -10,10 +8,11 @@
         "moduleResolution": "node",
         "allowSyntheticDefaultImports": true,
         "target": "es5",
+        "allowJs": true,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "jsx": "react",
         "jsxFactory": "createCell"
     },
-    "include": ["./source/**/*"]
+    "include": ["./source/**/*", "../source/**/*", "../type/**/*"]
 }

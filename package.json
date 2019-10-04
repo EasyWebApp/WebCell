@@ -23,9 +23,6 @@
     "main": "dist/index.js",
     "browser": "dist/index.js",
     "types": "dist/index.d.ts",
-    "dependencies": {
-        "snabbdom": "^0.7.3"
-    },
     "devDependencies": {
         "@types/jest": "^24.0.18",
         "@types/jsdom": "^12.2.4",
@@ -45,6 +42,7 @@
         "parcel-plugin-text": "^0.9.5",
         "prettier": "^1.18.2",
         "puppeteer-core": "^1.20.0",
+        "snabbdom": "^0.7.3",
         "ts-jest": "^24.1.0",
         "typedoc": "^0.15.0",
         "typescript": "^3.6.3"
@@ -55,7 +53,7 @@
         "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.ts",
         "test": "npm run lint  &&  npm run pack-test  &&  jest --forceExit",
         "debug": "npm run pack-test  &&  open-cli test/index.html",
-        "pack-type": "tsc -p DTS.json  &&  rm -f dist/*.{js,map}",
+        "pack-type": "tsc  &&  rm -f dist/*.{js,map}",
         "pack-dist": "parcel build source/index.ts --global WebCell",
         "copy-type": "cp type/index.d.ts dist/type.d.ts",
         "pack-docs": "typedoc --name WebCell --out docs/ source/",

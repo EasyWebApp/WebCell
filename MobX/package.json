@@ -1,0 +1,30 @@
+{
+    "name": "mobx-web-cell",
+    "version": "0.1.1",
+    "license": "LGPL-3.0",
+    "author": "shiy2008@gmail.com",
+    "description": "MobX adaptor for WebCell v2",
+    "keywords": [
+        "Web",
+        "WebCell",
+        "MobX",
+        "adaptor",
+        "TypeScript",
+        "decorator"
+    ],
+    "source": "source/index.ts",
+    "types": "dist/index.d.ts",
+    "main": "dist/mobx-web-cell.umd.js",
+    "module": "dist/mobx-web-cell.js",
+    "scripts": {
+        "build": "microbundle --external mobx --name mobxWebCell",
+        "prepublishOnly": "rm -rf .rts2_cache_* dist/  &&  npm run build"
+    },
+    "peerDependencies": {
+        "mobx": "^5.14.0"
+    },
+    "devDependencies": {
+        "microbundle": "^0.11.0",
+        "mobx": "^5.14.0"
+    }
+}

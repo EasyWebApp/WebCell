@@ -37,8 +37,8 @@ npm install parcel-bundler parcel-plugin-text -D
 [`source/index.html`](test/index.html)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.2.10/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.2.10/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.3.0/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.3.0/custom-elements-es5-adapter.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -121,9 +121,13 @@ export default class TestTag extends mixin() {
 }
 ```
 
+### State management
+
+We recommend [MobX][5], which is also powered by TypeScript & Decorator !
+
 ## Roadmap
 
--   [ ] (Template) [Document Fragment node][5]
+-   [ ] (Template) [Document Fragment node][6]
 
 Go to [contribute](./Contributing.md)!
 
@@ -131,4 +135,5 @@ Go to [contribute](./Contributing.md)!
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
 [4]: https://nodei.co/npm/web-cell/
-[5]: https://github.com/Microsoft/TypeScript/issues/20469
+[5]: ./MobX/ReadMe.md
+[6]: https://github.com/Microsoft/TypeScript/issues/20469
