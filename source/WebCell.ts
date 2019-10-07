@@ -1,6 +1,6 @@
 import { Reflect, PlainObject, delegate } from './utility';
 import { DOMEventDelegateHandler } from './decorator';
-import { visibleFirstOf, render } from './renderer';
+import { visibleFirstOf, patch, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
 export interface WebCellComponent extends Element {
@@ -22,6 +22,7 @@ export function mixin(superClass = HTMLElement): any {
         }
 
         private root: DocumentFragment | HTMLElement;
+        private vTree?: VNode;
         private tick?: Promise<any>;
 
         protected readonly props: PlainObject = {};
@@ -77,7 +78,9 @@ export function mixin(superClass = HTMLElement): any {
         abstract render(): VNode;
 
         protected update() {
-            render(this.render(), this.root);
+            this.vTree = this.vTree
+                ? patch(this.vTree, this.render())
+                : render(this.render(), this.root);
         }
 
         commit(key: string, value: any) {

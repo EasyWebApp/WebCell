@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-beta.1",
+    "version": "2.0.0-beta.4",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -67,6 +67,7 @@
             "git add"
         ],
         "*.{js,ts,tsx}": [
+            "prettier --write",
             "eslint --fix --rule 'require-atomic-updates: 1'",
             "git add"
         ],

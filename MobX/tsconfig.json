@@ -1,3 +1,8 @@
 {
-    "include": ["./source/*"]
+    "compilerOptions": {
+        "experimentalDecorators": true,
+        "jsx": "react",
+        "jsxFactory": "createCell"
+    },
+    "include": ["./source/*", "test.spec.tsx"]
 }

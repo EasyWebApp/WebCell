@@ -9,7 +9,7 @@
 ## Installation
 
 ```shell
-npm install web-cell mobx mobx-web-cell
+npm install web-cell@next mobx mobx-web-cell
 ```
 
 ## Usage
@@ -31,6 +31,23 @@ class App {
 
 export const app = new App();
 ```
+
+### Function Component
+
+`source/page/index.ts`
+
+```jsx
+import { createCell } from 'web-cell';
+import { observer } from 'mobx-web-cell';
+
+import { app } from '../model';
+
+export default observer(function PageIndex() {
+    return <div onClick={app.increase}>count: {app.count}</div>;
+});
+```
+
+### Class Component
 
 `source/page/index.ts`
 

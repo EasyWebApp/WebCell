@@ -37,8 +37,6 @@ export function visibleFirstOf(root: Node) {
     );
 }
 
-const vTree_cache = new WeakMap();
-
 export function render(node: VNode, root: Node = document.body) {
     var element = visibleFirstOf(root);
 
@@ -50,13 +48,7 @@ export function render(node: VNode, root: Node = document.body) {
 
     if (!element) throw ReferenceError('No Element to render');
 
-    var vTree = vTree_cache.get(element);
-
-    vTree = patch(vTree || element, node);
-
-    vTree_cache.set(element, vTree);
-
-    return vTree;
+    return patch(element, node);
 }
 
 function splitProps(raw: any) {
