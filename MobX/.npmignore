@@ -1,0 +1,4 @@
+*.spec.tsx
+*.spec.d.ts
+*polyfill.d.ts
+.rts2_cache_*/

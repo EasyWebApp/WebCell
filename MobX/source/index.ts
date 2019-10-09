@@ -22,7 +22,7 @@ function wrapClass(Class: Function) {
     };
 }
 
-export function observer(Class: Function) {
+export function observer(Class: any): Function | typeof Class {
     if (Object.getPrototypeOf(Class) === Function.prototype)
         return wrapFunction(Class);
 

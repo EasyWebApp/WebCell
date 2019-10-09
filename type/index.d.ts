@@ -2,6 +2,9 @@ declare namespace JSX {
     interface IntrinsicElements {
         [tagName: string]: any;
     }
+    interface ElementAttributesProperty {
+        props: any;
+    }
     interface ElementChildrenAttribute {
         children: any;
     }

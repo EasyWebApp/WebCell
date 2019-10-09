@@ -25,7 +25,6 @@ describe('Observer decorator', () => {
     });
 
     it('should re-render Class Component', () => {
-        // @ts-ignore
         @observer
         @component({
             tagName: 'test-tag',

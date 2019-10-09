@@ -3,17 +3,31 @@ import { DOMEventDelegateHandler } from './decorator';
 import { visibleFirstOf, patch, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
-export interface WebCellComponent extends Element {
+export interface WebCellComponent<P = {}> extends Element {
+    connectedCallback?(): void;
+    attributeChangedCallback?(
+        name: keyof P,
+        oldValue: string,
+        newValue: string
+    ): void;
+    adoptedCallback?(): void;
+    disconnectedCallback?(): void;
     visibleRoot?: Element;
 }
 
-export function mixin(superClass = HTMLElement): any {
-    abstract class WebCell extends superClass implements WebCellComponent {
+type Props<T> = {
+    [P in keyof T]: T[P];
+};
+
+export function mixin<P>(
+    superClass = HTMLElement
+): { new (): WebCellComponent<P> } {
+    class WebCell extends superClass implements WebCellComponent<P> {
         static get observedAttributes() {
             return Reflect.getMetadata('attributes', this);
         }
 
-        attributeChangedCallback(name: string, _: string, value: string) {
+        attributeChangedCallback(name: keyof P, _: string, value: string) {
             try {
                 value = JSON.parse(value);
             } finally {
@@ -25,7 +39,7 @@ export function mixin(superClass = HTMLElement): any {
         private vTree?: VNode;
         private tick?: Promise<any>;
 
-        protected readonly props: PlainObject = {};
+        protected readonly props: Props<P> = {} as Props<P>;
 
         [key: string]: any;
 
@@ -75,15 +89,18 @@ export function mixin(superClass = HTMLElement): any {
             this.update();
         }
 
-        abstract render(): VNode;
+        render(): VNode | void {}
 
         protected update() {
-            this.vTree = this.vTree
-                ? patch(this.vTree, this.render())
-                : render(this.render(), this.root);
+            const newTree = this.render();
+
+            if (newTree)
+                this.vTree = this.vTree
+                    ? patch(this.vTree, newTree)
+                    : render(newTree, this.root);
         }
 
-        commit(key: string, value: any) {
+        commit(key: keyof P, value: any) {
             this.props[key] = value;
 
             return (this.tick =
