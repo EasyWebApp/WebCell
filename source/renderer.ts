@@ -1,3 +1,6 @@
+import 'ts-polyfill/lib/es2019-array';
+import 'ts-polyfill/lib/es2019-object';
+
 import { init } from 'snabbdom';
 import AttrsHelper from 'snabbdom/modules/attributes';
 import PropsHelper from 'snabbdom/modules/props';
@@ -8,15 +11,11 @@ import EventHelper from 'snabbdom/modules/eventlisteners';
 import createElement from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 
-import {
-    Reflect,
-    fromEntries,
-    PlainObject,
-    templateOf,
-    elementTypeOf
-} from './utility';
+import { Reflect, PlainObject, templateOf, elementTypeOf } from './utility';
 
-const { find, concat } = Array.prototype;
+const { find } = Array.prototype;
+
+export { VNode } from 'snabbdom/vnode';
 
 export const patch = init([
     AttrsHelper,
@@ -73,7 +72,9 @@ function splitProps(raw: any) {
 }
 
 function splitAttrs(tagName: string, raw: any) {
-    const { prototype } = templateOf(tagName).constructor;
+    const prototype = tagName.includes('-')
+        ? (customElements.get(tagName) || '').prototype
+        : Object.getPrototypeOf(templateOf(tagName));
 
     const [props, attrs] = Object.entries(raw).reduce(
         (objects, [key, value]) => {
@@ -95,7 +96,7 @@ export function createCell(
     if (typeof tag !== 'string')
         tag = Reflect.getMetadata('tagName', tag) || tag;
 
-    children = concat.apply([], children);
+    children = children.flat(Infinity).filter(item => item != null);
 
     if (typeof tag === 'function') return tag({ ...data, children });
 
@@ -120,7 +121,7 @@ export function createCell(
             dataset,
             class:
                 typeof className === 'string'
-                    ? fromEntries(
+                    ? Object.fromEntries(
                           className
                               .trim()
                               .split(/\s+/)

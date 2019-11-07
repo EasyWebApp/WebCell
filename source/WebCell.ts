@@ -1,4 +1,4 @@
-import { Reflect, PlainObject, delegate } from './utility';
+import { Reflect, delegate } from './utility';
 import { DOMEventDelegateHandler } from './decorator';
 import { visibleFirstOf, patch, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
@@ -13,6 +13,8 @@ export interface WebCellComponent<P = {}> extends Element {
     adoptedCallback?(): void;
     disconnectedCallback?(): void;
     visibleRoot?: Element;
+    props: Props<P>;
+    emit(event: string, detail: any, options: EventInit): boolean;
 }
 
 type Props<T> = {
@@ -30,6 +32,8 @@ export function mixin<P>(
         attributeChangedCallback(name: keyof P, _: string, value: string) {
             try {
                 value = JSON.parse(value);
+            } catch {
+                //
             } finally {
                 this.commit(name, value);
             }
@@ -39,7 +43,7 @@ export function mixin<P>(
         private vTree?: VNode;
         private tick?: Promise<any>;
 
-        protected readonly props: Props<P> = {} as Props<P>;
+        readonly props: Props<P> = {} as Props<P>;
 
         [key: string]: any;
 
@@ -74,6 +78,12 @@ export function mixin<P>(
 
             if (!CSS) return;
 
+            if (renderChildren) {
+                console.warn(
+                    '[WebCell] Global CSS should be used while "renderTarget" is "children"'
+                );
+                return;
+            }
             const style = document.createElement('style');
 
             style.textContent = CSS;

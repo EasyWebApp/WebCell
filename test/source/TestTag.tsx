@@ -4,7 +4,8 @@ import {
     mixin,
     attribute,
     watch,
-    on
+    on,
+    Fragment
 } from '../../source';
 
 import style from './TestTag.css';
@@ -32,8 +33,10 @@ export default class TestTag extends mixin() {
     render() {
         return (
             <h1 title={this.title} className={`title ${this.status}`}>
-                {this.title}
-                <img alt={this.title} onClick={this.onClick} />
+                <Fragment>
+                    {this.title}
+                    <img alt={this.title} onClick={this.onClick} />
+                </Fragment>
                 <SubTag />
             </h1>
         );

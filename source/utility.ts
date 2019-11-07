@@ -1,11 +1,6 @@
-export type PlainObject = { [key: string]: any };
+import { VNode } from 'snabbdom/vnode';
 
-export function fromEntries(list: (string | any)[][]) {
-    return list.reduce(
-        (object, [key, value]) => ((object[key] = value), object),
-        {} as PlainObject
-    );
-}
+export type PlainObject = { [key: string]: any };
 
 const meta = new WeakMap();
 
@@ -58,4 +53,8 @@ export function delegate(selector: string, handler: Function) {
                     (event as CustomEvent).detail
                 );
     };
+}
+
+export function Fragment({ children }: { children?: VNode[] }) {
+    return children;
 }

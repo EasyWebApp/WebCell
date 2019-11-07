@@ -13,7 +13,8 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         "jsx": "react",
-        "jsxFactory": "createCell"
+        "jsxFactory": "createCell",
+        "lib": ["dom", "es2015", "es2019.array", "es2019.object"]
     },
     "include": ["./source/**/*", "./type/**/*"]
 }

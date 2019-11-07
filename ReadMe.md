@@ -85,7 +85,15 @@ export class SubTag extends mixin() {
 [`source/TestTag.tsx`](test/source/TestTag.tsx)
 
 ```jsx
-import { createCell, component, mixin, attribute, watch, on } from 'web-cell';
+import {
+    createCell,
+    component,
+    mixin,
+    attribute,
+    watch,
+    on,
+    Fragment
+} from 'web-cell';
 
 import style from './TestTag.css';
 import { SubTag } from './SubTag';
@@ -112,8 +120,10 @@ export default class TestTag extends mixin() {
     render() {
         return (
             <h1 title={this.title} className={`title ${this.status}`}>
-                {this.title}
-                <img alt={this.title} onClick={this.onClick} />
+                <Fragment>
+                    {this.title}
+                    <img alt={this.title} onClick={this.onClick} />
+                </Fragment>
                 <SubTag />
             </h1>
         );
@@ -127,7 +137,7 @@ We recommend [MobX][5], which is also powered by TypeScript & Decorator !
 
 ## Roadmap
 
--   [ ] (Template) [Document Fragment node][6]
+-   [x] (Template) [Document Fragment node][6]
 
 Go to [contribute](./Contributing.md)!
 
