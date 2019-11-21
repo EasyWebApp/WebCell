@@ -1,12 +1,12 @@
-import { Reflect, delegate } from './utility';
-import { DOMEventDelegateHandler } from './decorator';
+import { Reflect, delegate, toCamelCase } from './utility';
+import { watch, DOMEventDelegateHandler } from './decorator';
 import { visibleFirstOf, patch, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
 export interface WebCellComponent<P = {}> extends Element {
-    connectedCallback?(): void;
+    connectedCallback(): void;
     attributeChangedCallback?(
-        name: keyof P,
+        name: string,
         oldValue: string,
         newValue: string
     ): void;
@@ -14,6 +14,7 @@ export interface WebCellComponent<P = {}> extends Element {
     disconnectedCallback?(): void;
     visibleRoot?: Element;
     props: Props<P>;
+    defaultSlot: VNode[];
     emit(event: string, detail: any, options: EventInit): boolean;
 }
 
@@ -29,14 +30,14 @@ export function mixin<P>(
             return Reflect.getMetadata('attributes', this);
         }
 
-        attributeChangedCallback(name: keyof P, _: string, value: string) {
+        attributeChangedCallback(name: string, _: string, value: string) {
             try {
                 value = JSON.parse(value);
             } catch {
-                //
-            } finally {
-                this.commit(name, value);
+                /**/
             }
+
+            this.commit(toCamelCase(name) as keyof P, value);
         }
 
         private root: DocumentFragment | HTMLElement;
@@ -44,6 +45,9 @@ export function mixin<P>(
         private tick?: Promise<any>;
 
         readonly props: Props<P> = {} as Props<P>;
+
+        @watch
+        defaultSlot: VNode[] = [];
 
         [key: string]: any;
 

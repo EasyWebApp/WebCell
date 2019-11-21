@@ -88,49 +88,70 @@ function splitAttrs(tagName: string, raw: any) {
     return { props, attrs };
 }
 
+interface CellData {
+    className?: string;
+    style?: PlainObject;
+    key?: string;
+    ref?: (node: Node) => void;
+}
+
 export function createCell(
     tag: string | Function,
-    data?: any,
-    ...children: (string | VNode)[]
+    data?: CellData,
+    ...defaultSlot: (string | VNode)[]
 ) {
-    if (typeof tag !== 'string')
+    if (typeof tag !== 'string') {
+        var target = Reflect.getMetadata('renderTarget', tag);
         tag = Reflect.getMetadata('tagName', tag) || tag;
+    }
 
-    children = children.flat(Infinity).filter(item => item != null);
+    defaultSlot = defaultSlot.flat(Infinity).filter(item => item != null);
 
-    if (typeof tag === 'function') return tag({ ...data, children });
+    if (typeof tag === 'function') return tag({ ...data, defaultSlot });
 
-    const { className, style, ...rest }: any = data || {};
+    const { className, style, key, ref, ...rest } = data || {};
 
-    const { attrs, dataset, on } = splitProps(rest);
+    const { attrs, dataset, on } = splitProps(rest),
+        insert = ref && (({ elm }: { elm?: Node }) => ref(elm!));
 
     if (elementTypeOf(tag) === 'xml')
         return createElement(
             tag,
-            { attrs: { ...attrs, class: className }, dataset, style, on },
-            children
+            {
+                attrs: className ? { ...attrs, class: className } : attrs,
+                dataset,
+                style,
+                on,
+                key,
+                hook: { insert }
+            },
+            defaultSlot
         );
 
     const maps = splitAttrs(tag, attrs);
 
-    return createElement(
-        tag,
-        {
-            attrs: maps.attrs,
-            props: maps.props,
-            dataset,
-            class:
-                typeof className === 'string'
-                    ? Object.fromEntries(
-                          className
-                              .trim()
-                              .split(/\s+/)
-                              .map(name => [name, true])
-                      )
-                    : undefined,
-            style,
-            on
-        },
-        children
-    );
+    const meta = {
+        attrs: maps.attrs,
+        props: maps.props,
+        dataset,
+        class:
+            className && typeof className === 'string'
+                ? Object.fromEntries(
+                      className
+                          .trim()
+                          .split(/\s+/)
+                          .map(name => [name, true])
+                  )
+                : undefined,
+        style,
+        on,
+        key,
+        hook: { insert }
+    };
+
+    if (target !== 'children') return createElement(tag, meta, defaultSlot);
+
+    meta.props.defaultSlot = defaultSlot;
+
+    return createElement(tag, meta);
 }

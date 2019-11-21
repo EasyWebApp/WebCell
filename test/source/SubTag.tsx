@@ -1,7 +1,7 @@
 import { createCell, component, mixin } from '../../source';
 
-export function InlineTag({ children }: any) {
-    return <span>{children}</span>;
+export function InlineTag({ defaultSlot }: any) {
+    return <span>{defaultSlot}</span>;
 }
 
 @component({

@@ -4,7 +4,9 @@
 
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
-[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][4]
+[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][4]
+
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][5]
 
 ## Usage
 
@@ -54,8 +56,8 @@ npm install parcel-bundler parcel-plugin-text -D
 ```jsx
 import { createCell, component, mixin } from 'web-cell';
 
-export function InlineTag({ children }: any) {
-    return <span>{children}</span>;
+export function InlineTag({ defaultSlot }: any) {
+    return <span>{defaultSlot}</span>;
 }
 
 @component({
@@ -133,17 +135,18 @@ export default class TestTag extends mixin() {
 
 ### State management
 
-We recommend [MobX][5], which is also powered by TypeScript & Decorator !
+We recommend [MobX][6], which is also powered by TypeScript & Decorator !
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][6]
+-   [x] (Template) [Document Fragment node][7]
 
 Go to [contribute](./Contributing.md)!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://nodei.co/npm/web-cell/
-[5]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX/ReadMe.md
-[6]: https://github.com/Microsoft/TypeScript/issues/20469
+[4]: https://tech-query.me/programming/web-components-practise/slide.html
+[5]: https://nodei.co/npm/web-cell/
+[6]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX/
+[7]: https://github.com/Microsoft/TypeScript/issues/20469

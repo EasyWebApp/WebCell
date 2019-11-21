@@ -20,6 +20,14 @@ function getMetadata(key: string, target: Object) {
 
 export const Reflect = { defineMetadata, getMetadata };
 
+export function toHyphenCase(raw: string) {
+    return raw.replace(/[A-Z]+/g, match => '-' + match.toLowerCase());
+}
+
+export function toCamelCase(raw: string) {
+    return raw.replace(/-[a-z]/g, match => match[1].toUpperCase());
+}
+
 const spawn = document.createElement('template'),
     cache: PlainObject = {};
 
@@ -55,6 +63,6 @@ export function delegate(selector: string, handler: Function) {
     };
 }
 
-export function Fragment({ children }: { children?: VNode[] }) {
-    return children;
+export function Fragment({ defaultSlot }: { defaultSlot?: VNode[] }) {
+    return defaultSlot;
 }

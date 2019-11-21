@@ -1,4 +1,4 @@
-import { Reflect } from './utility';
+import { Reflect, toHyphenCase } from './utility';
 
 interface ComponentMeta {
     tagName: string;
@@ -38,7 +38,7 @@ export function watch(prototype: Object, key: string) {
 export function attribute({ constructor }: Object, key: string) {
     const list = Reflect.getMetadata('attributes', constructor) || [];
 
-    list.push(key.toLowerCase());
+    list.push(toHyphenCase(key));
 
     Reflect.defineMetadata('attributes', list, constructor);
 }

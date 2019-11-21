@@ -6,7 +6,10 @@ declare namespace JSX {
         props: any;
     }
     interface ElementChildrenAttribute {
-        children: any;
+        defaultSlot: any;
+    }
+    interface ElementClass {
+        render: any;
     }
 }
 

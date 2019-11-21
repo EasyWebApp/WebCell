@@ -25,7 +25,7 @@ describe('Renderer', () => {
 
         render(<Test prop1={1}>test</Test>);
 
-        expect(Test).toBeCalledWith({ prop1: 1, children: ['test'] });
+        expect(Test).toBeCalledWith({ prop1: 1, defaultSlot: ['test'] });
     });
 
     it('should render SVG attributes, CSS Styles/Classes', () => {
