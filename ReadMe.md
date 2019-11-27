@@ -4,9 +4,10 @@
 
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
-[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][4]
+[![NPM Dependency](https://david-dm.org/FreeCodeCamp-Chengdu/Web-Conf.svg)][4]
+[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][5]
 
-[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][5]
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][6]
 
 ## Usage
 
@@ -121,32 +122,48 @@ export default class TestTag extends mixin() {
 
     render() {
         return (
-            <h1 title={this.title} className={`title ${this.status}`}>
-                <Fragment>
+            <Fragment>
+                <h1 title={this.title} className={`title ${this.status}`}>
                     {this.title}
                     <img alt={this.title} onClick={this.onClick} />
-                </Fragment>
-                <SubTag />
-            </h1>
+                    <SubTag />
+                </h1>
+            </Fragment>
         );
     }
 }
 ```
 
-### State management
+## Ecosystem
 
-We recommend [MobX][6], which is also powered by TypeScript & Decorator !
+We recommend these libraries to use with WebCell:
+
+-   **State management**: [MobX][7] (also powered by TypeScript & Decorator)
+
+-   **Router**: [Cell Router][8] (based on MobX)
+
+-   **UI components**: [BootCell][9] (based on BootStrap v4)
+
+-   **HTTP request**: [KoAJAX][10] (based on Koa-like middlewares)
+
+-   **Event stream**: [Iterable Observer][11]
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][7]
+-   [x] (Template) [Document Fragment node][12]
 
-Go to [contribute](./Contributing.md)!
+Go to [contribute][13]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://tech-query.me/programming/web-components-practise/slide.html
-[5]: https://nodei.co/npm/web-cell/
-[6]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX/
-[7]: https://github.com/Microsoft/TypeScript/issues/20469
+[4]: https://david-dm.org/FreeCodeCamp-Chengdu/Web-Conf
+[5]: https://tech-query.me/programming/web-components-practise/slide.html
+[6]: https://nodei.co/npm/web-cell/
+[7]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
+[8]: https://github.com/EasyWebApp/cell-router/tree/v2
+[9]: https://web-cell.dev/BootCell/
+[10]: https://web-cell.dev/KoAJAX/
+[11]: https://web-cell.dev/iterable-observer/
+[12]: https://github.com/Microsoft/TypeScript/issues/20469
+[13]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md

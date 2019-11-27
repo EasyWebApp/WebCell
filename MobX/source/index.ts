@@ -1,8 +1,7 @@
-import { VNode } from 'snabbdom/vnode';
 import { autorun } from 'mobx';
-import { patch } from 'web-cell';
+import { VNode, patch } from 'web-cell';
 
-function wrapFunction(func: Function) {
+function wrapFunction(func: (props?: any) => VNode) {
     return function(props?: any) {
         var vTree: VNode;
 

@@ -32,13 +32,14 @@ export default class TestTag extends mixin() {
 
     render() {
         return (
-            <h1 title={this.title} className={`title ${this.status}`}>
-                <Fragment>
+            <Fragment>
+                <h1 title={this.title} className={`title ${this.status}`}>
                     {this.title}
                     <img alt={this.title} onClick={this.onClick} />
-                </Fragment>
-                <SubTag />
-            </h1>
+
+                    <SubTag />
+                </h1>
+            </Fragment>
         );
     }
 }

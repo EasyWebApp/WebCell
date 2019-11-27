@@ -1,4 +1,4 @@
-import { VNode } from 'snabbdom/vnode';
+import { VNodeChildElement } from './renderer';
 
 export type PlainObject = { [key: string]: any };
 
@@ -63,6 +63,10 @@ export function delegate(selector: string, handler: Function) {
     };
 }
 
-export function Fragment({ defaultSlot }: { defaultSlot?: VNode[] }) {
+export function Fragment({
+    defaultSlot
+}: {
+    defaultSlot?: VNodeChildElement[];
+}) {
     return defaultSlot;
 }

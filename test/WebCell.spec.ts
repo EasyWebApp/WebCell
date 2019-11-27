@@ -18,7 +18,8 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'test-tag',
-                tag => (tag as WebCellComponent).visibleRoot!.outerHTML
+                tag =>
+                    (tag as WebCellComponent).shadowRoot!.children[1]!.outerHTML
             )
         ).toBe(
             '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag><span>test</span></sub-tag></h1>'
@@ -41,7 +42,7 @@ describe('Web Component', () => {
 
         expect(
             await page.$eval('test-tag', tag => {
-                const root = (tag as WebCellComponent).visibleRoot!;
+                const root = (tag as WebCellComponent).shadowRoot!.children[1]!;
 
                 return [root.outerHTML, getComputedStyle(root).color];
             })
@@ -63,7 +64,8 @@ describe('Web Component', () => {
         expect(
             await page.$eval(
                 'test-tag',
-                tag => (tag as WebCellComponent).visibleRoot!.outerHTML
+                tag =>
+                    (tag as WebCellComponent).shadowRoot!.children[1]!.outerHTML
             )
         ).toBe(
             '<h1 title="Sample" class="title active">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'

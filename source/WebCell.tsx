@@ -1,6 +1,6 @@
-import { Reflect, delegate, toCamelCase } from './utility';
+import { Reflect, toCamelCase, Fragment, delegate } from './utility';
 import { watch, DOMEventDelegateHandler } from './decorator';
-import { visibleFirstOf, patch, render } from './renderer';
+import { VNodeChildElement, createCell, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
 export interface WebCellComponent<P = {}> extends Element {
@@ -14,7 +14,7 @@ export interface WebCellComponent<P = {}> extends Element {
     disconnectedCallback?(): void;
     visibleRoot?: Element;
     props: Props<P>;
-    defaultSlot: VNode[];
+    defaultSlot: VNodeChildElement[];
     emit(event: string, detail: any, options: EventInit): boolean;
 }
 
@@ -40,14 +40,15 @@ export function mixin<P>(
             this.commit(toCamelCase(name) as keyof P, value);
         }
 
-        private root: DocumentFragment | HTMLElement;
-        private vTree?: VNode;
+        private root: DocumentFragment | Element;
+        private CSS?: VNode;
+        private vTree: VNodeChildElement | VNodeChildElement[];
         private tick?: Promise<any>;
 
         readonly props: Props<P> = {} as Props<P>;
 
         @watch
-        defaultSlot: VNode[] = [];
+        defaultSlot: VNodeChildElement[] = [];
 
         [key: string]: any;
 
@@ -80,38 +81,31 @@ export function mixin<P>(
 
             const CSS = Reflect.getMetadata('style', this.constructor);
 
-            if (!CSS) return;
-
-            if (renderChildren) {
-                console.warn(
-                    '[WebCell] Global CSS should be used while "renderTarget" is "children"'
-                );
-                return;
-            }
-            const style = document.createElement('style');
-
-            style.textContent = CSS;
-
-            root.appendChild(style);
-        }
-
-        get visibleRoot() {
-            return visibleFirstOf(this.root);
+            if (CSS)
+                if (renderChildren)
+                    console.warn(
+                        '[WebCell] Global CSS should be used while "renderTarget" is "children"'
+                    );
+                else this.CSS = <style>{CSS}</style>;
         }
 
         connectedCallback() {
             this.update();
         }
 
-        render(): VNode | void {}
+        render(): VNodeChildElement | undefined {
+            return;
+        }
 
         protected update() {
-            const newTree = this.render();
-
-            if (newTree)
-                this.vTree = this.vTree
-                    ? patch(this.vTree, newTree)
-                    : render(newTree, this.root);
+            this.vTree = render(
+                <Fragment>
+                    {this.CSS}
+                    {this.render()}
+                </Fragment>,
+                this.root,
+                this.vTree
+            );
         }
 
         commit(key: keyof P, value: any) {
@@ -142,6 +136,12 @@ export function mixin<P>(
                     composed
                 })
             );
+        }
+
+        toString() {
+            return new XMLSerializer()
+                .serializeToString(this.root)
+                .replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
         }
     }
 

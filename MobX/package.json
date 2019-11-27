@@ -1,6 +1,6 @@
 {
     "name": "mobx-web-cell",
-    "version": "0.2.3",
+    "version": "0.2.4",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "MobX adaptor for WebCell v2",
@@ -22,19 +22,18 @@
         "prepublishOnly": "jest  &&  rm -rf .rts2_cache_* dist/  &&  npm run build"
     },
     "peerDependencies": {
-        "mobx": "^5.14.0",
-        "web-cell": "^2.0.0-beta.5"
+        "mobx": "^5.15.0",
+        "web-cell": "^2.0.0-rc.4"
     },
     "devDependencies": {
-        "@types/jest": "^24.0.18",
+        "@types/jest": "^24.0.23",
         "happy-dom": "^0.3.1",
         "jest": "^24.9.0",
         "microbundle": "^0.11.0",
-        "mobx": "^5.14.0",
-        "snabbdom": "^0.7.3",
-        "ts-jest": "^24.1.0",
-        "typescript": "^3.6.3",
-        "web-cell": "^2.0.0-beta.5"
+        "mobx": "^5.15.0",
+        "ts-jest": "^24.2.0",
+        "typescript": "^3.7.2",
+        "web-cell": "^2.0.0-rc.4"
     },
     "jest": {
         "preset": "ts-jest",

@@ -1,9 +1,9 @@
 type/
 .eslintrc.json
-jest.config.js
 test/
 DTS.json
 .cache/
 Contributing.md
 docs/
+.vscode/
 MobX/

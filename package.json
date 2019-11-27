@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-rc.2",
+    "version": "2.0.0-rc.4",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -27,25 +27,25 @@
         "@types/jest": "^24.0.23",
         "@types/jsdom": "^12.2.4",
         "@types/puppeteer-core": "^1.9.0",
-        "@typescript-eslint/parser": "^2.8.0",
+        "@typescript-eslint/parser": "^2.9.0",
         "@webcomponents/webcomponentsjs": "^2.4.0",
-        "eslint": "^6.6.0",
+        "eslint": "^6.7.1",
         "eslint-config-prettier": "^6.7.0",
         "eslint-plugin-prettier": "^3.1.1",
         "fs-match": "^1.3.5",
         "husky": "^3.1.0",
         "jest": "^24.9.0",
         "jsdom": "^15.2.1",
-        "lint-staged": "^9.4.3",
+        "lint-staged": "^9.5.0",
         "open-cli": "^5.0.0",
         "parcel-bundler": "^1.12.4",
         "parcel-plugin-text": "^0.9.5",
         "prettier": "^1.19.1",
         "puppeteer-core": "^1.20.0",
         "snabbdom": "^0.7.3",
-        "ts-jest": "^24.1.0",
+        "ts-jest": "^24.2.0",
         "ts-polyfill": "^3.5.3",
-        "typedoc": "^0.15.2",
+        "typedoc": "^0.15.3",
         "typescript": "^3.7.2"
     },
     "scripts": {
@@ -56,7 +56,7 @@
         "debug": "npm run pack-test  &&  open-cli test/index.html",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map}",
         "pack-dist": "parcel build source/index.ts --global WebCell",
-        "copy-type": "cp type/index.d.ts dist/type.d.ts",
+        "copy-type": "cp source/global.d.ts dist/",
         "pack-docs": "typedoc --name WebCell --out docs/ source/",
         "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run copy-type  &&  npm run pack-docs",
         "help": "npm run pack-docs  &&  open-cli docs/index.html",
@@ -86,6 +86,11 @@
     "prettier": {
         "singleQuote": true,
         "tabWidth": 4
+    },
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "testRegex": "/test/.*\\.(test|spec)?\\.tsx?$"
     },
     "parcel-plugin-text": {
         "extensions": [

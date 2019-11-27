@@ -8,14 +8,13 @@ import DataHelper from 'snabbdom/modules/dataset';
 import ClassHelper from 'snabbdom/modules/class';
 import StyleHelper from 'snabbdom/modules/style';
 import EventHelper from 'snabbdom/modules/eventlisteners';
-import createElement from 'snabbdom/h';
+import createElement, { VNodeChildElement } from 'snabbdom/h';
 import { VNode } from 'snabbdom/vnode';
 
 import { Reflect, PlainObject, templateOf, elementTypeOf } from './utility';
 
-const { find } = Array.prototype;
-
 export { VNode } from 'snabbdom/vnode';
+export { VNodeChildElement } from 'snabbdom/h';
 
 export const patch = init([
     AttrsHelper,
@@ -26,28 +25,47 @@ export const patch = init([
     EventHelper
 ]);
 
-const hiddenTag = ['style', 'link', 'script'];
-
-export function visibleFirstOf(root: Node) {
-    return find.call(
-        root.childNodes,
-        ({ nodeType, nodeName }) =>
-            nodeType === 1 && !hiddenTag.includes(nodeName.toLowerCase())
+export function render(
+    nodes: VNodeChildElement | VNodeChildElement[],
+    root: ParentNode & Node = document.body,
+    oldNodes: VNodeChildElement | VNodeChildElement[] = []
+) {
+    nodes = (nodes instanceof Array ? nodes : [nodes]).filter(
+        node => node != null
     );
-}
+    oldNodes = (oldNodes instanceof Array ? oldNodes : [oldNodes]).filter(
+        node => node != null
+    );
 
-export function render(node: VNode, root: Node = document.body) {
-    var element = visibleFirstOf(root);
+    for (let i = 0; i < nodes.length; i++) {
+        let node = root.childNodes[i],
+            vNode = nodes[i];
 
-    if (!element && node.sel) {
-        element = document.createElement(node.sel.split(/[#.:]/)[0]);
+        if (typeof vNode !== 'object') {
+            if (node) node.nodeValue = vNode + '';
+            else root.append(vNode + '');
 
-        root.appendChild(element);
+            continue;
+        }
+
+        if (!oldNodes[i]) {
+            const tag = (vNode as VNode).sel!.split(/[#.:]/)[0];
+
+            if (!node) node = root.appendChild(document.createElement(tag));
+            else if (node.nodeName.toLowerCase() !== tag) {
+                const old = node;
+
+                root.replaceChild((node = document.createElement(tag)), old);
+            }
+        }
+
+        nodes[i] = patch(
+            (oldNodes[i] as VNode) || (node as Element),
+            nodes[i] as VNode
+        );
     }
 
-    if (!element) throw ReferenceError('No Element to render');
-
-    return patch(element, node);
+    return nodes;
 }
 
 function splitProps(raw: any) {
@@ -98,8 +116,8 @@ interface CellData {
 export function createCell(
     tag: string | Function,
     data?: CellData,
-    ...defaultSlot: (string | VNode)[]
-) {
+    ...defaultSlot: VNodeChildElement[]
+): VNode | VNode[] {
     if (typeof tag !== 'string') {
         var target = Reflect.getMetadata('renderTarget', tag);
         tag = Reflect.getMetadata('tagName', tag) || tag;
