@@ -13,6 +13,8 @@ import { VNode } from 'snabbdom/vnode';
 
 import { Reflect, PlainObject, templateOf, elementTypeOf } from './utility';
 
+const { slice } = Array.prototype;
+
 export { VNode } from 'snabbdom/vnode';
 export { VNodeChildElement } from 'snabbdom/h';
 
@@ -65,7 +67,29 @@ export function render(
         );
     }
 
+    for (const node of slice.call(root.childNodes, nodes.length)) node.remove();
+
     return nodes;
+}
+
+interface LanguageMap {
+    [text: string]: string;
+}
+
+interface I18nData {
+    [language: string]: LanguageMap;
+}
+
+var languageMap: LanguageMap;
+
+export function setI18n(data: I18nData) {
+    for (const name of self.navigator.languages)
+        if (name in data) {
+            languageMap = data[name];
+            break;
+        }
+
+    return languageMap;
 }
 
 function splitProps(raw: any) {
@@ -111,6 +135,7 @@ interface CellData {
     style?: PlainObject;
     key?: string;
     ref?: (node: Node) => void;
+    i18n?: boolean;
 }
 
 export function createCell(
@@ -125,9 +150,14 @@ export function createCell(
 
     defaultSlot = defaultSlot.flat(Infinity).filter(item => item != null);
 
-    if (typeof tag === 'function') return tag({ ...data, defaultSlot });
+    const { className, style, key, ref, i18n, ...rest } = data || {};
 
-    const { className, style, key, ref, ...rest } = data || {};
+    if (i18n)
+        defaultSlot = defaultSlot.map(node =>
+            typeof node === 'string' ? languageMap[node] ?? node : node
+        );
+
+    if (typeof tag === 'function') return tag({ ...data, defaultSlot });
 
     const { attrs, dataset, on } = splitProps(rest),
         insert = ref && (({ elm }: { elm?: Node }) => ref(elm!));

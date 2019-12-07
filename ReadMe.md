@@ -4,7 +4,7 @@
 
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
-[![NPM Dependency](https://david-dm.org/FreeCodeCamp-Chengdu/Web-Conf.svg)][4]
+[![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
 [![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][5]
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][6]
@@ -105,25 +105,29 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends mixin() {
+export default class TestTag extends mixin<
+    { title: string },
+    { status: string }
+>() {
     @attribute
     @watch
     title = 'Test';
 
-    @watch
-    status = '';
+    state = { status: '' };
 
     onClick = () => (this.title = 'Example');
 
     @on('click', ':host h1')
     onDelegate() {
-        this.status = 'active';
+        this.setState({ status: 'active' });
     }
 
     render() {
+        const { status } = this.state;
+
         return (
             <Fragment>
-                <h1 title={this.title} className={`title ${this.status}`}>
+                <h1 title={this.title} className={`title ${status}`}>
                     {this.title}
                     <img alt={this.title} onClick={this.onClick} />
                     <SubTag />
@@ -132,6 +136,20 @@ export default class TestTag extends mixin() {
         );
     }
 }
+```
+
+### Internationalization
+
+`source/index.tsx`
+
+```javascript
+import { setI18n, render, createCell } from 'web-cell';
+
+setI18n({ 'zh-CN': { Sample: '样本' } });
+
+console.log(navigator.languages.includes('zh-CN')); // true
+
+render(<h1 i18n>Sample</h1>); // <h1>样本</h1>
 ```
 
 ## Ecosystem
@@ -157,7 +175,7 @@ Go to [contribute][13]!
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://david-dm.org/FreeCodeCamp-Chengdu/Web-Conf
+[4]: https://david-dm.org/EasyWebApp/WebCell
 [5]: https://tech-query.me/programming/web-components-practise/slide.html
 [6]: https://nodei.co/npm/web-cell/
 [7]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX

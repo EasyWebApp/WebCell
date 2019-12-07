@@ -3,7 +3,11 @@ import { watch, DOMEventDelegateHandler } from './decorator';
 import { VNodeChildElement, createCell, render } from './renderer';
 import { VNode } from 'snabbdom/vnode';
 
-export interface WebCellComponent<P = {}> extends Element {
+type Data<T> = {
+    [K in keyof T]: T[K];
+};
+
+export interface WebCellComponent<P = {}, S = {}> extends Element {
     connectedCallback(): void;
     attributeChangedCallback?(
         name: string,
@@ -12,20 +16,17 @@ export interface WebCellComponent<P = {}> extends Element {
     ): void;
     adoptedCallback?(): void;
     disconnectedCallback?(): void;
-    visibleRoot?: Element;
-    props: Props<P>;
+    props: Data<P>;
+    state: Data<S>;
+    setState(data: { [key in keyof S]: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
     emit(event: string, detail: any, options: EventInit): boolean;
 }
 
-type Props<T> = {
-    [P in keyof T]: T[P];
-};
-
-export function mixin<P>(
+export function mixin<P, S>(
     superClass = HTMLElement
-): { new (): WebCellComponent<P> } {
-    class WebCell extends superClass implements WebCellComponent<P> {
+): { new (): WebCellComponent<P, S> } {
+    class WebCell extends superClass implements WebCellComponent<P, S> {
         static get observedAttributes() {
             return Reflect.getMetadata('attributes', this);
         }
@@ -37,7 +38,7 @@ export function mixin<P>(
                 /**/
             }
 
-            this.commit(toCamelCase(name) as keyof P, value);
+            this.setProp(toCamelCase(name) as keyof P, value);
         }
 
         private root: DocumentFragment | Element;
@@ -45,7 +46,8 @@ export function mixin<P>(
         private vTree: VNodeChildElement | VNodeChildElement[];
         private tick?: Promise<any>;
 
-        readonly props: Props<P> = {} as Props<P>;
+        readonly props: Data<P> = {} as Data<P>;
+        readonly state: Data<S> = {} as Data<S>;
 
         @watch
         defaultSlot: VNodeChildElement[] = [];
@@ -108,9 +110,7 @@ export function mixin<P>(
             );
         }
 
-        commit(key: keyof P, value: any) {
-            this.props[key] = value;
-
+        protected updateAsync() {
             return (this.tick =
                 this.tick ||
                 new Promise(resolve =>
@@ -121,6 +121,18 @@ export function mixin<P>(
                         resolve();
                     })
                 ));
+        }
+
+        protected setProp(key: keyof P, value: any) {
+            this.props[key] = value;
+
+            return this.updateAsync();
+        }
+
+        setState(data: { [key in keyof S]: any }) {
+            Object.assign(this.state, data);
+
+            return this.updateAsync();
         }
 
         emit(

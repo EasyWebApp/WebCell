@@ -15,25 +15,29 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends mixin() {
+export default class TestTag extends mixin<
+    { title: string },
+    { status: string }
+>() {
     @attribute
     @watch
     title = 'Test';
 
-    @watch
-    status = '';
+    state = { status: '' };
 
     onClick = () => (this.title = 'Example');
 
     @on('click', ':host h1')
     onDelegate() {
-        this.status = 'active';
+        this.setState({ status: 'active' });
     }
 
     render() {
+        const { status } = this.state;
+
         return (
             <Fragment>
-                <h1 title={this.title} className={`title ${this.status}`}>
+                <h1 title={this.title} className={`title ${status}`} i18n>
                     {this.title}
                     <img alt={this.title} onClick={this.onClick} />
 
