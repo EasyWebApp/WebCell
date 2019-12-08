@@ -1,5 +1,5 @@
-import 'ts-polyfill/lib/es2019-array';
-import 'ts-polyfill/lib/es2019-object';
+import 'core-js/es/object/from-entries';
+import 'core-js/es/array/flat';
 
 import { init } from 'snabbdom';
 import AttrsHelper from 'snabbdom/modules/attributes';
@@ -77,15 +77,15 @@ interface LanguageMap {
 }
 
 interface I18nData {
-    [language: string]: LanguageMap;
+    [language: string]: () => Promise<LanguageMap>;
 }
 
 var languageMap: LanguageMap;
 
-export function setI18n(data: I18nData) {
+export async function setI18n(data: I18nData) {
     for (const name of self.navigator.languages)
         if (name in data) {
-            languageMap = data[name];
+            languageMap = await data[name]();
             break;
         }
 

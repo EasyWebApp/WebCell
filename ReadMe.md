@@ -105,10 +105,7 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends mixin<
-    { title: string },
-    { status: string }
->() {
+export class TestTag extends mixin<{ title?: string }, { status: string }>() {
     @attribute
     @watch
     title = 'Test';
@@ -140,16 +137,37 @@ export default class TestTag extends mixin<
 
 ### Internationalization
 
-`source/index.tsx`
+`tsconfig.json`
+
+```json
+{
+    "compilerOptions": {
+        "module": "esnext",
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": false,
+        "resolveJsonModule": true
+    }
+}
+```
+
+[`source/index.tsx`](test/source/index.tsx)
 
 ```javascript
-import { setI18n, render, createCell } from 'web-cell';
-
-setI18n({ 'zh-CN': { Sample: '样本' } });
+import {
+    setI18n,
+    documentReady,
+    render,
+    createCell
+} from 'web-cell';
 
 console.log(navigator.languages.includes('zh-CN')); // true
 
-render(<h1 i18n>Sample</h1>); // <h1>样本</h1>
+Promise.all([
+    setI18n({ 'zh-CN': () => import('./i18n/zh-CN.json') }),
+    documentReady
+]).then(() =>
+    render(<h1 i18n>Sample</h1>); // <h1>样本</h1>
+);
 ```
 
 ## Ecosystem

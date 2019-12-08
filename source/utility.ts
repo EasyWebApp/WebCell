@@ -63,6 +63,16 @@ export function delegate(selector: string, handler: Function) {
     };
 }
 
+export const documentReady = new Promise(resolve => {
+    document.addEventListener('DOMContentLoaded', resolve);
+
+    self.addEventListener('load', resolve);
+
+    setTimeout(function check() {
+        document.readyState === 'complete' ? resolve() : setTimeout(check);
+    });
+});
+
 export function Fragment({
     defaultSlot
 }: {

@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-rc.7",
+    "version": "2.0.0-rc.8",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -24,11 +24,13 @@
     "browser": "dist/index.js",
     "types": "dist/index.d.ts",
     "devDependencies": {
+        "@types/core-js": "^2.5.2",
         "@types/jest": "^24.0.23",
         "@types/jsdom": "^12.2.4",
         "@types/puppeteer-core": "^1.9.0",
         "@typescript-eslint/parser": "^2.10.0",
         "@webcomponents/webcomponentsjs": "^2.4.0",
+        "core-js": "^3.4.7",
         "eslint": "^6.7.2",
         "eslint-config-prettier": "^6.7.0",
         "eslint-plugin-prettier": "^3.1.1",
@@ -44,16 +46,15 @@
         "puppeteer-core": "^1.20.0",
         "snabbdom": "^0.7.3",
         "ts-jest": "^24.2.0",
-        "ts-polyfill": "^3.7.3",
         "typedoc": "^0.15.3",
         "typescript": "^3.7.3"
     },
     "scripts": {
         "lint": "lint-staged",
         "set-chrome": "app-find chrome -c",
-        "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.ts",
+        "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.html --public-url .",
         "test": "npm run lint  &&  npm run pack-test  &&  jest --forceExit",
-        "debug": "npm run pack-test  &&  open-cli test/index.html",
+        "debug": "npm run pack-test  &&  open-cli test/dist/index.html",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map}",
         "pack-dist": "parcel build source/index.ts --global WebCell",
         "copy-type": "cp source/global.d.ts dist/",

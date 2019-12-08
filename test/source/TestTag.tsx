@@ -15,10 +15,7 @@ import { SubTag } from './SubTag';
     tagName: 'test-tag',
     style
 })
-export default class TestTag extends mixin<
-    { title: string },
-    { status: string }
->() {
+export class TestTag extends mixin<{ title?: string }, { status: string }>() {
     @attribute
     @watch
     title = 'Test';

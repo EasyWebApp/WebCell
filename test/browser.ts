@@ -6,7 +6,7 @@ const { npm_config_chrome } = process.env;
 var browser: Browser, page: Page;
 
 export async function getPage(
-    path = './test/index.html',
+    path = './test/dist/index.html',
     initEval?: EvaluateFn
 ) {
     browser = browser || (await launch({ executablePath: npm_config_chrome }));
