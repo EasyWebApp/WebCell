@@ -152,7 +152,7 @@ export function createCell(
 
     const { className, style, key, ref, i18n, ...rest } = data || {};
 
-    if (i18n)
+    if (languageMap && i18n)
         defaultSlot = defaultSlot.map(node =>
             typeof node === 'string' ? languageMap[node] ?? node : node
         );

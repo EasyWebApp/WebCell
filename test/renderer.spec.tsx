@@ -1,4 +1,3 @@
-import '../source/DOM-polyfill';
 import { createCell, render } from '../source';
 
 describe('Renderer', () => {

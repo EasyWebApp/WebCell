@@ -1,8 +1,8 @@
-import './source/DOM-polyfill';
+import '../source/DOM-polyfill';
 import { createCell, render, component, mixin } from 'web-cell';
 import { observable } from 'mobx';
 
-import { observer } from './source';
+import { observer } from '../source';
 
 class Test {
     @observable

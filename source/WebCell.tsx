@@ -20,10 +20,13 @@ export interface WebCellComponent<P = {}, S = {}> extends Element {
     state: Data<S>;
     setState(data: { [key in keyof S]: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
+    render?(props: Data<P>, state: Data<S>): VNodeChildElement;
+    shouldUpdate?(oldState: S, newState: S): boolean;
+    updatedCallback?(): void;
     emit(event: string, detail: any, options: EventInit): boolean;
 }
 
-export function mixin<P, S>(
+export function mixin<P = {}, S = {}>(
     superClass = HTMLElement
 ): { new (): WebCellComponent<P, S> } {
     class WebCell extends superClass implements WebCellComponent<P, S> {
@@ -48,6 +51,7 @@ export function mixin<P, S>(
 
         readonly props: Data<P> = {} as Data<P>;
         readonly state: Data<S> = {} as Data<S>;
+        private cache: Data<S> = {} as Data<S>;
 
         @watch
         defaultSlot: VNodeChildElement[] = [];
@@ -95,19 +99,26 @@ export function mixin<P, S>(
             this.update();
         }
 
-        render(): VNodeChildElement | undefined {
-            return;
-        }
-
         protected update() {
+            if (
+                !(this.CSS || this.render) ||
+                !(this.shouldUpdate?.(this.state, this.cache) ?? true)
+            )
+                return;
+
+            Object.assign(this.state, this.cache);
+            this.cache = {} as Data<S>;
+
             this.vTree = render(
                 <Fragment>
                     {this.CSS}
-                    {this.render()}
+                    {this.render(this.props, this.state)}
                 </Fragment>,
                 this.root,
                 this.vTree
             );
+
+            this.updatedCallback?.();
         }
 
         protected updateAsync() {
@@ -130,7 +141,7 @@ export function mixin<P, S>(
         }
 
         setState(data: { [key in keyof S]: any }) {
-            Object.assign(this.state, data);
+            Object.assign(this.cache, data);
 
             return this.updateAsync();
         }

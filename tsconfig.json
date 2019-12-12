@@ -8,6 +8,7 @@
         "noImplicitAny": true,
         "module": "es2015",
         "moduleResolution": "node",
+        "esModuleInterop": true,
         "target": "es5",
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,

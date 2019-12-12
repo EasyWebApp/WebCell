@@ -11,11 +11,19 @@ import {
 import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
+interface Props {
+    title?: string;
+}
+
+interface State {
+    status: string;
+}
+
 @component({
     tagName: 'test-tag',
     style
 })
-export class TestTag extends mixin<{ title?: string }, { status: string }>() {
+export class TestTag extends mixin<Props, State>() {
     @attribute
     @watch
     title = 'Test';
@@ -29,14 +37,12 @@ export class TestTag extends mixin<{ title?: string }, { status: string }>() {
         this.setState({ status: 'active' });
     }
 
-    render() {
-        const { status } = this.state;
-
+    render({ title }: Props, { status }: State) {
         return (
             <Fragment>
-                <h1 title={this.title} className={`title ${status}`} i18n>
-                    {this.title}
-                    <img alt={this.title} onClick={this.onClick} />
+                <h1 title={title} className={`title ${status}`} i18n>
+                    {title}
+                    <img alt={title} onClick={this.onClick} />
 
                     <SubTag />
                 </h1>
