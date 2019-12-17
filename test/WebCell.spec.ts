@@ -6,14 +6,7 @@ import { WebCellComponent } from '../source';
 var page: Page;
 
 describe('Web Component', () => {
-    beforeAll(
-        async () =>
-            (page = await getPage(undefined, () =>
-                Object.defineProperty(navigator, 'languages', {
-                    get: () => ['en-US', 'zh-CN']
-                })
-            ))
-    );
+    beforeAll(async () => (page = await getPage()));
 
     it('should render Children & combine Function Component', async () => {
         expect(
@@ -75,7 +68,7 @@ describe('Web Component', () => {
                     (tag as WebCellComponent).shadowRoot!.children[1]!.outerHTML
             )
         ).toBe(
-            '<h1 title="Sample" class="title active">样本<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
+            '<h1 title="Sample" class="title active">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
         );
     });
 });

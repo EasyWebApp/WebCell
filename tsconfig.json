@@ -6,6 +6,7 @@
         "strict": true,
         "noImplicitReturns": true,
         "noImplicitAny": true,
+        "downlevelIteration": true,
         "module": "es2015",
         "moduleResolution": "node",
         "esModuleInterop": true,

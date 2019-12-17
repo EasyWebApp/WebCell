@@ -5,7 +5,7 @@
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
-[![Build Status](https://travis-ci.com/EasyWebApp/BootCell.svg?branch=v2)][5]
+[![Build Status](https://travis-ci.com/EasyWebApp/WebCell.svg?branch=v2)][5]
 [![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][6]
 
 [![Edit WebCell scaffold](https://codesandbox.io/static/img/play-codesandbox.svg)][7]
@@ -152,31 +152,50 @@ export class TestTag extends mixin<Props, State>() {
 ```json
 {
     "compilerOptions": {
-        "module": "esnext",
-        "moduleResolution": "node",
-        "allowSyntheticDefaultImports": false,
-        "resolveJsonModule": true
+        "module": "ESNext"
     }
 }
 ```
 
-[`source/index.tsx`](test/source/index.tsx)
+`source/i18n/en-US.ts`
+
+```typescript
+export enum en_US {
+    title = 'Test'
+}
+
+export type I18nMap = typeof en_US;
+```
+
+`source/i18n/zh-CN.ts`
+
+```typescript
+export enum zh_CN {
+    title = '测试'
+}
+```
+
+`source/index.tsx`
 
 ```javascript
 import {
-    setI18n,
+    createI18nScope,
     documentReady,
     render,
     createCell
 } from 'web-cell';
 
+import { I18nMap } from './i18n/en-US';
+
 console.log(navigator.languages.includes('zh-CN')); // true
 
-Promise.all([
-    setI18n({ 'zh-CN': () => import('./i18n/zh-CN.json') }),
-    documentReady
-]).then(() =>
-    render(<h1 i18n>Sample</h1>); // <h1>样本</h1>
+const { loaded, i18nTextOf } = createI18nScope<I18nMap>({
+    'en-US': async () => (await import('./i18n/en-US')).en_US,
+    'zh-CN': async () => (await import('./i18n/zh-CN')).zh_CN
+}, 'en-US');
+
+Promise.all([loaded, documentReady]).then(() =>
+    render(<h1>{i18nTextOf('title')}</h1>); // <h1>测试</h1>
 );
 ```
 

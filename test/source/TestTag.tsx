@@ -40,7 +40,7 @@ export class TestTag extends mixin<Props, State>() {
     render({ title }: Props, { status }: State) {
         return (
             <Fragment>
-                <h1 title={title} className={`title ${status}`} i18n>
+                <h1 title={title} className={`title ${status}`}>
                     {title}
                     <img alt={title} onClick={this.onClick} />
 

@@ -72,26 +72,6 @@ export function render(
     return nodes;
 }
 
-interface LanguageMap {
-    [text: string]: string;
-}
-
-interface I18nData {
-    [language: string]: () => Promise<LanguageMap>;
-}
-
-var languageMap: LanguageMap;
-
-export async function setI18n(data: I18nData) {
-    for (const name of self.navigator.languages)
-        if (name in data) {
-            languageMap = await data[name]();
-            break;
-        }
-
-    return languageMap;
-}
-
 function splitProps(raw: any) {
     const [attrs, dataset, on] = Object.entries(raw).reduce(
         (objects, [key, value]) => {
@@ -135,7 +115,6 @@ interface CellData {
     style?: PlainObject;
     key?: string;
     ref?: (node: Node) => void;
-    i18n?: boolean;
 }
 
 export function createCell(
@@ -150,12 +129,7 @@ export function createCell(
 
     defaultSlot = defaultSlot.flat(Infinity).filter(item => item != null);
 
-    const { className, style, key, ref, i18n, ...rest } = data || {};
-
-    if (languageMap && i18n)
-        defaultSlot = defaultSlot.map(node =>
-            typeof node === 'string' ? languageMap[node] ?? node : node
-        );
+    const { className, style, key, ref, ...rest } = data || {};
 
     if (typeof tag === 'function') return tag({ ...data, defaultSlot });
 
