@@ -1,13 +1,17 @@
 import { Reflect, toCamelCase, Fragment, delegate } from './utility';
 import { watch, DOMEventDelegateHandler } from './decorator';
-import { VNodeChildElement, createCell, render } from './renderer';
-import { VNode } from 'snabbdom/vnode';
+import { VNodeChildElement, VNode, createCell, render } from './renderer';
+
+interface BaseProps {
+    defaultSlot?: VNodeChildElement | VNodeChildElement[];
+}
 
 type Data<T> = {
     [K in keyof T]: T[K];
 };
 
-export interface WebCellComponent<P = {}, S = {}> extends Element {
+export interface WebCellComponent<P extends BaseProps = {}, S = {}>
+    extends Element {
     connectedCallback(): void;
     attributeChangedCallback?(
         name: string,

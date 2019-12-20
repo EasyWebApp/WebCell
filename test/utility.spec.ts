@@ -1,3 +1,4 @@
+import './DOM-polyfill';
 import { createI18nScope } from '../source';
 
 describe('Utility methods', () => {

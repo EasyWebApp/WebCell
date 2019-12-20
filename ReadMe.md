@@ -1,4 +1,4 @@
-![WebCell logo](https://web-cell.dev/image/WebCell-0.png)
+![WebCell logo](https://web-cell.dev/WebCell-0.e9f043e9.png)
 
 # WebCell
 
@@ -20,8 +20,8 @@ Command
 
 ```shell
 npm init -y
-npm install web-cell@next
-npm install parcel-bundler parcel-plugin-text -D
+npm install web-cell
+npm install parcel-bundler -D
 ```
 
 `package.json`
@@ -31,9 +31,6 @@ npm install parcel-bundler parcel-plugin-text -D
     "scripts": {
         "start": "parcel source/index.html",
         "build": "parcel build source/index.html"
-    },
-    "parcel-plugin-text": {
-        "extensions": ["css"]
     }
 }
 ```
@@ -77,7 +74,21 @@ export class SubTag extends mixin() {
 
 ### Advanced component
 
-[`source/TestTag.css`](test/source/TestTag.css)
+```shell
+npm install parcel-plugin-text -D
+```
+
+`package.json`
+
+```json
+{
+    "parcel-plugin-text": {
+        "extensions": ["css"]
+    }
+}
+```
+
+`source/TestTag.css`
 
 ```css
 .title {
@@ -197,6 +208,63 @@ const { loaded, i18nTextOf } = createI18nScope<I18nMap>({
 Promise.all([loaded, documentReady]).then(() =>
     render(<h1>{i18nTextOf('title')}</h1>); // <h1>测试</h1>
 );
+```
+
+### Transition toggle
+
+```shell
+npm install less postcss-modules -D
+```
+
+`package.json`
+
+```json
+{
+    "postcss": {
+        "modules": true
+    }
+}
+```
+
+[`source/ToggleTag.module.less`](test/source/ToggleTag.module.less)
+
+```less
+.toggle-tag {
+    transition: 0.5s;
+    opacity: 0;
+
+    &.show {
+        opacity: 1;
+    }
+}
+```
+
+[`source/ToggleTag.tsx`](test/source/ToggleTag.tsx)
+
+```javascript
+import { component, mixin, watch, createCell, TransitionCell } from 'web-cell';
+
+import style from './ToggleTag.module.less';
+
+@component({
+    tagName: 'toggle-tag',
+    renderTarget: 'children'
+})
+export class ToggleTag extends mixin() {
+    @watch
+    active = true;
+
+    render() {
+        return (
+            <TransitionCell
+                className={style['toggle-tag']}
+                activeClass={this.active ? style['show'] : ''}
+            >
+                Fade in/out
+            </TransitionCell>
+        );
+    }
+}
 ```
 
 ## Ecosystem
