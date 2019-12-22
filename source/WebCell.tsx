@@ -21,6 +21,7 @@ export interface WebCellComponent<P extends BaseProps = {}, S = {}>
     adoptedCallback?(): void;
     disconnectedCallback?(): void;
     props: Data<P>;
+    setProps(data: { [key in keyof P]: any }): Promise<void>;
     state: Data<S>;
     setState(data: { [key in keyof S]: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
@@ -45,7 +46,9 @@ export function mixin<P = {}, S = {}>(
                 /**/
             }
 
-            this.setProp(toCamelCase(name) as keyof P, value);
+            this.setProps({ [toCamelCase(name)]: value } as {
+                [key in keyof P]: string;
+            });
         }
 
         private root: DocumentFragment | Element;
@@ -138,8 +141,8 @@ export function mixin<P = {}, S = {}>(
                 ));
         }
 
-        protected setProp(key: keyof P, value: any) {
-            this.props[key] = value;
+        setProps(data: { [key in keyof P]: any }) {
+            Object.assign(this.props, data);
 
             return this.updateAsync();
         }

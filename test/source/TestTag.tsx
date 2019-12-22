@@ -8,6 +8,7 @@ import {
     Fragment
 } from '../../source';
 
+import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
 interface Props {
@@ -20,14 +21,7 @@ interface State {
 
 @component({
     tagName: 'test-tag',
-    style: `
-        .title {
-            color: lightblue;
-        }
-        .title.active {
-            color: lightpink;
-        }
-    `
+    style
 })
 export class TestTag extends mixin<Props, State>() {
     @attribute

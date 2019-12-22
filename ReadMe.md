@@ -210,63 +210,6 @@ Promise.all([loaded, documentReady]).then(() =>
 );
 ```
 
-### Transition toggle
-
-```shell
-npm install less postcss-modules -D
-```
-
-`package.json`
-
-```json
-{
-    "postcss": {
-        "modules": true
-    }
-}
-```
-
-[`source/ToggleTag.module.less`](test/source/ToggleTag.module.less)
-
-```less
-.toggle-tag {
-    transition: 0.5s;
-    opacity: 0;
-
-    &.show {
-        opacity: 1;
-    }
-}
-```
-
-[`source/ToggleTag.tsx`](test/source/ToggleTag.tsx)
-
-```javascript
-import { component, mixin, watch, createCell, TransitionCell } from 'web-cell';
-
-import style from './ToggleTag.module.less';
-
-@component({
-    tagName: 'toggle-tag',
-    renderTarget: 'children'
-})
-export class ToggleTag extends mixin() {
-    @watch
-    active = true;
-
-    render() {
-        return (
-            <TransitionCell
-                className={style['toggle-tag']}
-                activeClass={this.active ? style['show'] : ''}
-            >
-                Fade in/out
-            </TransitionCell>
-        );
-    }
-}
-```
-
 ## Ecosystem
 
 We recommend these libraries to use with WebCell:

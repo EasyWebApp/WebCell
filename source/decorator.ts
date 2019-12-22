@@ -25,7 +25,7 @@ export function component(meta: ComponentMeta) {
 export function watch(prototype: Object, key: string) {
     Object.defineProperty(prototype, key, {
         set(value) {
-            this.setProp(key, value);
+            this.setProps({ [key]: value });
         },
         get() {
             return this.props[key];
