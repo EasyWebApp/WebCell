@@ -1,4 +1,4 @@
-![WebCell logo](https://web-cell.dev/WebCell-0.e9f043e9.png)
+![WebCell logo](https://web-cell.dev/WebCell-0.f1ffd28b.png)
 
 # WebCell
 
@@ -8,11 +8,13 @@
 [![Build Status](https://travis-ci.com/EasyWebApp/WebCell.svg?branch=v2)][5]
 [![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][6]
 
-[![Edit WebCell scaffold](https://codesandbox.io/static/img/play-codesandbox.svg)][7]
+[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][7]
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][8]
 
 ## Usage
+
+Demo & **GitHub template**: https://web-cell.dev/scaffold/
 
 ### Project bootstrap
 
@@ -40,8 +42,9 @@ npm install parcel-bundler -D
 [`source/index.html`](test/index.html)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.3.0/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.3.0/custom-elements-es5-adapter.js"></script>
+<script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.0/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.0/custom-elements-es5-adapter.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -88,7 +91,7 @@ npm install parcel-plugin-text -D
 }
 ```
 
-`source/TestTag.css`
+[`source/TestTag.css`](test/source/TestTag.css)
 
 ```css
 .title {
@@ -239,10 +242,10 @@ Go to [contribute][16]!
 [4]: https://david-dm.org/EasyWebApp/WebCell
 [5]: https://travis-ci.com/EasyWebApp/WebCell
 [6]: https://tech-query.me/programming/web-components-practise/slide.html
-[7]: https://codesandbox.io/s/github/EasyWebApp/scaffold/tree/master/?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
+[7]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
 [8]: https://nodei.co/npm/web-cell/
 [9]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
-[10]: https://github.com/EasyWebApp/cell-router/tree/v2
+[10]: https://web-cell.dev/cell-router/
 [11]: https://web-cell.dev/BootCell/
 [12]: https://tech-query.me/GitHub-Web-Widget/
 [13]: https://web-cell.dev/KoAJAX/

@@ -1,5 +1,5 @@
-import './DOM-polyfill';
-import { createCell, render } from '../source';
+import './polyfill';
+import { createCell, render } from '../dist';
 
 describe('Renderer', () => {
     it('should render HTML attributes, CSS Styles/Classes & Dataset', () => {
@@ -21,14 +21,18 @@ describe('Renderer', () => {
     });
 
     it('should call Function while DOM rendering', () => {
-        const Test = jest.fn(() => <a />);
+        const hook = jest.fn();
+        const Test = jest.fn(() => <a ref={hook} />);
 
         render(<Test prop1={1}>test</Test>);
 
+        expect(hook).toBeCalledTimes(1);
         expect(Test).toBeCalledWith({ prop1: 1, defaultSlot: ['test'] });
     });
 
     it('should render SVG attributes, CSS Styles/Classes', () => {
+        document.body.innerHTML = '';
+
         render(
             <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="50" cy="50" r="40" stroke="red" fill="grey" />
@@ -36,7 +40,7 @@ describe('Renderer', () => {
         );
 
         expect(document.body.innerHTML.trim()).toBe(
-            '<svg viewbox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="red" fill="grey"></circle></svg>'
+            '<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="red" fill="grey"></circle></svg>'
         );
     });
 });

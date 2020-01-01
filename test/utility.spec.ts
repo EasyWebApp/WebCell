@@ -1,5 +1,5 @@
-import './DOM-polyfill';
-import { createI18nScope } from '../source';
+import './polyfill';
+import { createI18nScope } from '../dist';
 
 describe('Utility methods', () => {
     describe('Internationalization', () => {

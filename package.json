@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-rc.12",
+    "version": "2.0.0-rc.13",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -25,13 +25,13 @@
     "types": "dist/index.d.ts",
     "devDependencies": {
         "@types/core-js": "^2.5.2",
-        "@types/jest": "^24.0.24",
+        "@types/jest": "^24.0.25",
         "@types/puppeteer-core": "^1.9.0",
-        "@typescript-eslint/parser": "^2.12.0",
+        "@typescript-eslint/parser": "^2.14.0",
         "@webcomponents/webcomponentsjs": "^2.4.0",
-        "core-js": "^3.6.0",
+        "core-js": "^3.6.1",
         "eslint": "^6.8.0",
-        "eslint-config-prettier": "^6.7.0",
+        "eslint-config-prettier": "^6.9.0",
         "eslint-plugin-prettier": "^3.1.2",
         "fs-match": "^1.3.5",
         "husky": "^3.1.0",
@@ -44,22 +44,22 @@
         "puppeteer-core": "^1.20.0",
         "snabbdom": "^0.7.4",
         "ts-jest": "^24.2.0",
-        "typedoc": "^0.15.5",
+        "typedoc": "^0.15.6",
         "typescript": "^3.7.4"
     },
     "scripts": {
         "lint": "lint-staged",
-        "set-chrome": "app-find chrome -c",
-        "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.html --public-url .",
-        "test": "npm run lint  &&  npm run pack-test  &&  jest --forceExit",
-        "debug": "cd test/  &&  rm -rf dist/  &&  parcel source/index.html --open",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map}",
         "pack-dist": "parcel build source/index.ts --global WebCell",
         "copy-type": "cp source/global.d.ts dist/",
+        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-dist  &&  npm run copy-type",
+        "set-chrome": "app-find chrome -c",
+        "pack-test": "cd test/  &&  rm -rf dist/  &&  parcel build source/index.html --public-url .",
+        "test": "npm run lint  &&  npm run build  &&  npm run pack-test  &&  jest --forceExit",
+        "debug": "cd test/  &&  rm -rf dist/  &&  parcel source/index.html --open",
         "pack-docs": "typedoc --name WebCell --out docs/ source/",
-        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run copy-type  &&  npm run pack-docs",
         "help": "npm run pack-docs  &&  open-cli docs/index.html",
-        "prepublishOnly": "npm test  &&  npm run build"
+        "prepublishOnly": "npm test  &&  npm run pack-docs"
     },
     "lint-staged": {
         "source/**/*.{ts,tsx}": [
@@ -79,7 +79,7 @@
     "husky": {
         "hooks": {
             "pre-commit": "npm run lint",
-            "pre-push": "npm test  &&  npm run build"
+            "pre-push": "npm run prepublishOnly"
         }
     },
     "prettier": {
@@ -88,6 +88,11 @@
     },
     "jest": {
         "preset": "ts-jest",
+        "globals": {
+            "ts-jest": {
+                "tsConfig": "test/tsconfig.json"
+            }
+        },
         "testPathIgnorePatterns": [
             "/node_modules/",
             "/MobX/"

@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer-core';
 import { getPage, delay } from './browser';
 
-import { WebCellComponent } from '../source';
+import { WebCellComponent } from '../dist';
 
 var page: Page;
 

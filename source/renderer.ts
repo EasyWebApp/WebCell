@@ -1,22 +1,18 @@
-import 'core-js/es/object/from-entries';
-import 'core-js/es/array/flat';
-
-import { init } from 'snabbdom';
-import AttrsHelper from 'snabbdom/modules/attributes';
-import PropsHelper from 'snabbdom/modules/props';
-import DataHelper from 'snabbdom/modules/dataset';
-import ClassHelper from 'snabbdom/modules/class';
-import StyleHelper from 'snabbdom/modules/style';
-import EventHelper from 'snabbdom/modules/eventlisteners';
-import createElement, { VNodeChildElement } from 'snabbdom/h';
-import { VNode } from 'snabbdom/vnode';
+import { init } from 'snabbdom/src/snabbdom';
+import AttrsHelper from 'snabbdom/src/modules/attributes';
+import PropsHelper from 'snabbdom/src/modules/props';
+import DataHelper from 'snabbdom/src/modules/dataset';
+import ClassHelper from 'snabbdom/src/modules/class';
+import StyleHelper from 'snabbdom/src/modules/style';
+import EventHelper from 'snabbdom/src/modules/eventlisteners';
+import { VNode } from 'snabbdom/src/vnode';
+import toVNode from 'snabbdom/src/tovnode';
+import createElement, { VNodeChildElement } from 'snabbdom/src/h';
 
 import { Reflect, PlainObject, templateOf, elementTypeOf } from './utility';
 
-const { slice } = Array.prototype;
-
-export { VNode } from 'snabbdom/vnode';
-export { VNodeChildElement } from 'snabbdom/h';
+export { VNode } from 'snabbdom/src/vnode';
+export { VNodeChildElement } from 'snabbdom/src/h';
 
 export const patch = init([
     AttrsHelper,
@@ -27,47 +23,32 @@ export const patch = init([
     EventHelper
 ]);
 
+function createVTree(
+    root: ParentNode & Node,
+    nodes: VNodeChildElement | VNodeChildElement[]
+) {
+    const tree = toVNode(root);
+
+    tree.children = (nodes instanceof Array ? nodes : [nodes])
+        .filter(node => node != null)
+        .map(node =>
+            typeof node === 'string' || typeof node === 'object'
+                ? node
+                : node + ''
+        );
+
+    return tree;
+}
+
 export function render(
     nodes: VNodeChildElement | VNodeChildElement[],
     root: ParentNode & Node = document.body,
     oldNodes: VNodeChildElement | VNodeChildElement[] = []
 ) {
-    nodes = (nodes instanceof Array ? nodes : [nodes]).filter(
-        node => node != null
-    );
-    oldNodes = (oldNodes instanceof Array ? oldNodes : [oldNodes]).filter(
-        node => node != null
-    );
+    const newTree = createVTree(root, nodes),
+        oldTree = createVTree(root, oldNodes);
 
-    for (let i = 0; i < nodes.length; i++) {
-        let node = root.childNodes[i],
-            vNode = nodes[i];
-
-        if (typeof vNode !== 'object') {
-            if (node) node.nodeValue = vNode + '';
-            else root.append(vNode + '');
-
-            continue;
-        }
-
-        if (!oldNodes[i]) {
-            const tag = (vNode as VNode).sel!.split(/[#.:]/)[0];
-
-            if (!node) node = root.appendChild(document.createElement(tag));
-            else if (node.nodeName.toLowerCase() !== tag) {
-                const old = node;
-
-                root.replaceChild((node = document.createElement(tag)), old);
-            }
-        }
-
-        nodes[i] = patch(
-            (oldNodes[i] as VNode) || (node as Element),
-            nodes[i] as VNode
-        );
-    }
-
-    for (const node of slice.call(root.childNodes, nodes.length)) node.remove();
+    patch(oldTree, newTree);
 
     return nodes;
 }
