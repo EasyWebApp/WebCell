@@ -5,6 +5,15 @@ import { WebCellComponent } from '../dist';
 
 var page: Page;
 
+async function assertShadowDOM(tagName: string, HTML: string) {
+    expect(
+        await page.$eval(
+            tagName,
+            (tag: WebCellComponent) => tag.shadowRoot!.children[1]!.outerHTML
+        )
+    ).toBe(HTML);
+}
+
 describe('Web Component', () => {
     beforeAll(async () => (page = await getPage()));
 
@@ -15,13 +24,8 @@ describe('Web Component', () => {
     });
 
     it('should build Shadow DOM & create Class Component', async () => {
-        expect(
-            await page.$eval(
-                'test-tag',
-                tag =>
-                    (tag as WebCellComponent).shadowRoot!.children[1]!.outerHTML
-            )
-        ).toBe(
+        await assertShadowDOM(
+            'test-tag',
             '<h1 title="Test" class="title">Test<img alt="Test"><sub-tag><span>test</span></sub-tag></h1>'
         );
 
@@ -54,21 +58,25 @@ describe('Web Component', () => {
         );
     });
 
-    it('should observe Attribute', async () => {
+    it('should synchronize Attributes & Properties', async () => {
         await page.$eval('test-tag', tag =>
             tag.setAttribute('title', 'Sample')
         );
 
         await delay();
 
-        expect(
-            await page.$eval(
-                'test-tag',
-                tag =>
-                    (tag as WebCellComponent).shadowRoot!.children[1]!.outerHTML
-            )
-        ).toBe(
+        await assertShadowDOM(
+            'test-tag',
             '<h1 title="Sample" class="title active">Sample<img alt="Sample"><sub-tag><span>test</span></sub-tag></h1>'
         );
+
+        await page.$eval(
+            'test-tag',
+            (tag: WebCellComponent) => (tag.title = 'Demo')
+        );
+
+        expect(
+            await page.$eval('test-tag', tag => tag.getAttribute('title'))
+        ).toBe('Demo');
     });
 });

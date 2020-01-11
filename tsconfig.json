@@ -15,5 +15,13 @@
         "jsxFactory": "createCell",
         "lib": ["ES2019", "DOM"]
     },
-    "include": ["./source/**/*"]
+    "include": ["./source/**/*"],
+    "typedocOptions": {
+        "name": "WebCell",
+        "mode": "file",
+        "excludeExternals": true,
+        "excludeNotExported": true,
+        "readme": "./ReadMe.md",
+        "out": "docs/"
+    }
 }

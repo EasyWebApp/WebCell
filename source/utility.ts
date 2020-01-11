@@ -47,7 +47,13 @@ export function elementTypeOf(tagName: string) {
         : 'xml';
 }
 
-export function delegate(selector: string, handler: Function) {
+export type DelegateEventHandler = (
+    event: Event,
+    currentTarget: Element,
+    detail: any
+) => any;
+
+export function delegate(selector: string, handler: DelegateEventHandler) {
     return function(this: Node, event: Event) {
         var node,
             path = event.composedPath();

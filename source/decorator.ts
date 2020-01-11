@@ -1,4 +1,5 @@
 import { Reflect, toHyphenCase } from './utility';
+import { WebCellComponent } from './WebCell';
 
 interface ComponentMeta {
     tagName: string;
@@ -24,7 +25,7 @@ export function component(meta: ComponentMeta) {
 
 export function watch(prototype: Object, key: string) {
     Object.defineProperty(prototype, key, {
-        set(value) {
+        set(this: WebCellComponent, value) {
             this.setProps({ [key]: value });
         },
         get() {

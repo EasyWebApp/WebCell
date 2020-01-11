@@ -1,4 +1,10 @@
-import { Reflect, toCamelCase, Fragment, delegate } from './utility';
+import {
+    Reflect,
+    delegate,
+    Fragment,
+    toHyphenCase,
+    toCamelCase
+} from './utility';
 import { watch, DOMEventDelegateHandler } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
 
@@ -11,46 +17,53 @@ type Data<T> = {
 };
 
 export interface WebCellComponent<P extends BaseProps = {}, S = {}>
-    extends Element {
-    connectedCallback(): void;
+    extends HTMLElement {
+    /**
+     * Called every time the element is inserted into the DOM
+     */
+    connectedCallback?(): void;
+    /**
+     * Called every time the element is removed from the DOM.
+     */
+    disconnectedCallback?(): void;
+    /**
+     * Called when an observed attribute has been added, removed, updated, or replaced.
+     * Also called for initial values when an element is created by the parser, or upgraded.
+     *
+     * Note: only attributes listed in static `observedAttributes` property will receive this callback.
+     */
     attributeChangedCallback?(
         name: string,
         oldValue: string,
         newValue: string
     ): void;
+    /**
+     * The custom element has been moved into a new document
+     * (e.g. someone called `document.adoptNode(el)`).
+     */
     adoptedCallback?(): void;
-    disconnectedCallback?(): void;
+    update(): void;
     props: Data<P>;
-    setProps(data: { [key in keyof P]: any }): Promise<void>;
+    setProps(data: { [key in keyof P]: any }): Promise<any>;
     state: Data<S>;
     setState(data: { [key in keyof S]: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
     render?(props: Data<P>, state: Data<S>): VNodeChildElement;
+    /**
+     * Called before `state` is updated
+     */
     shouldUpdate?(oldState: S, newState: S): boolean;
+    /**
+     * Called after rendering
+     */
     updatedCallback?(): void;
-    emit(event: string, detail: any, options: EventInit): boolean;
+    emit(event: string, detail?: any, options?: EventInit): boolean;
 }
 
 export function mixin<P = {}, S = {}>(
     superClass = HTMLElement
 ): { new (): WebCellComponent<P, S> } {
     class WebCell extends superClass implements WebCellComponent<P, S> {
-        static get observedAttributes() {
-            return Reflect.getMetadata('attributes', this);
-        }
-
-        attributeChangedCallback(name: string, _: string, value: string) {
-            try {
-                value = JSON.parse(value);
-            } catch {
-                /**/
-            }
-
-            this.setProps({ [toCamelCase(name)]: value } as {
-                [key in keyof P]: string;
-            });
-        }
-
         private root: DocumentFragment | Element;
         private CSS?: VNode;
         private vTree: VNodeChildElement | VNodeChildElement[];
@@ -106,7 +119,7 @@ export function mixin<P = {}, S = {}>(
             this.update();
         }
 
-        protected update() {
+        update() {
             if (
                 !(this.CSS || this.render) ||
                 !(this.shouldUpdate?.(this.state, this.cache) ?? true)
@@ -144,7 +157,30 @@ export function mixin<P = {}, S = {}>(
         setProps(data: { [key in keyof P]: any }) {
             Object.assign(this.props, data);
 
-            return this.updateAsync();
+            const attributes: string[] | null = Reflect.getMetadata(
+                'attributes',
+                this.constructor
+            );
+
+            if (attributes)
+                var attributesChanged = new Promise(resolve => {
+                    self.requestAnimationFrame(() => {
+                        for (const key in data) {
+                            const name = toHyphenCase(key);
+
+                            if (attributes.includes(name))
+                                super.setAttribute(
+                                    name,
+                                    typeof data[key] === 'boolean'
+                                        ? name
+                                        : data[key]
+                                );
+                        }
+                        resolve();
+                    });
+                });
+
+            return Promise.all([attributesChanged, this.updateAsync()]);
         }
 
         setState(data: { [key in keyof S]: any }) {
@@ -153,9 +189,31 @@ export function mixin<P = {}, S = {}>(
             return this.updateAsync();
         }
 
+        setAttribute(name: string, value: string | number | boolean) {
+            super.setAttribute(name, value);
+
+            const list: string[] | null = Reflect.getMetadata(
+                'attributes',
+                this.constructor
+            );
+
+            if (!list?.includes(name)) return;
+
+            if (typeof value === 'string')
+                try {
+                    var data = JSON.parse(value);
+                } catch (error) {
+                    //
+                }
+
+            this.setProps({ [toCamelCase(name)]: data ?? value } as {
+                [key in keyof P]: any;
+            });
+        }
+
         emit(
             event: string,
-            detail: any,
+            detail?: any,
             { cancelable, bubbles, composed }: EventInit = {}
         ) {
             return this.dispatchEvent(

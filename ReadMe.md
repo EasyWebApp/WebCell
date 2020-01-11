@@ -213,6 +213,20 @@ Promise.all([loaded, documentReady]).then(() =>
 );
 ```
 
+## Life Cycle hooks
+
+1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#connectedcallback)
+
+2. [`disconnectedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#disconnectedcallback)
+
+3. [`attributeChangedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#attributechangedcallback)
+
+4. [`adoptedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#adoptedcallback)
+
+5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#shouldupdate)
+
+6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#updatedcallback)
+
 ## Ecosystem
 
 We recommend these libraries to use with WebCell:
