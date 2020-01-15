@@ -1,11 +1,11 @@
-import { Reflect, toHyphenCase } from './utility';
+import { CSSObject, Reflect, stringifyCSS, toHyphenCase } from './utility';
 import { WebCellComponent } from './WebCell';
 
 interface ComponentMeta {
     tagName: string;
     extends?: string;
     renderTarget?: 'shadowRoot' | 'children';
-    style?: string;
+    style?: string | CSSObject;
 }
 
 export function component(meta: ComponentMeta) {
@@ -17,7 +17,14 @@ export function component(meta: ComponentMeta) {
             Class
         );
 
-        if (meta.style) Reflect.defineMetadata('style', meta.style, Class);
+        if (meta.style)
+            Reflect.defineMetadata(
+                'style',
+                typeof meta.style === 'object'
+                    ? stringifyCSS(meta.style)
+                    : meta.style,
+                Class
+            );
 
         customElements.define(meta.tagName, Class, { extends: meta.extends });
     };

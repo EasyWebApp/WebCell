@@ -154,6 +154,22 @@ export function mixin<P = {}, S = {}>(
                 ));
         }
 
+        private syncPropAttr(data: { [key in keyof P]: any }, list: string[]) {
+            for (const key in data) {
+                const name = toHyphenCase(key);
+
+                if (!list.includes(name)) continue;
+
+                if (data[key] != null) {
+                    if (typeof data[key] !== 'object')
+                        super.setAttribute(
+                            name,
+                            typeof data[key] === 'boolean' ? name : data[key]
+                        );
+                } else this.removeAttribute(name);
+            }
+        }
+
         setProps(data: { [key in keyof P]: any }) {
             Object.assign(this.props, data);
 
@@ -163,22 +179,11 @@ export function mixin<P = {}, S = {}>(
             );
 
             if (attributes)
-                var attributesChanged = new Promise(resolve => {
-                    self.requestAnimationFrame(() => {
-                        for (const key in data) {
-                            const name = toHyphenCase(key);
-
-                            if (attributes.includes(name))
-                                super.setAttribute(
-                                    name,
-                                    typeof data[key] === 'boolean'
-                                        ? name
-                                        : data[key]
-                                );
-                        }
-                        resolve();
-                    });
-                });
+                var attributesChanged = new Promise(resolve =>
+                    self.requestAnimationFrame(
+                        () => (this.syncPropAttr(data, attributes), resolve())
+                    )
+                );
 
             return Promise.all([attributesChanged, this.updateAsync()]);
         }

@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-rc.14",
+    "version": "2.0.0-rc.15",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -27,9 +27,9 @@
         "@types/core-js": "^2.5.2",
         "@types/jest": "^24.0.25",
         "@types/puppeteer-core": "^1.9.0",
-        "@typescript-eslint/parser": "^2.15.0",
+        "@typescript-eslint/parser": "^2.16.0",
         "@webcomponents/webcomponentsjs": "^2.4.1",
-        "core-js": "^3.6.3",
+        "core-js": "^3.6.4",
         "eslint": "^6.8.0",
         "eslint-config-prettier": "^6.9.0",
         "eslint-plugin-prettier": "^3.1.2",
@@ -39,7 +39,6 @@
         "lint-staged": "^9.5.0",
         "open-cli": "^5.0.0",
         "parcel-bundler": "^1.12.4",
-        "parcel-plugin-text": "^0.9.5",
         "prettier": "^1.19.1",
         "puppeteer-core": "^1.20.0",
         "snabbdom": "^0.7.4",
@@ -96,11 +95,6 @@
         "testPathIgnorePatterns": [
             "/node_modules/",
             "/MobX/"
-        ]
-    },
-    "parcel-plugin-text": {
-        "extensions": [
-            "css"
         ]
     }
 }

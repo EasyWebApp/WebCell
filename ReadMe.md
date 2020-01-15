@@ -77,31 +77,6 @@ export class SubTag extends mixin() {
 
 ### Advanced component
 
-```shell
-npm install parcel-plugin-text -D
-```
-
-`package.json`
-
-```json
-{
-    "parcel-plugin-text": {
-        "extensions": ["css"]
-    }
-}
-```
-
-[`source/TestTag.css`](test/source/TestTag.css)
-
-```css
-.title {
-    color: lightblue;
-}
-.title.active {
-    color: lightpink;
-}
-```
-
 [`source/TestTag.tsx`](test/source/TestTag.tsx)
 
 ```jsx
@@ -115,7 +90,6 @@ import {
     Fragment
 } from 'web-cell';
 
-import style from './TestTag.css';
 import { SubTag } from './SubTag';
 
 interface Props {
@@ -128,7 +102,14 @@ interface State {
 
 @component({
     tagName: 'test-tag',
-    style
+    style: {
+        '.title': {
+            color: 'lightblue'
+        },
+        '.title.active': {
+            color: 'lightpink'
+        }
+    }
 })
 export class TestTag extends mixin<Props, State>() {
     @attribute
@@ -215,17 +196,17 @@ Promise.all([loaded, documentReady]).then(() =>
 
 ## Life Cycle hooks
 
-1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#connectedcallback)
+1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#connectedcallback)
 
-2. [`disconnectedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#disconnectedcallback)
+2. [`disconnectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#disconnectedcallback)
 
-3. [`attributeChangedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#attributechangedcallback)
+3. [`attributeChangedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#attributechangedcallback)
 
-4. [`adoptedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#adoptedcallback)
+4. [`adoptedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#adoptedcallback)
 
-5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#shouldupdate)
+5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#shouldupdate)
 
-6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/_webcell_.webcellcomponent.html#updatedcallback)
+6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback)
 
 ## Ecosystem
 
