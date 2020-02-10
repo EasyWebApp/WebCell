@@ -78,7 +78,7 @@ export function mixin<P = {}, S = {}>(
 
         [key: string]: any;
 
-        constructor({ mode }: any = {}) {
+        constructor({ mode = 'open' }: ShadowRootInit = {} as ShadowRootInit) {
             super();
 
             const renderChildren =
@@ -87,7 +87,7 @@ export function mixin<P = {}, S = {}>(
 
             const root = (this.root = renderChildren
                 ? this
-                : this.attachShadow({ mode: mode || 'open' }));
+                : this.attachShadow({ mode }));
 
             const events: DOMEventDelegateHandler[] =
                 Reflect.getMetadata('DOM-Event', Object.getPrototypeOf(this)) ||
@@ -160,12 +160,11 @@ export function mixin<P = {}, S = {}>(
 
                 if (!list.includes(name)) continue;
 
-                if (data[key] != null) {
-                    if (typeof data[key] !== 'object')
-                        super.setAttribute(
-                            name,
-                            typeof data[key] === 'boolean' ? name : data[key]
-                        );
+                const item = data[key];
+
+                if (item != null && item !== false) {
+                    if (typeof item !== 'object')
+                        super.setAttribute(name, item === true ? name : item);
                 } else this.removeAttribute(name);
             }
         }

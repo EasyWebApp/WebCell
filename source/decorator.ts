@@ -30,17 +30,27 @@ export function component(meta: ComponentMeta) {
     };
 }
 
-export function watch(prototype: Object, key: string) {
-    Object.defineProperty(prototype, key, {
-        set(this: WebCellComponent, value) {
+export function watch(
+    prototype: Object,
+    key: string,
+    meta?: PropertyDescriptor
+) {
+    const accessor = !!meta;
+    meta = meta || Object.getOwnPropertyDescriptor(prototype, key) || {};
+
+    meta.set =
+        meta.set ||
+        function(this: WebCellComponent, value) {
             this.setProps({ [key]: value });
-        },
-        get() {
+        };
+    meta.get =
+        meta.get ||
+        function() {
             return this.props[key];
-        },
-        configurable: true,
-        enumerable: true
-    });
+        };
+    (meta.configurable = true), (meta.enumerable = true);
+
+    if (!accessor) Object.defineProperty(prototype, key, meta);
 }
 
 export function attribute({ constructor }: Object, key: string) {

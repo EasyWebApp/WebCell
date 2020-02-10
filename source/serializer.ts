@@ -26,7 +26,7 @@ const VoidTag = [
 export function vNodeToMarkup({
     sel,
     data: { attrs, props, style, class: Klass, dataset } = {},
-    children
+    children = []
 }: VNode): string {
     const meta = [sel.split(/#|\./)[0]],
         selector = sel.match(/(#|\.)\S+?/g) || [];

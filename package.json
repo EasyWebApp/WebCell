@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.0.0-rc.15",
+    "version": "2.0.0-rc.18",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -25,18 +25,18 @@
     "types": "dist/index.d.ts",
     "devDependencies": {
         "@types/core-js": "^2.5.2",
-        "@types/jest": "^24.0.25",
+        "@types/jest": "^24.9.1",
         "@types/puppeteer-core": "^1.9.0",
-        "@typescript-eslint/parser": "^2.16.0",
+        "@typescript-eslint/parser": "^2.19.0",
         "@webcomponents/webcomponentsjs": "^2.4.1",
         "core-js": "^3.6.4",
         "eslint": "^6.8.0",
-        "eslint-config-prettier": "^6.9.0",
+        "eslint-config-prettier": "^6.10.0",
         "eslint-plugin-prettier": "^3.1.2",
         "fs-match": "^1.3.5",
-        "husky": "^3.1.0",
+        "husky": "^4.2.1",
         "jest": "^24.9.0",
-        "lint-staged": "^9.5.0",
+        "lint-staged": "^10.0.7",
         "open-cli": "^5.0.0",
         "parcel-bundler": "^1.12.4",
         "prettier": "^1.19.1",
@@ -44,7 +44,7 @@
         "snabbdom": "^0.7.4",
         "ts-jest": "^24.3.0",
         "typedoc": "^0.15.8",
-        "typescript": "^3.7.4"
+        "typescript": "^3.7.5"
     },
     "scripts": {
         "lint": "lint-staged",
@@ -62,17 +62,14 @@
     },
     "lint-staged": {
         "source/**/*.{ts,tsx}": [
-            "eslint --fix",
-            "git add"
+            "eslint --fix"
         ],
         "*.{js,ts,tsx}": [
             "prettier --write",
-            "eslint --fix --rule 'require-atomic-updates: 1'",
-            "git add"
+            "eslint --fix --rule 'require-atomic-updates: 1'"
         ],
         "*.{html,md,css,json,yml}": [
-            "prettier --write",
-            "git add"
+            "prettier --write"
         ]
     },
     "husky": {
