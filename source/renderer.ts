@@ -9,7 +9,13 @@ import { VNode } from 'snabbdom/src/vnode';
 import toVNode from 'snabbdom/src/tovnode';
 import createElement, { VNodeChildElement } from 'snabbdom/src/h';
 
-import { Reflect, PlainObject, templateOf, elementTypeOf } from './utility';
+import {
+    Reflect,
+    PlainObject,
+    templateOf,
+    ReadOnly_Properties,
+    elementTypeOf
+} from './utility';
 
 export { VNode } from 'snabbdom/src/vnode';
 export { VNodeChildElement } from 'snabbdom/src/h';
@@ -55,18 +61,17 @@ export function render(
 
 function splitProps(raw: any) {
     const [attrs, dataset, on] = Object.entries(raw).reduce(
-        (objects, [key, value]) => {
+        ([attrs, dataset, on], [key, value]) => {
             const data = /^data-(.+)/.exec(key);
 
             if (data)
-                objects[1][
+                dataset[
                     data[1].replace(/-\w/g, char => char[1].toUpperCase())
                 ] = value;
-            else if (/^on\w+/.test(key))
-                objects[2][key.slice(2).toLowerCase()] = value;
-            else objects[0][key] = value;
+            else if (/^on\w+/.test(key)) on[key.slice(2).toLowerCase()] = value;
+            else attrs[key] = value;
 
-            return objects;
+            return [attrs, dataset, on];
         },
         [{}, {}, {}] as PlainObject[]
     );
@@ -79,11 +84,17 @@ function splitAttrs(tagName: string, raw: any) {
         ? (customElements.get(tagName) || '').prototype
         : Object.getPrototypeOf(templateOf(tagName));
 
-    const [props, attrs] = Object.entries(raw).reduce(
-        (objects, [key, value]) => {
-            objects[key in prototype ? 0 : 1][key] = value;
+    const { name } = prototype.constructor as Function;
+    const readOnly =
+        ReadOnly_Properties[name as keyof typeof ReadOnly_Properties];
 
-            return objects;
+    const [props, attrs] = Object.entries(raw).reduce(
+        ([props, attrs], [key, value]) => {
+            if (key in prototype && !readOnly?.includes(key))
+                props[key] = value;
+            else attrs[key] = value;
+
+            return [props, attrs];
         },
         [{}, {}] as PlainObject[]
     );

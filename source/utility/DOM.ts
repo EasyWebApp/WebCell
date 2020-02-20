@@ -46,3 +46,17 @@ export function elementTypeOf(tagName: string) {
         ? 'html'
         : 'xml';
 }
+
+// fetch from https://html.spec.whatwg.org/
+
+export const ReadOnly_Properties = {
+    HTMLLinkElement: ['sizes'],
+    HTMLIFrameElement: ['sandbox'],
+    HTMLObjectElement: ['form'],
+    HTMLInputElement: ['form', 'list'],
+    HTMLButtonElement: ['form'],
+    HTMLSelectElement: ['form'],
+    HTMLTextAreaElement: ['form'],
+    HTMLOutputElement: ['form'],
+    HTMLFieldSetElement: ['form']
+};

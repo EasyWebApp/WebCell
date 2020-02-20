@@ -6,11 +6,13 @@
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
 [![Build Status](https://travis-ci.com/EasyWebApp/WebCell.svg?branch=v2)][5]
-[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][6]
 
-[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][7]
+[![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
+[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][7]
 
-[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][8]
+[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][8]
+
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][9]
 
 ## Usage
 
@@ -31,8 +33,8 @@ npm install parcel-bundler -D
 ```json
 {
     "scripts": {
-        "start": "parcel source/index.html",
-        "build": "parcel build source/index.html"
+        "start": "parcel source/index.html --open",
+        "build": "parcel build source/index.html --public-url"
     }
 }
 ```
@@ -212,38 +214,45 @@ Promise.all([loaded, documentReady]).then(() =>
 
 We recommend these libraries to use with WebCell:
 
--   **State management**: [MobX][9] (also powered by TypeScript & Decorator)
+-   **State management**: [MobX][10] (also powered by **TypeScript** & **Decorator**)
 
--   **Router**: [Cell Router][10] (based on MobX)
+-   **Router**: [Cell Router][11] (based on **MobX**)
 
 -   **UI components**
 
-    -   [BootCell][11] (based on BootStrap v4)
-    -   [GitHub Web Widget][12]
+    -   [BootCell][12] (based on **BootStrap v4**)
+    -   [Material Cell][13] (based on **Material Design** & **BootStrap v4**)
+    -   [GitHub Web Widget][14]
 
--   **HTTP request**: [KoAJAX][13] (based on Koa-like middlewares)
+-   **HTTP request**: [KoAJAX][15] (based on **Koa**-like middlewares)
 
--   **Event stream**: [Iterable Observer][14]
+-   **Event stream**: [Iterable Observer][16] (**Observable** proposal)
+
+-   **MarkDown integration**: [MarkCell][17] (**MDX** implement)
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][15]
+-   [x] (Template) [Document Fragment node][18]
+-   [ ] Server-side Render
 
-Go to [contribute][16]!
+Go to [contribute][19]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
 [4]: https://david-dm.org/EasyWebApp/WebCell
 [5]: https://travis-ci.com/EasyWebApp/WebCell
-[6]: https://tech-query.me/programming/web-components-practise/slide.html
-[7]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
-[8]: https://nodei.co/npm/web-cell/
-[9]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
-[10]: https://web-cell.dev/cell-router/
-[11]: https://web-cell.dev/BootCell/
-[12]: https://tech-query.me/GitHub-Web-Widget/
-[13]: https://web-cell.dev/KoAJAX/
-[14]: https://web-cell.dev/iterable-observer/
-[15]: https://github.com/Microsoft/TypeScript/issues/20469
-[16]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md
+[6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
+[7]: https://tech-query.me/programming/web-components-practise/slide.html
+[8]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
+[9]: https://nodei.co/npm/web-cell/
+[10]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
+[11]: https://web-cell.dev/cell-router/
+[12]: https://web-cell.dev/BootCell/
+[13]: https://web-cell.dev/material-cell/
+[14]: https://tech-query.me/GitHub-Web-Widget/
+[15]: https://web-cell.dev/KoAJAX/
+[16]: https://web-cell.dev/iterable-observer/
+[17]: https://github.com/EasyWebApp/MarkCell
+[18]: https://github.com/Microsoft/TypeScript/issues/20469
+[19]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md

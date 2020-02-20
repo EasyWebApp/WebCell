@@ -44,7 +44,8 @@ function fadeIn<T extends Event>(
 async function fadeOut<T extends Event>(
     type: 'transition' | 'animation',
     element: HTMLElement,
-    className: string
+    className: string,
+    remove?: boolean
 ) {
     const end = watchMotion<T>(type, element);
 
@@ -52,7 +53,8 @@ async function fadeOut<T extends Event>(
 
     await end;
 
-    element.style.display = 'none';
+    if (remove) element.remove();
+    else element.style.display = 'none';
 }
 
 export function transitIn(
@@ -71,10 +73,18 @@ export function animateIn(
     return fadeIn<AnimationEvent>('animation', element, className, display);
 }
 
-export function transitOut(element: HTMLElement, className: string) {
-    return fadeOut<TransitionEvent>('transition', element, className);
+export function transitOut(
+    element: HTMLElement,
+    className: string,
+    remove?: boolean
+) {
+    return fadeOut<TransitionEvent>('transition', element, className, remove);
 }
 
-export function animateOut(element: HTMLElement, className: string) {
-    return fadeOut<AnimationEvent>('animation', element, className);
+export function animateOut(
+    element: HTMLElement,
+    className: string,
+    remove?: boolean
+) {
+    return fadeOut<AnimationEvent>('animation', element, className, remove);
 }

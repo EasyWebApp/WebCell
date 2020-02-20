@@ -48,7 +48,10 @@ export interface WebCellComponent<P extends BaseProps = {}, S = {}>
     state: Data<S>;
     setState(data: { [key in keyof S]: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
-    render?(props: Data<P>, state: Data<S>): VNodeChildElement;
+    render(
+        props: Data<P>,
+        state: Data<S>
+    ): VNodeChildElement | VNodeChildElement[];
     /**
      * Called before `state` is updated
      */
@@ -117,6 +120,15 @@ export function mixin<P = {}, S = {}>(
 
         connectedCallback() {
             this.update();
+        }
+
+        render(props: Data<P>, state: Data<S>) {
+            return Reflect.getMetadata('renderTarget', this.constructor) !==
+                'children' ? (
+                <slot />
+            ) : (
+                this.defaultSlot
+            );
         }
 
         update() {
