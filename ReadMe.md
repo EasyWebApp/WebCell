@@ -45,8 +45,8 @@ npm install parcel-bundler -D
 
 ```html
 <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.0/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.0/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.2/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.2/custom-elements-es5-adapter.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -142,60 +142,6 @@ export class TestTag extends mixin<Props, State>() {
 }
 ```
 
-### Internationalization
-
-`tsconfig.json`
-
-```json
-{
-    "compilerOptions": {
-        "module": "ESNext"
-    }
-}
-```
-
-`source/i18n/en-US.ts`
-
-```typescript
-export enum en_US {
-    title = 'Test'
-}
-
-export type I18nMap = typeof en_US;
-```
-
-`source/i18n/zh-CN.ts`
-
-```typescript
-export enum zh_CN {
-    title = '测试'
-}
-```
-
-`source/index.tsx`
-
-```javascript
-import {
-    createI18nScope,
-    documentReady,
-    render,
-    createCell
-} from 'web-cell';
-
-import { I18nMap } from './i18n/en-US';
-
-console.log(navigator.languages.includes('zh-CN')); // true
-
-const { loaded, i18nTextOf } = createI18nScope<I18nMap>({
-    'en-US': async () => (await import('./i18n/en-US')).en_US,
-    'zh-CN': async () => (await import('./i18n/zh-CN')).zh_CN
-}, 'en-US');
-
-Promise.all([loaded, documentReady]).then(() =>
-    render(<h1>{i18nTextOf('title')}</h1>); // <h1>测试</h1>
-);
-```
-
 ## Life Cycle hooks
 
 1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#connectedcallback)
@@ -226,16 +172,18 @@ We recommend these libraries to use with WebCell:
 
 -   **HTTP request**: [KoAJAX][15] (based on **Koa**-like middlewares)
 
--   **Event stream**: [Iterable Observer][16] (**Observable** proposal)
+-   **Utility**: [Web utility][16] (Methods & Types)
 
--   **MarkDown integration**: [MarkCell][17] (**MDX** implement)
+-   **Event stream**: [Iterable Observer][17] (**Observable** proposal)
+
+-   **MarkDown integration**: [MarkCell][18] (**MDX** implement)
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][18]
+-   [x] (Template) [Document Fragment node][19]
 -   [ ] Server-side Render
 
-Go to [contribute][19]!
+Go to [contribute][20]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
@@ -252,7 +200,8 @@ Go to [contribute][19]!
 [13]: https://web-cell.dev/material-cell/
 [14]: https://tech-query.me/GitHub-Web-Widget/
 [15]: https://web-cell.dev/KoAJAX/
-[16]: https://web-cell.dev/iterable-observer/
-[17]: https://github.com/EasyWebApp/MarkCell
-[18]: https://github.com/Microsoft/TypeScript/issues/20469
-[19]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md
+[16]: https://web-cell.dev/web-utility/
+[17]: https://web-cell.dev/iterable-observer/
+[18]: https://github.com/EasyWebApp/MarkCell
+[19]: https://github.com/Microsoft/TypeScript/issues/20469
+[20]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md

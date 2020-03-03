@@ -29,22 +29,3 @@ export const documentReady = new Promise(resolve => {
         document.readyState === 'complete' ? resolve() : setTimeout(check);
     });
 });
-
-export function promisify<T extends Event>(scope: string, element: Element) {
-    return new Promise<T>((resolve, reject) => {
-        function end(event: T) {
-            resolve(event), clean();
-        }
-        function cancel(event: T) {
-            reject(event), clean();
-        }
-
-        function clean() {
-            element.removeEventListener(scope + 'end', end);
-            element.removeEventListener(scope + 'cancel', cancel);
-        }
-
-        element.addEventListener(scope + 'end', end);
-        element.addEventListener(scope + 'cancel', cancel);
-    });
-}

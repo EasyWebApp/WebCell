@@ -9,7 +9,7 @@ interface ComponentMeta {
 }
 
 export function component(meta: ComponentMeta) {
-    return (Class: Function) => {
+    return (Class: { new (): HTMLElement }) => {
         Reflect.defineMetadata('tagName', meta.tagName, Class);
         Reflect.defineMetadata(
             'renderTarget',
