@@ -44,9 +44,9 @@ export interface WebCellComponent<P extends BaseProps = {}, S = {}>
     adoptedCallback?(): void;
     update(): void;
     props: Data<P>;
-    setProps(data: { [key in keyof P]: any }): Promise<any>;
+    setProps(data: { [key in keyof P]?: any }): Promise<any>;
     state: Data<S>;
-    setState(data: { [key in keyof S]: any }): Promise<void>;
+    setState(data: { [key in keyof S]?: any }): Promise<void>;
     defaultSlot: VNodeChildElement[];
     render(
         props: Data<P>,
@@ -61,6 +61,7 @@ export interface WebCellComponent<P extends BaseProps = {}, S = {}>
      */
     updatedCallback?(): void;
     emit(event: string, detail?: any, options?: EventInit): boolean;
+    toString(): string;
 }
 
 export function mixin<P = {}, S = {}>(
@@ -166,7 +167,7 @@ export function mixin<P = {}, S = {}>(
                 ));
         }
 
-        private syncPropAttr(data: { [key in keyof P]: any }, list: string[]) {
+        private syncPropAttr(data: { [key in keyof P]?: any }, list: string[]) {
             for (const key in data) {
                 const name = toHyphenCase(key);
 
@@ -181,7 +182,7 @@ export function mixin<P = {}, S = {}>(
             }
         }
 
-        setProps(data: { [key in keyof P]: any }) {
+        setProps(data: { [key in keyof P]?: any }) {
             Object.assign(this.props, data);
 
             const attributes: string[] | null = Reflect.getMetadata(
@@ -199,7 +200,7 @@ export function mixin<P = {}, S = {}>(
             return Promise.all([attributesChanged, this.updateAsync()]);
         }
 
-        setState(data: { [key in keyof S]: any }) {
+        setState(data: { [key in keyof S]?: any }) {
             Object.assign(this.cache, data);
 
             return this.updateAsync();
@@ -223,7 +224,7 @@ export function mixin<P = {}, S = {}>(
                 }
 
             this.setProps({ [toCamelCase(name)]: data ?? value } as {
-                [key in keyof P]: any;
+                [key in keyof P]?: any;
             });
         }
 
@@ -245,7 +246,7 @@ export function mixin<P = {}, S = {}>(
         toString() {
             return new XMLSerializer()
                 .serializeToString(this.root)
-                .replace(' xmlns="http://www.w3.org/1999/xhtml"', '');
+                .replace(/ xmlns="http:\/\/www.w3.org\/1999\/xhtml"/g, '');
         }
     }
 

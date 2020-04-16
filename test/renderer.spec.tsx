@@ -1,5 +1,5 @@
-import './polyfill';
-import { createCell, render } from '../dist';
+import '../source/utility/polyfill';
+import { createCell, render, renderToStaticMarkup, Fragment } from '../source';
 
 describe('Renderer', () => {
     it('should render HTML attributes, CSS Styles/Classes & Dataset', () => {
@@ -41,6 +41,27 @@ describe('Renderer', () => {
 
         expect(document.body.innerHTML.trim()).toBe(
             '<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" stroke="red" fill="grey"></circle></svg>'
+        );
+    });
+
+    it('should render VDOM to Markup', () => {
+        const source = renderToStaticMarkup(
+            <Fragment>
+                <div
+                    className="test"
+                    style={{ color: 'red', opacity: 0.5 }}
+                    data-test="example"
+                >
+                    test
+                    <br />
+                    <span>example</span>
+                </div>
+                sample
+            </Fragment>
+        );
+
+        expect(source).toBe(
+            '<div data-test="example" class="test" style="color: red; opacity: 0.5;">test<br><span>example</span></div>sample'
         );
     });
 });

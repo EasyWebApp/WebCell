@@ -38,9 +38,7 @@ function createVTree(
     tree.children = (nodes instanceof Array ? nodes : [nodes])
         .filter(node => node != null)
         .map(node =>
-            typeof node === 'string' || typeof node === 'object'
-                ? node
-                : node + ''
+            typeof node === 'object' ? node : ({ text: node + '' } as VNode)
         );
 
     return tree;
@@ -168,4 +166,14 @@ export function createCell(
     meta.props.defaultSlot = defaultSlot;
 
     return createElement(tag, meta);
+}
+
+export function renderToStaticMarkup(
+    vNode: VNodeChildElement | VNodeChildElement[]
+) {
+    const { body } = document.implementation.createHTMLDocument();
+
+    render(vNode, body);
+
+    return body.innerHTML;
 }

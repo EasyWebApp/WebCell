@@ -39,14 +39,14 @@ npm install parcel-bundler -D
 }
 ```
 
-[`tsconfig.json`](./tsconfig.json)
+[`tsconfig.json`](https://github.com/EasyWebApp/WebCell/blob/v2/tsconfig.json)
 
-[`source/index.html`](test/index.html)
+`source/index.html`
 
 ```html
 <script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.2/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.2/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.3/custom-elements-es5-adapter.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -57,7 +57,7 @@ npm install parcel-bundler -D
 
 ### Simple component
 
-[`source/SubTag.tsx`](test/source/SubTag.tsx)
+`source/SubTag.tsx`
 
 ```jsx
 import { createCell, component, mixin } from 'web-cell';
@@ -79,7 +79,7 @@ export class SubTag extends mixin() {
 
 ### Advanced component
 
-[`source/TestTag.tsx`](test/source/TestTag.tsx)
+`source/TestTag.tsx`
 
 ```jsx
 import {
@@ -156,6 +156,14 @@ export class TestTag extends mixin<Props, State>() {
 
 6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback)
 
+## Scaffolds
+
+1. [Basic](https://github.com/EasyWebApp/scaffold)
+
+2. [DashBoard](https://github.com/EasyWebApp/DashBoard)
+
+3. [Static site](https://github.com/EasyWebApp/mark-wiki)
+
 ## Ecosystem
 
 We recommend these libraries to use with WebCell:
@@ -196,7 +204,7 @@ Go to [contribute][20]!
 [9]: https://nodei.co/npm/web-cell/
 [10]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
 [11]: https://web-cell.dev/cell-router/
-[12]: https://web-cell.dev/BootCell/
+[12]: https://bootstrap.web-cell.dev/
 [13]: https://web-cell.dev/material-cell/
 [14]: https://tech-query.me/GitHub-Web-Widget/
 [15]: https://web-cell.dev/KoAJAX/

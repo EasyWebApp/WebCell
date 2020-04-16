@@ -1,5 +1,5 @@
-import './polyfill';
-import { stringifyCSS } from '../dist';
+import '../source/utility/polyfill';
+import { stringifyCSS } from '../source';
 
 describe('Utility methods', () => {
     describe('Stringify CSS', () => {

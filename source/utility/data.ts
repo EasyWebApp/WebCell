@@ -1,4 +1,4 @@
-export type PlainObject = { [key: string]: any };
+export type PlainObject = Record<string, any>;
 
 const meta = new WeakMap();
 

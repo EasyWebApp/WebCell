@@ -1,7 +1,5 @@
-type/
 .eslintrc.json
 test/
-DTS.json
 .cache/
 Contributing.md
 docs/
