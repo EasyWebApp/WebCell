@@ -1,14 +1,6 @@
-import { delay } from '../source/utility/polyfill';
-import {
-    component,
-    mixin,
-    render,
-    createCell,
-    WebCellComponent,
-    watch,
-    attribute,
-    on
-} from '../source';
+import { component, watch, attribute, on } from '../source/decorator';
+import { mixin, WebCellComponent } from '../source/WebCell';
+import { render, createCell } from '../source/renderer';
 
 describe('Class & Decorator', () => {
     it('should define a Custom Element', () => {
@@ -89,7 +81,7 @@ describe('Class & Decorator', () => {
         expect(tag.name).toBe('test');
         expect(tag.props.name).toBe('test');
 
-        await delay(0.05);
+        await new Promise(resolve => setTimeout(resolve, 50));
 
         expect(tag.getAttribute('name')).toBe('test');
         expect(tag.innerHTML).toBe('<h2>test</h2>');

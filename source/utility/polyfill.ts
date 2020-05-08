@@ -18,7 +18,3 @@ for (const key of [
 }
 
 self.requestAnimationFrame = setTimeout;
-
-export function delay(seconds = 0.1) {
-    return new Promise(resolve => setTimeout(resolve, seconds * 1000));
-}

@@ -1,4 +1,4 @@
-import '../source/DOM-polyfill';
+import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
 import { createCell, render, component, mixin } from 'web-cell';
 import { observable } from 'mobx';
 

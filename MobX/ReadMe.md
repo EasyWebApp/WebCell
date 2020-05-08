@@ -9,7 +9,7 @@
 ## Installation
 
 ```shell
-npm install web-cell@next mobx mobx-web-cell
+npm install web-cell mobx mobx-web-cell
 ```
 
 ## Usage
@@ -69,6 +69,6 @@ export default class PageIndex extends mixin() {
 ```
 
 [1]: https://mobx.js.org
-[2]: https://github.com/EasyWebApp/WebCell/tree/v2
+[2]: https://web-cell.dev/
 [3]: https://www.jsdelivr.com/package/npm/mobx-web-cell
 [4]: https://nodei.co/npm/mobx-web-cell/

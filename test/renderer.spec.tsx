@@ -1,5 +1,5 @@
-import '../source/utility/polyfill';
-import { createCell, render, renderToStaticMarkup, Fragment } from '../source';
+import { createCell, render, renderToStaticMarkup } from '../source/renderer';
+import { Fragment } from '../source/utility/vDOM';
 
 describe('Renderer', () => {
     it('should render HTML attributes, CSS Styles/Classes & Dataset', () => {

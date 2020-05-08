@@ -1,29 +1,31 @@
+import { WebCellProps, VNode, WebCellComponent, patch } from 'web-cell';
 import { autorun } from 'mobx';
-import { VNode, patch } from 'web-cell';
 
-function wrapFunction(func: (props?: any) => VNode) {
-    return function(props?: any) {
+export type FunctionComponent = (props?: WebCellProps) => VNode;
+export type ClassComponent = { new (): WebCellComponent };
+
+function wrapFunction(func: FunctionComponent) {
+    return function (props?: WebCellProps) {
         var vTree: VNode;
 
         autorun(
             () => (vTree = vTree ? patch(vTree, func(props)) : func(props))
         );
-
         return vTree;
     };
 }
 
-function wrapClass(Class: Function) {
+function wrapClass(Class: ClassComponent) {
     const update = Class.prototype.update;
 
-    Class.prototype.update = function() {
+    Class.prototype.update = function () {
         autorun(() => update.call(this));
     };
 }
 
-export function observer(Class: any): Function | typeof Class {
+export function observer(Class: FunctionComponent | ClassComponent): any {
     if (Object.getPrototypeOf(Class) === Function.prototype)
-        return wrapFunction(Class);
+        return wrapFunction(Class as FunctionComponent);
 
-    wrapClass(Class);
+    wrapClass(Class as ClassComponent);
 }
