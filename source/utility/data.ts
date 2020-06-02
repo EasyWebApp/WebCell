@@ -1,5 +1,3 @@
-export type PlainObject = Record<string, any>;
-
 const meta = new WeakMap();
 
 function defineMetadata(key: string, value: any, target: Object) {
@@ -11,7 +9,7 @@ function defineMetadata(key: string, value: any, target: Object) {
 }
 
 function getMetadata(key: string, target: Object) {
-    const data: PlainObject | null = meta.get(target);
+    const data: Record<string, any> | null = meta.get(target);
 
     if (data) return data[key];
 }

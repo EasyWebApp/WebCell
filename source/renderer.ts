@@ -11,9 +11,9 @@ import createElement, { VNodeChildElement } from 'snabbdom/src/h';
 
 import {
     Reflect,
-    PlainObject,
     templateOf,
     ReadOnly_Properties,
+    CellData,
     elementTypeOf
 } from './utility';
 
@@ -71,7 +71,7 @@ function splitProps(raw: any) {
 
             return [attrs, dataset, on];
         },
-        [{}, {}, {}] as PlainObject[]
+        [{}, {}, {}] as Record<string, any>[]
     );
 
     return { attrs, dataset, on };
@@ -94,17 +94,10 @@ function splitAttrs(tagName: string, raw: any) {
 
             return [props, attrs];
         },
-        [{}, {}] as PlainObject[]
+        [{}, {}] as Record<string, any>[]
     );
 
     return { props, attrs };
-}
-
-interface CellData {
-    className?: string;
-    style?: PlainObject;
-    key?: string;
-    ref?: (node: Node) => void;
 }
 
 export function createCell(
@@ -132,7 +125,7 @@ export function createCell(
             {
                 attrs: className ? { ...attrs, class: className } : attrs,
                 dataset,
-                style,
+                style: style as Record<string, string>,
                 on,
                 key,
                 hook: { insert }
@@ -155,7 +148,7 @@ export function createCell(
                           .map(name => [name, true])
                   )
                 : undefined,
-        style,
+        style: style as Record<string, string>,
         on,
         key,
         hook: { insert }

@@ -9,10 +9,11 @@
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
 [![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][7]
+[![Gitter](https://badges.gitter.im/EasyWebApp/community.svg)][8]
 
-[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][8]
+[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][9]
 
-[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][9]
+[![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][10]
 
 ## Usage
 
@@ -168,30 +169,30 @@ export class TestTag extends mixin<Props, State>() {
 
 We recommend these libraries to use with WebCell:
 
--   **State management**: [MobX][10] (also powered by **TypeScript** & **Decorator**)
+-   **State management**: [MobX][11] (also powered by **TypeScript** & **Decorator**)
 
--   **Router**: [Cell Router][11] (based on **MobX**)
+-   **Router**: [Cell Router][12] (based on **MobX**)
 
 -   **UI components**
 
-    -   [BootCell][12] (based on **BootStrap v4**)
-    -   [Material Cell][13] (based on **Material Design** & **BootStrap v4**)
-    -   [GitHub Web Widget][14]
+    -   [BootCell][13] (based on **BootStrap v4**)
+    -   [Material Cell][14] (based on **Material Design** & **BootStrap v4**)
+    -   [GitHub Web Widget][15]
 
--   **HTTP request**: [KoAJAX][15] (based on **Koa**-like middlewares)
+-   **HTTP request**: [KoAJAX][16] (based on **Koa**-like middlewares)
 
--   **Utility**: [Web utility][16] (Methods & Types)
+-   **Utility**: [Web utility][17] (Methods & Types)
 
--   **Event stream**: [Iterable Observer][17] (**Observable** proposal)
+-   **Event stream**: [Iterable Observer][18] (**Observable** proposal)
 
--   **MarkDown integration**: [MarkCell][18] (**MDX** implement)
+-   **MarkDown integration**: [MarkCell][19] (**MDX** implement)
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][19]
+-   [x] (Template) [Document Fragment node][20]
 -   [ ] Server-side Render
 
-Go to [contribute][20]!
+Go to [contribute][21]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
@@ -200,16 +201,17 @@ Go to [contribute][20]!
 [5]: https://travis-ci.com/EasyWebApp/WebCell
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://tech-query.me/programming/web-components-practise/slide.html
-[8]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
-[9]: https://nodei.co/npm/web-cell/
-[10]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
-[11]: https://web-cell.dev/cell-router/
-[12]: https://bootstrap.web-cell.dev/
-[13]: https://web-cell.dev/material-cell/
-[14]: https://tech-query.me/GitHub-Web-Widget/
-[15]: https://web-cell.dev/KoAJAX/
-[16]: https://web-cell.dev/web-utility/
-[17]: https://web-cell.dev/iterable-observer/
-[18]: https://github.com/EasyWebApp/MarkCell
-[19]: https://github.com/Microsoft/TypeScript/issues/20469
-[20]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md
+[8]: https://gitter.im/EasyWebApp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
+[9]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
+[10]: https://nodei.co/npm/web-cell/
+[11]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
+[12]: https://web-cell.dev/cell-router/
+[13]: https://bootstrap.web-cell.dev/
+[14]: https://web-cell.dev/material-cell/
+[15]: https://tech-query.me/GitHub-Web-Widget/
+[16]: https://web-cell.dev/KoAJAX/
+[17]: https://web-cell.dev/web-utility/
+[18]: https://web-cell.dev/iterable-observer/
+[19]: https://github.com/EasyWebApp/MarkCell
+[20]: https://github.com/Microsoft/TypeScript/issues/20469
+[21]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md

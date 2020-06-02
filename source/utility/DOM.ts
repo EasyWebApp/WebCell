@@ -1,5 +1,3 @@
-import { PlainObject } from './data';
-
 export type CSSValue = string | number | CSSObject;
 
 export interface CSSObject {
@@ -29,7 +27,7 @@ ${stringifyCSS(value as CSSObject, depth + 1)}${indent}}\n`
 }
 
 const spawn = document.createElement('template'),
-    cache: PlainObject = {};
+    cache: Record<string, any> = {};
 
 export function templateOf(tagName: string) {
     if (cache[tagName]) return cache[tagName];

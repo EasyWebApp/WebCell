@@ -1,5 +1,6 @@
 import {
     Reflect,
+    WebCellProps,
     delegate,
     Fragment,
     toHyphenCase,
@@ -8,20 +9,18 @@ import {
 import { watch, DOMEventDelegateHandler } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
 
-interface BaseProps {
-    defaultSlot?: VNodeChildElement | VNodeChildElement[];
-}
-
 type Data<T> = {
     [K in keyof T]: T[K];
 };
 
-export interface WebCellComponent<P extends BaseProps = {}, S = {}>
-    extends HTMLElement {
+export interface WebCellComponent<
+    P extends WebCellProps = WebCellProps,
+    S = {}
+> extends HTMLElement {
     /**
      * Called every time the element is inserted into the DOM
      */
-    connectedCallback?(): void;
+    connectedCallback(): void;
     /**
      * Called every time the element is removed from the DOM.
      */
@@ -64,7 +63,7 @@ export interface WebCellComponent<P extends BaseProps = {}, S = {}>
     toString(): string;
 }
 
-export function mixin<P = {}, S = {}>(
+export function mixin<P = WebCellProps, S = {}>(
     superClass = HTMLElement
 ): { new (): WebCellComponent<P, S> } {
     class WebCell extends superClass implements WebCellComponent<P, S> {
