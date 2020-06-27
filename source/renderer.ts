@@ -10,12 +10,13 @@ import toVNode from 'snabbdom/src/tovnode';
 import createElement, { VNodeChildElement } from 'snabbdom/src/h';
 
 import {
-    Reflect,
+    WebCellElement,
     templateOf,
     ReadOnly_Properties,
-    CellData,
+    WebCellData,
     elementTypeOf
 } from './utility';
+import { WebCellClass } from './WebCell';
 
 export { VNode } from 'snabbdom/src/vnode';
 export { VNodeChildElement } from 'snabbdom/src/h';
@@ -29,10 +30,7 @@ export const patch = init([
     EventHelper
 ]);
 
-function createVTree(
-    root: ParentNode & Node,
-    nodes: VNodeChildElement | VNodeChildElement[]
-) {
+function createVTree(root: ParentNode & Node, nodes: WebCellElement) {
     const tree = toVNode(root);
 
     tree.children = (nodes instanceof Array ? nodes : [nodes])
@@ -45,9 +43,9 @@ function createVTree(
 }
 
 export function render(
-    nodes: VNodeChildElement | VNodeChildElement[],
+    nodes: WebCellElement,
     root: ParentNode & Node = document.body,
-    oldNodes: VNodeChildElement | VNodeChildElement[] = []
+    oldNodes: WebCellElement = []
 ) {
     const newTree = createVTree(root, nodes),
         oldTree = createVTree(root, oldNodes);
@@ -102,12 +100,12 @@ function splitAttrs(tagName: string, raw: any) {
 
 export function createCell(
     tag: string | Function,
-    data?: CellData,
+    data?: WebCellData,
     ...defaultSlot: VNodeChildElement[]
 ): VNode | VNode[] {
     if (typeof tag !== 'string') {
-        var target = Reflect.getMetadata('renderTarget', tag);
-        tag = Reflect.getMetadata('tagName', tag) || tag;
+        var { tagName, renderTarget } = tag as WebCellClass;
+        tag = tagName || tag;
     }
 
     defaultSlot = defaultSlot.flat(Infinity).filter(item => item != null);
@@ -154,16 +152,15 @@ export function createCell(
         hook: { insert }
     };
 
-    if (target !== 'children') return createElement(tag, meta, defaultSlot);
+    if (renderTarget !== 'children')
+        return createElement(tag, meta, defaultSlot);
 
     meta.props.defaultSlot = defaultSlot;
 
     return createElement(tag, meta);
 }
 
-export function renderToStaticMarkup(
-    vNode: VNodeChildElement | VNodeChildElement[]
-) {
+export function renderToStaticMarkup(vNode: WebCellElement) {
     const { body } = document.implementation.createHTMLDocument();
 
     render(vNode, body);

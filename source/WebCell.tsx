@@ -1,17 +1,13 @@
 import {
-    Reflect,
     WebCellProps,
+    WebCellElement,
     delegate,
     Fragment,
     toHyphenCase,
     toCamelCase
 } from './utility';
-import { watch, DOMEventDelegateHandler } from './decorator';
+import { ComponentMeta, watch, DOMEventDelegater } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
-
-type Data<T> = {
-    [K in keyof T]: T[K];
-};
 
 export interface WebCellComponent<
     P extends WebCellProps = WebCellProps,
@@ -42,15 +38,12 @@ export interface WebCellComponent<
      */
     adoptedCallback?(): void;
     update(): void;
-    props: Data<P>;
-    setProps(data: { [key in keyof P]?: any }): Promise<any>;
-    state: Data<S>;
-    setState(data: { [key in keyof S]?: any }): Promise<void>;
+    props: P;
+    setProps(data: Partial<P>): Promise<any>;
+    state: S;
+    setState(data: Partial<S>): Promise<void>;
     defaultSlot: VNodeChildElement[];
-    render(
-        props: Data<P>,
-        state: Data<S>
-    ): VNodeChildElement | VNodeChildElement[];
+    render(props: P, state: S): WebCellElement;
     /**
      * Called before `state` is updated
      */
@@ -63,18 +56,32 @@ export interface WebCellComponent<
     toString(): string;
 }
 
+export interface WebCellClass<P extends WebCellProps = WebCellProps, S = {}>
+    extends Partial<ComponentMeta> {
+    new (): WebCellComponent<P, S>;
+    attributes?: string[];
+    eventDelegaters?: DOMEventDelegater[];
+}
+
 export function mixin<P = WebCellProps, S = {}>(
     superClass = HTMLElement
-): { new (): WebCellComponent<P, S> } {
+): WebCellClass {
     class WebCell extends superClass implements WebCellComponent<P, S> {
+        static tagName: string;
+        static extends?: string;
+        static renderTarget: ComponentMeta['renderTarget'] = 'shadowRoot';
+        static style?: ComponentMeta['style'];
+        static attributes: string[] = [];
+        static eventDelegaters: DOMEventDelegater[] = [];
+
         private root: DocumentFragment | Element;
         private CSS?: VNode;
-        private vTree: VNodeChildElement | VNodeChildElement[];
-        private tick?: Promise<any>;
+        private vTree: WebCellElement;
+        private tick?: Promise<void>;
 
-        readonly props: Data<P> = {} as Data<P>;
-        readonly state: Data<S> = {} as Data<S>;
-        private cache: Data<S> = {} as Data<S>;
+        readonly props: P = {} as P;
+        readonly state: S = {} as S;
+        private cache: Partial<S> = {} as Partial<S>;
 
         @watch
         defaultSlot: VNodeChildElement[] = [];
@@ -84,19 +91,16 @@ export function mixin<P = WebCellProps, S = {}>(
         constructor({ mode = 'open' }: ShadowRootInit = {} as ShadowRootInit) {
             super();
 
-            const renderChildren =
-                Reflect.getMetadata('renderTarget', this.constructor) ===
-                'children';
+            const { renderTarget, eventDelegaters, style } = this
+                .constructor as WebCellClass;
+
+            const renderChildren = renderTarget === 'children';
 
             const root = (this.root = renderChildren
                 ? this
                 : this.attachShadow({ mode }));
 
-            const events: DOMEventDelegateHandler[] =
-                Reflect.getMetadata('DOM-Event', Object.getPrototypeOf(this)) ||
-                [];
-
-            for (const { type, selector, method } of events) {
+            for (const { type, selector, method } of eventDelegaters) {
                 if (renderChildren && /^:host/.test(selector))
                     console.warn(
                         `[WebCell] DOM Event delegation of "${selector}" won't work if you don't invoke "this.attachShadow()" manually.`
@@ -108,22 +112,20 @@ export function mixin<P = WebCellProps, S = {}>(
                 );
             }
 
-            const CSS = Reflect.getMetadata('style', this.constructor);
-
-            if (CSS)
+            if (style)
                 if (renderChildren)
                     console.warn(
                         '[WebCell] Global CSS should be used while "renderTarget" is "children"'
                     );
-                else this.CSS = <style>{CSS}</style>;
+                else this.CSS = <style>{style as string}</style>;
         }
 
         connectedCallback() {
             this.update();
         }
 
-        render(props: Data<P>, state: Data<S>) {
-            return Reflect.getMetadata('renderTarget', this.constructor) !==
+        render(props: P, state: S) {
+            return (this.constructor as WebCellClass).renderTarget !==
                 'children' ? (
                 <slot />
             ) : (
@@ -139,7 +141,7 @@ export function mixin<P = WebCellProps, S = {}>(
                 return;
 
             Object.assign(this.state, this.cache);
-            this.cache = {} as Data<S>;
+            this.cache = {} as Partial<S>;
 
             this.vTree = render(
                 <Fragment>
@@ -156,7 +158,7 @@ export function mixin<P = WebCellProps, S = {}>(
         protected updateAsync() {
             return (this.tick =
                 this.tick ||
-                new Promise(resolve =>
+                new Promise<void>(resolve =>
                     self.requestAnimationFrame(() => {
                         this.update();
 
@@ -181,16 +183,13 @@ export function mixin<P = WebCellProps, S = {}>(
             }
         }
 
-        setProps(data: { [key in keyof P]?: any }) {
+        setProps(data: Partial<P>) {
             Object.assign(this.props, data);
 
-            const attributes: string[] | null = Reflect.getMetadata(
-                'attributes',
-                this.constructor
-            );
+            const { attributes } = this.constructor as WebCellClass;
 
             if (attributes)
-                var attributesChanged = new Promise(resolve =>
+                var attributesChanged = new Promise<void>(resolve =>
                     self.requestAnimationFrame(
                         () => (this.syncPropAttr(data, attributes), resolve())
                     )
@@ -199,7 +198,7 @@ export function mixin<P = WebCellProps, S = {}>(
             return Promise.all([attributesChanged, this.updateAsync()]);
         }
 
-        setState(data: { [key in keyof S]?: any }) {
+        setState(data: Partial<S>) {
             Object.assign(this.cache, data);
 
             return this.updateAsync();
@@ -208,12 +207,9 @@ export function mixin<P = WebCellProps, S = {}>(
         setAttribute(name: string, value: string | number | boolean) {
             super.setAttribute(name, value);
 
-            const list: string[] | null = Reflect.getMetadata(
-                'attributes',
-                this.constructor
-            );
+            const { attributes } = this.constructor as WebCellClass;
 
-            if (!list?.includes(name)) return;
+            if (!attributes.includes(name)) return;
 
             if (typeof value === 'string')
                 try {
