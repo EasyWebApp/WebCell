@@ -101,8 +101,11 @@ describe('Class & Decorator', () => {
             name: string;
 
             @on('click', 'h2')
-            onClick(event: MouseEvent, target: HTMLElement, detail: any) {
-                this.name = [event.type, target.tagName, detail] + '';
+            onClick(
+                { type, detail }: CustomEvent<number>,
+                { tagName }: HTMLHeadingElement
+            ) {
+                this.name = [type, tagName, detail] + '';
             }
 
             render() {

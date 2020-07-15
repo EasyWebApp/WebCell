@@ -1,4 +1,9 @@
-import { CSSObject, stringifyCSS, toHyphenCase } from './utility';
+import {
+    CSSObject,
+    stringifyCSS,
+    toHyphenCase,
+    DelegateEventHandler
+} from './utility';
 import { WebCellClass, WebCellComponent } from './WebCell';
 
 export interface ComponentMeta {
@@ -57,11 +62,16 @@ export interface DOMEventDelegater {
 }
 
 export function on(type: string, selector: string) {
-    return ({ constructor }: Object, method: string) => {
+    return <T extends DelegateEventHandler>(
+        { constructor }: Object,
+        method: string,
+        meta: PropertyDescriptor
+    ) => {
         (constructor as WebCellClass).eventDelegaters.push({
             type,
             selector,
             method
         });
+        return meta as PropertyDescriptor & { value: T };
     };
 }

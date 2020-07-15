@@ -1,5 +1,5 @@
 import { HTMLProps } from 'web-utility/source/DOM-type';
-import { VNodeChildElement } from 'snabbdom/src/h';
+import { VNodeChildElement } from 'snabbdom/src/package/h';
 
 export interface WebCellData extends HTMLProps {
     key?: string | number;

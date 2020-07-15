@@ -65,7 +65,7 @@ export interface WebCellClass<P extends WebCellProps = WebCellProps, S = {}>
 
 export function mixin<P = WebCellProps, S = {}>(
     superClass = HTMLElement
-): WebCellClass {
+): WebCellClass<P, S> {
     class WebCell extends superClass implements WebCellComponent<P, S> {
         static tagName: string;
         static extends?: string;
@@ -92,7 +92,7 @@ export function mixin<P = WebCellProps, S = {}>(
             super();
 
             const { renderTarget, eventDelegaters, style } = this
-                .constructor as WebCellClass;
+                .constructor as WebCellClass<P, S>;
 
             const renderChildren = renderTarget === 'children';
 
@@ -125,7 +125,7 @@ export function mixin<P = WebCellProps, S = {}>(
         }
 
         render(props: P, state: S) {
-            return (this.constructor as WebCellClass).renderTarget !==
+            return (this.constructor as WebCellClass<P, S>).renderTarget !==
                 'children' ? (
                 <slot />
             ) : (
@@ -186,7 +186,7 @@ export function mixin<P = WebCellProps, S = {}>(
         setProps(data: Partial<P>) {
             Object.assign(this.props, data);
 
-            const { attributes } = this.constructor as WebCellClass;
+            const { attributes } = this.constructor as WebCellClass<P, S>;
 
             if (attributes)
                 var attributesChanged = new Promise<void>(resolve =>
@@ -204,10 +204,10 @@ export function mixin<P = WebCellProps, S = {}>(
             return this.updateAsync();
         }
 
-        setAttribute(name: string, value: string | number | boolean) {
+        setAttribute(name: string, value: string) {
             super.setAttribute(name, value);
 
-            const { attributes } = this.constructor as WebCellClass;
+            const { attributes } = this.constructor as WebCellClass<P, S>;
 
             if (!attributes.includes(name)) return;
 

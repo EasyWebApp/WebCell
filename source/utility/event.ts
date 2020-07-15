@@ -1,11 +1,14 @@
-export type DelegateEventHandler = (
+export type DelegateEventHandler<T = any> = (
     event: Event,
     currentTarget: Element,
-    detail: any
+    detail?: T
 ) => any;
 
-export function delegate(selector: string, handler: DelegateEventHandler) {
-    return function(this: Node, event: Event) {
+export function delegate<T>(
+    selector: string,
+    handler: DelegateEventHandler<T>
+) {
+    return function (this: Node, event: Event) {
         var node,
             path = event.composedPath();
 

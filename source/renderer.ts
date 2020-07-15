@@ -1,13 +1,13 @@
-import { init } from 'snabbdom/src/snabbdom';
-import AttrsHelper from 'snabbdom/src/modules/attributes';
-import PropsHelper from 'snabbdom/src/modules/props';
-import DataHelper from 'snabbdom/src/modules/dataset';
-import ClassHelper from 'snabbdom/src/modules/class';
-import StyleHelper from 'snabbdom/src/modules/style';
-import EventHelper from 'snabbdom/src/modules/eventlisteners';
-import { VNode } from 'snabbdom/src/vnode';
-import toVNode from 'snabbdom/src/tovnode';
-import createElement, { VNodeChildElement } from 'snabbdom/src/h';
+import { init } from 'snabbdom/src/package/init';
+import { attributesModule } from 'snabbdom/src/package/modules/attributes';
+import { propsModule } from 'snabbdom/src/package/modules/props';
+import { datasetModule } from 'snabbdom/src/package/modules/dataset';
+import { classModule } from 'snabbdom/src/package/modules/class';
+import { styleModule } from 'snabbdom/src/package/modules/style';
+import { eventListenersModule } from 'snabbdom/src/package/modules/eventlisteners';
+import { VNode } from 'snabbdom/src/package/vnode';
+import { toVNode } from 'snabbdom/src/package/tovnode';
+import { VNodeChildElement, h as createElement } from 'snabbdom/src/package/h';
 
 import {
     WebCellElement,
@@ -18,16 +18,16 @@ import {
 } from './utility';
 import { WebCellClass } from './WebCell';
 
-export { VNode } from 'snabbdom/src/vnode';
-export { VNodeChildElement } from 'snabbdom/src/h';
+export { VNode } from 'snabbdom/src/package/vnode';
+export { VNodeChildElement } from 'snabbdom/src/package/h';
 
 export const patch = init([
-    AttrsHelper,
-    PropsHelper,
-    DataHelper,
-    ClassHelper,
-    StyleHelper,
-    EventHelper
+    attributesModule,
+    propsModule,
+    datasetModule,
+    classModule,
+    styleModule,
+    eventListenersModule
 ]);
 
 function createVTree(root: ParentNode & Node, nodes: WebCellElement) {
