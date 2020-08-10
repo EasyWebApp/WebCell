@@ -24,10 +24,7 @@ declare global {
             defaultSlot: VNodeChildElement[];
         }
         interface ElementClass {
-            render: (
-                props: WebCellProps,
-                state: Record<string, any>
-            ) => WebCellElement;
+            render: (props: WebCellProps, state: any) => WebCellElement;
         }
     }
 }
