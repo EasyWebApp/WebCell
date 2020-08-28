@@ -9,10 +9,8 @@ import {
 import { ComponentMeta, watch, DOMEventDelegater } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
 
-export interface WebCellComponent<
-    P extends WebCellProps = WebCellProps,
-    S = {}
-> extends HTMLElement {
+export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
+    extends HTMLElement {
     /**
      * Called every time the element is inserted into the DOM
      */
@@ -144,10 +142,10 @@ export function mixin<P = WebCellProps, S = {}>(
             this.cache = {} as Partial<S>;
 
             this.vTree = render(
-                <Fragment>
+                <>
                     {this.CSS}
                     {this.render(this.props, this.state)}
-                </Fragment>,
+                </>,
                 this.root,
                 this.vTree
             );

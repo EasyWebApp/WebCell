@@ -132,14 +132,14 @@ export class TestTag extends mixin<Props, State>() {
 
     render({ title }: Props, { status }: State) {
         return (
-            <Fragment>
+            <>
                 <h1 title={title} className={`title ${status}`}>
                     {title}
                     <img alt={title} onClick={this.onClick} />
 
                     <SubTag />
                 </h1>
-            </Fragment>
+            </>
         );
     }
 }
@@ -191,10 +191,9 @@ We recommend these libraries to use with WebCell:
 
 ## Roadmap
 
--   [x] (Template) [Document Fragment node][21]
 -   [ ] Server-side Render
 
-Go to [contribute][22]!
+Go to [contribute][21]!
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
@@ -216,5 +215,4 @@ Go to [contribute][22]!
 [18]: https://web-cell.dev/web-utility/
 [19]: https://web-cell.dev/iterable-observer/
 [20]: https://github.com/EasyWebApp/MarkCell
-[21]: https://github.com/Microsoft/TypeScript/issues/20469
-[22]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md
+[21]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md

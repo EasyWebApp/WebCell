@@ -46,7 +46,7 @@ describe('Renderer', () => {
 
     it('should render VDOM to Markup', () => {
         const source = renderToStaticMarkup(
-            <Fragment>
+            <>
                 <div
                     className="test"
                     style={{ color: 'red', opacity: 0.5 }}
@@ -57,7 +57,7 @@ describe('Renderer', () => {
                     <span>example</span>
                 </div>
                 sample
-            </Fragment>
+            </>
         );
 
         expect(source).toBe(

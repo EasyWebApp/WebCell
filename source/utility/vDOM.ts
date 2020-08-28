@@ -1,5 +1,6 @@
 import { HTMLProps } from 'web-utility/source/DOM-type';
 import { VNodeChildElement } from 'snabbdom/src/package/h';
+import { WebCellComponent } from '../WebCell';
 
 export interface WebCellData extends HTMLProps {
     key?: string | number;
@@ -23,9 +24,7 @@ declare global {
         interface ElementChildrenAttribute {
             defaultSlot: VNodeChildElement[];
         }
-        interface ElementClass {
-            render: (props: WebCellProps, state: any) => WebCellElement;
-        }
+        interface ElementClass extends WebCellComponent<any, any> {}
     }
 }
 
