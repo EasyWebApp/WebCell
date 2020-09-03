@@ -1,6 +1,6 @@
 {
     "name": "mobx-web-cell",
-    "version": "0.3.1",
+    "version": "0.3.2",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "MobX adaptor for WebCell v2",
@@ -12,6 +12,7 @@
         "TypeScript",
         "decorator"
     ],
+    "homepage": "https://github.com/EasyWebApp/WebCell/tree/v2/MobX",
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "main": "dist/index.umd.js",
@@ -22,16 +23,16 @@
         "prepublishOnly": "npm test  &&  rm -rf .rts2_cache_* dist/  &&  npm run build"
     },
     "dependencies": {
-        "mobx": "^5.15.4",
-        "web-cell": "^2.1.0"
+        "mobx": "^5.15.6",
+        "web-cell": "^2.2.0"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.3",
-        "@webcomponents/webcomponentsjs": "^2.4.3",
-        "jest": "^26.1.0",
-        "microbundle": "^0.12.2",
-        "ts-jest": "^26.1.1",
-        "typescript": "^3.9.5"
+        "@types/jest": "^26.0.10",
+        "@webcomponents/webcomponentsjs": "^2.4.4",
+        "jest": "^26.4.2",
+        "microbundle": "^0.12.3",
+        "ts-jest": "^26.3.0",
+        "typescript": "^4.0.2"
     },
     "jest": {
         "preset": "ts-jest"

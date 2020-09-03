@@ -9,6 +9,10 @@ import {
 import { ComponentMeta, watch, DOMEventDelegater } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
 
+export type WebCellFunction<P extends WebCellProps = WebCellProps> = (
+    props?: P
+) => WebCellElement;
+
 export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
     extends HTMLElement {
     /**
