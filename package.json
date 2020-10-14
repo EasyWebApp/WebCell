@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.2.0",
+    "version": "2.3.0-beta.0",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -29,24 +29,25 @@
         "web-utility": "^1.8.0"
     },
     "devDependencies": {
-        "@types/core-js": "^2.5.3",
-        "@types/jest": "^26.0.10",
-        "@types/jsdom": "^16.2.3",
-        "@typescript-eslint/parser": "^3.10.1",
-        "eslint": "^7.7.0",
-        "eslint-config-prettier": "^6.11.0",
+        "@types/core-js": "^2.5.4",
+        "@types/jest": "^26.0.14",
+        "@types/jsdom": "^16.2.4",
+        "@typescript-eslint/parser": "^4.4.1",
+        "element-internals-polyfill": "0.0.23",
+        "eslint": "^7.11.0",
+        "eslint-config-prettier": "^6.12.0",
         "eslint-plugin-prettier": "^3.1.4",
-        "husky": "^4.2.5",
-        "jest": "^26.4.2",
-        "lint-staged": "^10.2.13",
+        "husky": "^4.3.0",
+        "jest": "^26.5.3",
+        "lint-staged": "^10.4.0",
         "open-cli": "^6.0.1",
         "parcel-bundler": "^1.12.4",
-        "prettier": "^2.1.1",
-        "snabbdom": "^1.0.1",
-        "ts-jest": "^26.3.0",
-        "typedoc": "^0.18.0",
-        "typescript": "^4.0.2",
-        "web-utility": "^1.8.0"
+        "prettier": "^2.1.2",
+        "snabbdom": "^2.1.0",
+        "ts-jest": "^26.4.1",
+        "typedoc": "^0.19.2",
+        "typescript": "^4.0.3",
+        "web-utility": "^1.8.2"
     },
     "scripts": {
         "lint": "lint-staged",
@@ -59,16 +60,12 @@
         "prepublishOnly": "npm test  &&  npm run build"
     },
     "lint-staged": {
-        "source/**/*.{ts,tsx}": [
-            "eslint --fix"
-        ],
+        "source/**/*.{ts,tsx}": "eslint --fix",
         "*.{js,ts,tsx}": [
             "prettier --write",
             "eslint --fix --rule 'require-atomic-updates: 1'"
         ],
-        "*.{html,md,css,json,yml}": [
-            "prettier --write"
-        ]
+        "*.{html,md,css,json,yml}": "prettier --write"
     },
     "husky": {
         "hooks": {
@@ -83,7 +80,7 @@
         "tabWidth": 4
     },
     "jest": {
-        "preset": "ts-jest",
+        "preset": "ts-jest/presets/js-with-ts",
         "globals": {
             "ts-jest": {
                 "tsConfig": "test/tsconfig.json",

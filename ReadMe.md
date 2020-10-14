@@ -47,9 +47,13 @@ npm install parcel-bundler -D
 `source/index.html`
 
 ```html
-<script src="https://polyfill.io/v3/polyfill.min.js?flags=gated&features=Object.fromEntries%2CArray.prototype.flat"></script>
+<script
+    crossorigin
+    src="https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries"
+></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.4/webcomponents-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.4/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.0.23/dist/index.min.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -145,6 +149,16 @@ export class TestTag extends mixin<Props, State>() {
 }
 ```
 
+## Basic knowledge
+
+-   [Web components](https://developer.mozilla.org/en-US/docs/Web/Web_Components)
+-   [Custom elements](https://developers.google.cn/web/fundamentals/web-components/customelements)
+-   [Shadow DOM](https://developers.google.cn/web/fundamentals/web-components/shadowdom)
+-   [Element Internals](https://web.dev/more-capable-form-controls/)
+-   [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
+-   [ECMAScript 6+](http://es6-features.org/)
+-   [TypeScript 4+][3]
+
 ## Life Cycle hooks
 
 1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#connectedcallback)
@@ -158,6 +172,14 @@ export class TestTag extends mixin<Props, State>() {
 5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#shouldupdate)
 
 6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback)
+
+7. [`formAssociatedCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formassociatedcallback)
+
+8. [`formDisabledCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formdisabledcallback)
+
+9. [`formResetCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formresetcallback)
+
+10. [`formStateRestoreCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formstaterestorecallback)
 
 ## Scaffolds
 

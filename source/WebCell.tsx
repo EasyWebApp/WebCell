@@ -60,12 +60,12 @@ export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
 
 export interface WebCellClass<P extends WebCellProps = WebCellProps, S = {}>
     extends Partial<ComponentMeta> {
-    new (): WebCellComponent<P, S>;
+    new (options?: ShadowRootInit): WebCellComponent<P, S>;
     attributes?: string[];
     eventDelegaters?: DOMEventDelegater[];
 }
 
-export function mixin<P = WebCellProps, S = {}>(
+export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
     superClass = HTMLElement
 ): WebCellClass<P, S> {
     class WebCell extends superClass implements WebCellComponent<P, S> {

@@ -9,7 +9,7 @@
 ## Installation
 
 ```shell
-npm install web-cell mobx mobx-web-cell
+npm install web-cell mobx@5 mobx-web-cell
 ```
 
 ## Usage

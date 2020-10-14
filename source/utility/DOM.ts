@@ -1,33 +1,29 @@
-export type CSSValue = string | number | CSSObject;
+import { HTMLProps } from 'web-utility/source/DOM-type';
+import { toHyphenCase } from './data';
 
-export interface CSSObject {
-    [key: string]: CSSValue;
-}
+export type CSSRule = Record<string, HTMLProps['style']>;
+export type CSSObject = CSSRule | Record<string, CSSRule>;
 
-export function stringifyCSS(data: CSSObject, depth = 0): string {
-    const indent = ' '.repeat(4 * depth),
-        [simple, nested] = Object.entries(data).reduce(
-            ([simple, nested], [key, value]) => {
-                if (typeof value !== 'object') simple.push([key, value]);
-                else nested.push([key, value]);
+export function stringifyCSS(
+    data: HTMLProps['style'] | CSSObject,
+    depth = 0,
+    indent = '    '
+): string {
+    const padding = indent.repeat(depth);
 
-                return [simple, nested];
-            },
-            [[], []] as CSSValue[][][]
-        );
-
-    return simple[0]
-        ? simple.map(([key, value]) => `${indent}${key}: ${value};\n`).join('')
-        : nested
-              .map(
-                  ([key, value]) => `${indent}${key} {
-${stringifyCSS(value as CSSObject, depth + 1)}${indent}}\n`
-              )
-              .join('');
+    return Object.entries(data)
+        .map(([key, value]) =>
+            typeof value !== 'object'
+                ? `${padding}${toHyphenCase(key)}: ${value};`
+                : `${padding}${key} {
+${stringifyCSS(value as CSSObject, depth + 1, indent)}
+${padding}}`
+        )
+        .join('\n');
 }
 
 const spawn = document.createElement('template'),
-    cache: Record<string, any> = {};
+    cache: Record<string, Element> = {};
 
 export function templateOf(tagName: string) {
     if (cache[tagName]) return cache[tagName];

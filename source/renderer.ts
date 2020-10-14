@@ -1,13 +1,16 @@
-import { init } from 'snabbdom/src/package/init';
-import { attributesModule } from 'snabbdom/src/package/modules/attributes';
-import { propsModule } from 'snabbdom/src/package/modules/props';
-import { datasetModule } from 'snabbdom/src/package/modules/dataset';
-import { classModule } from 'snabbdom/src/package/modules/class';
-import { styleModule } from 'snabbdom/src/package/modules/style';
-import { eventListenersModule } from 'snabbdom/src/package/modules/eventlisteners';
-import { VNode } from 'snabbdom/src/package/vnode';
-import { toVNode } from 'snabbdom/src/package/tovnode';
-import { VNodeChildElement, h as createElement } from 'snabbdom/src/package/h';
+import { init } from 'snabbdom/build/package/init';
+import { attributesModule } from 'snabbdom/build/package/modules/attributes';
+import { propsModule } from 'snabbdom/build/package/modules/props';
+import { datasetModule } from 'snabbdom/build/package/modules/dataset';
+import { classModule } from 'snabbdom/build/package/modules/class';
+import { styleModule } from 'snabbdom/build/package/modules/style';
+import { eventListenersModule } from 'snabbdom/build/package/modules/eventlisteners';
+import { VNode } from 'snabbdom/build/package/vnode';
+import { toVNode } from 'snabbdom/build/package/tovnode';
+import {
+    VNodeChildElement,
+    h as createElement
+} from 'snabbdom/build/package/h';
 
 import {
     WebCellElement,
@@ -18,8 +21,8 @@ import {
 } from './utility';
 import { WebCellClass } from './WebCell';
 
-export { VNode } from 'snabbdom/src/package/vnode';
-export { VNodeChildElement } from 'snabbdom/src/package/h';
+export { VNode } from 'snabbdom/build/package/vnode';
+export { VNodeChildElement } from 'snabbdom/build/package/h';
 
 export const patch = init([
     attributesModule,

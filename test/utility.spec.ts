@@ -1,11 +1,14 @@
+import { HTMLProps } from 'web-utility/source/DOM-type';
+
 import { stringifyCSS } from '../source/utility/DOM';
 
 describe('Utility methods', () => {
     describe('Stringify CSS', () => {
-        const rule = {
+        const rule: HTMLProps['style'] = {
             position: 'absolute',
-            top: 0,
-            height: '100%'
+            top: '0',
+            height: '100%',
+            objectFit: 'contain'
         };
 
         it('should stringify Simple CSS Object to a Rule', () => {
@@ -14,7 +17,7 @@ describe('Utility methods', () => {
             expect(CSS).toBe(`position: absolute;
 top: 0;
 height: 100%;
-`);
+object-fit: contain;`);
         });
 
         it('should stringify Nested CSS Object to Rules', () => {
@@ -27,13 +30,14 @@ height: 100%;
     position: absolute;
     top: 0;
     height: 100%;
+    object-fit: contain;
 }
 #demo {
     position: absolute;
     top: 0;
     height: 100%;
-}
-`);
+    object-fit: contain;
+}`);
         });
 
         it('should stringify Nested CSS Object to Nested Rules', () => {
@@ -48,15 +52,16 @@ height: 100%;
     position: absolute;
     top: 0;
     height: 100%;
+    object-fit: contain;
 }
 @media (min-width: 600px) {
     .test {
         position: absolute;
         top: 0;
         height: 100%;
+        object-fit: contain;
     }
-}
-`);
+}`);
         });
     });
 });

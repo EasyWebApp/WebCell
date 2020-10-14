@@ -2,7 +2,7 @@ import { component, watch, attribute, on } from '../source/decorator';
 import { mixin, WebCellComponent } from '../source/WebCell';
 import { render, createCell } from '../source/renderer';
 
-describe('Class & Decorator', () => {
+describe('Base Class & Decorator', () => {
     it('should define a Custom Element', () => {
         @component({ tagName: 'x-first' })
         class XFirst extends mixin() {}
@@ -32,8 +32,7 @@ describe('Class & Decorator', () => {
 
         expect(tag.toString()).toBe(`<style>h2 {
     color: red;
-}
-</style><h2></h2>`);
+}</style><h2></h2>`);
     });
 
     it('should put .render() returned DOM into .children of a Custom Element', () => {
