@@ -23,10 +23,12 @@ export function delegate<T>(
     };
 }
 
-export const documentReady = new Promise(resolve => {
-    document.addEventListener('DOMContentLoaded', resolve);
+export const documentReady = new Promise<void>(resolve => {
+    const done = () => resolve();
 
-    self.addEventListener('load', resolve);
+    document.addEventListener('DOMContentLoaded', done);
+
+    self.addEventListener('load', () => done);
 
     setTimeout(function check() {
         document.readyState === 'complete' ? resolve() : setTimeout(check);

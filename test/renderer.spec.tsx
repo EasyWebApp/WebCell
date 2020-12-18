@@ -49,7 +49,7 @@ describe('Renderer', () => {
             <>
                 <div
                     className="test"
-                    style={{ color: 'red', opacity: 0.5 }}
+                    style={{ color: 'red', opacity: '0.5' }}
                     data-test="example"
                 >
                     test

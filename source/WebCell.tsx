@@ -1,3 +1,5 @@
+import { Constructor } from 'web-utility/source/data';
+import { CustomElement } from 'web-utility/source/DOM-type';
 import {
     WebCellProps,
     WebCellElement,
@@ -14,31 +16,7 @@ export type WebCellFunction<P extends WebCellProps = WebCellProps> = (
 ) => WebCellElement;
 
 export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
-    extends HTMLElement {
-    /**
-     * Called every time the element is inserted into the DOM
-     */
-    connectedCallback(): void;
-    /**
-     * Called every time the element is removed from the DOM.
-     */
-    disconnectedCallback?(): void;
-    /**
-     * Called when an observed attribute has been added, removed, updated, or replaced.
-     * Also called for initial values when an element is created by the parser, or upgraded.
-     *
-     * Note: only attributes listed in static `observedAttributes` property will receive this callback.
-     */
-    attributeChangedCallback?(
-        name: string,
-        oldValue: string,
-        newValue: string
-    ): void;
-    /**
-     * The custom element has been moved into a new document
-     * (e.g. someone called `document.adoptNode(el)`).
-     */
-    adoptedCallback?(): void;
+    extends CustomElement {
     update(): void;
     props: P;
     setProps(data: Partial<P>): Promise<any>;
@@ -59,14 +37,14 @@ export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
 }
 
 export interface WebCellClass<P extends WebCellProps = WebCellProps, S = {}>
-    extends Partial<ComponentMeta> {
-    new (options?: ShadowRootInit): WebCellComponent<P, S>;
+    extends Partial<ComponentMeta>,
+        Constructor<WebCellComponent<P, S>> {
     attributes?: string[];
     eventDelegaters?: DOMEventDelegater[];
 }
 
 export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
-    superClass = HTMLElement
+    superClass: Constructor<HTMLElement> = HTMLElement
 ): WebCellClass<P, S> {
     class WebCell extends superClass implements WebCellComponent<P, S> {
         static tagName: string;
@@ -170,7 +148,7 @@ export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
                 ));
         }
 
-        private syncPropAttr(data: { [key in keyof P]?: any }, list: string[]) {
+        private syncPropAttr(data: Partial<P>, list: string[]) {
             for (const key in data) {
                 const name = toHyphenCase(key);
 
@@ -219,10 +197,7 @@ export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
                 } catch (error) {
                     //
                 }
-
-            this.setProps({ [toCamelCase(name)]: data ?? value } as {
-                [key in keyof P]?: any;
-            });
+            this.setProps({ [toCamelCase(name)]: data ?? value } as Partial<P>);
         }
 
         emit(

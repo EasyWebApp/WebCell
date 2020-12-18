@@ -51,9 +51,9 @@ npm install parcel-bundler -D
     crossorigin
     src="https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries"
 ></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.4/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.4.4/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.0.23/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.1/dist/index.min.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -161,25 +161,25 @@ export class TestTag extends mixin<Props, State>() {
 
 ## Life Cycle hooks
 
-1. [`connectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#connectedcallback)
+1. [`connectedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#connectedcallback)
 
-2. [`disconnectedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#disconnectedcallback)
+2. [`disconnectedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#disconnectedcallback)
 
-3. [`attributeChangedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#attributechangedcallback)
+3. [`attributeChangedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#attributechangedcallback)
 
-4. [`adoptedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#adoptedcallback)
+4. [`adoptedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#adoptedcallback)
 
 5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#shouldupdate)
 
 6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback)
 
-7. [`formAssociatedCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formassociatedcallback)
+7. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formassociatedcallback)
 
-8. [`formDisabledCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formdisabledcallback)
+8. [`formDisabledCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formdisabledcallback)
 
-9. [`formResetCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formresetcallback)
+9. [`formResetCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formresetcallback)
 
-10. [`formStateRestoreCallback`](https://web-cell.dev/WebCell/interfaces/webfieldcomponent.html#formstaterestorecallback)
+10. [`formStateRestoreCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formstaterestorecallback)
 
 ## Scaffolds
 
@@ -195,7 +195,7 @@ We recommend these libraries to use with WebCell:
 
 -   **State management**: [MobX][12] (also powered by **TypeScript** & **Decorator**)
 
--   **Router**: [Cell Router][13] (based on **MobX**)
+-   **Router**: [Cell Router][13]
 
 -   **UI components**
 
@@ -213,7 +213,7 @@ We recommend these libraries to use with WebCell:
 
 ## Roadmap
 
--   [ ] Server-side Render
+-   [ ] [Server-side Render](https://web.dev/declarative-shadow-dom/)
 
 Go to [contribute][21]!
 
