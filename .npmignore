@@ -3,6 +3,6 @@ test/
 .cache/
 Contributing.md
 docs/
-.travis.yml
+.github/
 .vscode/
 MobX/

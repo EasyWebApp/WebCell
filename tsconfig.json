@@ -6,7 +6,6 @@
         "declaration": true,
         "allowJs": true,
         "noImplicitReturns": true,
-        "noImplicitAny": true,
         "downlevelIteration": true,
         "module": "ES6",
         "moduleResolution": "Node",

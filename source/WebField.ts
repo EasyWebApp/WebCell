@@ -1,53 +1,83 @@
 import type {} from 'element-internals-polyfill';
+import { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
 import { Constructor } from 'web-utility/source/data';
 import { BaseFieldProps, CustomFormElement } from 'web-utility/source/DOM-type';
 
 import { WebCellProps } from './utility';
 import { mixin, WebCellComponent } from './WebCell';
-import { watch, attribute } from './decorator';
+import { attribute } from './decorator';
 
 export interface WebFieldProps extends BaseFieldProps, WebCellProps {}
 
-export type WebFieldComponent<
+export interface WebFieldState {
+    disabled?: boolean;
+}
+
+export interface WebFieldComponent<
     P extends WebFieldProps = WebFieldProps,
     S = {}
-> = CustomFormElement & WebCellComponent<P, S>;
+> extends CustomFormElement,
+        WebCellComponent<P, S> {
+    internals: ElementInternals;
+}
 
 export type WebFieldClass<
     P extends WebFieldProps = WebFieldProps,
     S = {}
 > = Constructor<WebFieldComponent<P, S>>;
 
-export function mixinForm<P extends WebFieldProps = WebFieldProps, S = {}>(
-    superClass: Constructor<HTMLElement> = HTMLElement
-): WebFieldClass<P, S> {
-    class WebField
-        extends mixin<P, S>(superClass)
-        implements WebFieldComponent<P, S> {
+export function mixinForm<
+    P extends WebFieldProps = WebFieldProps,
+    S extends WebFieldState = WebFieldState
+>(): WebFieldClass<P, S> {
+    class WebField extends mixin<P, S>() implements WebFieldComponent<P, S> {
         static formAssociated = true;
 
-        @attribute
-        @watch
-        name: string;
+        readonly internals = this.attachInternals();
 
-        @watch
-        value: string;
-
-        @attribute
-        @watch
-        required: boolean;
+        formDisabledCallback(disabled: boolean) {
+            this.setState({ disabled } as Partial<S>);
+        }
 
         @attribute
-        @watch
-        disabled: boolean;
+        set name(name: string) {
+            this.setProps({ name } as Partial<P>);
+        }
+        get name() {
+            return this.props.name;
+        }
+
+        set value(value: string) {
+            this.setProps({ value } as Partial<P>);
+            this.internals.setFormValue(value);
+        }
+        get value() {
+            return this.props.value;
+        }
 
         @attribute
-        @watch
-        placeholder: string;
+        set required(required: boolean) {
+            this.setProps({ required } as Partial<P>);
+        }
+        get required() {
+            return this.props.required;
+        }
 
         @attribute
-        @watch
-        autofocus: boolean;
+        set disabled(disabled: boolean) {
+            this.setProps({ disabled } as Partial<P>);
+        }
+        get disabled() {
+            return this.props.disabled;
+        }
+
+        @attribute
+        set autofocus(autofocus: boolean) {
+            this.setProps({ autofocus } as Partial<P>);
+        }
+        get autofocus() {
+            return this.props.autofocus;
+        }
 
         set defaultValue(raw: string) {
             this.setAttribute('value', raw);
@@ -58,8 +88,6 @@ export function mixinForm<P extends WebFieldProps = WebFieldProps, S = {}>(
         get defaultValue() {
             return this.getAttribute('value');
         }
-
-        protected internals = this.attachInternals();
 
         get form() {
             return this.internals.form;

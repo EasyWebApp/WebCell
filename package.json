@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.3.0-beta.1",
+    "version": "2.3.0-beta.4",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -23,7 +23,7 @@
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "web-utility": "^2.1.1"
+        "web-utility": "^2.2.1"
     },
     "peerDependencies": {
         "@webcomponents/webcomponentsjs": "^2.5.0",
@@ -34,10 +34,10 @@
         "@types/core-js": "^2.5.4",
         "@types/jest": "^26.0.19",
         "@types/jsdom": "^16.2.5",
-        "@typescript-eslint/parser": "^4.10.0",
+        "@typescript-eslint/parser": "^4.11.0",
         "element-internals-polyfill": "0.1.1",
-        "eslint": "^7.15.0",
-        "eslint-config-prettier": "^7.0.0",
+        "eslint": "^7.16.0",
+        "eslint-config-prettier": "^7.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "husky": "^4.3.6",
         "jest": "^26.6.3",

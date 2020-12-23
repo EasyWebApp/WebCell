@@ -213,6 +213,7 @@ We recommend these libraries to use with WebCell:
 
 ## Roadmap
 
+-   [ ] [Extend **Build-in Elements** with Virtual DOM](https://github.com/snabbdom/snabbdom/pull/829)
 -   [ ] [Server-side Render](https://web.dev/declarative-shadow-dom/)
 
 Go to [contribute][21]!

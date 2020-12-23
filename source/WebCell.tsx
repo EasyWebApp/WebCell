@@ -17,6 +17,7 @@ export type WebCellFunction<P extends WebCellProps = WebCellProps> = (
 
 export interface WebCellComponent<P extends WebCellProps = WebCellProps, S = {}>
     extends CustomElement {
+    root: DocumentFragment | Element;
     update(): void;
     props: P;
     setProps(data: Partial<P>): Promise<any>;
@@ -54,7 +55,7 @@ export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
         static attributes: string[] = [];
         static eventDelegaters: DOMEventDelegater[] = [];
 
-        private root: DocumentFragment | Element;
+        readonly root: DocumentFragment | Element;
         private CSS?: VNode;
         private vTree: WebCellElement;
         private tick?: Promise<void>;
