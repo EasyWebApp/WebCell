@@ -16,7 +16,7 @@ jobs:
             - name: Install & build
               run: |
                   npm install
-                  npm run build
+                  npm run pack-docs
             - name: Deploy
               uses: peaceiris/actions-gh-pages@v3
               with:
