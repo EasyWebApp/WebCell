@@ -8,7 +8,7 @@ import {
     toHyphenCase,
     toCamelCase
 } from './utility';
-import { ComponentMeta, watch, DOMEventDelegater } from './decorator';
+import { ComponentMeta, DOMEventDelegater, watch } from './decorator';
 import { VNodeChildElement, VNode, createCell, render } from './renderer';
 
 export type WebCellFunction<P extends WebCellProps = WebCellProps> = (
@@ -48,8 +48,8 @@ export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
     superClass: Constructor<HTMLElement> = HTMLElement
 ): WebCellClass<P, S> {
     class WebCell extends superClass implements WebCellComponent<P, S> {
-        static tagName: string;
-        static extends?: string;
+        static tagName: ComponentMeta['tagName'];
+        static extends?: ComponentMeta['extends'];
         static renderTarget: ComponentMeta['renderTarget'] = 'shadowRoot';
         static style?: ComponentMeta['style'];
         static attributes: string[] = [];

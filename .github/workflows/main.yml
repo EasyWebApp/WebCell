@@ -2,7 +2,7 @@ name: CI & CD
 on:
     push:
         branches:
-            - v2
+            - type-optimize
 jobs:
     Build-and-Deploy:
         runs-on: ubuntu-latest

@@ -1,4 +1,13 @@
-import { HTMLProps } from 'web-utility/source/DOM-type';
+import {
+    HTMLProps,
+    HTMLContainerProps,
+    HTMLHyperLinkProps,
+    HTMLTableCellProps,
+    BaseFieldProps,
+    HTMLButtonProps,
+    HTMLInputProps,
+    HTMLTextFieldProps
+} from 'web-utility/source/DOM-type';
 import { VNodeChildElement } from 'snabbdom/build/package/h';
 import { WebCellComponent } from '../WebCell';
 
@@ -17,6 +26,16 @@ declare global {
     namespace JSX {
         interface IntrinsicElements {
             [tagName: string]: WebCellProps;
+            a: HTMLHyperLinkProps & WebCellProps;
+            area: HTMLHyperLinkProps & WebCellProps;
+            th: HTMLTableCellProps & WebCellProps;
+            td: HTMLTableCellProps & WebCellProps;
+            form: HTMLContainerProps & WebCellProps;
+            button: HTMLButtonProps & WebCellProps;
+            textarea: HTMLTextFieldProps & WebCellProps;
+            input: HTMLInputProps & WebCellProps;
+            output: BaseFieldProps & WebCellProps;
+            select: BaseFieldProps & WebCellProps;
         }
         interface ElementAttributesProperty {
             props: WebCellProps;

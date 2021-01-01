@@ -23,7 +23,7 @@
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "web-utility": "^2.2.1"
+        "web-utility": "^2.3.0"
     },
     "peerDependencies": {
         "@webcomponents/webcomponentsjs": "^2.5.0",
@@ -34,7 +34,7 @@
         "@types/core-js": "^2.5.4",
         "@types/jest": "^26.0.19",
         "@types/jsdom": "^16.2.5",
-        "@typescript-eslint/parser": "^4.11.0",
+        "@typescript-eslint/parser": "^4.11.1",
         "element-internals-polyfill": "0.1.1",
         "eslint": "^7.16.0",
         "eslint-config-prettier": "^7.1.0",
@@ -54,10 +54,10 @@
         "lint": "lint-staged",
         "test": "npm run lint  &&  jest",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map} dist/**/*.{js,map}",
-        "pack-dist": "parcel build source/index.ts --global WebCell",
-        "pack-docs": "typedoc source/",
-        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
-        "help": "npm run pack-docs  &&  open-cli docs/index.html",
+        "pack-dist": "rm -rf dist/  &&  parcel build source/index.ts --global WebCell",
+        "pack-docs": "rm -rf docs/  &&  typedoc source/",
+        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
+        "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"
     },
     "lint-staged": {
@@ -70,8 +70,7 @@
     },
     "husky": {
         "hooks": {
-            "pre-commit": "npm test",
-            "pre-push": "npm run build"
+            "pre-commit": "npm test"
         }
     },
     "prettier": {

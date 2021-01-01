@@ -5,7 +5,7 @@
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
-[![Build Status](https://travis-ci.com/EasyWebApp/WebCell.svg?branch=v2)][5]
+[![CI & CD](https://github.com/EasyWebApp/web-cell/workflows/CI%20&%20CD/badge.svg)][5]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
 [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][7]
@@ -222,7 +222,7 @@ Go to [contribute][21]!
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
 [4]: https://david-dm.org/EasyWebApp/WebCell
-[5]: https://travis-ci.com/EasyWebApp/WebCell
+[5]: https://github.com/EasyWebApp/web-cell/actions
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://github.com/jaywcjlove/awesome-uikit
 [8]: https://tech-query.me/programming/web-components-practise/slide.html
