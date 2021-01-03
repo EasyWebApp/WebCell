@@ -17,9 +17,9 @@ jobs:
               run: |
                   npm install
                   npm run pack-docs
-            - name: Deploy
-              uses: peaceiris/actions-gh-pages@v3
-              with:
-                  publish_dir: ./docs
-                  personal_token: ${{ secrets.GITHUB_TOKEN }}
-                  force_orphan: true
+            # - name: Deploy
+            #   uses: peaceiris/actions-gh-pages@v3
+            #   with:
+            #       publish_dir: ./docs
+            #       personal_token: ${{ secrets.GITHUB_TOKEN }}
+            #       force_orphan: true

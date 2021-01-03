@@ -2,7 +2,7 @@ import 'element-internals-polyfill';
 
 import { render, createCell } from '../source/renderer';
 import { component } from '../source/decorator';
-import { WebFieldProps, mixinForm } from '../source/WebField';
+import { WebFieldProps, WebFieldState, mixinForm } from '../source/WebField';
 
 const delay = (second: number) =>
     new Promise(resolve => setTimeout(resolve, second * 1000));
@@ -13,7 +13,7 @@ describe('Field Class & Decorator', () => {
     })
     class TestInput extends mixinForm<
         { a?: number } & WebFieldProps,
-        { b: string }
+        { b: string } & WebFieldState
     >() {
         state = { b: '' };
     }

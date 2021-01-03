@@ -1,13 +1,13 @@
-import {
+import type {
+    SelfCloseTags,
+    HTMLContentKeys,
+    BaseHTMLProps,
+    BaseSVGProps,
     HTMLProps,
-    HTMLContainerProps,
-    HTMLHyperLinkProps,
-    HTMLTableCellProps,
-    BaseFieldProps,
-    HTMLButtonProps,
-    HTMLInputProps,
-    HTMLTextFieldProps
-} from 'web-utility/source/DOM-type';
+    BaseEventHandlers,
+    InputEventHandlers,
+    BubbleEventHandlers
+} from 'web-utility';
 import { VNodeChildElement } from 'snabbdom/build/package/h';
 import { WebCellComponent } from '../WebCell';
 
@@ -22,21 +22,38 @@ export interface WebCellProps extends WebCellData {
     defaultSlot?: WebCellElement;
 }
 
+type BaseCellProps<T extends HTMLElement> = WebCellProps &
+    BaseEventHandlers &
+    Omit<BaseHTMLProps<T>, 'style' | HTMLContentKeys>;
+type HTMLTags = {
+    [tagName in keyof HTMLElementTagNameMap]: BaseCellProps<
+        HTMLElementTagNameMap[tagName]
+    > &
+        (tagName extends 'input'
+            ? InputEventHandlers
+            : tagName extends SelfCloseTags
+            ? {}
+            : BubbleEventHandlers);
+};
+
+type SVGScalar<T extends Partial<SVGElement>> = {
+    [K in keyof T]?: T[K] extends SVGAnimatedLength
+        ? number
+        : T[K] extends SVGAnimatedRect
+        ? string
+        : T[K];
+};
+type SVGTags = {
+    [tagName in keyof SVGElementTagNameMap]: WebCellProps &
+        SVGScalar<Omit<BaseSVGProps<SVGElementTagNameMap[tagName]>, 'style'>>;
+};
+
 declare global {
     namespace JSX {
-        interface IntrinsicElements {
-            [tagName: string]: WebCellProps;
-            a: HTMLHyperLinkProps & WebCellProps;
-            area: HTMLHyperLinkProps & WebCellProps;
-            th: HTMLTableCellProps & WebCellProps;
-            td: HTMLTableCellProps & WebCellProps;
-            form: HTMLContainerProps & WebCellProps;
-            button: HTMLButtonProps & WebCellProps;
-            textarea: HTMLTextFieldProps & WebCellProps;
-            input: HTMLInputProps & WebCellProps;
-            output: BaseFieldProps & WebCellProps;
-            select: BaseFieldProps & WebCellProps;
-        }
+        interface IntrinsicElements
+            extends HTMLTags,
+                Omit<SVGTags, 'a' | 'script' | 'style' | 'title'> {}
+
         interface ElementAttributesProperty {
             props: WebCellProps;
         }

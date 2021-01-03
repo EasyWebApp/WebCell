@@ -1,6 +1,7 @@
 import { component, watch, attribute, on } from '../source/decorator';
 import { mixin, WebCellComponent } from '../source/WebCell';
 import { render, createCell } from '../source/renderer';
+import type { WebCellProps } from '../source/utility/vDOM';
 
 describe('Base Class & Decorator', () => {
     it('should define a Custom Element', () => {
@@ -59,7 +60,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-fourth',
             renderTarget: 'children'
         })
-        class XFourth extends mixin<{ name?: string }>() {
+        class XFourth extends mixin<{ name?: string } & WebCellProps>() {
             @attribute
             @watch
             name: string;
@@ -95,7 +96,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-firth',
             renderTarget: 'children'
         })
-        class XFirth extends mixin<{ name?: string }>() {
+        class XFirth extends mixin<{ name?: string } & WebCellProps>() {
             @watch
             name: string;
 

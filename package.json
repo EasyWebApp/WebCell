@@ -23,7 +23,7 @@
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "web-utility": "^2.3.0"
+        "web-utility": "^2.4.1"
     },
     "peerDependencies": {
         "@webcomponents/webcomponentsjs": "^2.5.0",
@@ -36,7 +36,7 @@
         "@types/jsdom": "^16.2.5",
         "@typescript-eslint/parser": "^4.11.1",
         "element-internals-polyfill": "0.1.1",
-        "eslint": "^7.16.0",
+        "eslint": "^7.17.0",
         "eslint-config-prettier": "^7.1.0",
         "eslint-plugin-prettier": "^3.3.0",
         "husky": "^4.3.6",
@@ -47,16 +47,16 @@
         "prettier": "^2.2.1",
         "snabbdom": "^2.1.0",
         "ts-jest": "^26.4.4",
-        "typedoc": "^0.20.7",
+        "typedoc": "^0.20.10",
         "typescript": "^4.1.3"
     },
     "scripts": {
         "lint": "lint-staged",
         "test": "npm run lint  &&  jest",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map} dist/**/*.{js,map}",
-        "pack-dist": "rm -rf dist/  &&  parcel build source/index.ts --global WebCell",
+        "pack-dist": "parcel build source/index.ts --global WebCell",
         "pack-docs": "rm -rf docs/  &&  typedoc source/",
-        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
+        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"
     },

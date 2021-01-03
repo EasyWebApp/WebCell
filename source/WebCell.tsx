@@ -1,5 +1,5 @@
-import { Constructor } from 'web-utility/source/data';
-import { CustomElement } from 'web-utility/source/DOM-type';
+import type { Constructor } from 'web-utility';
+import type { CustomElement } from 'web-utility';
 import {
     WebCellProps,
     WebCellElement,
@@ -149,7 +149,7 @@ export function mixin<P extends WebCellProps = WebCellProps, S = {}>(
                 ));
         }
 
-        private syncPropAttr(data: Partial<P>, list: string[]) {
+        private syncPropAttr(data: Partial<WebCellProps>, list: string[]) {
             for (const key in data) {
                 const name = toHyphenCase(key);
 
