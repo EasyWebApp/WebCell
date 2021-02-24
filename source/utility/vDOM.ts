@@ -4,6 +4,7 @@ import type {
     BaseHTMLProps,
     BaseSVGProps,
     HTMLProps,
+    HTMLContainerProps,
     BaseEventHandlers,
     InputEventHandlers,
     BubbleEventHandlers
@@ -24,7 +25,8 @@ export interface WebCellProps extends WebCellData {
 
 type BaseCellProps<T extends HTMLElement> = WebCellProps &
     BaseEventHandlers &
-    Omit<BaseHTMLProps<T>, 'style' | HTMLContentKeys>;
+    Omit<BaseHTMLProps<T>, HTMLContentKeys>;
+
 type HTMLTags = {
     [tagName in keyof HTMLElementTagNameMap]: BaseCellProps<
         HTMLElementTagNameMap[tagName]
@@ -33,19 +35,13 @@ type HTMLTags = {
             ? InputEventHandlers
             : tagName extends SelfCloseTags
             ? {}
-            : BubbleEventHandlers);
+            : HTMLContainerProps & BubbleEventHandlers);
 };
 
-type SVGScalar<T extends Partial<SVGElement>> = {
-    [K in keyof T]?: T[K] extends SVGAnimatedLength
-        ? number
-        : T[K] extends SVGAnimatedRect
-        ? string
-        : T[K];
-};
 type SVGTags = {
     [tagName in keyof SVGElementTagNameMap]: WebCellProps &
-        SVGScalar<Omit<BaseSVGProps<SVGElementTagNameMap[tagName]>, 'style'>>;
+        BaseSVGProps<SVGElementTagNameMap[tagName]> &
+        (tagName extends 'svg' ? { xmlns: string } : {});
 };
 
 declare global {

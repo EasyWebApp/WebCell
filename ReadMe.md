@@ -200,7 +200,7 @@ We recommend these libraries to use with WebCell:
 -   **UI components**
 
     -   [BootCell][14] (based on **BootStrap v4**)
-    -   [Material Cell][15] (based on **Material Design** & **BootStrap v4**)
+    -   [Material Cell][15] (based on **Material Design**)
     -   [GitHub Web Widget][16]
 
 -   **HTTP request**: [KoAJAX][17] (based on **Koa**-like middlewares)
@@ -232,7 +232,7 @@ Go to [contribute][21]!
 [12]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
 [13]: https://web-cell.dev/cell-router/
 [14]: https://bootstrap.web-cell.dev/
-[15]: https://web-cell.dev/material-cell/
+[15]: https://material.web-cell.dev/
 [16]: https://tech-query.me/GitHub-Web-Widget/
 [17]: https://web-cell.dev/KoAJAX/
 [18]: https://web-cell.dev/web-utility/

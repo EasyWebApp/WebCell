@@ -33,13 +33,18 @@ describe('Renderer', () => {
         document.body.innerHTML = '';
 
         render(
-            <svg viewBox="0 0 300 100">
-                <circle cx={50} cy={50} r={40} />
+            <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+                <circle
+                    cx="50"
+                    cy="50"
+                    r="40"
+                    style={{ stroke: 'red', fill: 'grey' }}
+                />
             </svg>
         );
 
         expect(document.body.innerHTML.trim()).toBe(
-            '<svg viewBox="0 0 300 100"><circle cx="50" cy="50" r="40"></circle></svg>'
+            '<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" style="stroke: red; fill: grey;"></circle></svg>'
         );
     });
 

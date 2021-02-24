@@ -1,4 +1,10 @@
-import { WebCellProps, WebCellClass, VNode, patch } from 'web-cell';
+import {
+    WebCellProps,
+    WebCellClass,
+    WebCellComponent,
+    VNode,
+    patch
+} from 'web-cell';
 import { autorun } from 'mobx';
 
 export type FunctionComponent<P extends WebCellProps = WebCellProps> = (
@@ -17,10 +23,10 @@ function wrapFunction<P>(func: FunctionComponent<P>) {
 }
 
 function wrapClass<P, S>(Class: WebCellClass<P, S>) {
-    const { update } = Class.prototype;
+    const { update } = Class.prototype as WebCellComponent<P, S>;
 
-    Class.prototype.update = function () {
-        autorun(() => update.call(this));
+    Class.prototype.update = function (this: WebCellComponent<P, S>) {
+        autorun(() => this.isConnected && update.call(this));
     };
 }
 
