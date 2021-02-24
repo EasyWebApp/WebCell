@@ -58,7 +58,7 @@ export function render(
     return nodes;
 }
 
-function splitProps(raw: any) {
+function splitProps(raw: Record<string, any>) {
     const [attrs, dataset, on] = Object.entries(raw).reduce(
         ([attrs, dataset, on], [key, value]) => {
             const data = /^data-(.+)/.exec(key);
@@ -67,7 +67,8 @@ function splitProps(raw: any) {
                 dataset[
                     data[1].replace(/-\w/g, char => char[1].toUpperCase())
                 ] = value;
-            else if (/^on\w+/.test(key)) on[key.slice(2).toLowerCase()] = value;
+            else if (/^on\w+/.test(key) && value instanceof Function)
+                on[key.slice(2).toLowerCase()] = value;
             else attrs[key] = value;
 
             return [attrs, dataset, on];
@@ -78,7 +79,7 @@ function splitProps(raw: any) {
     return { attrs, dataset, on };
 }
 
-function splitAttrs(tagName: string, raw: any) {
+function splitAttrs(tagName: string, raw: Record<string, any>) {
     const prototype = tagName.includes('-')
         ? (customElements.get(tagName) || '').prototype
         : Object.getPrototypeOf(templateOf(tagName));

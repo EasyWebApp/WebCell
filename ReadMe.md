@@ -5,7 +5,7 @@
 [Web Components][1] engine based on [JSX][2] & [TypeScript][3]
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
-[![Build Status](https://travis-ci.com/EasyWebApp/WebCell.svg?branch=v2)][5]
+[![CI & CD](https://github.com/EasyWebApp/WebCell/workflows/CI%20&%20CD/badge.svg)][5]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
 [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][7]
@@ -200,7 +200,7 @@ We recommend these libraries to use with WebCell:
 -   **UI components**
 
     -   [BootCell][14] (based on **BootStrap v4**)
-    -   [Material Cell][15] (based on **Material Design** & **BootStrap v4**)
+    -   [Material Cell][15] (based on **Material Design**)
     -   [GitHub Web Widget][16]
 
 -   **HTTP request**: [KoAJAX][17] (based on **Koa**-like middlewares)
@@ -222,7 +222,7 @@ Go to [contribute][21]!
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
 [4]: https://david-dm.org/EasyWebApp/WebCell
-[5]: https://travis-ci.com/EasyWebApp/WebCell
+[5]: https://github.com/EasyWebApp/WebCell/actions
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://github.com/jaywcjlove/awesome-uikit
 [8]: https://tech-query.me/programming/web-components-practise/slide.html
@@ -232,7 +232,7 @@ Go to [contribute][21]!
 [12]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
 [13]: https://web-cell.dev/cell-router/
 [14]: https://bootstrap.web-cell.dev/
-[15]: https://web-cell.dev/material-cell/
+[15]: https://material.web-cell.dev/
 [16]: https://tech-query.me/GitHub-Web-Widget/
 [17]: https://web-cell.dev/KoAJAX/
 [18]: https://web-cell.dev/web-utility/

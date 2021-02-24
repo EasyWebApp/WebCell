@@ -1,11 +1,11 @@
-import { HTMLProps } from 'web-utility/source/DOM-type';
+import type { CSSStyles } from 'web-utility';
 import { toHyphenCase } from './data';
 
-export type CSSRule = Record<string, HTMLProps['style']>;
+export type CSSRule = Record<string, CSSStyles>;
 export type CSSObject = CSSRule | Record<string, CSSRule>;
 
 export function stringifyCSS(
-    data: HTMLProps['style'] | CSSObject,
+    data: CSSStyles | CSSObject,
     depth = 0,
     indent = '    '
 ): string {

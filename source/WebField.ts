@@ -1,7 +1,7 @@
 import type {} from 'element-internals-polyfill';
-import { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
-import { Constructor } from 'web-utility/source/data';
-import { BaseFieldProps, CustomFormElement } from 'web-utility/source/DOM-type';
+import type { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
+import type { Constructor } from 'web-utility';
+import type { BaseFieldProps, CustomFormElement } from 'web-utility';
 
 import { WebCellProps } from './utility';
 import { mixin, WebCellComponent } from './WebCell';

@@ -1,10 +1,21 @@
-import { HTMLProps } from 'web-utility/source/DOM-type';
+import type { CSSStyles } from 'web-utility';
 
+import { toCamelCase, toHyphenCase } from '../source/utility/data';
 import { stringifyCSS } from '../source/utility/DOM';
 
 describe('Utility methods', () => {
+    it('should convert a Camel-case String to Hyphen-case', () => {
+        expect(toHyphenCase('smallCamel')).toBe('small-camel');
+        expect(toHyphenCase('LargeCamel')).toBe('large-camel');
+    });
+
+    it('should convert a Hyphen-case String to Camel-case', () => {
+        expect(toCamelCase('small-camel')).toBe('smallCamel');
+        expect(toCamelCase('large-camel', true)).toBe('LargeCamel');
+    });
+
     describe('Stringify CSS', () => {
-        const rule: HTMLProps['style'] = {
+        const rule: CSSStyles = {
             position: 'absolute',
             top: '0',
             height: '100%',

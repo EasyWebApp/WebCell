@@ -7,8 +7,8 @@ import {
 import { WebCellClass, WebCellComponent } from './WebCell';
 
 export interface ComponentMeta {
-    tagName: string;
-    extends?: string;
+    tagName: `${string}-${string}`;
+    extends?: keyof HTMLElementTagNameMap;
     renderTarget?: 'shadowRoot' | 'children';
     style?: string | CSSObject;
 }
@@ -56,12 +56,12 @@ export function attribute({ constructor }: Object, key: string) {
 }
 
 export interface DOMEventDelegater {
-    type: string;
+    type: keyof HTMLElementEventMap;
     selector: string;
     method: string;
 }
 
-export function on(type: string, selector: string) {
+export function on(type: DOMEventDelegater['type'], selector: string) {
     return <T extends DelegateEventHandler>(
         { constructor }: Object,
         method: string,
