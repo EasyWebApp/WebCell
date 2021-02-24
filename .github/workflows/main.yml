@@ -2,7 +2,7 @@ name: CI & CD
 on:
     push:
         branches:
-            - type-optimize
+            - master
 jobs:
     Build-and-Deploy:
         runs-on: ubuntu-latest
@@ -10,16 +10,16 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v2
             - name: Use Node.js
-              uses: actions/setup-node@v2-beta
+              uses: actions/setup-node@v2
               with:
                   node-version: '14'
             - name: Install & build
               run: |
                   npm install
-                  npm run pack-docs
-            # - name: Deploy
-            #   uses: peaceiris/actions-gh-pages@v3
-            #   with:
-            #       publish_dir: ./docs
-            #       personal_token: ${{ secrets.GITHUB_TOKEN }}
-            #       force_orphan: true
+                  npm run build
+            - name: Deploy
+              uses: peaceiris/actions-gh-pages@v3
+              with:
+                  publish_dir: ./docs
+                  personal_token: ${{ secrets.GITHUB_TOKEN }}
+                  force_orphan: true
