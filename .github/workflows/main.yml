@@ -2,7 +2,7 @@ name: CI & CD
 on:
     push:
         branches:
-            - master
+            - v2
 jobs:
     Build-and-Deploy:
         runs-on: ubuntu-latest
