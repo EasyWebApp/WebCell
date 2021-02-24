@@ -1,0 +1,346 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>WebCell</title>
+	<meta name="description" content="Documentation for WebCell">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">WebCell</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<h1>WebCell</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<p><img src="https://web-cell.dev/WebCell-0.f1ffd28b.png" alt="WebCell logo"></p>
+				<a href="#webcell" id="webcell" style="color: inherit; text-decoration: none;">
+					<h1>WebCell</h1>
+				</a>
+				<p><a href="https://www.webcomponents.org/">Web Components</a> engine based on <a href="https://facebook.github.io/jsx/">JSX</a> &amp; <a href="https://www.typescriptlang.org">TypeScript</a></p>
+				<p><a href="https://david-dm.org/EasyWebApp/WebCell"><img src="https://david-dm.org/EasyWebApp/WebCell.svg" alt="NPM Dependency"></a>
+				<a href="https://github.com/EasyWebApp/WebCell/actions"><img src="https://github.com/EasyWebApp/WebCell/workflows/CI%20&%20CD/badge.svg" alt="CI &amp; CD"></a></p>
+				<p><a href="https://github.com/996icu/996.ICU/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-Anti%20996-blue.svg" alt="Anti 996 license"></a>
+				<a href="https://github.com/jaywcjlove/awesome-uikit"><img src="https://jaywcjlove.github.io/sb/ico/awesome.svg" alt="jaywcjlove/sb"></a></p>
+				<p><a href="https://tech-query.me/programming/web-components-practise/slide.html"><img src="https://img.shields.io/badge/learn-Slideshow-blue" alt="Slideshow"></a>
+				<a href="https://gitter.im/EasyWebApp/community?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge"><img src="https://badges.gitter.im/EasyWebApp/community.svg" alt="Gitter"></a></p>
+				<p><a href="https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&amp;fontsize=14&amp;hidenavigation=1&amp;module=%2Fsrc%2FClock.tsx&amp;theme=dark"><img src="https://codesandbox.io/static/img/play-codesandbox.svg" alt="Edit WebCell demo"></a></p>
+				<p><a href="https://nodei.co/npm/web-cell/"><img src="https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true" alt="NPM"></a></p>
+				<a href="#usage" id="usage" style="color: inherit; text-decoration: none;">
+					<h2>Usage</h2>
+				</a>
+				<p>Demo &amp; <strong>GitHub template</strong>: <a href="https://web-cell.dev/scaffold/">https://web-cell.dev/scaffold/</a></p>
+				<a href="#project-bootstrap" id="project-bootstrap" style="color: inherit; text-decoration: none;">
+					<h3>Project bootstrap</h3>
+				</a>
+				<p>Command</p>
+				<pre><code class="language-shell"><span style="color: #000000">npm init -y</span>
+<span style="color: #000000">npm install web-cell</span>
+<span style="color: #000000">npm install parcel-bundler -D</span>
+</code></pre>
+				<p><code>package.json</code></p>
+				<pre><code class="language-json"><span style="color: #000000">{</span>
+<span style="color: #000000">    </span><span style="color: #0451A5">&quot;scripts&quot;</span><span style="color: #000000">: {</span>
+<span style="color: #000000">        </span><span style="color: #0451A5">&quot;start&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;parcel source/index.html --open&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #0451A5">&quot;build&quot;</span><span style="color: #000000">: </span><span style="color: #A31515">&quot;parcel build source/index.html --public-url&quot;</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<p><a href="https://github.com/EasyWebApp/WebCell/blob/v2/tsconfig.json"><code>tsconfig.json</code></a></p>
+				<p><code>source/index.html</code></p>
+				<pre><code class="language-html"><span style="color: #800000">&lt;script</span>
+<span style="color: #000000FF">    </span><span style="color: #FF0000">crossorigin</span>
+<span style="color: #000000FF">    </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries&quot;</span>
+<span style="color: #800000">&gt;&lt;/script&gt;</span>
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.1/dist/index.min.js&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;source/SubTag.tsx&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+<span style="color: #800000">&lt;script</span><span style="color: #000000FF"> </span><span style="color: #FF0000">src</span><span style="color: #000000FF">=</span><span style="color: #0000FF">&quot;source/TestTag.tsx&quot;</span><span style="color: #800000">&gt;&lt;/script&gt;</span>
+
+<span style="color: #800000">&lt;sub-tag&gt;&lt;/sub-tag&gt;</span>
+<span style="color: #800000">&lt;test-tag&gt;&lt;/test-tag&gt;</span>
+</code></pre>
+				<a href="#simple-component" id="simple-component" style="color: inherit; text-decoration: none;">
+					<h3>Simple component</h3>
+				</a>
+				<p><code>source/SubTag.tsx</code></p>
+				<pre><code class="language-jsx"><span style="color: #000000">import { createCell, component, mixin } from &#039;web-cell&#039;;</span>
+
+<span style="color: #000000">export function InlineTag({ defaultSlot }: any) {</span>
+<span style="color: #000000">    return &lt;span&gt;{defaultSlot}&lt;/span&gt;;</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #000000">@component({</span>
+<span style="color: #000000">    tagName: &#039;sub-tag&#039;,</span>
+<span style="color: #000000">    renderTarget: &#039;children&#039;</span>
+<span style="color: #000000">})</span>
+<span style="color: #000000">export class SubTag extends mixin() {</span>
+<span style="color: #000000">    render() {</span>
+<span style="color: #000000">        return &lt;InlineTag&gt;test&lt;/InlineTag&gt;;</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#advanced-component" id="advanced-component" style="color: inherit; text-decoration: none;">
+					<h3>Advanced component</h3>
+				</a>
+				<p><code>source/TestTag.tsx</code></p>
+				<pre><code class="language-jsx"><span style="color: #000000">import {</span>
+<span style="color: #000000">    createCell,</span>
+<span style="color: #000000">    component,</span>
+<span style="color: #000000">    mixin,</span>
+<span style="color: #000000">    attribute,</span>
+<span style="color: #000000">    watch,</span>
+<span style="color: #000000">    on,</span>
+<span style="color: #000000">    Fragment</span>
+<span style="color: #000000">} from &#039;web-cell&#039;;</span>
+
+<span style="color: #000000">import { SubTag } from &#039;./SubTag&#039;;</span>
+
+<span style="color: #000000">interface Props {</span>
+<span style="color: #000000">    title?: string;</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #000000">interface State {</span>
+<span style="color: #000000">    status: string;</span>
+<span style="color: #000000">}</span>
+
+<span style="color: #000000">@component({</span>
+<span style="color: #000000">    tagName: &#039;test-tag&#039;,</span>
+<span style="color: #000000">    style: {</span>
+<span style="color: #000000">        &#039;.title&#039;: {</span>
+<span style="color: #000000">            color: &#039;lightblue&#039;</span>
+<span style="color: #000000">        },</span>
+<span style="color: #000000">        &#039;.title.active&#039;: {</span>
+<span style="color: #000000">            color: &#039;lightpink&#039;</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">})</span>
+<span style="color: #000000">export class TestTag extends mixin&lt;Props, State&gt;() {</span>
+<span style="color: #000000">    @attribute</span>
+<span style="color: #000000">    @watch</span>
+<span style="color: #000000">    title = &#039;Test&#039;;</span>
+
+<span style="color: #000000">    state = { status: &#039;&#039; };</span>
+
+<span style="color: #000000">    onClick = () =&gt; (this.title = &#039;Example&#039;);</span>
+
+<span style="color: #000000">    @on(&#039;click&#039;, &#039;:host h1&#039;)</span>
+<span style="color: #000000">    onDelegate() {</span>
+<span style="color: #000000">        this.setState({ status: &#039;active&#039; });</span>
+<span style="color: #000000">    }</span>
+
+<span style="color: #000000">    render({ title }: Props, { status }: State) {</span>
+<span style="color: #000000">        return (</span>
+<span style="color: #000000">            &lt;&gt;</span>
+<span style="color: #000000">                &lt;h1 title={title} className={`title ${status}`}&gt;</span>
+<span style="color: #000000">                    {title}</span>
+<span style="color: #000000">                    &lt;img alt={title} onClick={this.onClick} /&gt;</span>
+
+<span style="color: #000000">                    &lt;SubTag /&gt;</span>
+<span style="color: #000000">                &lt;/h1&gt;</span>
+<span style="color: #000000">            &lt;/&gt;</span>
+<span style="color: #000000">        );</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+</code></pre>
+				<a href="#basic-knowledge" id="basic-knowledge" style="color: inherit; text-decoration: none;">
+					<h2>Basic knowledge</h2>
+				</a>
+				<ul>
+					<li>  <a href="https://developer.mozilla.org/en-US/docs/Web/Web_Components">Web components</a></li>
+					<li>  <a href="https://developers.google.cn/web/fundamentals/web-components/customelements">Custom elements</a></li>
+					<li>  <a href="https://developers.google.cn/web/fundamentals/web-components/shadowdom">Shadow DOM</a></li>
+					<li>  <a href="https://web.dev/more-capable-form-controls/">Element Internals</a></li>
+					<li>  <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables">CSS variables</a></li>
+					<li>  <a href="http://es6-features.org/">ECMAScript 6+</a></li>
+					<li>  <a href="https://www.typescriptlang.org">TypeScript 4+</a></li>
+				</ul>
+				<a href="#life-cycle-hooks" id="life-cycle-hooks" style="color: inherit; text-decoration: none;">
+					<h2>Life Cycle hooks</h2>
+				</a>
+				<ol>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customelement.html#connectedcallback"><code>connectedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customelement.html#disconnectedcallback"><code>disconnectedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customelement.html#attributechangedcallback"><code>attributeChangedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customelement.html#adoptedcallback"><code>adoptedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#shouldupdate"><code>shouldUpdate</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback"><code>updatedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customformelement.html#formassociatedcallback"><code>formAssociatedCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customformelement.html#formdisabledcallback"><code>formDisabledCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customformelement.html#formresetcallback"><code>formResetCallback</code></a></p>
+					</li>
+					<li><p><a href="https://web-cell.dev/web-utility/interfaces/customformelement.html#formstaterestorecallback"><code>formStateRestoreCallback</code></a></p>
+					</li>
+				</ol>
+				<a href="#scaffolds" id="scaffolds" style="color: inherit; text-decoration: none;">
+					<h2>Scaffolds</h2>
+				</a>
+				<ol>
+					<li><p><a href="https://github.com/EasyWebApp/scaffold">Basic</a></p>
+					</li>
+					<li><p><a href="https://github.com/EasyWebApp/DashBoard">DashBoard</a></p>
+					</li>
+					<li><p><a href="https://github.com/EasyWebApp/mark-wiki">Static site</a></p>
+					</li>
+				</ol>
+				<a href="#ecosystem" id="ecosystem" style="color: inherit; text-decoration: none;">
+					<h2>Ecosystem</h2>
+				</a>
+				<p>We recommend these libraries to use with WebCell:</p>
+				<ul>
+					<li><p>  <strong>State management</strong>: <a href="https://github.com/EasyWebApp/WebCell/blob/v2/MobX">MobX</a> (also powered by <strong>TypeScript</strong> &amp; <strong>Decorator</strong>)</p>
+					</li>
+					<li><p>  <strong>Router</strong>: <a href="https://web-cell.dev/cell-router/">Cell Router</a></p>
+					</li>
+					<li><p><strong>UI components</strong></p>
+						<ul>
+							<li>  <a href="https://bootstrap.web-cell.dev/">BootCell</a> (based on <strong>BootStrap v4</strong>)</li>
+							<li>  <a href="https://material.web-cell.dev/">Material Cell</a> (based on <strong>Material Design</strong>)</li>
+							<li>  <a href="https://tech-query.me/GitHub-Web-Widget/">GitHub Web Widget</a></li>
+						</ul>
+					</li>
+					<li><p>  <strong>HTTP request</strong>: <a href="https://web-cell.dev/KoAJAX/">KoAJAX</a> (based on <strong>Koa</strong>-like middlewares)</p>
+					</li>
+					<li><p>  <strong>Utility</strong>: <a href="https://web-cell.dev/web-utility/">Web utility</a> (Methods &amp; Types)</p>
+					</li>
+					<li><p>  <strong>Event stream</strong>: <a href="https://web-cell.dev/iterable-observer/">Iterable Observer</a> (<strong>Observable</strong> proposal)</p>
+					</li>
+					<li><p>  <strong>MarkDown integration</strong>: <a href="https://github.com/EasyWebApp/MarkCell">MarkCell</a> (<strong>MDX</strong> implement)</p>
+					</li>
+				</ul>
+				<a href="#roadmap" id="roadmap" style="color: inherit; text-decoration: none;">
+					<h2>Roadmap</h2>
+				</a>
+				<ul>
+					<li>  [ ] <a href="https://github.com/snabbdom/snabbdom/pull/829">Extend <strong>Build-in Elements</strong> with Virtual DOM</a></li>
+					<li>  [ ] <a href="https://web.dev/declarative-shadow-dom/">Server-side Render</a></li>
+				</ul>
+				<p>Go to <a href="https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md">contribute</a>!</p>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/webcell.html">Web<wbr>Cell</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/webfield.html">Web<wbr>Field</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/decorator.html">decorator</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/index.html">index</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/renderer.html">renderer</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility.html">utility</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility_dom.html">utility/DOM</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility_data.html">utility/data</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility_event.html">utility/event</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility_polyfill.html">utility/polyfill</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/utility_vdom.html">utility/vDOM</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
