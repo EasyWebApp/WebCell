@@ -1,4 +1,5 @@
 .eslintrc.json
+jest.config.ts
 test/
 .cache/
 Contributing.md

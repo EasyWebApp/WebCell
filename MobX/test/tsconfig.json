@@ -1,5 +1,7 @@
 {
     "compilerOptions": {
+        "target": "ES2017",
+        "esModuleInterop": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "jsxFactory": "createCell"
