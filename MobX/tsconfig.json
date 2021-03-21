@@ -2,7 +2,10 @@
     "compilerOptions": {
         "experimentalDecorators": true,
         "jsx": "react",
-        "jsxFactory": "createCell"
+        "jsxFactory": "createCell",
+        "declaration": true,
+        "skipLibCheck": true,
+        "outDir": "dist/"
     },
     "include": ["./source/*"]
 }

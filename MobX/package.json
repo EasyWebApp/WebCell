@@ -1,6 +1,6 @@
 {
     "name": "mobx-web-cell",
-    "version": "0.3.5",
+    "version": "0.3.6",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "MobX adaptor for WebCell v2",
@@ -15,26 +15,35 @@
     "homepage": "https://github.com/EasyWebApp/WebCell/tree/v2/MobX",
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
-    "main": "dist/index.umd.js",
-    "module": "dist/index.js",
+    "main": "dist/index.js",
+    "module": "dist/index.esm.js",
     "scripts": {
-        "build": "microbundle --external web-cell,mobx --globals web-cell=WebCell --name mobxWebCell",
+        "pack-type": "tsc --emitDeclarationOnly",
+        "pack-dist": "esbuild source/index.ts --bundle --minify --sourcemap --external:web-cell --external:mobx",
+        "pack-cjs": "npm run pack-dist -- --format=cjs --outfile=dist/index.js",
+        "pack-esm": "npm run pack-dist -- --format=esm --outfile=dist/index.esm.js",
+        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-cjs  &&  npm run pack-esm",
         "test": "jest --forceExit",
-        "prepublishOnly": "npm test  &&  rm -rf .rts2_cache_* dist/  &&  npm run build"
+        "prepublishOnly": "npm test  &&  npm run build"
     },
     "dependencies": {
         "mobx": ">4.0.0 <6.0.0",
-        "web-cell": "^2.3.0"
+        "web-cell": "^2.3.1"
     },
     "devDependencies": {
         "@types/jest": "^26.0.20",
         "@webcomponents/webcomponentsjs": "^2.5.0",
+        "esbuild": "^0.8.52",
         "jest": "^26.6.3",
-        "microbundle": "^0.13.0",
         "ts-jest": "^26.5.2",
         "typescript": "^4.2.2"
     },
     "jest": {
-        "preset": "ts-jest"
+        "preset": "ts-jest",
+        "globals": {
+            "ts-jest": {
+                "tsconfig": "test/tsconfig.json"
+            }
+        }
     }
 }
