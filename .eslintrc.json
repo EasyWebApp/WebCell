@@ -12,9 +12,16 @@
             "jsx": true
         }
     },
-    "extends": ["eslint:recommended", "plugin:prettier/recommended"],
+    "plugins": ["@typescript-eslint"],
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended",
+        "prettier"
+    ],
     "rules": {
         "no-unused-vars": "warn",
-        "no-undef": "warn"
+        "no-undef": "warn",
+        "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/explicit-module-boundary-types": "off"
     }
 }
