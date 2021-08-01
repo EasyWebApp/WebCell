@@ -53,7 +53,7 @@ npm install parcel-bundler -D
 ></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.1/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.29/dist/index.min.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -161,25 +161,25 @@ export class TestTag extends mixin<Props, State>() {
 
 ## Life Cycle hooks
 
-1. [`connectedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#connectedcallback)
+1. [`connectedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#connectedCallback)
 
-2. [`disconnectedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#disconnectedcallback)
+2. [`disconnectedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#disconnectedCallback)
 
-3. [`attributeChangedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#attributechangedcallback)
+3. [`attributeChangedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#attributeChangedCallback)
 
-4. [`adoptedCallback`](https://web-cell.dev/web-utility/interfaces/customelement.html#adoptedcallback)
+4. [`adoptedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#adoptedCallback)
 
-5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#shouldupdate)
+5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcell.webcellcomponent.html#shouldupdate)
 
-6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcellcomponent.html#updatedcallback)
+6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcell.webcellcomponent.html#updatedcallback)
 
-7. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formassociatedcallback)
+7. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formAssociatedCallback)
 
-8. [`formDisabledCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formdisabledcallback)
+8. [`formDisabledCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formDisabledCallback)
 
-9. [`formResetCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formresetcallback)
+9. [`formResetCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formResetCallback)
 
-10. [`formStateRestoreCallback`](https://web-cell.dev/web-utility/interfaces/customformelement.html#formstaterestorecallback)
+10. [`formStateRestoreCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formStateRestoreCallback)
 
 ## Scaffolds
 
