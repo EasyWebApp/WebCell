@@ -27,14 +27,15 @@
         "web-cell": "^2.3.0"
     },
     "devDependencies": {
-        "@types/jest": "^26.0.20",
+        "@types/jest": "^26.0.24",
         "@webcomponents/webcomponentsjs": "^2.5.0",
-        "jest": "^26.6.3",
-        "microbundle": "^0.13.0",
-        "ts-jest": "^26.5.2",
-        "typescript": "^4.2.2"
+        "jest": "^27.0.6",
+        "microbundle": "^0.13.3",
+        "ts-jest": "^27.0.4",
+        "typescript": "^4.3.5"
     },
     "jest": {
+        "testEnvironment": "jsdom",
         "preset": "ts-jest"
     }
 }

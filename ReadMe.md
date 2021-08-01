@@ -53,7 +53,7 @@ npm install parcel-bundler -D
 ></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.29/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.43/dist/index.min.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -169,9 +169,9 @@ export class TestTag extends mixin<Props, State>() {
 
 4. [`adoptedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#adoptedCallback)
 
-5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/webcell.webcellcomponent.html#shouldupdate)
+5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#shouldUpdate)
 
-6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/webcell.webcellcomponent.html#updatedcallback)
+6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#updatedCallback)
 
 7. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formAssociatedCallback)
 
