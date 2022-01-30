@@ -1,6 +1,8 @@
 import type { Constructor } from 'web-utility';
 import type { CustomElement } from 'web-utility';
 import {
+    VNodeChildElement,
+    VNode,
     WebCellProps,
     WebCellElement,
     delegate,
@@ -9,7 +11,7 @@ import {
     toCamelCase
 } from './utility';
 import { ComponentMeta, DOMEventDelegater, watch } from './decorator';
-import { VNodeChildElement, VNode, createCell, render } from './renderer';
+import { createCell, render } from './renderer';
 
 export type WebCellFunction<P extends WebCellProps = WebCellProps> = (
     props?: P

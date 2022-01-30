@@ -1,6 +1,7 @@
 .eslintrc.json
+jest.config.ts
 test/
-.cache/
+.parcel-cache/
 Contributing.md
 docs/
 .github/
