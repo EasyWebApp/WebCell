@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.3.0",
+    "version": "2.4.0-rc.1",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -20,44 +20,49 @@
         "url": "https://github.com/EasyWebApp/WebCell/issues"
     },
     "main": "dist/index.js",
+    "module": "dist/index.esm.js",
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "web-utility": "^2.6.0"
+        "@swc/helpers": "^0.3.2",
+        "snabbdom": "^3.3.1",
+        "web-utility": "^3.0.0"
     },
     "peerDependencies": {
-        "@webcomponents/webcomponentsjs": "^2.5.0",
-        "core-js": "^3.16.0",
-        "jsdom": "^16.6.0"
+        "@webcomponents/webcomponentsjs": "^2.6.0",
+        "core-js": "^3.20.3",
+        "jsdom": "^19.0.0"
     },
     "devDependencies": {
-        "@types/core-js": "^2.5.4",
-        "@types/jest": "^26.0.24",
-        "@types/jsdom": "^16.2.13",
-        "@typescript-eslint/eslint-plugin": "^4.28.5",
-        "@typescript-eslint/parser": "^4.28.5",
-        "element-internals-polyfill": "0.1.43",
-        "eslint": "^7.32.0",
+        "@jest/types": "^27.4.2",
+        "@parcel/transformer-typescript-types": "^2.2.1",
+        "@types/core-js": "^2.5.5",
+        "@types/jest": "^27.4.0",
+        "@types/jsdom": "^16.2.14",
+        "@typescript-eslint/eslint-plugin": "^5.10.1",
+        "@typescript-eslint/parser": "^5.10.1",
+        "element-internals-polyfill": "^0.1.54",
+        "eslint": "^8.8.0",
         "eslint-config-prettier": "^8.3.0",
-        "husky": "^7.0.1",
-        "jest": "^27.0.6",
-        "lint-staged": "^11.1.1",
-        "open-cli": "^7.0.0",
-        "parcel-bundler": "^1.12.5",
-        "prettier": "^2.3.2",
-        "snabbdom": "^2.1.0",
-        "ts-jest": "^27.0.4",
-        "typedoc": "^0.21.5",
-        "typescript": "^4.3.5"
+        "husky": "^7.0.4",
+        "jest": "^27.4.7",
+        "lint-staged": "^12.3.2",
+        "open-cli": "^7.0.1",
+        "parcel": "^2.2.1",
+        "prettier": "^2.5.1",
+        "ts-jest": "^27.1.3",
+        "ts-node": "^10.4.0",
+        "typedoc": "^0.22.11",
+        "typescript": "~4.3.5"
     },
     "scripts": {
         "prepare": "husky install",
         "lint": "lint-staged",
         "test": "npm run lint  &&  jest",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map} dist/**/*.{js,map}",
-        "pack-dist": "parcel build source/index.ts --global WebCell",
+        "pack-dist": "rm -rf dist/  &&  parcel build source/index.ts",
         "pack-docs": "rm -rf docs/  &&  typedoc source/",
-        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
+        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"
     },
@@ -72,19 +77,11 @@
         "arrowParens": "avoid",
         "tabWidth": 4
     },
-    "jest": {
-        "testEnvironment": "jsdom",
-        "preset": "ts-jest/presets/js-with-ts",
-        "globals": {
-            "ts-jest": {
-                "tsconfig": "test/tsconfig.json",
-                "isolatedModules": true
-            }
+    "browserslist": "> 0.5%, last 2 versions, not dead",
+    "targets": {
+        "main": {
+            "optimize": true
         },
-        "testPathIgnorePatterns": [
-            "/node_modules/",
-            "/MobX/"
-        ],
-        "transformIgnorePatterns": []
+        "types": false
     }
 }

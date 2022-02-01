@@ -28,7 +28,7 @@ Command
 ```shell
 npm init -y
 npm install web-cell
-npm install parcel-bundler -D
+npm install parcel -D
 ```
 
 `package.json`

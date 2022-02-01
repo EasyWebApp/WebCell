@@ -19,9 +19,11 @@
         "prettier"
     ],
     "rules": {
+        "no-var": "off",
         "no-unused-vars": "warn",
         "no-undef": "warn",
         "@typescript-eslint/ban-types": "warn",
+        "@typescript-eslint/no-namespace": "warn",
         "@typescript-eslint/explicit-module-boundary-types": "off"
     }
 }

@@ -9,13 +9,18 @@ import type {
     InputEventHandlers,
     BubbleEventHandlers
 } from 'web-utility';
-import { VNodeChildElement } from 'snabbdom/build/package/h';
+import { VNode } from 'snabbdom';
+
 import { WebCellComponent } from '../WebCell';
+
+export { VNode } from 'snabbdom';
 
 export interface WebCellData extends HTMLProps {
     key?: string | number;
     ref?: (node: Node) => void;
 }
+
+export type VNodeChildElement = number | string | VNode | null | undefined;
 
 export type WebCellElement = VNodeChildElement | VNodeChildElement[];
 
@@ -56,7 +61,7 @@ declare global {
         interface ElementChildrenAttribute {
             defaultSlot: VNodeChildElement[];
         }
-        interface ElementClass extends WebCellComponent<any, any> {}
+        type ElementClass = WebCellComponent<any, any>;
     }
 }
 

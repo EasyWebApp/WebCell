@@ -1,8 +1,8 @@
 name: CI & CD
 on:
     push:
-        branches:
-            - v2
+        tags:
+            - v*
 jobs:
     Build-and-Deploy:
         runs-on: ubuntu-latest
@@ -12,14 +12,25 @@ jobs:
             - name: Use Node.js
               uses: actions/setup-node@v2
               with:
-                  node-version: '14'
-            - name: Install & build
+                  node-version: 14
+                  registry-url: https://registry.npmjs.org
+                  cache: yarn
+            - name: Install, Build & Publish
               run: |
-                  npm install
-                  npm run build
-            - name: Deploy
+                  yarn
+                  yarn publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+            - name: Update document
               uses: peaceiris/actions-gh-pages@v3
               with:
                   publish_dir: ./docs
                   personal_token: ${{ secrets.GITHUB_TOKEN }}
                   force_orphan: true
+            - name: Publish Adapter
+              run: |
+                  cd MobX/
+                  yarn
+                  yarn publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

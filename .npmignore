@@ -1,8 +1,10 @@
 .eslintrc.json
+jest.config.ts
 test/
-.cache/
+.parcel-cache/
 Contributing.md
 docs/
+.husky/
 .github/
 .vscode/
 MobX/
