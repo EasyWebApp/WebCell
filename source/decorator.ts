@@ -47,7 +47,7 @@ export function watch(
 
     if (!accessor) Object.defineProperty(prototype, key, meta);
 
-    return meta;
+    return meta as any;
 }
 
 export function attribute({ constructor }: Object, key: string) {
