@@ -9,11 +9,11 @@ import type {
     InputEventHandlers,
     BubbleEventHandlers
 } from 'web-utility';
-import { VNode } from 'snabbdom';
+import type { VNode } from 'snabbdom';
 
 import { WebCellComponent } from '../WebCell';
 
-export { VNode } from 'snabbdom';
+export type { VNode } from 'snabbdom';
 
 export interface WebCellData extends HTMLProps {
     key?: string | number;

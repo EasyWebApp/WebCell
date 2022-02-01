@@ -6,10 +6,10 @@ import {
     classModule,
     styleModule,
     eventListenersModule,
-    VNode,
     toVNode,
     h as createElement
 } from 'snabbdom';
+import type { VNode } from 'snabbdom';
 
 import {
     VNodeChildElement,
