@@ -33,7 +33,7 @@ export function watch(
     key: string,
     meta?: PropertyDescriptor
 ) {
-    const accessor = !!meta;
+    const accessor = !!(meta?.get || meta?.set);
     meta = meta || Object.getOwnPropertyDescriptor(prototype, key) || {};
 
     meta.set =
