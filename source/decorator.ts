@@ -34,18 +34,15 @@ export function watch(
     meta?: PropertyDescriptor
 ) {
     const accessor = !!(meta?.get || meta?.set);
-    meta = meta || Object.getOwnPropertyDescriptor(prototype, key) || {};
 
-    meta.set =
-        meta.set ||
-        function (this: WebCellComponent, value) {
-            this.setProps({ [key]: value });
-        };
-    meta.get =
-        meta.get ||
-        function () {
-            return this.props[key];
-        };
+    if (!accessor) meta = {};
+
+    meta.set ||= function (this: WebCellComponent, value) {
+        this.setProps({ [key]: value });
+    };
+    meta.get ||= function () {
+        return this.props[key];
+    };
     (meta.configurable = true), (meta.enumerable = true);
 
     if (!accessor) Object.defineProperty(prototype, key, meta);

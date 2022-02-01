@@ -4,7 +4,7 @@ on:
         tags:
             - v*
 jobs:
-    Build-and-Deploy:
+    Build-and-Publish:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
