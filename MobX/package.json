@@ -1,6 +1,6 @@
 {
     "name": "mobx-web-cell",
-    "version": "0.4.0-rc.0",
+    "version": "0.4.0-rc.1",
     "license": "LGPL-3.0",
     "author": "shiy2008@gmail.com",
     "description": "MobX adaptor for WebCell v2",
@@ -24,7 +24,7 @@
     },
     "dependencies": {
         "mobx": ">4.0.0 <6.0.0",
-        "web-cell": "^2.4.0-rc.1"
+        "web-cell": "^2.4.0-rc.2"
     },
     "devDependencies": {
         "@parcel/packager-ts": "^2.2.1",

@@ -5281,10 +5281,10 @@ weak-lru-cache@^1.2.1:
   resolved "https://registry.yarnpkg.com/weak-lru-cache/-/weak-lru-cache-1.2.1.tgz#6b4f2da7e1701f845e71522417f1df1e39503df8"
   integrity sha512-O5ag1F0Xk6ui+Fg5LlosTcVAyHs6DeyiDDbOapNtFCx/KjZ82B3U9stM9hvzbVclKWn9ABPjaINX/nQkGkJkKg==
 
-web-cell@2.4.0-rc.0:
-  version "2.4.0-rc.0"
-  resolved "https://registry.yarnpkg.com/web-cell/-/web-cell-2.4.0-rc.0.tgz#ec0f534bcbc784eb5875d3ba5289f4f6f48b3f6c"
-  integrity sha512-i3IHAswYUiXfMUUkLPA2/xkWTxkTFltMO22P2Z+PClwQ6ZNelKao8mN7na/MxIW8Ob3izBYv5YXKvWv19+KmjA==
+web-cell@^2.4.0-rc.1:
+  version "2.4.0-rc.1"
+  resolved "https://registry.yarnpkg.com/web-cell/-/web-cell-2.4.0-rc.1.tgz#4ad2917fb350cbc6283a0c753ccce7a5f190d19e"
+  integrity sha512-JABI6/9afMxXuhBckoswhJ1xr7w13zCj1JUpxvewR+gLyTi7jeCeeke1TBB6ESHondtQxR35UbvH0IBMj9Zijw==
   dependencies:
     "@swc/helpers" "^0.3.2"
     snabbdom "^3.3.1"
