@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "2.4.0-rc.0",
+    "version": "2.4.0-rc.1",
     "description": "Web Components engine based on JSX & TypeScript",
     "keywords": [
         "web",
@@ -60,9 +60,9 @@
         "lint": "lint-staged",
         "test": "npm run lint  &&  jest",
         "pack-type": "tsc  &&  rm -f dist/*.{js,map} dist/**/*.{js,map}",
-        "pack-dist": "parcel build source/index.ts",
+        "pack-dist": "rm -rf dist/  &&  parcel build source/index.ts",
         "pack-docs": "rm -rf docs/  &&  typedoc source/",
-        "build": "rm -rf dist/  &&  npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
+        "build": "npm run pack-type  &&  npm run pack-dist  &&  npm run pack-docs",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"
     },

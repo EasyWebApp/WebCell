@@ -4,6 +4,7 @@ test/
 .parcel-cache/
 Contributing.md
 docs/
+.husky/
 .github/
 .vscode/
 MobX/

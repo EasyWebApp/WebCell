@@ -3,7 +3,8 @@
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "jsx": "react",
-        "jsxFactory": "createCell"
+        "jsxFactory": "createCell",
+        "lib": ["ES2021", "DOM"]
     },
     "include": ["./source/*"]
 }
