@@ -1,8 +1,8 @@
-import '@webcomponents/webcomponentsjs/custom-elements-es5-adapter';
-import { createCell, render, component, mixin } from 'web-cell';
 import { observable } from 'mobx';
 
-import { observer } from '../source';
+import { component, observer } from '../source/decorator';
+import { mixin } from '../source/WebCell';
+import { createCell, render } from '../source/renderer';
 
 class Test {
     @observable
@@ -25,11 +25,10 @@ describe('Observer decorator', () => {
     });
 
     it('should re-render Class Component', () => {
-        @observer
         @component({
-            tagName: 'test-tag',
-            renderTarget: 'children'
+            tagName: 'test-tag'
         })
+        @observer
         class TestTag extends mixin() {
             render() {
                 return <i>{model.count}</i>;

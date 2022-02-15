@@ -1,4 +1,18 @@
 import {
+    Constructor,
+    ReadOnly_Properties,
+    isHTMLElementClass,
+    tagNameOf,
+    templateOf,
+    elementTypeOf
+} from 'web-utility';
+import {
+    On,
+    VNodeData,
+    VNode,
+    JsxVNodeChild,
+    Fragment,
+    jsx,
     init,
     attributesModule,
     propsModule,
@@ -6,20 +20,12 @@ import {
     classModule,
     styleModule,
     eventListenersModule,
-    toVNode,
-    h as createElement
+    toVNode
 } from 'snabbdom';
-import type { VNode } from 'snabbdom';
 
-import {
-    VNodeChildElement,
-    WebCellElement,
-    templateOf,
-    ReadOnly_Properties,
-    WebCellData,
-    elementTypeOf
-} from './utility';
-import { WebCellClass } from './WebCell';
+import { VDOMData, ComponentTag } from './utility/vDOM';
+
+export { Fragment } from 'snabbdom';
 
 export const patch = init([
     attributesModule,
@@ -29,142 +35,91 @@ export const patch = init([
     styleModule,
     eventListenersModule
 ]);
+export const treeMap = new WeakMap<Element | DocumentFragment, VNode>();
 
-function createVTree(root: ParentNode & Node, nodes: WebCellElement) {
+function isFragment({ sel, text }: VNode) {
+    return !(sel != null) && !(text != null);
+}
+
+function createVTree(root: Element | DocumentFragment, node: VNode) {
     const tree = toVNode(root);
 
-    tree.children = (nodes instanceof Array ? nodes : [nodes])
-        .filter(node => node != null)
-        .map(node =>
-            typeof node === 'object' ? node : ({ text: node + '' } as VNode)
-        );
+    tree.children = isFragment(node) ? node.children : [node];
 
     return tree;
 }
 
 export function render(
-    nodes: WebCellElement,
-    root: ParentNode & Node = document.body,
-    oldNodes: WebCellElement = []
+    node: VNode,
+    root: Element | DocumentFragment = document.body
 ) {
-    const newTree = createVTree(root, nodes),
-        oldTree = createVTree(root, oldNodes);
+    const newTree = createVTree(root, node),
+        oldTree = treeMap.get(root) || toVNode(root);
 
-    patch(oldTree, newTree);
+    const tree = patch(oldTree, newTree);
 
-    return nodes;
+    treeMap.set(root, tree);
+
+    return tree;
 }
 
-function splitProps(raw: Record<string, any>) {
-    const [attrs, dataset, on] = Object.entries(raw).reduce(
-        ([attrs, dataset, on], [key, value]) => {
-            const data = /^data-(.+)/.exec(key);
-
-            if (data)
-                dataset[
-                    data[1].replace(/-\w/g, char => char[1].toUpperCase())
-                ] = value;
-            else if (/^on\w+/.test(key) && value instanceof Function)
-                on[key.slice(2).toLowerCase()] = value;
-            else attrs[key] = value;
-
-            return [attrs, dataset, on];
-        },
-        [{}, {}, {}] as Record<string, any>[]
-    );
-
-    return { attrs, dataset, on };
+function isListener(key: string, handler: any): handler is On[string] {
+    return /^on[A-Z][a-z]+/.test(key) && handler instanceof Function;
 }
 
-function splitAttrs(tagName: string, raw: Record<string, any>) {
-    const prototype = tagName.includes('-')
-        ? (customElements.get(tagName) || '').prototype
-        : Object.getPrototypeOf(templateOf(tagName));
+function splitProps(tagName: string, raw: VDOMData) {
+    const { constructor } = templateOf(tagName),
+        isXML = elementTypeOf(tagName) === 'xml';
+    const data: VNodeData = {},
+        ReadOnlyProps = ReadOnly_Properties.get(
+            constructor as Constructor<HTMLElement>
+        );
 
-    const { name } = prototype.constructor as Function;
-    const readOnly =
-        ReadOnly_Properties[name as keyof typeof ReadOnly_Properties];
+    for (const key in raw) {
+        const value = raw[key as keyof VDOMData];
 
-    const [props, attrs] = Object.entries(raw).reduce(
-        ([props, attrs], [key, value]) => {
-            if (key in prototype && !readOnly?.includes(key))
-                props[key] = value;
-            else attrs[key] = value;
-
-            return [props, attrs];
-        },
-        [{}, {}] as Record<string, any>[]
-    );
-
-    return { props, attrs };
+        if (key === 'ref')
+            (data.hook ||= {}).insert = ({ elm }) =>
+                raw[key](elm as HTMLElement);
+        else if (key === 'className')
+            data.class = Object.fromEntries(
+                raw[key]
+                    .trim()
+                    .split(/\s+/)
+                    .map(name => [name, true])
+            );
+        else if (key === 'style') {
+            data.style = raw[key];
+        } else if (key.startsWith('data-'))
+            (data.dataset ||= {})[key.slice(5)] = raw[key];
+        else if (isListener(key, value))
+            (data.on ||= {})[key.slice(2).toLowerCase()] = value;
+        else if (isXML || key.includes('-') || ReadOnlyProps?.includes(key)) {
+            (data.attrs ||= {})[key] = raw[key];
+        } else {
+            (data.props ||= {})[key] = value;
+        }
+    }
+    return data;
 }
 
 export function createCell(
-    tag: string | Function,
-    data?: WebCellData,
-    ...defaultSlot: VNodeChildElement[]
-): VNode | VNode[] {
-    if (typeof tag !== 'string') {
-        var { tagName, renderTarget } = tag as WebCellClass;
-        tag = tagName || tag;
-    }
+    tag: ComponentTag,
+    props: VDOMData = {},
+    ...defaultSlot: JsxVNodeChild[]
+) {
+    if (isHTMLElementClass(tag)) tag = tagNameOf(tag);
+    else if (tag === Fragment)
+        return Fragment({ key: props?.key }, ...defaultSlot);
+    else if (typeof tag === 'function') return tag({ ...props, defaultSlot });
 
-    defaultSlot = defaultSlot.flat(Infinity).filter(item => item != null);
-
-    const { className, style, key, ref, ...rest } = data || {};
-
-    if (typeof tag === 'function') return tag({ ...data, defaultSlot });
-
-    const { attrs, dataset, on } = splitProps(rest),
-        insert = ref && (({ elm }: { elm?: Node }) => ref(elm!));
-
-    if (elementTypeOf(tag) === 'xml')
-        return createElement(
-            tag,
-            {
-                attrs: className ? { ...attrs, class: className } : attrs,
-                dataset,
-                style: style as Record<string, string>,
-                on,
-                key,
-                hook: { insert }
-            },
-            defaultSlot
-        );
-
-    const maps = splitAttrs(tag, attrs);
-
-    const meta = {
-        attrs: maps.attrs,
-        props: maps.props,
-        dataset,
-        class:
-            className && typeof className === 'string'
-                ? Object.fromEntries(
-                      className
-                          .trim()
-                          .split(/\s+/)
-                          .map(name => [name, true])
-                  )
-                : undefined,
-        style: style as Record<string, string>,
-        on,
-        key,
-        hook: { insert }
-    };
-
-    if (renderTarget !== 'children')
-        return createElement(tag, meta, defaultSlot);
-
-    meta.props.defaultSlot = defaultSlot;
-
-    return createElement(tag, meta);
+    return jsx(tag, splitProps(tag, props), defaultSlot);
 }
 
-export function renderToStaticMarkup(vNode: WebCellElement) {
+export function renderToStaticMarkup(tree: VNode) {
     const { body } = document.implementation.createHTMLDocument();
 
-    render(vNode, body);
+    render(tree, body);
 
     return body.innerHTML;
 }

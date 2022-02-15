@@ -1,52 +1,42 @@
-import type {
-    SelfCloseTags,
-    HTMLContentKeys,
-    BaseHTMLProps,
-    BaseSVGProps,
-    HTMLProps,
-    HTMLContainerProps,
-    BaseEventHandlers,
-    InputEventHandlers,
-    BubbleEventHandlers
-} from 'web-utility';
-import type { VNode } from 'snabbdom';
+import { HTMLProps, SVGProps } from 'web-utility';
+import { Key, VNode, JsxVNodeChildren, Fragment } from 'snabbdom';
 
-import { WebCellComponent } from '../WebCell';
+import { WebCellClass, WebCellComponent } from '../WebCell';
 
-export type { VNode } from 'snabbdom';
-
-export interface WebCellData extends HTMLProps {
-    key?: string | number;
-    ref?: (node: Node) => void;
+interface VDOMExtra<T extends Element> {
+    key?: Key;
+    ref?: (node: T) => any;
+}
+interface VDOMContainer {
+    defaultSlot?: JsxVNodeChildren;
 }
 
-export type VNodeChildElement = number | string | VNode | null | undefined;
+export type VDOMData<T extends HTMLElement = HTMLElement> = HTMLProps<T> &
+    VDOMExtra<T>;
 
-export type WebCellElement = VNodeChildElement | VNodeChildElement[];
+export type WebCellProps<T extends HTMLElement = HTMLElement> = VDOMData<T> &
+    VDOMContainer;
 
-export interface WebCellProps extends WebCellData {
-    defaultSlot?: WebCellElement;
-}
+export type FunctionComponent<P = {}, T extends HTMLElement = HTMLElement> = (
+    props: P & WebCellProps<T>
+) => VNode;
 
-type BaseCellProps<T extends HTMLElement> = WebCellProps &
-    BaseEventHandlers &
-    Omit<BaseHTMLProps<T>, HTMLContentKeys>;
+export type ComponentTag =
+    | string
+    | typeof Fragment
+    | FunctionComponent
+    | WebCellClass;
 
 type HTMLTags = {
-    [tagName in keyof HTMLElementTagNameMap]: BaseCellProps<
+    [tagName in keyof HTMLElementTagNameMap]: WebCellProps<
         HTMLElementTagNameMap[tagName]
-    > &
-        (tagName extends 'input'
-            ? InputEventHandlers
-            : tagName extends SelfCloseTags
-            ? {}
-            : HTMLContainerProps & BubbleEventHandlers);
+    >;
 };
 
 type SVGTags = {
-    [tagName in keyof SVGElementTagNameMap]: WebCellProps &
-        BaseSVGProps<SVGElementTagNameMap[tagName]> &
-        (tagName extends 'svg' ? { xmlns: string } : {});
+    [tagName in keyof SVGElementTagNameMap]: VDOMContainer &
+        SVGProps<SVGElementTagNameMap[tagName]> &
+        VDOMExtra<SVGElementTagNameMap[tagName]>;
 };
 
 declare global {
@@ -58,13 +48,11 @@ declare global {
         interface ElementAttributesProperty {
             props: WebCellProps;
         }
-        interface ElementChildrenAttribute {
-            defaultSlot: VNodeChildElement[];
-        }
-        type ElementClass = WebCellComponent<any, any>;
-    }
-}
+        type Element = VNode;
 
-export function Fragment({ defaultSlot }: WebCellProps) {
-    return defaultSlot;
+        interface ElementChildrenAttribute {
+            defaultSlot: JsxVNodeChildren;
+        }
+        type ElementClass = WebCellComponent;
+    }
 }

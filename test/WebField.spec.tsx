@@ -1,22 +1,16 @@
 import 'element-internals-polyfill';
+import { sleep } from 'web-utility';
 
 import { render, createCell } from '../source/renderer';
-import { component } from '../source/decorator';
-import { WebFieldProps, WebFieldState, mixinForm } from '../source/WebField';
-
-const delay = (second: number) =>
-    new Promise(resolve => setTimeout(resolve, second * 1000));
+import { component, observer } from '../source/decorator';
+import { WebFieldProps, mixinForm } from '../source/WebField';
 
 describe('Field Class & Decorator', () => {
     @component({
         tagName: 'test-input'
     })
-    class TestInput extends mixinForm<
-        { a?: number } & WebFieldProps,
-        { b: string } & WebFieldState
-    >() {
-        state = { b: '' };
-    }
+    @observer
+    class TestInput extends mixinForm<{ a?: number } & WebFieldProps>() {}
 
     it('should define a Custom Field Element', () => {
         render(<TestInput />);
@@ -28,14 +22,14 @@ describe('Field Class & Decorator', () => {
     });
 
     it('should have simple Form properties', async () => {
-        const input = new TestInput();
+        const input = document.querySelector<TestInput>('test-input');
 
         input.name = 'test';
-        await delay(0.05);
+        await sleep();
         expect(input.getAttribute('name')).toBe('test');
 
         input.required = true;
-        await delay(0.05);
+        await sleep();
         expect(input.hasAttribute('required')).toBeTruthy();
     });
 

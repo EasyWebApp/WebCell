@@ -1,5 +1,10 @@
-import { createCell, render, renderToStaticMarkup } from '../source/renderer';
-import { Fragment } from '../source/utility/vDOM';
+import { FunctionComponent } from '../source';
+import {
+    createCell,
+    Fragment,
+    render,
+    renderToStaticMarkup
+} from '../source/renderer';
 
 describe('Renderer', () => {
     it('should render HTML attributes, CSS Styles/Classes & Dataset', () => {
@@ -21,8 +26,9 @@ describe('Renderer', () => {
 
     it('should call Function while DOM rendering', () => {
         const hook = jest.fn();
-        const Test = jest.fn(() => <a ref={hook} />);
-
+        const Test = jest.fn(() => <i ref={hook} />) as FunctionComponent<{
+            prop1: number;
+        }>;
         render(<Test prop1={1}>test</Test>);
 
         expect(hook).toBeCalledTimes(1);
@@ -30,10 +36,8 @@ describe('Renderer', () => {
     });
 
     it('should render SVG attributes, CSS Styles/Classes', () => {
-        document.body.innerHTML = '';
-
         render(
-            <svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg">
+            <svg viewBox="0 0 300 100">
                 <circle
                     cx="50"
                     cy="50"
@@ -44,7 +48,7 @@ describe('Renderer', () => {
         );
 
         expect(document.body.innerHTML.trim()).toBe(
-            '<svg viewBox="0 0 300 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" style="stroke: red; fill: grey;"></circle></svg>'
+            '<svg viewBox="0 0 300 100"><circle cx="50" cy="50" r="40" style="stroke: red; fill: grey;"></circle></svg>'
         );
     });
 

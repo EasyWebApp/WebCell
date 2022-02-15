@@ -1,11 +1,17 @@
-import { component, watch, attribute, on } from '../source/decorator';
-import { mixin, WebCellComponent } from '../source/WebCell';
-import { render, createCell } from '../source/renderer';
+import { sleep, stringifyCSS } from 'web-utility';
+import { observable } from 'mobx';
+
+import { component, observer, attribute, on } from '../source/decorator';
+import { mixin } from '../source/WebCell';
+import { Fragment, render, createCell } from '../source/renderer';
 import type { WebCellProps } from '../source/utility/vDOM';
 
 describe('Base Class & Decorator', () => {
     it('should define a Custom Element', () => {
-        @component({ tagName: 'x-first' })
+        @component({
+            tagName: 'x-first',
+            mode: 'open'
+        })
         class XFirst extends mixin() {}
 
         render(<XFirst />);
@@ -17,19 +23,29 @@ describe('Base Class & Decorator', () => {
     it('should inject CSS into Shadow Root', () => {
         @component({
             tagName: 'x-second',
-            style: {
-                h2: { color: 'red' }
-            }
+            mode: 'open'
         })
         class XSecond extends mixin() {
+            private innerStyle = (
+                <style>
+                    {stringifyCSS({
+                        h2: { color: 'red' }
+                    })}
+                </style>
+            );
+
             render() {
-                return <h2 />;
+                return (
+                    <>
+                        {this.innerStyle}
+                        <h2 />
+                    </>
+                );
             }
         }
-
         render(<XSecond />);
 
-        const tag = document.body.lastElementChild as WebCellComponent;
+        const tag = document.body.lastElementChild as XSecond;
 
         expect(tag.toString()).toBe(`<style>h2 {
     color: red;
@@ -38,8 +54,7 @@ describe('Base Class & Decorator', () => {
 
     it('should put .render() returned DOM into .children of a Custom Element', () => {
         @component({
-            tagName: 'x-third',
-            renderTarget: 'children'
+            tagName: 'x-third'
         })
         class XThird extends mixin() {
             render() {
@@ -57,12 +72,12 @@ describe('Base Class & Decorator', () => {
 
     it('should update Property & Attribute by watch() & attribute() decorators', async () => {
         @component({
-            tagName: 'x-fourth',
-            renderTarget: 'children'
+            tagName: 'x-fourth'
         })
+        @observer
         class XFourth extends mixin<{ name?: string } & WebCellProps>() {
             @attribute
-            @watch
+            @observable
             name: string;
 
             render() {
@@ -79,9 +94,8 @@ describe('Base Class & Decorator', () => {
         tag.name = 'test';
 
         expect(tag.name).toBe('test');
-        expect(tag.props.name).toBe('test');
 
-        await new Promise(resolve => setTimeout(resolve, 50));
+        await sleep();
 
         expect(tag.getAttribute('name')).toBe('test');
         expect(tag.innerHTML).toBe('<h2>test</h2>');
@@ -93,15 +107,15 @@ describe('Base Class & Decorator', () => {
 
     it('should delegate DOM Event by on() decorator', () => {
         @component({
-            tagName: 'x-firth',
-            renderTarget: 'children'
+            tagName: 'x-firth'
         })
+        @observer
         class XFirth extends mixin<{ name?: string } & WebCellProps>() {
-            @watch
+            @observable
             name: string;
 
             @on('click', 'h2')
-            onClick(
+            handleClick(
                 { type, detail }: CustomEvent<number>,
                 { tagName }: HTMLHeadingElement
             ) {
@@ -126,34 +140,5 @@ describe('Base Class & Decorator', () => {
         );
 
         expect(tag.name).toBe('click,H2,1');
-    });
-
-    it('should be able to prevent Update in .shouldUpdate()', async () => {
-        interface XSixthState {
-            name?: string;
-        }
-
-        @component({ tagName: 'x-sixth' })
-        class XSixth extends mixin<{}, XSixthState>() {
-            state = {
-                name: ''
-            };
-
-            shouldUpdate(oldState: XSixthState, { name }: XSixthState) {
-                return !name;
-            }
-
-            render(_: {}, { name }: XSixthState) {
-                return <h2>{name}</h2>;
-            }
-        }
-
-        render(<XSixth />);
-
-        const tag = document.body.lastElementChild as XSixth;
-
-        await tag.setState({ name: 'test' });
-
-        expect(tag.toString()).toBe('<h2></h2>');
     });
 });

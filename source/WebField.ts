@@ -1,88 +1,75 @@
 import type {} from 'element-internals-polyfill';
-import type { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
-import type { Constructor } from 'web-utility';
-import type { BaseFieldProps, CustomFormElement } from 'web-utility';
+import { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
+import { observable, reaction } from 'mobx';
+import {
+    Constructor,
+    CustomFormElement,
+    CustomFormElementClass
+} from 'web-utility';
 
-import { WebCellProps } from './utility';
 import { mixin, WebCellComponent } from './WebCell';
 import { attribute } from './decorator';
+import { WebCellProps } from './utility';
 
-export interface WebFieldProps extends BaseFieldProps, WebCellProps {}
+export type WebFieldProps<T extends HTMLElement = HTMLInputElement> =
+    WebCellProps<T>;
 
-export interface WebFieldState {
-    disabled?: boolean;
-}
-
-export interface WebFieldComponent<
-    P extends WebFieldProps = WebFieldProps,
-    S = {}
-> extends CustomFormElement,
-        WebCellComponent<P, S> {
+export interface WebFieldComponent<P extends WebFieldProps = WebFieldProps>
+    extends CustomFormElement,
+        WebCellComponent<P> {
     internals: ElementInternals;
 }
 
-export type WebFieldClass<
-    P extends WebFieldProps = WebFieldProps,
-    S = {}
-> = Constructor<WebFieldComponent<P, S>>;
+export type WebFieldClass<P extends WebFieldProps = WebFieldProps> = Pick<
+    CustomFormElementClass,
+    'observedAttributes' | 'formAssociated'
+> &
+    Constructor<WebFieldComponent<P>>;
 
 export function mixinForm<
-    P extends WebFieldProps = WebFieldProps,
-    S extends WebFieldState = WebFieldState
->(): WebFieldClass<P, S> {
-    class WebField extends mixin<P, S>() implements WebFieldComponent<P, S> {
+    P extends WebFieldProps = WebFieldProps
+>(): WebFieldClass<P> {
+    class WebField extends mixin<P>() implements WebFieldComponent<P> {
         static formAssociated = true;
 
         readonly internals = this.attachInternals();
 
+        connectedCallback() {
+            this.disposers.push(
+                reaction(
+                    () => this.value,
+                    value => this.internals.setFormValue(value)
+                )
+            );
+        }
+
         formDisabledCallback(disabled: boolean) {
-            this.setState({ disabled } as Partial<S>);
+            this.disabled = disabled;
         }
 
         @attribute
-        set name(name: string) {
-            this.setProps({ name } as Partial<P>);
-        }
-        get name() {
-            return this.props.name;
-        }
+        @observable
+        name: string;
 
-        set value(value: string) {
-            this.setProps({ value } as Partial<P>);
-            this.internals.setFormValue(value);
-        }
-        get value() {
-            return this.props.value;
-        }
+        @observable
+        value: string;
 
         @attribute
-        set required(required: boolean) {
-            this.setProps({ required } as Partial<P>);
-        }
-        get required() {
-            return this.props.required;
-        }
+        @observable
+        required: boolean;
 
         @attribute
-        set disabled(disabled: boolean) {
-            this.setProps({ disabled } as Partial<P>);
-        }
-        get disabled() {
-            return this.props.disabled;
-        }
+        @observable
+        disabled: boolean;
 
         @attribute
-        set autofocus(autofocus: boolean) {
-            this.setProps({ autofocus } as Partial<P>);
-        }
-        get autofocus() {
-            return this.props.autofocus;
-        }
+        @observable
+        autofocus: boolean;
 
         set defaultValue(raw: string) {
             this.setAttribute('value', raw);
 
-            this.props.value ?? (this.value = raw);
+            this.value ??= raw;
         }
 
         get defaultValue() {

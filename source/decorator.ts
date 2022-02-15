@@ -1,57 +1,103 @@
 import {
-    CSSObject,
-    stringifyCSS,
-    toHyphenCase,
+    toCamelCase,
+    parseJSON,
+    isHTMLElementClass,
     DelegateEventHandler
-} from './utility';
-import { WebCellClass, WebCellComponent } from './WebCell';
+} from 'web-utility';
+import { observable, autorun } from 'mobx';
 
-export interface ComponentMeta {
+import { FunctionComponent } from './utility/vDOM';
+import { WebCellClass, ComponentClass } from './WebCell';
+import { VNode } from 'snabbdom';
+import { patch } from './renderer';
+
+export interface ComponentMeta extends Partial<ShadowRootInit> {
     tagName: `${string}-${string}`;
     extends?: keyof HTMLElementTagNameMap;
-    renderTarget?: 'shadowRoot' | 'children';
-    style?: string | CSSObject;
 }
 
-export function component({ style, ...meta }: ComponentMeta) {
+export function component(meta: ComponentMeta) {
     return <T extends WebCellClass>(Class: T) => {
-        customElements.define(
-            meta.tagName,
-            Object.assign(Class, {
-                style: typeof style === 'object' ? stringifyCSS(style) : style,
-                ...meta
-            }),
-            { extends: meta.extends }
-        );
-
+        customElements.define(meta.tagName, Object.assign(Class, meta), {
+            extends: meta.extends
+        });
         return Class;
     };
 }
 
-export function watch(
-    prototype: Object,
-    key: string,
-    meta?: PropertyDescriptor
-) {
-    const accessor = !!(meta?.get || meta?.set);
+/**
+ * @deprecated Use `@observable` of MobX directly since WebCell 3.0.0
+ */
+export const watch = observable;
 
-    if (!accessor) meta = {};
+function wrapFunction<P>(func: FunctionComponent<P>) {
+    return function (props?: P) {
+        var tree: VNode;
 
-    meta.set ||= function (this: WebCellComponent, value) {
-        this.setProps({ [key]: value });
+        const disposer = autorun(
+            () => (tree = tree ? patch(tree, func(props)) : func(props))
+        );
+        const { destroy } = (tree.data ||= {}).hook || {};
+
+        tree.data.hook = {
+            ...tree.data.hook,
+            destroy(node) {
+                disposer();
+                destroy?.(node);
+            }
+        };
+        return tree;
     };
-    meta.get ||= function () {
-        return this.props[key];
-    };
-    (meta.configurable = true), (meta.enumerable = true);
-
-    if (!accessor) Object.defineProperty(prototype, key, meta);
-
-    return meta as any;
 }
 
-export function attribute({ constructor }: Object, key: string) {
-    (constructor as WebCellClass).attributes.push(toHyphenCase(key));
+function wrapClass<T extends ComponentClass>(Component: T) {
+    // @ts-ignore
+    return class ObserverTrait extends Component {
+        connectedCallback() {
+            const { observedAttributes = [] } = this
+                .constructor as WebCellClass;
+
+            this.disposers = [
+                autorun(() => this.update()),
+
+                ...observedAttributes.map(name =>
+                    autorun(() => this.syncPropAttr(name))
+                )
+            ];
+            super.connectedCallback?.();
+        }
+
+        attributeChangedCallback(name: string, old: string, value: string) {
+            this[toCamelCase(name)] = parseJSON(value);
+
+            super.attributeChangedCallback?.(name, old, value);
+        }
+    };
+}
+
+export function observer<T extends FunctionComponent | ComponentClass>(
+    Component: T
+): any {
+    return isHTMLElementClass(Component)
+        ? wrapClass(Component)
+        : wrapFunction(Component);
+}
+
+export function attribute<T extends InstanceType<WebCellClass>>(
+    { constructor }: T,
+    key: string
+) {
+    var { observedAttributes } = constructor as WebCellClass;
+
+    if (!observedAttributes) {
+        observedAttributes = [];
+
+        Object.defineProperty(constructor, 'observedAttributes', {
+            configurable: true,
+            get: () => observedAttributes
+        });
+    }
+    observedAttributes.push(key);
 }
 
 export interface DOMEventDelegater {
@@ -61,8 +107,11 @@ export interface DOMEventDelegater {
 }
 
 export function on(type: DOMEventDelegater['type'], selector: string) {
-    return <T extends DelegateEventHandler>(
-        { constructor }: Object,
+    return <
+        T extends DelegateEventHandler,
+        I extends InstanceType<WebCellClass>
+    >(
+        { constructor }: I,
         method: string,
         meta: PropertyDescriptor
     ) => {

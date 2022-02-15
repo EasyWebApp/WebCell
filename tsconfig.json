@@ -2,21 +2,17 @@
     "compilerOptions": {
         "outDir": "dist/",
         "target": "ES5",
-        "sourceMap": true,
         "declaration": true,
-        "allowJs": true,
-        "noImplicitReturns": true,
-        "downlevelIteration": true,
-        "module": "ES6",
         "moduleResolution": "Node",
         "esModuleInterop": true,
         "experimentalDecorators": true,
         "jsx": "react",
         "jsxFactory": "createCell",
         "jsxFragmentFactory": "Fragment",
-        "lib": ["ES2019", "DOM"]
+        "skipLibCheck": true,
+        "lib": ["ES2021", "DOM"]
     },
-    "include": ["./source/**/*"],
+    "include": ["source/**/*"],
     "typedocOptions": {
         "name": "WebCell",
         "excludeExternals": true,

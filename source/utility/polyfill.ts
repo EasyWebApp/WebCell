@@ -1,5 +1,6 @@
 import 'core-js/es/object/from-entries';
 import 'core-js/es/array/flat';
+import 'element-internals-polyfill';
 import { JSDOM } from 'jsdom';
 
 const { window } = new JSDOM();

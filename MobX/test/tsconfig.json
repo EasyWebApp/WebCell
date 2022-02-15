@@ -1,8 +1,0 @@
-{
-    "compilerOptions": {
-        "experimentalDecorators": true,
-        "jsx": "react",
-        "jsxFactory": "createCell"
-    },
-    "include": ["./*"]
-}
