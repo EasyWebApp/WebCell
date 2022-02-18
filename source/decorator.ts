@@ -4,7 +4,7 @@ import {
     isHTMLElementClass,
     DelegateEventHandler
 } from 'web-utility';
-import { observable, autorun } from 'mobx';
+import { autorun } from 'mobx';
 
 import { FunctionComponent } from './utility/vDOM';
 import { WebCellClass, ComponentClass } from './WebCell';
@@ -24,11 +24,6 @@ export function component(meta: ComponentMeta) {
         return Class;
     };
 }
-
-/**
- * @deprecated Use `@observable` of MobX directly since WebCell 3.0.0
- */
-export const watch = observable;
 
 function wrapFunction<P>(func: FunctionComponent<P>) {
     return function (props?: P) {

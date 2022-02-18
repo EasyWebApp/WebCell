@@ -3,14 +3,14 @@ import { sleep } from 'web-utility';
 
 import { render, createCell } from '../source/renderer';
 import { component, observer } from '../source/decorator';
-import { WebFieldProps, mixinForm } from '../source/WebField';
+import { WebFieldProps, WebField } from '../source/WebField';
 
 describe('Field Class & Decorator', () => {
     @component({
         tagName: 'test-input'
     })
     @observer
-    class TestInput extends mixinForm<{ a?: number } & WebFieldProps>() {}
+    class TestInput extends WebField<{ a?: number } & WebFieldProps>() {}
 
     it('should define a Custom Field Element', () => {
         render(<TestInput />);

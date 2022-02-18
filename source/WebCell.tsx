@@ -1,3 +1,5 @@
+import type {} from 'element-internals-polyfill';
+import { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
 import {
     Constructor,
     CustomElement,
@@ -14,6 +16,7 @@ import { Fragment, createCell, render } from './renderer';
 
 export interface WebCellComponent<P extends WebCellProps = WebCellProps>
     extends CustomElement {
+    internals?: ElementInternals;
     root?: DocumentFragment | HTMLElement;
     update?(): void;
     /**
@@ -39,7 +42,7 @@ export interface WebCellClass<P extends WebCellProps = WebCellProps>
     eventDelegaters?: DOMEventDelegater[];
 }
 
-export function mixin<P extends WebCellProps = WebCellProps>(
+export function WebCell<P extends WebCellProps = WebCellProps>(
     superClass: Constructor<CustomElement> = HTMLElement
 ): WebCellClass<P> {
     class WebCell extends superClass implements WebCellComponent<P> {
@@ -49,6 +52,7 @@ export function mixin<P extends WebCellProps = WebCellProps>(
         static delegatesFocus?: ComponentMeta['delegatesFocus'];
         static eventDelegaters: DOMEventDelegater[] = [];
 
+        readonly internals?: ElementInternals;
         readonly root: DocumentFragment | HTMLElement;
         readonly props: P = {} as P;
         readonly disposers: IReactionDisposer[] = [];
@@ -61,14 +65,21 @@ export function mixin<P extends WebCellProps = WebCellProps>(
         constructor() {
             super();
 
-            const { mode, delegatesFocus, eventDelegaters } = this
-                .constructor as WebCellClass;
+            const {
+                extends: extendTag,
+                mode,
+                delegatesFocus,
+                eventDelegaters
+            } = this.constructor as WebCellClass;
 
             const renderChildren = !(mode != null);
 
+            if (!extendTag) this.internals = this.attachInternals();
+
             this.root = renderChildren
                 ? this
-                : this.attachShadow({ mode, delegatesFocus });
+                : this.internals?.shadowRoot ||
+                  this.attachShadow({ mode, delegatesFocus });
 
             for (const { selector, method } of eventDelegaters) {
                 if (renderChildren && /^:host/.test(selector))
@@ -80,12 +91,14 @@ export function mixin<P extends WebCellProps = WebCellProps>(
         }
 
         connectedCallback() {
-            const { eventDelegaters } = this.constructor as WebCellClass;
+            const { eventDelegaters } = this.constructor as WebCellClass,
+                { root } = this;
 
             for (const { type, method } of eventDelegaters)
-                this.root.addEventListener(type, this[method]);
+                root.addEventListener(type, this[method]);
 
-            if (!this.lastChild) this.update();
+            if (!(root instanceof DocumentFragment) || !root.lastChild)
+                this.update();
         }
 
         render() {
@@ -144,5 +157,5 @@ export function mixin<P extends WebCellProps = WebCellProps>(
 }
 
 export type ComponentClass = {
-    new (): InstanceType<ReturnType<typeof mixin>>;
+    new (): InstanceType<ReturnType<typeof WebCell>>;
 };

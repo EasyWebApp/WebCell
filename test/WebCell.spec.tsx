@@ -1,8 +1,9 @@
+import 'element-internals-polyfill';
 import { sleep, stringifyCSS } from 'web-utility';
 import { observable } from 'mobx';
 
 import { component, observer, attribute, on } from '../source/decorator';
-import { mixin } from '../source/WebCell';
+import { WebCell } from '../source/WebCell';
 import { Fragment, render, createCell } from '../source/renderer';
 import type { WebCellProps } from '../source/utility/vDOM';
 
@@ -12,7 +13,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-first',
             mode: 'open'
         })
-        class XFirst extends mixin() {}
+        class XFirst extends WebCell() {}
 
         render(<XFirst />);
 
@@ -25,7 +26,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-second',
             mode: 'open'
         })
-        class XSecond extends mixin() {
+        class XSecond extends WebCell() {
             private innerStyle = (
                 <style>
                     {stringifyCSS({
@@ -56,7 +57,7 @@ describe('Base Class & Decorator', () => {
         @component({
             tagName: 'x-third'
         })
-        class XThird extends mixin() {
+        class XThird extends WebCell() {
             render() {
                 return <h2 />;
             }
@@ -75,7 +76,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-fourth'
         })
         @observer
-        class XFourth extends mixin<{ name?: string } & WebCellProps>() {
+        class XFourth extends WebCell<{ name?: string } & WebCellProps>() {
             @attribute
             @observable
             name: string;
@@ -110,7 +111,7 @@ describe('Base Class & Decorator', () => {
             tagName: 'x-firth'
         })
         @observer
-        class XFirth extends mixin<{ name?: string } & WebCellProps>() {
+        class XFirth extends WebCell<{ name?: string } & WebCellProps>() {
             @observable
             name: string;
 
@@ -140,5 +141,32 @@ describe('Base Class & Decorator', () => {
         );
 
         expect(tag.name).toBe('click,H2,1');
+    });
+
+    it('should extend Original HTML tags', () => {
+        @component({
+            tagName: 'x-sixth',
+            extends: 'blockquote',
+            mode: 'open'
+        })
+        class XSixth extends WebCell(HTMLQuoteElement) {
+            render() {
+                return (
+                    <>
+                        💖
+                        <slot />
+                    </>
+                );
+            }
+        }
+        render(<blockquote is="x-sixth">test</blockquote>);
+
+        const element = document.querySelector('blockquote');
+
+        expect(element).toBeInstanceOf(XSixth);
+        expect(element).toBeInstanceOf(HTMLQuoteElement);
+
+        expect(element.textContent).toBe('test');
+        expect(element + '').toBe('💖<slot></slot>');
     });
 });

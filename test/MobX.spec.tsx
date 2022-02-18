@@ -1,7 +1,8 @@
+import 'element-internals-polyfill';
 import { observable } from 'mobx';
 
 import { component, observer } from '../source/decorator';
-import { mixin } from '../source/WebCell';
+import { WebCell } from '../source/WebCell';
 import { createCell, render } from '../source/renderer';
 
 class Test {
@@ -29,7 +30,7 @@ describe('Observer decorator', () => {
             tagName: 'test-tag'
         })
         @observer
-        class TestTag extends mixin() {
+        class TestTag extends WebCell() {
             render() {
                 return <i>{model.count}</i>;
             }

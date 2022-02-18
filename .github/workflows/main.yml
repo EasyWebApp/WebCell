@@ -16,9 +16,7 @@ jobs:
                   registry-url: https://registry.npmjs.org
                   cache: yarn
             - name: Install, Build & Publish
-              run: |
-                  yarn
-                  yarn publish
+              run: yarn  &&  yarn publish
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
             - name: Update document
@@ -27,10 +25,3 @@ jobs:
                   publish_dir: ./docs
                   personal_token: ${{ secrets.GITHUB_TOKEN }}
                   force_orphan: true
-            - name: Publish Adapter
-              run: |
-                  cd MobX/
-                  yarn
-                  yarn publish
-              env:
-                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

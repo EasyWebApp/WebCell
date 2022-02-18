@@ -3,4 +3,4 @@ package-lock.json
 dist/
 .parcel-cache/
 docs/
-.vscode/
+.vscode/settings.json

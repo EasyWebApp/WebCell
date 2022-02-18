@@ -1,6 +1,7 @@
 import { HTMLProps, SVGProps } from 'web-utility';
 import { Key, VNode, JsxVNodeChildren, Fragment } from 'snabbdom';
 
+import { ComponentMeta } from '../decorator';
 import { WebCellClass, WebCellComponent } from '../WebCell';
 
 interface VDOMExtra<T extends Element> {
@@ -15,7 +16,9 @@ export type VDOMData<T extends HTMLElement = HTMLElement> = HTMLProps<T> &
     VDOMExtra<T>;
 
 export type WebCellProps<T extends HTMLElement = HTMLElement> = VDOMData<T> &
-    VDOMContainer;
+    VDOMContainer & {
+        is?: ComponentMeta['tagName'];
+    };
 
 export type FunctionComponent<P = {}, T extends HTMLElement = HTMLElement> = (
     props: P & WebCellProps<T>
@@ -31,6 +34,8 @@ type HTMLTags = {
     [tagName in keyof HTMLElementTagNameMap]: WebCellProps<
         HTMLElementTagNameMap[tagName]
     >;
+} & {
+    [tagName: string]: WebCellProps;
 };
 
 type SVGTags = {
@@ -41,6 +46,7 @@ type SVGTags = {
 
 declare global {
     namespace JSX {
+        // @ts-ignore
         interface IntrinsicElements
             extends HTMLTags,
                 Omit<SVGTags, 'a' | 'script' | 'style' | 'title'> {}

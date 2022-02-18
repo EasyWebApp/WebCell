@@ -2,10 +2,10 @@
 
 # WebCell
 
-[Web Components][1] engine based on [JSX][2] & [TypeScript][3]
+[Web Components][1] engine based on VDOM, [JSX][2], [MobX][12] & [TypeScript][3]
 
 [![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
-[![CI & CD](https://github.com/EasyWebApp/WebCell/workflows/CI%20&%20CD/badge.svg)][5]
+[![CI & CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][5]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
 [![jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][7]
@@ -37,12 +37,12 @@ npm install parcel -D
 {
     "scripts": {
         "start": "parcel source/index.html --open",
-        "build": "parcel build source/index.html --public-url"
+        "build": "parcel build source/index.html --public-url ."
     }
 }
 ```
 
-[`tsconfig.json`](https://github.com/EasyWebApp/WebCell/blob/v2/tsconfig.json)
+[`tsconfig.json`](https://github.com/EasyWebApp/WebCell/blob/main/tsconfig.json)
 
 `source/index.html`
 
@@ -51,9 +51,9 @@ npm install parcel -D
     crossorigin
     src="https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries"
 ></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.5.0/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.43/dist/index.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/webcomponents-bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/custom-elements-es5-adapter.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.54/dist/index.min.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -67,17 +67,16 @@ npm install parcel -D
 `source/SubTag.tsx`
 
 ```jsx
-import { createCell, component, mixin } from 'web-cell';
+import { WebCellProps, WebCell, createCell, component } from 'web-cell';
 
-export function InlineTag({ defaultSlot }: any) {
+export function InlineTag({ defaultSlot }: WebCellProps) {
     return <span>{defaultSlot}</span>;
 }
 
 @component({
-    tagName: 'sub-tag',
-    renderTarget: 'children'
+    tagName: 'sub-tag'
 })
-export class SubTag extends mixin() {
+export class SubTag extends WebCell() {
     render() {
         return <InlineTag>test</InlineTag>;
     }
@@ -88,58 +87,69 @@ export class SubTag extends mixin() {
 
 `source/TestTag.tsx`
 
-```jsx
+```typescript
 import {
+    WebCellProps,
+    WebCell,
     createCell,
     component,
-    mixin,
     attribute,
-    watch,
+    observer,
     on,
     Fragment
 } from 'web-cell';
+import { observable } from 'mobx';
 
 import { SubTag } from './SubTag';
 
-interface Props {
-    title?: string;
+export interface TestTagProps extends WebCellProps {
+    topic?: string;
 }
 
-interface State {
-    status: string;
+class State {
+    @observable
+    status = '';
 }
 
 @component({
     tagName: 'test-tag',
-    style: {
-        '.title': {
-            color: 'lightblue'
-        },
-        '.title.active': {
-            color: 'lightpink'
-        }
-    }
+    mode: 'open'
 })
-export class TestTag extends mixin<Props, State>() {
+@observer
+export class TestTag extends WebCell<TestTagProps>() {
     @attribute
-    @watch
-    title = 'Test';
+    @observable
+    topic = 'Test';
 
-    state = { status: '' };
+    state = new State();
 
-    onClick = () => (this.title = 'Example');
+    onClick = () => (this.topic = 'Example');
 
     @on('click', ':host h1')
     onDelegate() {
-        this.setState({ status: 'active' });
+        this.state.status = 'active';
     }
 
-    render({ title }: Props, { status }: State) {
+    render() {
+        const { topic } = this,
+            { status } = this.state;
+
         return (
             <>
-                <h1 title={title} className={`title ${status}`}>
-                    {title}
-                    <img alt={title} onClick={this.onClick} />
+                <style>
+                    {stringifyCSS({
+                        '.topic': {
+                            color: 'lightblue'
+                        },
+                        '.topic.active': {
+                            color: 'lightpink'
+                        }
+                    })}
+                </style>
+
+                <h1 title={topic} className={`topic ${status}`}>
+                    {topic}
+                    <img alt={topic} onClick={this.onClick} />
 
                     <SubTag />
                 </h1>
@@ -169,17 +179,15 @@ export class TestTag extends mixin<Props, State>() {
 
 4. [`adoptedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#adoptedCallback)
 
-5. [`shouldUpdate`](https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#shouldUpdate)
+5. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#updatedCallback)
 
-6. [`updatedCallback`](https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#updatedCallback)
+6. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formAssociatedCallback)
 
-7. [`formAssociatedCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formAssociatedCallback)
+7. [`formDisabledCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formDisabledCallback)
 
-8. [`formDisabledCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formDisabledCallback)
+8. [`formResetCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formResetCallback)
 
-9. [`formResetCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formResetCallback)
-
-10. [`formStateRestoreCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formStateRestoreCallback)
+9. [`formStateRestoreCallback`](https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formStateRestoreCallback)
 
 ## Scaffolds
 
@@ -213,23 +221,26 @@ We recommend these libraries to use with WebCell:
 
 ## Roadmap
 
--   [ ] [Extend **Build-in Elements** with Virtual DOM](https://github.com/snabbdom/snabbdom/pull/829)
--   [ ] [Server-side Render](https://web.dev/declarative-shadow-dom/)
+-   [x] [Extend **Build-in Elements** with Virtual DOM](https://github.com/snabbdom/snabbdom/pull/829)
+-   [x] [Server-side Render](https://web.dev/declarative-shadow-dom/)
 
-Go to [contribute][21]!
+## More guides
+
+1. [v2 to v3 migration][21]
+2. [Development contribution][22]
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
 [4]: https://david-dm.org/EasyWebApp/WebCell
-[5]: https://github.com/EasyWebApp/WebCell/actions
+[5]: https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://github.com/jaywcjlove/awesome-uikit
 [8]: https://tech-query.me/programming/web-components-practise/slide.html
 [9]: https://gitter.im/EasyWebApp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 [10]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
 [11]: https://nodei.co/npm/web-cell/
-[12]: https://github.com/EasyWebApp/WebCell/blob/v2/MobX
+[12]: https://github.com/mobxjs/mobx/blob/mobx4and5/docs/
 [13]: https://web-cell.dev/cell-router/
 [14]: https://bootstrap.web-cell.dev/
 [15]: https://material.web-cell.dev/
@@ -238,4 +249,5 @@ Go to [contribute][21]!
 [18]: https://web-cell.dev/web-utility/
 [19]: https://web-cell.dev/iterable-observer/
 [20]: https://github.com/EasyWebApp/MarkCell
-[21]: https://github.com/EasyWebApp/WebCell/blob/v2/Contributing.md
+[21]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md
+[22]: https://github.com/EasyWebApp/WebCell/blob/main/Contributing.md

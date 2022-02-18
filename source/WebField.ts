@@ -1,5 +1,3 @@
-import type {} from 'element-internals-polyfill';
-import { ElementInternals } from 'element-internals-polyfill/dist/element-internals';
 import { observable, reaction } from 'mobx';
 import {
     Constructor,
@@ -7,18 +5,15 @@ import {
     CustomFormElementClass
 } from 'web-utility';
 
-import { mixin, WebCellComponent } from './WebCell';
+import { WebCell, WebCellComponent } from './WebCell';
 import { attribute } from './decorator';
 import { WebCellProps } from './utility';
 
 export type WebFieldProps<T extends HTMLElement = HTMLInputElement> =
     WebCellProps<T>;
 
-export interface WebFieldComponent<P extends WebFieldProps = WebFieldProps>
-    extends CustomFormElement,
-        WebCellComponent<P> {
-    internals: ElementInternals;
-}
+export type WebFieldComponent<P extends WebFieldProps = WebFieldProps> =
+    CustomFormElement & WebCellComponent<P>;
 
 export type WebFieldClass<P extends WebFieldProps = WebFieldProps> = Pick<
     CustomFormElementClass,
@@ -26,13 +21,11 @@ export type WebFieldClass<P extends WebFieldProps = WebFieldProps> = Pick<
 > &
     Constructor<WebFieldComponent<P>>;
 
-export function mixinForm<
+export function WebField<
     P extends WebFieldProps = WebFieldProps
 >(): WebFieldClass<P> {
-    class WebField extends mixin<P>() implements WebFieldComponent<P> {
+    class WebField extends WebCell<P>() implements WebFieldComponent<P> {
         static formAssociated = true;
-
-        readonly internals = this.attachInternals();
 
         connectedCallback() {
             this.disposers.push(
