@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.0-alpha.0",
+    "version": "3.0.0-alpha.1",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -48,7 +48,7 @@
         "core-js": "^3.21.1",
         "element-internals-polyfill": "^0.1.54",
         "eslint": "^8.9.0",
-        "eslint-config-prettier": "^8.3.0",
+        "eslint-config-prettier": "^8.4.0",
         "husky": "^7.0.4",
         "jest": "^27.5.1",
         "jsdom": "^19.0.0",

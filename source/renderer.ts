@@ -10,9 +10,10 @@ import {
     On,
     VNodeData,
     VNode,
-    JsxVNodeChild,
+    JsxVNodeChildren,
     Fragment,
-    jsx,
+    vnode,
+    h,
     init,
     attributesModule,
     propsModule,
@@ -107,14 +108,36 @@ function splitProps(tagName: string, raw: VDOMData) {
 export function createCell(
     tag: ComponentTag,
     props: VDOMData = {},
-    ...defaultSlot: JsxVNodeChild[]
+    ...children: JsxVNodeChildren[]
 ) {
+    var defaultSlot: (VNode | string)[] = children
+        .flat()
+        .filter(node => node != null && node !== false && node !== '')
+        .map(node =>
+            typeof node === 'boolean' ||
+            typeof node === 'number' ||
+            typeof node === 'string'
+                ? vnode(
+                      undefined,
+                      undefined,
+                      undefined,
+                      String(node),
+                      undefined
+                  )
+                : node
+        );
+    if (defaultSlot.length === 1 && typeof defaultSlot[0] !== 'string') {
+        const [{ sel, text }] = defaultSlot;
+
+        if (!sel && text) defaultSlot = [text];
+    }
+
     if (isHTMLElementClass(tag)) tag = tagNameOf(tag);
     else if (tag === Fragment)
         return Fragment({ key: props?.key }, ...defaultSlot);
     else if (typeof tag === 'function') return tag({ ...props, defaultSlot });
 
-    return jsx(tag, splitProps(tag, props), defaultSlot);
+    return h(tag, splitProps(tag, props), defaultSlot);
 }
 
 export function renderToStaticMarkup(tree: VNode) {
