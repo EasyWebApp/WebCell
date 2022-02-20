@@ -1,4 +1,4 @@
-import { FunctionComponent } from '../source';
+import { WebCellProps, FunctionComponent } from '../source';
 import {
     createCell,
     Fragment,
@@ -26,9 +26,9 @@ describe('Renderer', () => {
 
     it('should call Function while DOM rendering', () => {
         const hook = jest.fn();
-        const Test = jest.fn(() => <i ref={hook} />) as FunctionComponent<{
-            prop1: number;
-        }>;
+        const Test = jest.fn(() => <i ref={hook} />) as FunctionComponent<
+            { prop1: number } & WebCellProps
+        >;
         render(<Test prop1={1}>test</Test>);
 
         expect(hook).toBeCalledTimes(1);

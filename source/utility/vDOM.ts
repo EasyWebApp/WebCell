@@ -20,8 +20,8 @@ export type WebCellProps<T extends HTMLElement = HTMLElement> = VDOMData<T> &
         is?: ComponentMeta['tagName'];
     };
 
-export type FunctionComponent<P = {}, T extends HTMLElement = HTMLElement> = (
-    props: P & WebCellProps<T>
+export type FunctionComponent<P extends WebCellProps = WebCellProps> = (
+    props: P
 ) => VNode;
 
 export type ComponentTag =

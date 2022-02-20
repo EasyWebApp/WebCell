@@ -10,9 +10,9 @@ import {
 } from 'web-utility';
 import { IReactionDisposer, observable } from 'mobx';
 
-import { WebCellProps } from './utility';
+import { WebCellProps, getMobxData } from './utility';
 import { ComponentMeta, DOMEventDelegater } from './decorator';
-import { Fragment, createCell, render } from './renderer';
+import { createCell, render } from './renderer';
 
 export interface WebCellComponent<P extends WebCellProps = WebCellProps>
     extends CustomElement {
@@ -26,7 +26,7 @@ export interface WebCellComponent<P extends WebCellProps = WebCellProps>
     disposers?: IReactionDisposer[];
     syncPropAttr?(name: string): void;
     defaultSlot?: JSX.Element;
-    render?(): JSX.Element;
+    render?(): JSX.Element | undefined;
     /**
      * Called after rendering
      */
@@ -54,11 +54,14 @@ export function WebCell<P extends WebCellProps = WebCellProps>(
 
         readonly internals?: ElementInternals;
         readonly root: DocumentFragment | HTMLElement;
-        readonly props: P = {} as P;
+
+        get props() {
+            return getMobxData<P>(this);
+        }
         readonly disposers: IReactionDisposer[] = [];
 
         @observable
-        defaultSlot = (<></>);
+        defaultSlot?: JSX.Element;
 
         [key: string]: any;
 
@@ -110,7 +113,11 @@ export function WebCell<P extends WebCellProps = WebCellProps>(
         }
 
         update() {
-            render(this.render(), this.root);
+            const tree = this.render();
+
+            if (!tree) return;
+
+            render(tree, this.root);
 
             this.updatedCallback?.();
         }

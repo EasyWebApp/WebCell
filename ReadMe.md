@@ -223,6 +223,7 @@ We recommend these libraries to use with WebCell:
 
 -   [x] [Extend **Build-in Elements** with Virtual DOM](https://github.com/snabbdom/snabbdom/pull/829)
 -   [x] [Server-side Render](https://web.dev/declarative-shadow-dom/)
+-   [x] [Async Component loading](https://reactjs.org/docs/react-api.html#reactlazy)
 
 ## More guides
 

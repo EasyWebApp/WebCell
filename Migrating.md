@@ -1,6 +1,6 @@
 # WebCell v2 to v3 migration
 
-## "state" concept has been totally dropped
+## React-style State has been totally dropped
 
 **WebCell v3** is heavily inspired by [the **Local Observable State** idea of **MobX**][1], and [not only React][2], Web Components can be much easier to manage the **Inner State & Logic**, without any complex things:
 
