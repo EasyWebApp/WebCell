@@ -11,8 +11,12 @@ import {
 import { IReactionDisposer, observable } from 'mobx';
 
 import { WebCellProps, getMobxData } from './utility';
-import { ComponentMeta, DOMEventDelegater } from './decorator';
-import { createCell, render } from './renderer';
+import {
+    ComponentMeta,
+    DOMEventDelegater,
+    ReactionDelegater
+} from './decorator';
+import { Fragment, createCell, render } from './renderer';
 
 export interface WebCellComponent<P extends WebCellProps = WebCellProps>
     extends CustomElement {
@@ -40,6 +44,7 @@ export interface WebCellClass<P extends WebCellProps = WebCellProps>
         Partial<ComponentMeta>,
         Constructor<WebCellComponent<P>> {
     eventDelegaters?: DOMEventDelegater[];
+    reactions?: ReactionDelegater[];
 }
 
 export function WebCell<P extends WebCellProps = WebCellProps>(
@@ -51,6 +56,7 @@ export function WebCell<P extends WebCellProps = WebCellProps>(
         static mode?: ComponentMeta['mode'];
         static delegatesFocus?: ComponentMeta['delegatesFocus'];
         static eventDelegaters: DOMEventDelegater[] = [];
+        static reactions: ReactionDelegater[] = [];
 
         readonly internals?: ElementInternals;
         readonly root: DocumentFragment | HTMLElement;
@@ -113,11 +119,7 @@ export function WebCell<P extends WebCellProps = WebCellProps>(
         }
 
         update() {
-            const tree = this.render();
-
-            if (!tree) return;
-
-            render(tree, this.root);
+            render(this.render() ?? <></>, this.root);
 
             this.updatedCallback?.();
         }
@@ -129,6 +131,8 @@ export function WebCell<P extends WebCellProps = WebCellProps>(
                 this.root.removeEventListener(type, this[method]);
 
             for (const disposer of this.disposers) disposer();
+
+            this.disposers.length = 0;
         }
 
         syncPropAttr(name: string) {

@@ -1,4 +1,4 @@
-import { observable, reaction } from 'mobx';
+import { observable } from 'mobx';
 import {
     Constructor,
     CustomFormElement,
@@ -6,7 +6,7 @@ import {
 } from 'web-utility';
 
 import { WebCell, WebCellComponent } from './WebCell';
-import { attribute } from './decorator';
+import { attribute, reaction } from './decorator';
 import { WebCellProps } from './utility';
 
 export type WebFieldProps<T extends HTMLElement = HTMLInputElement> =
@@ -27,13 +27,9 @@ export function WebField<
     class WebField extends WebCell<P>() implements WebFieldComponent<P> {
         static formAssociated = true;
 
-        connectedCallback() {
-            this.disposers.push(
-                reaction(
-                    () => this.value,
-                    value => this.internals.setFormValue(value)
-                )
-            );
+        @reaction((element: WebFieldComponent<P>) => element.value)
+        protected setValue(value: string) {
+            this.internals.setFormValue(value);
         }
 
         formDisabledCallback(disabled: boolean) {

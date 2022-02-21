@@ -82,7 +82,7 @@ function splitProps(tagName: string, raw: VDOMData) {
         if (key === 'is') data.is = raw[key];
         else if (key === 'ref')
             (data.hook ||= {}).insert = ({ elm }) =>
-                raw[key](elm as HTMLElement);
+                raw[key]?.(elm as HTMLElement);
         else if (key === 'className')
             data.class = Object.fromEntries(
                 raw[key]

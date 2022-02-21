@@ -1,13 +1,14 @@
 import {
     toCamelCase,
+    toHyphenCase,
     parseJSON,
     isHTMLElementClass,
     DelegateEventHandler
 } from 'web-utility';
-import { autorun } from 'mobx';
+import { IReactionPublic, reaction as watch, autorun } from 'mobx';
 
 import { FunctionComponent } from './utility/vDOM';
-import { WebCellClass, ComponentClass } from './WebCell';
+import { WebCellComponent, WebCellClass, ComponentClass } from './WebCell';
 import { VNode } from 'snabbdom';
 import { patch } from './renderer';
 
@@ -49,16 +50,22 @@ function wrapClass<T extends ComponentClass>(Component: T) {
     // @ts-ignore
     return class ObserverTrait extends Component {
         connectedCallback() {
-            const { observedAttributes = [] } = this
+            const { observedAttributes = [], reactions } = this
                 .constructor as WebCellClass;
 
-            this.disposers = [
+            this.disposers.push(
                 autorun(() => this.update()),
 
                 ...observedAttributes.map(name =>
                     autorun(() => this.syncPropAttr(name))
+                ),
+                ...reactions.map(({ methodKey, expression }) =>
+                    watch(
+                        r => expression(this, r),
+                        (this[methodKey] as ReactionHandler).bind(this)
+                    )
                 )
-            ];
+            );
             super.connectedCallback?.();
         }
 
@@ -92,7 +99,33 @@ export function attribute<T extends InstanceType<WebCellClass>>(
             get: () => observedAttributes
         });
     }
-    observedAttributes.push(key);
+    observedAttributes.push(toHyphenCase(key));
+}
+
+type ReactionHandler<I = any, O = any> = (
+    data?: I,
+    reaction?: IReactionPublic
+) => O;
+
+export interface ReactionDelegater {
+    methodKey: string;
+    expression: ReactionHandler;
+}
+
+export function reaction<C extends WebCellComponent, V>(
+    expression: ReactionHandler<C, V>
+) {
+    return (
+        { constructor }: C,
+        key: string,
+        meta: TypedPropertyDescriptor<ReactionHandler<V>>
+    ) => {
+        (constructor as WebCellClass).reactions.push({
+            methodKey: key,
+            expression
+        });
+        return meta;
+    };
 }
 
 export interface DOMEventDelegater {
