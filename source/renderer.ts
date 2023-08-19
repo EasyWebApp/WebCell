@@ -1,9 +1,7 @@
 import {
-    Constructor,
-    ReadOnly_Properties,
+    isDOMReadOnly,
     isHTMLElementClass,
     tagNameOf,
-    templateOf,
     elementTypeOf
 } from 'web-utility';
 import {
@@ -69,12 +67,8 @@ function isListener(key: string, handler: any): handler is On[string] {
 }
 
 function splitProps(tagName: string, raw: VDOMData) {
-    const { constructor } = templateOf(tagName),
-        isXML = elementTypeOf(tagName) === 'xml';
     const data: VNodeData = {},
-        ReadOnlyProps = ReadOnly_Properties.get(
-            constructor as Constructor<HTMLElement>
-        );
+        isXML = elementTypeOf(tagName) === 'xml';
 
     for (const key in raw) {
         const value = raw[key as keyof VDOMData];
@@ -84,19 +78,22 @@ function splitProps(tagName: string, raw: VDOMData) {
             (data.hook ||= {}).insert = ({ elm }) =>
                 raw[key]?.(elm as HTMLElement);
         else if (key === 'className')
-            data.class = Object.fromEntries(
-                raw[key]
-                    .trim()
-                    .split(/\s+/)
-                    .map(name => [name, true])
-            );
+            data.class =
+                raw[key] &&
+                Object.fromEntries(
+                    raw[key]
+                        .trim()
+                        .split(/\s+/)
+                        .map(name => [name, true])
+                );
         else if (key === 'style') {
             data.style = raw[key];
         } else if (key.startsWith('data-'))
             (data.dataset ||= {})[key.slice(5)] = raw[key];
         else if (isListener(key, value))
             (data.on ||= {})[key.slice(2).toLowerCase()] = value;
-        else if (isXML || key.includes('-') || ReadOnlyProps?.includes(key)) {
+        // @ts-ignore
+        else if (isXML || key.includes('-') || isDOMReadOnly(tagName, key)) {
             (data.attrs ||= {})[key] = raw[key];
         } else {
             (data.props ||= {})[key] = value;

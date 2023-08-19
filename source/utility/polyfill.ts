@@ -13,9 +13,7 @@ for (const key of [
     'HTMLUnknownElement',
     'XMLSerializer',
     'CustomEvent'
-]) {
-    // @ts-ignore
-    global[key] = window[key];
-}
+])
+    globalThis[key] = window[key];
 
 self.requestAnimationFrame = setTimeout;
