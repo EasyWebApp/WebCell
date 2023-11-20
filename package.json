@@ -65,12 +65,12 @@
     },
     "scripts": {
         "prepare": "husky install",
-        "test": "lint-staged  &&  jest",
+        "test": "lint-staged && jest",
         "pack-dist": "tsc --emitDeclarationOnly  &&  parcel build source/index.ts",
-        "pack-docs": "rm -rf docs/  &&  typedoc source/",
-        "build": "rm -rf dist/  &&  npm run pack-dist  &&  npm run pack-docs",
-        "start": "npm run pack-docs  &&  open-cli docs/index.html",
-        "prepublishOnly": "npm test  &&  npm run build"
+        "pack-docs": "rm -rf docs/ && typedoc source/",
+        "build": "rm -rf dist/ && npm run pack-dist && npm run pack-docs",
+        "start": "npm run pack-docs && open-cli docs/index.html",
+        "prepublishOnly": "npm test && npm run build"
     },
     "lint-staged": {
         "*.{md,json,yml,js,ts,tsx}": "prettier --write",
