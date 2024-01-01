@@ -4,7 +4,7 @@
 
 [Web Components][1] engine based on VDOM, [JSX][2], [MobX][12] & [TypeScript][3]
 
-[![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
+[![NPM Dependency](https://img.shields.io/librariesio/github/EasyWebApp/WebCell.svg)][4]
 [![CI & CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][5]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
@@ -16,6 +16,23 @@
 [![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][10]
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][11]
+
+## Feature
+
+### Engines comparison
+
+|    feature    |      WebCell 3       |      WebCell 2       |             React             |                 Vue                 |
+| :-----------: | :------------------: | :------------------: | :---------------------------: | :---------------------------------: |
+|  JS language  |     TypeScript 5     |     TypeScript 4     |   ECMAScript or TypeScript    |      ECMAScript or TypeScript       |
+|   JS syntax   | ES decorator stage-3 | ES decorator stage-2 |                               |                                     |
+|  XML syntax   |      JSX import      |     JSX factory      |      JSX factory/import       | HTML/Vue template or JSX (optional) |
+|    DOM API    |    Web components    |    Web components    |            HTML 5+            |               HTML 5+               |
+| view renderer |    DOM renderer 2    |       SnabbDOM       |          (built-in)           |          SnabbDOM (forked)          |
+|   state API   |  MobX `@observable`  |     `this.state`     | `this.state` or `useState()`  |       `this.$data` or `ref()`       |
+|   props API   |  MobX `@observable`  |       `@watch`       | `this.props` or `props => {}` |  `this.$props` or `defineProps()`   |
+| state manager |       MobX 6+        |       MobX 4/5       |             Redux             |                VueX                 |
+|  page router  |       JSX tags       | JSX tags + JSON data |           JSX tags            |              JSON data              |
+| asset bundler |       Parcel 2       |       Parcel 1       |            webpack            |                Vite                 |
 
 ## Usage
 
@@ -47,13 +64,9 @@ npm install parcel -D
 `source/index.html`
 
 ```html
-<script
-    crossorigin
-    src="https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries"
-></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.54/dist/index.min.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/ECMAScript.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/WebComponents.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/ElementInternals.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -233,7 +246,7 @@ We recommend these libraries to use with WebCell:
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://david-dm.org/EasyWebApp/WebCell
+[4]: https://libraries.io/npm/web-cell
 [5]: https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://github.com/jaywcjlove/awesome-uikit
