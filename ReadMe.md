@@ -40,15 +40,15 @@ Demo & **GitHub template**: https://web-cell.dev/scaffold/
 
 ### Project bootstrap
 
-Command
+#### Command
 
 ```shell
 npm init -y
-npm install web-cell
+npm install dom-renderer mobx web-cell
 npm install parcel -D
 ```
 
-`package.json`
+#### `package.json`
 
 ```json
 {
@@ -59,9 +59,21 @@ npm install parcel -D
 }
 ```
 
-[`tsconfig.json`](https://github.com/EasyWebApp/WebCell/blob/main/tsconfig.json)
+#### `tsconfig.json`
 
-`source/index.html`
+```json
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "useDefineForClassFields": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "dom-renderer"
+    }
+}
+```
+
+#### `source/index.html`
 
 ```html
 <script src="https://polyfill.web-cell.dev/feature/ECMAScript.js"></script>
@@ -80,16 +92,16 @@ npm install parcel -D
 `source/SubTag.tsx`
 
 ```jsx
-import { WebCellProps, WebCell, createCell, component } from 'web-cell';
+import { WebCellProps, component } from 'web-cell';
 
-export function InlineTag({ defaultSlot }: WebCellProps) {
-    return <span>{defaultSlot}</span>;
+export function InlineTag({ children }: WebCellProps) {
+    return <span>{children}</span>;
 }
 
 @component({
     tagName: 'sub-tag'
 })
-export class SubTag extends WebCell() {
+export class SubTag extends HTMLElement {
     render() {
         return <InlineTag>test</InlineTag>;
     }
@@ -100,17 +112,8 @@ export class SubTag extends WebCell() {
 
 `source/TestTag.tsx`
 
-```typescript
-import {
-    WebCellProps,
-    WebCell,
-    createCell,
-    component,
-    attribute,
-    observer,
-    on,
-    Fragment
-} from 'web-cell';
+```tsx
+import { WebCellProps, component, attribute, observer, on } from 'web-cell';
 import { observable } from 'mobx';
 
 import { SubTag } from './SubTag';
@@ -180,7 +183,7 @@ export class TestTag extends WebCell<TestTagProps>() {
 -   [Element Internals](https://web.dev/more-capable-form-controls/)
 -   [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
 -   [ECMAScript 6+](http://es6-features.org/)
--   [TypeScript 4+][3]
+-   [TypeScript 5+][3]
 
 ## Life Cycle hooks
 

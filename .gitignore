@@ -5,3 +5,4 @@ dist/
 .parcel-cache/
 docs/
 .vscode/settings.json
+.vercel

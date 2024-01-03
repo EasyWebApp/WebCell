@@ -16,9 +16,8 @@ import {
     component,
 +   observer,
 -   mixin,
-+   WebCell,
-    createCell,
-    Fragment
+-   createCell,
+-   Fragment
 } from 'web-cell';
 +import { observable } from 'mobx';
 
@@ -33,7 +32,7 @@ import {
 })
 +@observer
 -export class MyTag extends mixin<{}, State>() {
-+export class MyTag extends WebCell() {
++export class MyTag extends HTMLElement {
 -   state: Readonly<State> = {
 -       key: 'value'
 -   };
@@ -70,9 +69,8 @@ import {
 -   watch,
 +   observer,
 -   mixin,
-+   WebCell,
-    createCell,
-    Fragment
+-   createCell,
+-   Fragment
 } from 'web-cell';
 -import { observer } from 'mobx-web-cell';
 +import { observable } from 'mobx';
@@ -90,7 +88,8 @@ export interface MyTagProps extends WebCellProps {
     @attribute
 -   @watch
 +   @observable
-    count = 0;
+-   count = 0;
++   accessor count = 0;
 
 -   render({ count }: MyTagProps) {
 +   render() {
@@ -109,7 +108,6 @@ export interface MyTagProps extends WebCellProps {
 import {
     component,
 -   mixin
-+   WebCell
 } from 'web-cell';
 
 @component({
@@ -117,7 +115,7 @@ import {
 -   renderTarget: 'children'
 })
 -export class MyTag extends mixin() {
-+export class MyTag extends WebCell() {
++export class MyTag extends HTMLElement {
 }
 ```
 
@@ -127,7 +125,6 @@ import {
 import {
     component,
 -   mixin
-+   WebCell
 } from 'web-cell';
 
 @component({
@@ -136,7 +133,7 @@ import {
 +   mode: 'open'
 })
 -export class MyTag extends mixin() {
-+export class MyTag extends WebCell() {
++export class MyTag extends HTMLElement {
 }
 ```
 
@@ -149,7 +146,6 @@ This makes **Shadow CSS** to react with the data of component instances.
 import {
     component,
 -   mixin
-+   WebCell
 } from 'web-cell';
 
 @component({
@@ -163,7 +159,7 @@ import {
 -   }
 })
 -export class MyTag extends mixin() {
-+export class MyTag extends WebCell() {
++export class MyTag extends HTMLElement {
     render() {
         return <>
 +           <style>
@@ -183,14 +179,15 @@ import {
 
 [JSDoc's `@deprecated` hints][7] will lead your way to rename them:
 
-1. `mixin()` => `WebCell()`
+1. `mixin()` => `HTMLElement` & its Sub-classes
 2. `mixinForm()` => `WebField()`
-3. `@watch` => `@observable`
+3. `@watch` => `@observable accessor`
 
 ## Appendix: v3 prototype
 
-1. https://codesandbox.io/s/web-components-jsx-i7u60?file=/index.tsx
-2. https://codesandbox.io/s/mobx-lite-791eg?file=/src/index.ts
+1. [Legacy architecture](https://codesandbox.io/s/web-components-jsx-i7u60?file=/index.tsx)
+2. [Modern architecture](https://codesandbox.io/s/mobx-web-components-pvn9rf?file=/src/WebComponent.ts)
+3. [MobX lite](https://codesandbox.io/s/mobx-lite-791eg?file=/src/index.ts)
 
 [1]: https://github.com/mobxjs/mobx/blob/mobx4and5/docs/refguide/observer-component.md#local-observable-state-in-class-based-components
 [2]: https://blog.cloudboost.io/3-reasons-why-i-stopped-using-react-setstate-ab73fc67a42e
