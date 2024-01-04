@@ -23,7 +23,10 @@ export const FunctionClock = observer(() => {
     );
 });
 
-@component({ tagName: 'class-clock' })
+@component({
+    tagName: 'class-clock',
+    mode: 'open'
+})
 @observer
 export class ClassClock extends HTMLElement {
     state = new ClockModel();

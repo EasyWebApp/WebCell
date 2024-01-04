@@ -2,7 +2,9 @@ import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
 import { autorun } from 'mobx';
 import { CustomElement, isHTMLElementClass } from 'web-utility';
 
-export interface ComponentMeta extends ElementDefinitionOptions {
+export interface ComponentMeta
+    extends ElementDefinitionOptions,
+        Partial<ShadowRootInit> {
     tagName: string;
 }
 
@@ -15,7 +17,14 @@ export function component({ tagName, ...meta }: ComponentMeta) {
         { addInitializer }: ClassDecoratorContext
     ) => {
         class RendererComponent extends (Class as CustomElementConstructor) {
+            protected internals = this.attachInternals();
             protected renderer = new DOMRenderer();
+
+            constructor() {
+                super();
+
+                if (meta.mode) this.attachShadow(meta as ShadowRootInit);
+            }
 
             connectedCallback() {
                 this.update();
@@ -24,9 +33,10 @@ export function component({ tagName, ...meta }: ComponentMeta) {
             }
 
             update() {
-                const vNode = this.render?.();
-
-                if (vNode) this.renderer.render(vNode, this);
+                const vNode = this.render?.(),
+                    { shadowRoot } = this.internals;
+                // @ts-ignore
+                if (vNode) this.renderer.render(vNode, shadowRoot || this);
             }
 
             declare render: () => VNode;
@@ -100,4 +110,13 @@ export function observer<T extends WebCellComponent>(
     _?: ClassDecoratorContext
 ) {
     return isHTMLElementClass(func) ? wrapClass(func) : wrapFunction(func);
+}
+
+declare global {
+    namespace JSX {
+        interface ElementAttributesProperty {
+            // @ts-ignore
+            props: {};
+        }
+    }
 }
