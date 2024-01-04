@@ -1,10 +1,14 @@
-import { DOMRenderer, VNode } from 'dom-renderer';
+import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
 import { autorun } from 'mobx';
+import { CustomElement, isHTMLElementClass } from 'web-utility';
 
-interface ComponentMeta extends ElementDefinitionOptions {
+export interface ComponentMeta extends ElementDefinitionOptions {
     tagName: string;
 }
 
+/**
+ * Class decorator of Web components
+ */
 export function component({ tagName, ...meta }: ComponentMeta) {
     return <T extends CustomElementConstructor>(
         Class: T,
@@ -35,18 +39,65 @@ export function component({ tagName, ...meta }: ComponentMeta) {
     };
 }
 
-export function observer<T extends CustomElementConstructor>(
-    Class: T,
-    _: ClassDecoratorContext
-) {
-    class ObserverComponent extends (Class as CustomElementConstructor) {
+export type FunctionComponent<P extends DataObject = {}> = (props: P) => VNode;
+export type FC<P extends DataObject = {}> = FunctionComponent<P>;
+
+function wrapFunction<P>(func: FC<P>) {
+    return (props: P) => {
+        var tree: VNode,
+            renderer = new DOMRenderer();
+
+        const disposer = autorun(() => {
+            const newTree = func(props);
+
+            tree = tree ? renderer.patch(tree, newTree) : newTree;
+        });
+        const { unRef } = tree;
+
+        tree.unRef = node => (disposer(), unRef?.(node));
+
+        return tree;
+    };
+}
+
+export type ClassComponent = CustomElementConstructor;
+
+function wrapClass<T extends ClassComponent>(Class: T) {
+    class ObserverComponent
+        extends (Class as ClassComponent)
+        implements CustomElement
+    {
+        protected disposers = [];
+
         constructor() {
             super();
 
             const { update } = Object.getPrototypeOf(this);
             // @ts-ignore
-            this.update = () => autorun(() => update.call(this));
+            this.update = () =>
+                this.disposers.push(autorun(() => update.call(this)));
+        }
+
+        disconnectedCallback() {
+            for (const disposer of this.disposers) disposer();
         }
     }
     return ObserverComponent as unknown as T;
+}
+
+export type WebCellComponent = FunctionComponent | ClassComponent;
+
+/**
+ * Class decorator of Web components for MobX
+ */
+export function observer<T extends WebCellComponent>(
+    func: T,
+    _: ClassDecoratorContext
+): T;
+export function observer<T extends WebCellComponent>(func: T): T;
+export function observer<T extends WebCellComponent>(
+    func: T,
+    _?: ClassDecoratorContext
+) {
+    return isHTMLElementClass(func) ? wrapClass(func) : wrapFunction(func);
 }

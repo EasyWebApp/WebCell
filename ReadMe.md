@@ -45,7 +45,7 @@ Demo & **GitHub template**: https://web-cell.dev/scaffold/
 ```shell
 npm init -y
 npm install dom-renderer mobx web-cell
-npm install parcel -D
+npm install parcel @parcel/config-default "@parcel/transformer-typescript-tsc" -D
 ```
 
 #### `package.json`
@@ -69,6 +69,17 @@ npm install parcel -D
         "useDefineForClassFields": true,
         "jsx": "react-jsx",
         "jsxImportSource": "dom-renderer"
+    }
+}
+```
+
+#### `.parcelrc`
+
+```json
+{
+    "extends": "@parcel/config-default",
+    "transformers": {
+        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
     }
 }
 ```

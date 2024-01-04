@@ -1,9 +1,11 @@
 .eslintrc.json
 jest.config.ts
 test/
+preview/
 .parcel-cache/
 Contributing.md
 docs/
 .husky/
 .github/
 .vscode/
+.vercel/
