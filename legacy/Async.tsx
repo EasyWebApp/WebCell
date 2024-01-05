@@ -1,8 +1,8 @@
 import { observable } from 'mobx';
 
 import { ComponentTag, WebCellProps, FunctionComponent } from './utility';
-import { WebCellClass, WebCell } from './WebCell';
-import { component, observer, reaction } from './decorator';
+import { WebCellClass, WebCell } from '../source/WebCell';
+import { component, observer, reaction } from '../source/decorator';
 import { createCell } from './renderer';
 
 export interface AsyncBoxProps extends WebCellProps {

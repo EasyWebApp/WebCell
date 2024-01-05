@@ -1,8 +1,8 @@
 import { HTMLProps, SVGProps } from 'web-utility';
 import { Key, VNode, JsxVNodeChildren, Fragment } from 'snabbdom';
 
-import { ComponentMeta } from '../decorator';
-import { WebCellClass, WebCellComponent } from '../WebCell';
+import { ComponentMeta } from '../../source/decorator';
+import { WebCellClass, WebCellComponent } from '../../source/WebCell';
 
 interface VDOMExtra<T extends Element> {
     key?: Key;

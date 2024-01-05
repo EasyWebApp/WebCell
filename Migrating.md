@@ -24,7 +24,8 @@ import {
 -interface State {
 +class State {
 +   @observable
-    key: string;
+-   key: string;
++   accessor key = '';
 }
 
 @component({
@@ -56,7 +57,7 @@ At the same time, `shouldUpdate() {}` life-cycle has been dropped. You just need
 MobX's [`@observable`][4] & [`reaction()`][5] are awesome APIs to implement these above with clear codes, so we add `mobx` package as a dependency:
 
 ```shell
-npm install mobx@5
+npm install mobx
 ```
 
 On the other hand, [`mobx-web-cell` adapter][6] has been merged into the core package. And cause of replacing **Prototype Overwrite** with **Class Inheritance** to refactor **Class Mixins**, `@observer` decorator should follow strict order to make observation work:

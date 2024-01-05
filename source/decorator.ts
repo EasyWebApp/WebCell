@@ -1,153 +1,177 @@
+import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
 import {
-    toCamelCase,
-    toHyphenCase,
-    parseJSON,
+    IReactionDisposer,
+    IReactionPublic,
+    autorun,
+    reaction as watch
+} from 'mobx';
+import {
+    CustomElement,
     isHTMLElementClass,
-    DelegateEventHandler
+    parseJSON,
+    toCamelCase,
+    toHyphenCase
 } from 'web-utility';
-import { IReactionPublic, reaction as watch, autorun } from 'mobx';
 
-import { FunctionComponent } from './utility/vDOM';
-import { WebCellComponent, WebCellClass, ComponentClass } from './WebCell';
-import { VNode } from 'snabbdom';
-import { patch } from './renderer';
+import { ComponentClass } from './WebCell';
 
-export interface ComponentMeta extends Partial<ShadowRootInit> {
-    tagName: `${string}-${string}`;
-    extends?: keyof HTMLElementTagNameMap;
-}
+export type FunctionComponent<P extends DataObject = {}> = (props: P) => VNode;
+export type FC<P extends DataObject = {}> = FunctionComponent<P>;
 
-export function component(meta: ComponentMeta) {
-    return <T extends WebCellClass>(Class: T) => {
-        customElements.define(meta.tagName, Object.assign(Class, meta), {
-            extends: meta.extends
+function wrapFunction<P>(func: FC<P>) {
+    return (props: P) => {
+        var tree: VNode,
+            renderer = new DOMRenderer();
+
+        const disposer = autorun(() => {
+            const newTree = func(props);
+
+            tree = tree ? renderer.patch(tree, newTree) : newTree;
         });
-        return Class;
-    };
-}
+        const { unRef } = tree;
 
-function wrapFunction<P>(func: FunctionComponent<P>) {
-    return function (props?: P) {
-        var tree: VNode;
+        tree.unRef = node => (disposer(), unRef?.(node));
 
-        const disposer = autorun(
-            () => (tree = tree ? patch(tree, func(props)) : func(props))
-        );
-        const { destroy } = (tree.data ||= {}).hook || {};
-
-        tree.data.hook = {
-            ...tree.data.hook,
-            destroy(node) {
-                disposer();
-                destroy?.(node);
-            }
-        };
         return tree;
     };
 }
 
+interface ReactionItem {
+    expression: ReactionExpression;
+    effect: Function;
+}
+const reactionMap = new WeakMap<CustomElement, ReactionItem[]>();
+
 function wrapClass<T extends ComponentClass>(Component: T) {
-    // @ts-ignore
-    return class ObserverTrait extends Component {
+    class ObserverComponent
+        extends (Component as ComponentClass)
+        implements CustomElement
+    {
+        protected disposers: IReactionDisposer[] = [];
+
+        constructor() {
+            super();
+
+            const { update } = Object.getPrototypeOf(this);
+
+            this['update'] = () =>
+                this.disposers.push(autorun(() => update.call(this)));
+        }
+
         connectedCallback() {
-            const { observedAttributes = [], reactions } = this
-                .constructor as WebCellClass;
+            const names: string[] = this.constructor['observedAttributes'],
+                reactions = reactionMap.get(this) || [];
 
             this.disposers.push(
-                autorun(() => this.update()),
-
-                ...observedAttributes.map(name =>
-                    autorun(() => this.syncPropAttr(name))
-                ),
-                ...reactions.map(({ methodKey, expression }) =>
+                ...names.map(name => autorun(() => this.syncPropAttr(name))),
+                ...reactions.map(({ expression, effect }) =>
                     watch(
-                        r => expression(this, r),
-                        (this[methodKey] as ReactionHandler).bind(this)
+                        reaction => expression(this, reaction),
+                        effect.bind(this)
                     )
                 )
             );
-            super.connectedCallback?.();
+            super['connectedCallback']?.();
+        }
+
+        disconnectedCallback() {
+            for (const disposer of this.disposers) disposer();
+
+            this.disposers.length = 0;
         }
 
         attributeChangedCallback(name: string, old: string, value: string) {
             this[toCamelCase(name)] = parseJSON(value);
 
-            super.attributeChangedCallback?.(name, old, value);
+            super['attributeChangedCallback']?.(name, old, value);
         }
-    };
-}
 
-export function observer<T extends FunctionComponent | ComponentClass>(
-    Component: T
-): any {
-    return isHTMLElementClass(Component)
-        ? wrapClass(Component)
-        : wrapFunction(Component);
-}
+        syncPropAttr(name: string) {
+            var value = this[toCamelCase(name)];
 
-export function attribute<T extends InstanceType<WebCellClass>>(
-    { constructor }: T,
-    key: string
-) {
-    var { observedAttributes } = constructor as WebCellClass;
+            if (!(value != null) || value === false)
+                return this.removeAttribute(name);
 
-    if (!observedAttributes) {
-        observedAttributes = [];
+            value = value === true ? name : value;
 
-        Object.defineProperty(constructor, 'observedAttributes', {
-            configurable: true,
-            get: () => observedAttributes
-        });
+            if (typeof value === 'object') {
+                value = value.toJSON?.();
+
+                value =
+                    typeof value === 'object' ? JSON.stringify(value) : value;
+            }
+            super.setAttribute(name, value);
+        }
     }
-    observedAttributes.push(toHyphenCase(key));
+    return ObserverComponent as unknown as T;
 }
 
-type ReactionHandler<I = any, O = any> = (
+export type WebCellComponent = FunctionComponent | ComponentClass;
+
+/**
+ * `class` decorator of Web components for MobX
+ */
+export function observer<T extends WebCellComponent>(
+    func: T,
+    _: ClassDecoratorContext
+): T;
+export function observer<T extends WebCellComponent>(func: T): T;
+export function observer<T extends WebCellComponent>(
+    func: T,
+    _?: ClassDecoratorContext
+) {
+    return isHTMLElementClass(func) ? wrapClass(func) : wrapFunction(func);
+}
+
+/**
+ * `accessor` decorator of MobX `@observable` for HTML attributes
+ */
+export function attribute<C extends HTMLElement, V>(
+    _: ClassAccessorDecoratorTarget<C, V>,
+    { name, addInitializer }: ClassAccessorDecoratorContext<C>
+) {
+    addInitializer(function () {
+        const { constructor } = this;
+        var names = constructor['observedAttributes'];
+
+        if (!names) {
+            names = [];
+
+            Object.defineProperty(constructor, 'observedAttributes', {
+                configurable: true,
+                get: () => names
+            });
+        }
+        names.push(toHyphenCase(name.toString()));
+    });
+}
+
+export type ReactionExpression<I = any, O = any> = (
     data?: I,
     reaction?: IReactionPublic
 ) => O;
 
-export interface ReactionDelegater {
-    methodKey: string;
-    expression: ReactionHandler;
-}
+export type ReactionEffect<V> = (
+    newValue: V,
+    oldValue: V,
+    reaction: IReactionPublic
+) => any;
 
-export function reaction<C extends WebCellComponent, V>(
-    expression: ReactionHandler<C, V>
+/**
+ * Method decorator of MobX `reaction()`
+ */
+export function reaction<C extends HTMLElement, V>(
+    expression: ReactionExpression<C, V>
 ) {
     return (
-        { constructor }: C,
-        key: string,
-        meta: TypedPropertyDescriptor<ReactionHandler<V>>
-    ) => {
-        (constructor as WebCellClass).reactions.push({
-            methodKey: key,
-            expression
-        });
-        return meta;
-    };
-}
+        effect: ReactionEffect<V>,
+        { addInitializer }: ClassMethodDecoratorContext<C>
+    ) =>
+        addInitializer(function () {
+            const reactions = reactionMap.get(this) || [];
 
-export interface DOMEventDelegater {
-    type: keyof HTMLElementEventMap;
-    selector: string;
-    method: string;
-}
+            reactions.push({ expression, effect });
 
-export function on(type: DOMEventDelegater['type'], selector: string) {
-    return <
-        T extends DelegateEventHandler,
-        I extends InstanceType<WebCellClass>
-    >(
-        { constructor }: I,
-        method: string,
-        meta: PropertyDescriptor
-    ) => {
-        (constructor as WebCellClass).eventDelegaters.push({
-            type,
-            selector,
-            method
+            reactionMap.set(this, reactions);
         });
-        return meta as PropertyDescriptor & { value: T };
-    };
 }

@@ -135,7 +135,7 @@ export interface TestTagProps extends WebCellProps {
 
 class State {
     @observable
-    status = '';
+    accessor status = '';
 }
 
 @component({
@@ -148,7 +148,7 @@ export class TestTag extends HTMLElement {
 
     @attribute
     @observable
-    topic = 'Test';
+    accessor topic = 'Test';
 
     state = new State();
 
