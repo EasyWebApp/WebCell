@@ -5,8 +5,8 @@ import {
     CustomFormElementClass
 } from 'web-utility';
 
-import { WebCell, WebCellComponent } from './WebCell';
-import { attribute, reaction } from './decorator';
+import { WebCell, WebCellComponent } from '../source/WebCell';
+import { attribute, reaction } from '../source/decorator';
 import { WebCellProps } from './utility';
 
 export type WebFieldProps<T extends HTMLElement = HTMLInputElement> =

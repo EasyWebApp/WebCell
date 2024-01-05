@@ -4,7 +4,7 @@
 
 [Web Components][1] engine based on VDOM, [JSX][2], [MobX][12] & [TypeScript][3]
 
-[![NPM Dependency](https://david-dm.org/EasyWebApp/WebCell.svg)][4]
+[![NPM Dependency](https://img.shields.io/librariesio/github/EasyWebApp/WebCell.svg)][4]
 [![CI & CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][5]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][6]
@@ -17,21 +17,38 @@
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][11]
 
+## Feature
+
+### Engines comparison
+
+|    feature    |      WebCell 3       |      WebCell 2       |             React             |                 Vue                 |
+| :-----------: | :------------------: | :------------------: | :---------------------------: | :---------------------------------: |
+|  JS language  |     TypeScript 5     |     TypeScript 4     |   ECMAScript or TypeScript    |      ECMAScript or TypeScript       |
+|   JS syntax   | ES decorator stage-3 | ES decorator stage-2 |                               |                                     |
+|  XML syntax   |      JSX import      |     JSX factory      |      JSX factory/import       | HTML/Vue template or JSX (optional) |
+|    DOM API    |    Web components    |    Web components    |            HTML 5+            |               HTML 5+               |
+| view renderer |    DOM renderer 2    |       SnabbDOM       |          (built-in)           |          SnabbDOM (forked)          |
+|   state API   |  MobX `@observable`  |     `this.state`     | `this.state` or `useState()`  |       `this.$data` or `ref()`       |
+|   props API   |  MobX `@observable`  |       `@watch`       | `this.props` or `props => {}` |  `this.$props` or `defineProps()`   |
+| state manager |       MobX 6+        |       MobX 4/5       |             Redux             |                VueX                 |
+|  page router  |       JSX tags       | JSX tags + JSON data |           JSX tags            |              JSON data              |
+| asset bundler |       Parcel 2       |       Parcel 1       |            webpack            |                Vite                 |
+
 ## Usage
 
 Demo & **GitHub template**: https://web-cell.dev/scaffold/
 
 ### Project bootstrap
 
-Command
+#### Command
 
 ```shell
 npm init -y
-npm install web-cell
-npm install parcel -D
+npm install dom-renderer mobx web-cell
+npm install parcel @parcel/config-default "@parcel/transformer-typescript-tsc" -D
 ```
 
-`package.json`
+#### `package.json`
 
 ```json
 {
@@ -42,18 +59,37 @@ npm install parcel -D
 }
 ```
 
-[`tsconfig.json`](https://github.com/EasyWebApp/WebCell/blob/main/tsconfig.json)
+#### `tsconfig.json`
 
-`source/index.html`
+```json
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "moduleResolution": "Node",
+        "useDefineForClassFields": true,
+        "jsx": "react-jsx",
+        "jsxImportSource": "dom-renderer"
+    }
+}
+```
+
+#### `.parcelrc`
+
+```json
+{
+    "extends": "@parcel/config-default",
+    "transformers": {
+        "*.{ts,tsx}": ["@parcel/transformer-typescript-tsc"]
+    }
+}
+```
+
+#### `source/index.html`
 
 ```html
-<script
-    crossorigin
-    src="https://polyfill.app/api/polyfill?features=es.array.flat,es.object.from-entries"
-></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/webcomponents-bundle.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.6.0/custom-elements-es5-adapter.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/element-internals-polyfill@0.1.54/dist/index.min.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/ECMAScript.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/WebComponents.js"></script>
+<script src="https://polyfill.web-cell.dev/feature/ElementInternals.js"></script>
 
 <script src="source/SubTag.tsx"></script>
 <script src="source/TestTag.tsx"></script>
@@ -67,16 +103,16 @@ npm install parcel -D
 `source/SubTag.tsx`
 
 ```jsx
-import { WebCellProps, WebCell, createCell, component } from 'web-cell';
+import { WebCellProps, component } from 'web-cell';
 
-export function InlineTag({ defaultSlot }: WebCellProps) {
-    return <span>{defaultSlot}</span>;
+export function InlineTag({ children }: WebCellProps) {
+    return <span>{children}</span>;
 }
 
 @component({
     tagName: 'sub-tag'
 })
-export class SubTag extends WebCell() {
+export class SubTag extends HTMLElement {
     render() {
         return <InlineTag>test</InlineTag>;
     }
@@ -87,17 +123,8 @@ export class SubTag extends WebCell() {
 
 `source/TestTag.tsx`
 
-```typescript
-import {
-    WebCellProps,
-    WebCell,
-    createCell,
-    component,
-    attribute,
-    observer,
-    on,
-    Fragment
-} from 'web-cell';
+```tsx
+import { WebCellProps, component, attribute, observer, on } from 'web-cell';
 import { observable } from 'mobx';
 
 import { SubTag } from './SubTag';
@@ -108,7 +135,7 @@ export interface TestTagProps extends WebCellProps {
 
 class State {
     @observable
-    status = '';
+    accessor status = '';
 }
 
 @component({
@@ -116,10 +143,12 @@ class State {
     mode: 'open'
 })
 @observer
-export class TestTag extends WebCell<TestTagProps>() {
+export class TestTag extends HTMLElement {
+    declare props: TestTagProps;
+
     @attribute
     @observable
-    topic = 'Test';
+    accessor topic = 'Test';
 
     state = new State();
 
@@ -167,7 +196,7 @@ export class TestTag extends WebCell<TestTagProps>() {
 -   [Element Internals](https://web.dev/more-capable-form-controls/)
 -   [CSS variables](https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables)
 -   [ECMAScript 6+](http://es6-features.org/)
--   [TypeScript 4+][3]
+-   [TypeScript 5+][3]
 
 ## Life Cycle hooks
 
@@ -233,7 +262,7 @@ We recommend these libraries to use with WebCell:
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
 [3]: https://www.typescriptlang.org
-[4]: https://david-dm.org/EasyWebApp/WebCell
+[4]: https://libraries.io/npm/web-cell
 [5]: https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml
 [6]: https://github.com/996icu/996.ICU/blob/master/LICENSE
 [7]: https://github.com/jaywcjlove/awesome-uikit
