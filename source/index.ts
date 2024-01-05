@@ -1,6 +1,12 @@
 import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
 import { autorun } from 'mobx';
-import { CustomElement, isHTMLElementClass } from 'web-utility';
+import {
+    CustomElement,
+    isHTMLElementClass,
+    parseJSON,
+    toCamelCase,
+    toHyphenCase
+} from 'web-utility';
 
 export interface ComponentMeta
     extends ElementDefinitionOptions,
@@ -9,12 +15,12 @@ export interface ComponentMeta
 }
 
 /**
- * Class decorator of Web components
+ * `class` decorator of Web components
  */
 export function component({ tagName, ...meta }: ComponentMeta) {
     return <T extends CustomElementConstructor>(
         Class: T,
-        { addInitializer }: ClassDecoratorContext
+        { addInitializer }: ClassDecoratorContext<CustomElementConstructor>
     ) => {
         class RendererComponent extends (Class as CustomElementConstructor) {
             protected internals = this.attachInternals();
@@ -42,7 +48,7 @@ export function component({ tagName, ...meta }: ComponentMeta) {
             declare render: () => VNode;
         }
 
-        addInitializer(function (this: CustomElementConstructor) {
+        addInitializer(function () {
             globalThis.customElements?.define(tagName, this, meta);
         });
         return RendererComponent as unknown as T;
@@ -86,10 +92,39 @@ function wrapClass<T extends ClassComponent>(Class: T) {
             // @ts-ignore
             this.update = () =>
                 this.disposers.push(autorun(() => update.call(this)));
+
+            const names: string[] = this.constructor['observedAttributes'];
+
+            this.disposers.push(
+                ...names.map(name => autorun(() => this.syncPropAttr(name)))
+            );
         }
 
         disconnectedCallback() {
             for (const disposer of this.disposers) disposer();
+
+            this.disposers.length = 0;
+        }
+
+        attributeChangedCallback(name: string, old: string, value: string) {
+            this[toCamelCase(name)] = parseJSON(value);
+
+            super['attributeChangedCallback']?.(name, old, value);
+        }
+
+        syncPropAttr(name: string) {
+            const value = this[toCamelCase(name)];
+
+            if (value != null && value !== false)
+                super.setAttribute(
+                    name,
+                    value === true
+                        ? name
+                        : typeof value !== 'object'
+                          ? value
+                          : JSON.stringify(value)
+                );
+            else this.removeAttribute(name);
         }
     }
     return ObserverComponent as unknown as T;
@@ -98,7 +133,7 @@ function wrapClass<T extends ClassComponent>(Class: T) {
 export type WebCellComponent = FunctionComponent | ClassComponent;
 
 /**
- * Class decorator of Web components for MobX
+ * `class` decorator of Web components for MobX
  */
 export function observer<T extends WebCellComponent>(
     func: T,
@@ -110,6 +145,29 @@ export function observer<T extends WebCellComponent>(
     _?: ClassDecoratorContext
 ) {
     return isHTMLElementClass(func) ? wrapClass(func) : wrapFunction(func);
+}
+
+/**
+ * `accessor` decorator of MobX `@observable` for HTML attributes
+ */
+export function attribute<C extends CustomElementConstructor, V>(
+    _: ClassAccessorDecoratorTarget<C, V>,
+    { name, addInitializer }: ClassAccessorDecoratorContext<CustomElement>
+) {
+    addInitializer(function () {
+        const { constructor } = this;
+        var names = constructor['observedAttributes'];
+
+        if (!names) {
+            names = [];
+
+            Object.defineProperty(constructor, 'observedAttributes', {
+                configurable: true,
+                get: () => names
+            });
+        }
+        names.push(toHyphenCase(name.toString()));
+    });
 }
 
 declare global {

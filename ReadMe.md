@@ -143,7 +143,9 @@ class State {
     mode: 'open'
 })
 @observer
-export class TestTag extends WebCell<TestTagProps>() {
+export class TestTag extends HTMLElement {
+    declare props: TestTagProps;
+
     @attribute
     @observable
     topic = 'Test';

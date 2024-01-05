@@ -84,7 +84,9 @@ export interface MyTagProps extends WebCellProps {
 })
 @observer
 -export class MyTag extends mixin<MyTagProps>() {
-+export class MyTag extends WebCell<MyTagProps>() {
++export class MyTag extends HTMLElement {
++   declare props: MyTagProps;
+
     @attribute
 -   @watch
 +   @observable
