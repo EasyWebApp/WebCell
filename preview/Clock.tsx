@@ -1,6 +1,6 @@
-import { observable } from 'mobx';
-import { Second } from 'web-utility';
-import { component, observer } from '../source';
+import { IReactionPublic, observable } from 'mobx';
+import { CustomElement, Second } from 'web-utility';
+import { attribute, component, observer, on, reaction } from '../source';
 
 class ClockModel {
     @observable
@@ -28,11 +28,29 @@ export const FunctionClock = observer(() => {
     mode: 'open'
 })
 @observer
-export class ClassClock extends HTMLElement {
-    state = new ClockModel();
+export class ClassClock extends HTMLElement implements CustomElement {
+    @attribute
+    @observable
+    accessor time = new Date();
+
+    timer = setInterval(() => (this.time = new Date()), Second);
+
+    disconnectedCallback() {
+        clearInterval(this.timer);
+    }
+
+    @reaction((that: ClassClock) => that.time)
+    handleReaction(newValue: Date, oldValue: Date, reaction: IReactionPublic) {
+        console.log(newValue, oldValue, reaction);
+    }
+
+    @on('click', 'time')
+    handleClick(event: MouseEvent, currentTarget: HTMLTimeElement) {
+        console.log(event, currentTarget);
+    }
 
     render() {
-        const { time } = this.state;
+        const { time } = this;
 
         return (
             <time dateTime={time.toJSON()}>

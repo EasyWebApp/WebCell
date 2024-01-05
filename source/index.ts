@@ -1,7 +1,14 @@
 import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
-import { autorun } from 'mobx';
+import {
+    IReactionDisposer,
+    IReactionPublic,
+    autorun,
+    reaction as watch
+} from 'mobx';
 import {
     CustomElement,
+    DelegateEventHandler,
+    delegate,
     isHTMLElementClass,
     parseJSON,
     toCamelCase,
@@ -14,28 +21,56 @@ export interface ComponentMeta
     tagName: string;
 }
 
+export type ClassComponent = CustomElementConstructor;
+
+interface DelegatedEvent {
+    type: keyof HTMLElementEventMap;
+    handler: EventListener;
+}
+const eventMap = new WeakMap<CustomElement, DelegatedEvent[]>();
+
 /**
  * `class` decorator of Web components
  */
 export function component({ tagName, ...meta }: ComponentMeta) {
-    return <T extends CustomElementConstructor>(
+    return <T extends ClassComponent>(
         Class: T,
-        { addInitializer }: ClassDecoratorContext<CustomElementConstructor>
+        { addInitializer }: ClassDecoratorContext<ClassComponent>
     ) => {
-        class RendererComponent extends (Class as CustomElementConstructor) {
+        class RendererComponent
+            extends (Class as ClassComponent)
+            implements CustomElement
+        {
             protected internals = this.attachInternals();
             protected renderer = new DOMRenderer();
 
             constructor() {
                 super();
 
-                if (meta.mode) this.attachShadow(meta as ShadowRootInit);
+                if (meta.mode && !this.internals.shadowRoot)
+                    this.attachShadow(meta as ShadowRootInit);
             }
 
             connectedCallback() {
                 this.update();
-                // @ts-ignore
-                super.connectedCallback?.();
+
+                const root = this.internals.shadowRoot || this,
+                    events = eventMap.get(this) || [];
+
+                for (const { type, handler } of events)
+                    root.addEventListener(type, handler);
+
+                super['connectedCallback']?.();
+            }
+
+            disconnectedCallback() {
+                const root = this.internals.shadowRoot || this,
+                    events = eventMap.get(this) || [];
+
+                for (const { type, handler } of events)
+                    root.removeEventListener(type, handler);
+
+                super['disconnectedCallback']?.();
             }
 
             update() {
@@ -76,14 +111,18 @@ function wrapFunction<P>(func: FC<P>) {
     };
 }
 
-export type ClassComponent = CustomElementConstructor;
+interface ReactionItem {
+    expression: ReactionExpression;
+    effect: Function;
+}
+const reactionMap = new WeakMap<CustomElement, ReactionItem[]>();
 
 function wrapClass<T extends ClassComponent>(Class: T) {
     class ObserverComponent
         extends (Class as ClassComponent)
         implements CustomElement
     {
-        protected disposers = [];
+        protected disposers: IReactionDisposer[] = [];
 
         constructor() {
             super();
@@ -92,12 +131,22 @@ function wrapClass<T extends ClassComponent>(Class: T) {
             // @ts-ignore
             this.update = () =>
                 this.disposers.push(autorun(() => update.call(this)));
+        }
 
-            const names: string[] = this.constructor['observedAttributes'];
+        connectedCallback() {
+            const names: string[] = this.constructor['observedAttributes'],
+                reactions = reactionMap.get(this) || [];
 
             this.disposers.push(
-                ...names.map(name => autorun(() => this.syncPropAttr(name)))
+                ...names.map(name => autorun(() => this.syncPropAttr(name))),
+                ...reactions.map(({ expression, effect }) =>
+                    watch(
+                        reaction => expression(this, reaction),
+                        effect.bind(this)
+                    )
+                )
             );
+            super['connectedCallback']?.();
         }
 
         disconnectedCallback() {
@@ -113,18 +162,20 @@ function wrapClass<T extends ClassComponent>(Class: T) {
         }
 
         syncPropAttr(name: string) {
-            const value = this[toCamelCase(name)];
+            var value = this[toCamelCase(name)];
 
-            if (value != null && value !== false)
-                super.setAttribute(
-                    name,
-                    value === true
-                        ? name
-                        : typeof value !== 'object'
-                          ? value
-                          : JSON.stringify(value)
-                );
-            else this.removeAttribute(name);
+            if (!(value != null) || value === false)
+                return this.removeAttribute(name);
+
+            value = value === true ? name : value;
+
+            if (typeof value === 'object') {
+                value = value.toJSON?.();
+
+                value =
+                    typeof value === 'object' ? JSON.stringify(value) : value;
+            }
+            super.setAttribute(name, value);
         }
     }
     return ObserverComponent as unknown as T;
@@ -150,10 +201,10 @@ export function observer<T extends WebCellComponent>(
 /**
  * `accessor` decorator of MobX `@observable` for HTML attributes
  */
-export function attribute<C extends CustomElementConstructor, V>(
+export const attribute = <C extends HTMLElement, V>(
     _: ClassAccessorDecoratorTarget<C, V>,
-    { name, addInitializer }: ClassAccessorDecoratorContext<CustomElement>
-) {
+    { name, addInitializer }: ClassAccessorDecoratorContext<C>
+) =>
     addInitializer(function () {
         const { constructor } = this;
         var names = constructor['observedAttributes'];
@@ -168,6 +219,56 @@ export function attribute<C extends CustomElementConstructor, V>(
         }
         names.push(toHyphenCase(name.toString()));
     });
+
+export type ReactionExpression<I = any, O = any> = (
+    data?: I,
+    reaction?: IReactionPublic
+) => O;
+
+export type ReactionEffect<V> = (
+    newValue: V,
+    oldValue: V,
+    reaction: IReactionPublic
+) => any;
+
+/**
+ * Method decorator of MobX `reaction()`
+ */
+export function reaction<C extends HTMLElement, V>(
+    expression: ReactionExpression<C, V>
+) {
+    return (
+        effect: ReactionEffect<V>,
+        { addInitializer }: ClassMethodDecoratorContext<C>
+    ) =>
+        addInitializer(function () {
+            const reactions = reactionMap.get(this) || [];
+
+            reactions.push({ expression, effect });
+
+            reactionMap.set(this, reactions);
+        });
+}
+
+/**
+ * Method decorator of DOM Event delegation
+ */
+export function on<T extends HTMLElement>(
+    type: DelegatedEvent['type'],
+    selector: string
+) {
+    return (
+        method: DelegateEventHandler,
+        { addInitializer }: ClassMethodDecoratorContext<T>
+    ) =>
+        addInitializer(function () {
+            const events = eventMap.get(this) || [],
+                handler = delegate(selector, method.bind(this));
+
+            events.push({ type, handler });
+
+            eventMap.set(this, events);
+        });
 }
 
 declare global {
