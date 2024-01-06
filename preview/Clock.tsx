@@ -39,7 +39,7 @@ export class ClassClock extends HTMLElement implements CustomElement {
         clearInterval(this.timer);
     }
 
-    @reaction((that: ClassClock) => that.time)
+    @reaction(({ time }) => time)
     handleReaction(newValue: Date, oldValue: Date, reaction: IReactionPublic) {
         console.log(newValue, oldValue, reaction);
     }

@@ -1,4 +1,4 @@
-import { DOMRenderer, DataObject, VNode } from 'dom-renderer';
+import { DOMRenderer, DataObject, VNode, JsxChildren } from 'dom-renderer';
 import {
     IReactionDisposer,
     IReactionPublic,
@@ -15,6 +15,9 @@ import {
 
 import { ComponentClass } from './WebCell';
 
+export type PropsWithChildren<P extends DataObject = {}> = P & {
+    children?: JsxChildren;
+};
 export type FunctionComponent<P extends DataObject = {}> = (props: P) => VNode;
 export type FC<P extends DataObject = {}> = FunctionComponent<P>;
 
