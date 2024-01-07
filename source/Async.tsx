@@ -1,32 +1,42 @@
 import { observable } from 'mobx';
+import { HTMLProps } from 'web-utility';
 
-import { ComponentTag, WebCellProps, FunctionComponent } from './utility';
-import { WebCellClass, WebCell } from '../source/WebCell';
-import { component, observer, reaction } from '../source/decorator';
-import { createCell } from './renderer';
+import { ClassComponent, WebCell, component } from './WebCell';
+import {
+    FunctionComponent,
+    WebCellComponent,
+    observer,
+    reaction
+} from './decorator';
+
+export type ComponentTag = string | WebCellComponent;
+
+export type WebCellProps<T extends HTMLElement = HTMLElement> = HTMLProps<T>;
 
 export interface AsyncBoxProps extends WebCellProps {
     loader: () => Promise<ComponentTag>;
     delegatedProps?: WebCellProps;
 }
 
+export interface AsyncBox extends WebCell {}
+
 @component({
     tagName: 'async-box'
 })
 @observer
-export class AsyncBox extends WebCell<AsyncBoxProps>() {
-    @observable
-    loader: AsyncBoxProps['loader'];
+export class AsyncBox extends HTMLElement {
+    declare props: AsyncBoxProps;
 
     @observable
-    component?: ComponentTag;
+    accessor loader: AsyncBoxProps['loader'];
 
     @observable
-    delegatedProps?: AsyncBoxProps['delegatedProps'];
+    accessor component: ComponentTag;
+
+    @observable
+    accessor delegatedProps: AsyncBoxProps['delegatedProps'];
 
     connectedCallback() {
-        super.connectedCallback();
-
         this.load();
     }
 
@@ -40,20 +50,20 @@ export class AsyncBox extends WebCell<AsyncBoxProps>() {
 
     render() {
         const { component: Tag, props, delegatedProps } = this;
-        const { defaultSlot, ...data } = { ...props, ...delegatedProps };
+        const { children, ...data } = { ...props, ...delegatedProps };
 
-        return Tag && <Tag {...data}>{defaultSlot}</Tag>;
+        return Tag && <Tag {...data}>{children}</Tag>;
     }
 }
 
 type GetAsyncProps<T> = T extends () => Promise<{
-    default: FunctionComponent<infer P> | WebCellClass<infer P>;
+    default: FunctionComponent<infer P> | ClassComponent;
 }>
     ? P
     : {};
 
 export function lazy<
-    T extends () => Promise<{ default: FunctionComponent | WebCellClass }>
+    T extends () => Promise<{ default: FunctionComponent | ClassComponent }>
 >(loader: T) {
     return (props: GetAsyncProps<T>) => (
         <AsyncBox

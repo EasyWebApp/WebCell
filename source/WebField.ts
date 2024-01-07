@@ -1,18 +1,20 @@
 import { observable } from 'mobx';
 import { CustomFormElement } from 'web-utility';
 
-import { ComponentClass } from './WebCell';
+import { ClassComponent, WebCell } from './WebCell';
 import { attribute, reaction } from './decorator';
+
+export interface WebField extends CustomFormElement, WebCell {}
 
 /**
  * `class` decorator of Form associated Web components
  */
-export function formField<T extends ComponentClass>(
+export function formField<T extends ClassComponent>(
     Class: T,
     _: ClassDecoratorContext
 ) {
-    class WebField
-        extends (Class as ComponentClass)
+    class FormFieldComponent
+        extends (Class as ClassComponent)
         implements CustomFormElement
     {
         /**
@@ -78,5 +80,5 @@ export function formField<T extends ComponentClass>(
             return this.internals.reportValidity();
         }
     }
-    return WebField as unknown as T;
+    return FormFieldComponent as unknown as T;
 }

@@ -1,5 +1,7 @@
 import { HTMLFieldProps } from 'web-utility';
-import { component, formField, observer } from '../source';
+import { WebField, component, formField, observer } from '../source';
+
+export interface TestField extends WebField {}
 
 @component({
     tagName: 'test-field',
@@ -9,9 +11,6 @@ import { component, formField, observer } from '../source';
 @observer
 export class TestField extends HTMLElement {
     declare props: HTMLFieldProps;
-
-    declare name: string;
-    declare value: string;
 
     render() {
         const { name } = this;

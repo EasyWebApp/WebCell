@@ -13,7 +13,7 @@ import {
     toHyphenCase
 } from 'web-utility';
 
-import { ComponentClass } from './WebCell';
+import { ClassComponent } from './WebCell';
 
 export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
@@ -45,9 +45,9 @@ interface ReactionItem {
 }
 const reactionMap = new WeakMap<CustomElement, ReactionItem[]>();
 
-function wrapClass<T extends ComponentClass>(Component: T) {
+function wrapClass<T extends ClassComponent>(Component: T) {
     class ObserverComponent
-        extends (Component as ComponentClass)
+        extends (Component as ClassComponent)
         implements CustomElement
     {
         protected disposers: IReactionDisposer[] = [];
@@ -62,7 +62,8 @@ function wrapClass<T extends ComponentClass>(Component: T) {
         }
 
         connectedCallback() {
-            const names: string[] = this.constructor['observedAttributes'],
+            const names: string[] =
+                    this.constructor['observedAttributes'] || [],
                 reactions = reactionMap.get(this) || [];
 
             this.disposers.push(
@@ -109,7 +110,7 @@ function wrapClass<T extends ComponentClass>(Component: T) {
     return ObserverComponent as unknown as T;
 }
 
-export type WebCellComponent = FunctionComponent | ComponentClass;
+export type WebCellComponent = FunctionComponent | ClassComponent;
 
 /**
  * `class` decorator of Web components for MobX
