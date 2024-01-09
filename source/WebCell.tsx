@@ -12,7 +12,15 @@ export interface ComponentMeta
     tagName: string;
 }
 
-export type ComponentClass = CustomElementConstructor;
+export type ClassComponent = CustomElementConstructor;
+
+export interface WebCell extends CustomElement {
+    internals: ElementInternals;
+    renderer: DOMRenderer;
+    root: ParentNode;
+    update: () => void;
+    emit: (event: string, detail?: any, option?: EventInit) => boolean;
+}
 
 interface DelegatedEvent {
     type: keyof HTMLElementEventMap;
@@ -25,18 +33,18 @@ const eventMap = new WeakMap<CustomElement, DelegatedEvent[]>();
  * `class` decorator of Web components
  */
 export function component(meta: ComponentMeta) {
-    return <T extends ComponentClass>(
+    return <T extends ClassComponent>(
         Class: T,
-        { addInitializer }: ClassDecoratorContext<ComponentClass>
+        { addInitializer }: ClassDecoratorContext<ClassComponent>
     ) => {
         class RendererComponent
-            extends (Class as ComponentClass)
-            implements CustomElement
+            extends (Class as ClassComponent)
+            implements WebCell
         {
-            protected internals = this.attachInternals();
-            protected renderer = new DOMRenderer();
+            internals = this.attachInternals();
+            renderer = new DOMRenderer();
 
-            get root() {
+            get root(): ParentNode {
                 return this.internals.shadowRoot || this;
             }
 

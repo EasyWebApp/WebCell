@@ -1,34 +1,30 @@
 import { observable } from 'mobx';
-import {
-    Constructor,
-    CustomFormElement,
-    CustomFormElementClass
-} from 'web-utility';
+import { CustomFormElement } from 'web-utility';
 
-import { WebCell, WebCellComponent } from '../source/WebCell';
-import { attribute, reaction } from '../source/decorator';
-import { WebCellProps } from './utility';
+import { ClassComponent, WebCell } from './WebCell';
+import { attribute, reaction } from './decorator';
 
-export type WebFieldProps<T extends HTMLElement = HTMLInputElement> =
-    WebCellProps<T>;
+export interface WebField extends CustomFormElement, WebCell {}
 
-export type WebFieldComponent<P extends WebFieldProps = WebFieldProps> =
-    CustomFormElement & WebCellComponent<P>;
-
-export type WebFieldClass<P extends WebFieldProps = WebFieldProps> = Pick<
-    CustomFormElementClass,
-    'observedAttributes' | 'formAssociated'
-> &
-    Constructor<WebFieldComponent<P>>;
-
-export function WebField<
-    P extends WebFieldProps = WebFieldProps
->(): WebFieldClass<P> {
-    class WebField extends WebCell<P>() implements WebFieldComponent<P> {
+/**
+ * `class` decorator of Form associated Web components
+ */
+export function formField<T extends ClassComponent>(
+    Class: T,
+    _: ClassDecoratorContext
+) {
+    class FormFieldComponent
+        extends (Class as ClassComponent)
+        implements CustomFormElement
+    {
+        /**
+         * Defined in {@link component}
+         */
+        declare internals: ElementInternals;
         static formAssociated = true;
 
-        @reaction((element: WebFieldComponent<P>) => element.value)
-        protected setValue(value: string) {
+        @reaction(({ value }) => value)
+        setValue(value: string) {
             this.internals.setFormValue(value);
         }
 
@@ -38,22 +34,22 @@ export function WebField<
 
         @attribute
         @observable
-        name: string;
+        accessor name: string;
 
         @observable
-        value: string;
-
-        @attribute
-        @observable
-        required: boolean;
+        accessor value: string;
 
         @attribute
         @observable
-        disabled: boolean;
+        accessor required: boolean;
 
         @attribute
         @observable
-        autofocus: boolean;
+        accessor disabled: boolean;
+
+        @attribute
+        @observable
+        accessor autofocus: boolean;
 
         set defaultValue(raw: string) {
             this.setAttribute('value', raw);
@@ -84,5 +80,5 @@ export function WebField<
             return this.internals.reportValidity();
         }
     }
-    return WebField;
+    return FormFieldComponent as unknown as T;
 }

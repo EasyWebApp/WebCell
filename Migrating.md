@@ -63,8 +63,9 @@ npm install mobx
 On the other hand, [`mobx-web-cell` adapter][6] has been merged into the core package. And cause of replacing **Prototype Overwrite** with **Class Inheritance** to refactor **Class Mixins**, `@observer` decorator should follow strict order to make observation work:
 
 ```diff
++import { JsxProps } from 'dom-renderer';
 import {
-    WebCellProps,
+-   WebCellProps,
     component,
     attribute,
 -   watch,
@@ -76,7 +77,8 @@ import {
 -import { observer } from 'mobx-web-cell';
 +import { observable } from 'mobx';
 
-export interface MyTagProps extends WebCellProps {
+-export interface MyTagProps extends WebCellProps {
++export interface MyTagProps extends JsxProps<HTMLElement> {
     count?: number
 }
 
@@ -183,7 +185,7 @@ import {
 [JSDoc's `@deprecated` hints][7] will lead your way to rename them:
 
 1. `mixin()` => `HTMLElement` & its Sub-classes
-2. `mixinForm()` => `WebField()`
+2. `mixinForm()` => `HTMLElement` & `@formField`
 3. `@watch` => `@observable accessor`
 
 ## Appendix: v3 prototype

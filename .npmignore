@@ -1,3 +1,4 @@
+.parcelrc
 .eslintrc.json
 jest.config.ts
 test/

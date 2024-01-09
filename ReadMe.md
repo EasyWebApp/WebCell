@@ -45,7 +45,7 @@ Demo & **GitHub template**: https://web-cell.dev/scaffold/
 ```shell
 npm init -y
 npm install dom-renderer mobx web-cell
-npm install parcel @parcel/config-default "@parcel/transformer-typescript-tsc" -D
+npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
 ```
 
 #### `package.json`
@@ -102,12 +102,12 @@ npm install parcel @parcel/config-default "@parcel/transformer-typescript-tsc" -
 
 `source/SubTag.tsx`
 
-```jsx
-import { WebCellProps, component } from 'web-cell';
+```tsx
+import { component, FC, PropsWithChildren } from 'web-cell';
 
-export function InlineTag({ children }: WebCellProps) {
-    return <span>{children}</span>;
-}
+export const InlineTag: FC<PropsWithChildren> = ({ children }) => (
+    <span>{children}</span>
+);
 
 @component({
     tagName: 'sub-tag'
@@ -124,12 +124,14 @@ export class SubTag extends HTMLElement {
 `source/TestTag.tsx`
 
 ```tsx
-import { WebCellProps, component, attribute, observer, on } from 'web-cell';
+import { JsxProps } from 'dom-renderer';
 import { observable } from 'mobx';
+import { component, attribute, observer, on } from 'web-cell';
+import { stringifyCSS } from 'web-utility';
 
 import { SubTag } from './SubTag';
 
-export interface TestTagProps extends WebCellProps {
+export interface TestTagProps extends JsxProps<HTMLElement> {
     topic?: string;
 }
 
@@ -152,6 +154,15 @@ export class TestTag extends HTMLElement {
 
     state = new State();
 
+    style = stringifyCSS({
+        '.topic': {
+            color: 'lightblue'
+        },
+        '.topic.active': {
+            color: 'lightpink'
+        }
+    });
+
     onClick = () => (this.topic = 'Example');
 
     @on('click', ':host h1')
@@ -160,21 +171,12 @@ export class TestTag extends HTMLElement {
     }
 
     render() {
-        const { topic } = this,
+        const { style, topic } = this,
             { status } = this.state;
 
         return (
             <>
-                <style>
-                    {stringifyCSS({
-                        '.topic': {
-                            color: 'lightblue'
-                        },
-                        '.topic.active': {
-                            color: 'lightpink'
-                        }
-                    })}
-                </style>
+                <style>{style}</style>
 
                 <h1 title={topic} className={`topic ${status}`}>
                     {topic}

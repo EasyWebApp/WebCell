@@ -1,8 +1,16 @@
+import { formToJSON } from 'web-utility';
+import { FC, PropsWithChildren } from '../source';
+
 import { ClassClock, FunctionClock } from './Clock';
+import { TestField } from './Field';
+
+const Hello: FC<PropsWithChildren> = ({ children }) => (
+    <h1>Hello {children}!</h1>
+);
 
 export const HomePage = () => (
     <>
-        <h1>Hello Vanilla!</h1>
+        <Hello>WebCell</Hello>
         <div>
             We use the same configuration as Parcel to bundle this sandbox, you
             can find more info about Parcel
@@ -23,5 +31,15 @@ export const HomePage = () => (
                 <ClassClock />
             </li>
         </ul>
+        <form
+            // @ts-ignore
+            onSubmit={({ currentTarget }) =>
+                alert(JSON.stringify(formToJSON(currentTarget)))
+            }
+        >
+            <TestField name="test" />
+
+            <button>√</button>
+        </form>
     </>
 );
