@@ -30,8 +30,7 @@ export class AsyncBox extends HTMLElement {
     @observable
     accessor loader: AsyncBoxProps['loader'];
 
-    @observable
-    accessor component: ComponentTag;
+    component: ComponentTag;
 
     @observable
     accessor delegatedProps: AsyncBoxProps['delegatedProps'];

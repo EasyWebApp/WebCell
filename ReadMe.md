@@ -98,96 +98,362 @@ npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
 <test-tag></test-tag>
 ```
 
-### Simple component
-
-`source/SubTag.tsx`
+### Function component
 
 ```tsx
-import { component, FC, PropsWithChildren } from 'web-cell';
+import { DOMRenderer } from 'dom-renderer';
+import { FC, PropsWithChildren } from 'web-cell';
 
-export const InlineTag: FC<PropsWithChildren> = ({ children }) => (
-    <span>{children}</span>
+const Hello: FC<PropsWithChildren> = ({ children = 'World' }) => (
+    <h1>Hello, {children}!</h1>
 );
 
-@component({
-    tagName: 'sub-tag'
-})
-export class SubTag extends HTMLElement {
-    render() {
-        return <InlineTag>test</InlineTag>;
-    }
-}
+new DOMRenderer().renderer(<Hello>WebCell</Hello>);
 ```
 
-### Advanced component
+### Class component
 
-`source/TestTag.tsx`
+#### Children slot
 
 ```tsx
-import { JsxProps } from 'dom-renderer';
-import { observable } from 'mobx';
-import { component, attribute, observer, on } from 'web-cell';
-import { stringifyCSS } from 'web-utility';
-
-import { SubTag } from './SubTag';
-
-export interface TestTagProps extends JsxProps<HTMLElement> {
-    topic?: string;
-}
-
-class State {
-    @observable
-    accessor status = '';
-}
+import { DOMRenderer } from 'dom-renderer';
+import { component } from 'web-cell';
 
 @component({
-    tagName: 'test-tag',
+    tagName: 'hello-world',
     mode: 'open'
 })
+class Hello extends HTMLElement {
+    render() {
+        return (
+            <h1>
+                Hello, <slot />!
+            </h1>
+        );
+    }
+}
+
+new DOMRenderer().renderer(
+    <>
+        <Hello>WebCell</Hello>
+        {/* or */}
+        <hello-world>WebCell</hello-world>
+    </>
+);
+```
+
+#### DOM Props
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { observable } from 'mobx';
+import { component, attribute, observer } from 'web-cell';
+
+interface HelloProps {
+    name?: string;
+}
+
+@component({ tagName: 'hello-world' })
 @observer
-export class TestTag extends HTMLElement {
-    declare props: TestTagProps;
+class Hello extends HTMLElement {
+    declare props: HelloProps;
 
     @attribute
     @observable
-    accessor topic = 'Test';
+    accessor name = '';
 
-    state = new State();
+    render() {
+        return <h1>Hello, {this.name}!</h1>;
+    }
+}
 
+new DOMRenderer().renderer(<Hello name="WebCell" />);
+
+// or for HTML tag names in TypeScript
+
+declare global {
+    namespace JSX {
+        interface IntrinsicElements {
+            'hello-world': HelloProps;
+        }
+    }
+}
+new DOMRenderer().renderer(<hello-world name="WebCell" />);
+```
+
+### Inner state
+
+#### Function component
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { observable } from 'mobx';
+import { FC, observer } from 'web-cell';
+
+class CounterModel {
+    @observable
+    accessor times = 0;
+}
+
+const couterStore = new CounterModel();
+
+const Counter: FC = observer(() => (
+    <button onClick={() => (couterStore.times += 1)}>
+        Counts: {couterStore.times}
+    </button>
+));
+
+new DOMRenderer().renderer(<Counter />);
+```
+
+#### Class component
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { observable } from 'mobx';
+import { component, observer } from 'web-cell';
+
+@component({ tagName: 'my-counter' })
+@observer
+class Counter extends HTMLElement {
+    @observable
+    accessor times = 0;
+
+    handleClick = () => (this.times += 1);
+
+    render() {
+        return <button onClick={this.handleClick}>Counts: {this.times}</button>;
+    }
+}
+
+new DOMRenderer().renderer(<Counter />);
+```
+
+### CSS scope
+
+#### Inline style
+
+```tsx
+import { component } from 'web-cell';
+import { stringifyCSS } from 'web-utility';
+
+@component({
+    tagName: 'my-button',
+    mode: 'open'
+})
+export class MyButton extends HTMLElement {
     style = stringifyCSS({
-        '.topic': {
-            color: 'lightblue'
-        },
-        '.topic.active': {
-            color: 'lightpink'
+        '.btn': {
+            color: 'white',
+            background: 'lightblue'
         }
     });
 
-    onClick = () => (this.topic = 'Example');
-
-    @on('click', ':host h1')
-    onDelegate() {
-        this.state.status = 'active';
-    }
-
     render() {
-        const { style, topic } = this,
-            { status } = this.state;
-
         return (
             <>
-                <style>{style}</style>
+                <style>{this.style}</style>
 
-                <h1 title={topic} className={`topic ${status}`}>
-                    {topic}
-                    <img alt={topic} onClick={this.onClick} />
-
-                    <SubTag />
-                </h1>
+                <a className="btn">
+                    <slot />
+                </a>
             </>
         );
     }
 }
+```
+
+#### Link stylesheet
+
+```tsx
+import { component } from 'web-cell';
+
+@component({
+    tagName: 'my-button',
+    mode: 'open'
+})
+export class MyButton extends HTMLElement {
+    render() {
+        return (
+            <>
+                <link
+                    rel="stylesheet"
+                    href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+                />
+                <a className="btn">
+                    <slot />
+                </a>
+            </>
+        );
+    }
+}
+```
+
+#### CSS module
+
+##### `scoped.css`
+
+```css
+.btn {
+    color: white;
+    background: lightblue;
+}
+```
+
+##### `MyButton.tsx`
+
+```tsx
+import { component, WebCell } from 'web-cell';
+
+import styles from './scoped.css' assert { type: 'css' };
+
+interface MyButton extends WebCell {}
+
+@component({
+    tagName: 'my-button',
+    mode: 'open'
+})
+export class MyButton extends HTMLElement {
+    connectedCallback() {
+        this.root.adoptedStyleSheets = [styles];
+    }
+
+    render() {
+        return (
+            <a className="btn">
+                <slot />
+            </a>
+        );
+    }
+}
+```
+
+### Event delegation
+
+```tsx
+import { component, on } from 'web-cell';
+
+@component({ tagName: 'my-table' })
+export class MyTable extends HTMLElement {
+    @on('click', ':host td > button')
+    handleEdit(event: MouseEvent, { dataset: { id } }: HTMLButtonElement) {
+        console.log(`editing row: ${id}`);
+    }
+
+    render() {
+        return (
+            <table>
+                <tr>
+                    <td>1</td>
+                    <td>A</td>
+                    <td>
+                        <button data-id="1">edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>B</td>
+                    <td>
+                        <button data-id="2">edit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>C</td>
+                    <td>
+                        <button data-id="3">edit</button>
+                    </td>
+                </tr>
+            </table>
+        );
+    }
+}
+```
+
+### MobX reaction
+
+```tsx
+import { observable } from 'mobx';
+import { component, observer, reaction } from 'web-cell';
+
+@component({ tagName: 'my-counter' })
+@observer
+export class Counter extends HTMLElement {
+    @observable
+    accessor times = 0;
+
+    handleClick = () => (this.times += 1);
+
+    @reaction(({ times }) => times)
+    echoTimes(newValue: number, oldValue: number) {
+        console.log(`newValue: ${newValue}, oldValue: ${oldValue}`);
+    }
+
+    render() {
+        return <button onClick={this.handleClick}>Counts: {this.times}</button>;
+    }
+}
+```
+
+### Form association
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { HTMLFieldProps } from 'web-utility';
+import { WebField, component, formField, observer } from 'web-cell';
+
+interface MyField extends WebField {}
+
+@component({
+    tagName: 'my-field',
+    mode: 'open'
+})
+@formField
+@observer
+class MyField extends HTMLElement {
+    declare props: HTMLFieldProps;
+
+    render() {
+        const { name } = this;
+
+        return (
+            <input
+                name={name}
+                onChange={({ currentTarget: { value } }) =>
+                    (this.value = value)
+                }
+            />
+        );
+    }
+}
+
+new DOMRenderer().renderer(
+    <form method="POST" action="/api/data">
+        <MyField name="test" />
+
+        <button>submit</button>
+    </form>
+);
+```
+
+### Async component
+
+#### `AsyncTag.tsx`
+
+```tsx
+import { FC } from 'web-cell';
+
+const AsyncTag: FC = () => <div>Async</div>;
+
+export default AsyncTag;
+```
+
+#### `index.tsx`
+
+```tsx
+const AsyncTag = lazy(() => import('./AsyncTag'));
+
+new DOMRenderer().renderer(<AsyncTag />);
 ```
 
 ## Basic knowledge
