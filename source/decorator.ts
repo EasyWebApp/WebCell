@@ -14,6 +14,7 @@ import {
 } from 'web-utility';
 
 import { ClassComponent } from './WebCell';
+import { getMobxData } from './MobX';
 
 export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
@@ -33,6 +34,7 @@ function wrapFunction<P>(func: FC<P>) {
         });
         const { unRef } = tree;
 
+        tree.ref = node => (tree.node = node);
         tree.unRef = node => (disposer(), unRef?.(node));
 
         return tree;
@@ -51,6 +53,10 @@ function wrapClass<T extends ClassComponent>(Component: T) {
         implements CustomElement
     {
         protected disposers: IReactionDisposer[] = [];
+
+        get props() {
+            return getMobxData(this);
+        }
 
         constructor() {
             super();

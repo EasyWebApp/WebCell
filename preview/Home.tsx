@@ -1,8 +1,10 @@
 import { formToJSON } from 'web-utility';
-import { FC, PropsWithChildren } from '../source';
+import { FC, PropsWithChildren, lazy } from '../source';
 
 import { ClassClock, FunctionClock } from './Clock';
 import { TestField } from './Field';
+
+const Async = lazy(() => import('./Async'));
 
 const Hello: FC<PropsWithChildren> = ({ children }) => (
     <h1>Hello {children}!</h1>
@@ -23,6 +25,7 @@ export const HomePage = () => (
             </a>
             .
         </div>
+
         <ul>
             <li>
                 <FunctionClock />
@@ -31,6 +34,7 @@ export const HomePage = () => (
                 <ClassClock />
             </li>
         </ul>
+
         <form
             // @ts-ignore
             onSubmit={({ currentTarget }) =>
@@ -41,5 +45,7 @@ export const HomePage = () => (
 
             <button>√</button>
         </form>
+
+        <Async>content</Async>
     </>
 );
