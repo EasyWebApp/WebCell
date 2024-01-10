@@ -3,6 +3,7 @@ import {
     CustomElement,
     DelegateEventHandler,
     delegate,
+    isEmpty,
     stringifyDOM
 } from 'web-utility';
 
@@ -80,7 +81,7 @@ export function component(meta: ComponentMeta) {
             update() {
                 const vNode = this.render?.();
 
-                if (vNode) this.renderer.render(vNode, this.root);
+                this.renderer.render(isEmpty(vNode) ? <></> : vNode, this.root);
             }
 
             disconnectedCallback() {

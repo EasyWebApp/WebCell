@@ -1,9 +1,11 @@
 import { observable } from 'mobx';
-import { HTMLProps } from 'web-utility';
+import { JsxProps } from 'dom-renderer';
 
 import { ClassComponent, WebCell, component } from './WebCell';
 import {
+    FC,
     FunctionComponent,
+    PropsWithChildren,
     WebCellComponent,
     observer,
     reaction
@@ -11,7 +13,7 @@ import {
 
 export type ComponentTag = string | WebCellComponent;
 
-export type WebCellProps<T extends HTMLElement = HTMLElement> = HTMLProps<T>;
+export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
 
 export interface AsyncBoxProps extends WebCellProps {
     loader: () => Promise<ComponentTag>;
@@ -31,7 +33,7 @@ export class AsyncBox extends HTMLElement {
     accessor loader: AsyncBoxProps['loader'];
 
     @observable
-    accessor component: ComponentTag;
+    accessor component: FC<PropsWithChildren>;
 
     @observable
     accessor delegatedProps: AsyncBoxProps['delegatedProps'];
@@ -43,8 +45,12 @@ export class AsyncBox extends HTMLElement {
     @reaction((element: AsyncBox) => element.loader)
     protected async load() {
         this.component = undefined;
-        this.component = await this.loader();
 
+        const Tag = await this.loader();
+
+        this.component = ({ children, ...props }) => (
+            <Tag {...props}>{children}</Tag>
+        );
         this.emit('load', this.component);
     }
 
