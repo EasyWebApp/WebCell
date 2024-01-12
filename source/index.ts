@@ -3,3 +3,4 @@ export * from './MobX';
 export * from './WebCell';
 export * from './WebField';
 export * from './Async';
+export * from './Animation';

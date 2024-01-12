@@ -6,7 +6,8 @@
 git clone https://github.com/EasyWebApp/WebCell.git ~/Desktop/WebCell
 cd ~/Desktop/WebCell
 
-npm install
+npm i pnpm -g
+pnpm i
 npm test
-npm run build
+pnpm build
 ```

@@ -52,6 +52,8 @@ function wrapClass<T extends ClassComponent>(Component: T) {
         extends (Component as ClassComponent)
         implements CustomElement
     {
+        static observedAttributes = [];
+
         protected disposers: IReactionDisposer[] = [];
 
         get props() {
@@ -88,6 +90,16 @@ function wrapClass<T extends ClassComponent>(Component: T) {
             for (const disposer of this.disposers) disposer();
 
             this.disposers.length = 0;
+        }
+
+        setAttribute(name: string, value: string) {
+            const old = super.getAttribute(name),
+                names: string[] = this.constructor['observedAttributes'];
+
+            super.setAttribute(name, value);
+
+            if (names.includes(name))
+                this.attributeChangedCallback(name, old, value);
         }
 
         attributeChangedCallback(name: string, old: string, value: string) {
@@ -141,18 +153,10 @@ export function attribute<C extends HTMLElement, V>(
     { name, addInitializer }: ClassAccessorDecoratorContext<C>
 ) {
     addInitializer(function () {
-        const { constructor } = this;
-        var names = constructor['observedAttributes'];
+        const names: string[] = this.constructor['observedAttributes'],
+            attribute = toHyphenCase(name.toString());
 
-        if (!names) {
-            names = [];
-
-            Object.defineProperty(constructor, 'observedAttributes', {
-                configurable: true,
-                get: () => names
-            });
-        }
-        names.push(toHyphenCase(name.toString()));
+        if (!names.includes(attribute)) names.push(attribute);
     });
 }
 

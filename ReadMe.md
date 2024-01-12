@@ -454,9 +454,26 @@ export default AsyncTag;
 #### `index.tsx`
 
 ```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { lazy } from 'web-cell';
+
 const AsyncTag = lazy(() => import('./AsyncTag'));
 
 new DOMRenderer().render(<AsyncTag />);
+```
+
+### Animate CSS component
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { AnimateCSS } from 'web-cell';
+
+new DOMRenderer().render(
+    <AnimateCSS
+        type="fadeIn"
+        component={props => <h1 {...props}>Fade In</h1>}
+    />
+);
 ```
 
 ## Node.js usage
@@ -505,7 +522,7 @@ import 'web-cell/polyfill';
 
 We recommend these libraries to use with WebCell:
 
--   **State management**: [MobX][42] (also powered by **TypeScript** & **Decorator**)
+-   **State management**: [MobX][3] (also powered by **TypeScript** & **Decorator**)
 -   **Router**: [Cell Router][43]
 -   **UI components**
 
@@ -520,14 +537,13 @@ We recommend these libraries to use with WebCell:
 
 ## Roadmap
 
--   [x] [Extend **Build-in Elements** with Virtual DOM][51]
--   [x] [Server-side Render][52]
--   [x] [Async Component loading][53]
+-   [x] [Server-side Render][51]
+-   [x] [Async Component loading][52]
 
 ## More guides
 
-1.  [v2 to v3 migration][54]
-2.  [Development contribution][55]
+1.  [v2 to v3 migration][53]
+2.  [Development contribution][54]
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
@@ -539,7 +555,7 @@ We recommend these libraries to use with WebCell:
 [8]: https://github.com/jaywcjlove/awesome-uikit
 [9]: https://tech-query.me/programming/web-components-practise/slide.html
 [10]: https://gitter.im/EasyWebApp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
-[11]: https://codesandbox.io/s/webcell-demo-9gyll?autoresize=1&fontsize=14&hidenavigation=1&module=%2Fsrc%2FClock.tsx&theme=dark
+[11]: https://codesandbox.io/p/devbox/9gyll?embed=1&file=%2Fsrc%2FClock.tsx
 [12]: https://nodei.co/npm/web-cell/
 [13]: https://www.typescriptlang.org/
 [14]: https://github.com/tc39/proposal-decorators
@@ -570,7 +586,6 @@ We recommend these libraries to use with WebCell:
 [39]: https://github.com/EasyWebApp/scaffold
 [40]: https://github.com/EasyWebApp/DashBoard
 [41]: https://github.com/EasyWebApp/mark-wiki
-[42]: https://github.com/mobxjs/mobx/blob/mobx4and5/docs/
 [43]: https://web-cell.dev/cell-router/
 [44]: https://bootstrap.web-cell.dev/
 [45]: https://material.web-cell.dev/
@@ -579,8 +594,7 @@ We recommend these libraries to use with WebCell:
 [48]: https://web-cell.dev/web-utility/
 [49]: https://web-cell.dev/iterable-observer/
 [50]: https://github.com/EasyWebApp/MarkCell
-[51]: https://github.com/snabbdom/snabbdom/pull/829
-[52]: https://web.dev/declarative-shadow-dom/
-[53]: https://reactjs.org/docs/react-api.html#reactlazy
-[54]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md
-[55]: https://github.com/EasyWebApp/WebCell/blob/main/Contributing.md
+[51]: https://web.dev/declarative-shadow-dom/
+[52]: https://reactjs.org/docs/react-api.html#reactlazy
+[53]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md
+[54]: https://github.com/EasyWebApp/WebCell/blob/main/Contributing.md

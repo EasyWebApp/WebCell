@@ -1,5 +1,6 @@
 import { DataObject } from 'dom-renderer';
 import { ObservableValue } from 'mobx/dist/internal';
+import { delegate } from 'web-utility';
 
 export function getMobxData<T extends DataObject>(observable: T) {
     for (const key of Object.getOwnPropertySymbols(observable)) {
@@ -13,3 +14,18 @@ export function getMobxData<T extends DataObject>(observable: T) {
             ) as T;
     }
 }
+
+export const animated = <T extends HTMLElement | SVGElement>(
+    root: T,
+    targetSelector: string
+) =>
+    new Promise<AnimationEvent>(resolve => {
+        const ended = delegate(targetSelector, (event: AnimationEvent) => {
+            root.removeEventListener('animationend', ended);
+            root.removeEventListener('animationcancel', ended);
+            resolve(event);
+        });
+
+        root.addEventListener('animationend', ended);
+        root.addEventListener('animationcancel', ended);
+    });
