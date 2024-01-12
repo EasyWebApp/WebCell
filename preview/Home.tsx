@@ -1,18 +1,21 @@
 import { formToJSON } from 'web-utility';
-import { FC, PropsWithChildren, lazy } from '../source';
+import { AnimateCSS, FC, WebCellProps, lazy } from '../source';
 
 import { ClassClock, FunctionClock } from './Clock';
 import { TestField } from './Field';
 
 const Async = lazy(() => import('./Async'));
 
-const Hello: FC<PropsWithChildren> = ({ children }) => (
-    <h1>Hello {children}!</h1>
+const Hello: FC<WebCellProps> = ({ className, children }) => (
+    <h1 className={className}>Hello {children}!</h1>
 );
 
 export const HomePage = () => (
     <>
-        <Hello>WebCell</Hello>
+        <AnimateCSS
+            type="fadeIn"
+            component={props => <Hello {...props}>WebCell</Hello>}
+        />
         <div>
             We use the same configuration as Parcel to bundle this sandbox, you
             can find more info about Parcel

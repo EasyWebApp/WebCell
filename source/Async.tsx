@@ -1,5 +1,5 @@
-import { observable } from 'mobx';
 import { JsxProps } from 'dom-renderer';
+import { observable } from 'mobx';
 
 import { ClassComponent, WebCell, component } from './WebCell';
 import {
@@ -7,42 +7,39 @@ import {
     FunctionComponent,
     PropsWithChildren,
     WebCellComponent,
-    observer,
-    reaction
+    observer
 } from './decorator';
 
 export type ComponentTag = string | WebCellComponent;
 
 export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
 
-export interface AsyncBoxProps extends WebCellProps {
+export interface AsyncCellProps extends WebCellProps {
     loader: () => Promise<ComponentTag>;
     delegatedProps?: WebCellProps;
 }
 
-export interface AsyncBox extends WebCell {}
+export interface AsyncCell extends WebCell {}
 
 @component({
-    tagName: 'async-box'
+    tagName: 'async-cell'
 })
 @observer
-export class AsyncBox extends HTMLElement {
-    declare props: AsyncBoxProps;
+export class AsyncCell extends HTMLElement {
+    declare props: AsyncCellProps;
 
-    @observable
-    accessor loader: AsyncBoxProps['loader'];
+    loader: AsyncCellProps['loader'];
 
     @observable
     accessor component: FC<PropsWithChildren>;
 
     @observable
-    accessor delegatedProps: AsyncBoxProps['delegatedProps'];
+    accessor delegatedProps: AsyncCellProps['delegatedProps'];
 
     connectedCallback() {
         this.load();
     }
 
-    @reaction((element: AsyncBox) => element.loader)
     protected async load() {
         this.component = undefined;
 
@@ -72,7 +69,7 @@ export function lazy<
     T extends () => Promise<{ default: FunctionComponent | ClassComponent }>
 >(loader: T) {
     return (props: GetAsyncProps<T>) => (
-        <AsyncBox
+        <AsyncCell
             delegatedProps={props}
             loader={async () => (await loader()).default}
         />
