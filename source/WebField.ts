@@ -1,10 +1,12 @@
 import { observable } from 'mobx';
-import { CustomFormElement } from 'web-utility';
+import { CustomFormElement, HTMLFieldProps } from 'web-utility';
 
 import { ClassComponent, WebCell } from './WebCell';
 import { attribute, reaction } from './decorator';
 
-export interface WebField extends CustomFormElement, WebCell {}
+export interface WebField<P = {}>
+    extends CustomFormElement,
+        WebCell<P & HTMLFieldProps> {}
 
 /**
  * `class` decorator of Form associated Web components

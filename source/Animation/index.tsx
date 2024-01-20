@@ -1,26 +1,26 @@
 import { observable } from 'mobx';
 import { importCSS } from 'web-utility';
 
-import { WebCellProps } from '../Async';
 import { animated } from '../MobX';
-import { WebCell, component } from '../WebCell';
+import { WebCell, WebCellProps, component } from '../WebCell';
 import { FC, attribute, observer, reaction } from '../decorator';
 import { AnimationType } from './type';
 
 export * from './type';
-
-export interface AnimateCSS extends WebCell {}
 
 export interface AnimateCSSProps {
     type: AnimationType;
     component: FC<WebCellProps>;
 }
 
+export interface AnimateCSS extends WebCell<AnimateCSSProps> {}
+
 @component({ tagName: 'animation-css' })
 @observer
-export class AnimateCSS extends HTMLElement implements WebCell {
-    declare props: AnimateCSSProps;
-
+export class AnimateCSS
+    extends HTMLElement
+    implements WebCell<AnimateCSSProps>
+{
     @attribute
     @observable
     accessor type: AnimationType;

@@ -1,4 +1,4 @@
-import { DOMRenderer, VNode } from 'dom-renderer';
+import { DOMRenderer, JsxProps, VNode } from 'dom-renderer';
 import {
     CustomElement,
     DelegateEventHandler,
@@ -15,7 +15,10 @@ export interface ComponentMeta
 
 export type ClassComponent = CustomElementConstructor;
 
-export interface WebCell extends CustomElement {
+export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
+
+export interface WebCell<P = {}> extends CustomElement {
+    props: P & WebCellProps;
     internals: ElementInternals;
     renderer: DOMRenderer;
     root: ParentNode;
@@ -42,6 +45,8 @@ export function component(meta: ComponentMeta) {
             extends (Class as ClassComponent)
             implements WebCell
         {
+            declare props: WebCellProps;
+
             internals = this.attachInternals();
             renderer = new DOMRenderer();
 

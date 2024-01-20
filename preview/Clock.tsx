@@ -1,6 +1,13 @@
 import { IReactionPublic, observable } from 'mobx';
-import { CustomElement, Second } from 'web-utility';
-import { attribute, component, observer, on, reaction } from '../source';
+import { Second } from 'web-utility';
+import {
+    WebCell,
+    attribute,
+    component,
+    observer,
+    on,
+    reaction
+} from '../source';
 
 class ClockModel {
     @observable
@@ -23,17 +30,23 @@ export const FunctionClock = observer(() => {
     );
 });
 
+export interface ClassClock extends WebCell {}
+
 @component({
     tagName: 'class-clock',
     mode: 'open'
 })
 @observer
-export class ClassClock extends HTMLElement implements CustomElement {
+export class ClassClock extends HTMLElement implements WebCell {
     @attribute
     @observable
     accessor time = new Date();
 
-    timer = setInterval(() => (this.time = new Date()), Second);
+    private timer: number;
+
+    connectedCallback() {
+        this.timer = setInterval(() => (this.time = new Date()), Second);
+    }
 
     disconnectedCallback() {
         clearInterval(this.timer);

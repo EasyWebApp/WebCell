@@ -1,7 +1,6 @@
-import { JsxProps } from 'dom-renderer';
 import { observable } from 'mobx';
 
-import { ClassComponent, WebCell, component } from './WebCell';
+import { ClassComponent, WebCell, WebCellProps, component } from './WebCell';
 import {
     FC,
     FunctionComponent,
@@ -12,22 +11,18 @@ import {
 
 export type ComponentTag = string | WebCellComponent;
 
-export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
-
-export interface AsyncCellProps extends WebCellProps {
+export interface AsyncCellProps {
     loader: () => Promise<ComponentTag>;
     delegatedProps?: WebCellProps;
 }
 
-export interface AsyncCell extends WebCell {}
+export interface AsyncCell extends WebCell<AsyncCellProps> {}
 
 @component({
     tagName: 'async-cell'
 })
 @observer
-export class AsyncCell extends HTMLElement {
-    declare props: AsyncCellProps;
-
+export class AsyncCell extends HTMLElement implements WebCell<AsyncCellProps> {
     loader: AsyncCellProps['loader'];
 
     @observable

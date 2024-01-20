@@ -24,19 +24,22 @@ export type FC<P extends DataObject = {}> = FunctionComponent<P>;
 
 function wrapFunction<P>(func: FC<P>) {
     return (props: P) => {
-        var tree: VNode,
+        const tree = func(props),
             renderer = new DOMRenderer();
 
         const disposer = autorun(() => {
             const newTree = func(props);
 
-            tree = tree ? renderer.patch(tree, newTree) : newTree;
+            if (tree.node) Object.assign(tree, renderer.patch(tree, newTree));
         });
-        const { unRef } = tree;
+        const { ref } = tree;
 
-        tree.ref = node => (tree.node = node);
-        tree.unRef = node => (disposer(), unRef?.(node));
+        tree.ref = node => {
+            if (node) tree.node = node;
+            else disposer();
 
+            ref?.(node);
+        };
         return tree;
     };
 }

@@ -150,17 +150,17 @@ new DOMRenderer().render(
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
 import { observable } from 'mobx';
-import { component, attribute, observer } from 'web-cell';
+import { WebCell, component, attribute, observer } from 'web-cell';
 
 interface HelloProps {
     name?: string;
 }
 
+interface Hello extends WebCell<HelloProps> {}
+
 @component({ tagName: 'hello-world' })
 @observer
-class Hello extends HTMLElement {
-    declare props: HelloProps;
-
+class Hello extends HTMLElement implements WebCell<HelloProps> {
     @attribute
     @observable
     accessor name = '';
@@ -306,7 +306,7 @@ export class MyButton extends HTMLElement {
 ##### `MyButton.tsx`
 
 ```tsx
-import { component, WebCell } from 'web-cell';
+import { WebCell, component } from 'web-cell';
 
 import styles from './scoped.css' assert { type: 'css' };
 
@@ -316,7 +316,7 @@ interface MyButton extends WebCell {}
     tagName: 'my-button',
     mode: 'open'
 })
-export class MyButton extends HTMLElement {
+export class MyButton extends HTMLElement implements WebCell {
     connectedCallback() {
         this.root.adoptedStyleSheets = [styles];
     }
@@ -402,7 +402,6 @@ export class Counter extends HTMLElement {
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
-import { HTMLFieldProps } from 'web-utility';
 import { WebField, component, formField, observer } from 'web-cell';
 
 interface MyField extends WebField {}
@@ -413,9 +412,7 @@ interface MyField extends WebField {}
 })
 @formField
 @observer
-class MyField extends HTMLElement {
-    declare props: HTMLFieldProps;
-
+class MyField extends HTMLElement implements WebField {
     render() {
         const { name } = this;
 
