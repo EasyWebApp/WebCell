@@ -1,4 +1,4 @@
-![WebCell logo](https://web-cell.dev/WebCell-0.f1ffd28b.png)
+![WebCell logo](https://github.com/EasyWebApp.png)
 
 # WebCell
 
@@ -537,10 +537,11 @@ We recommend these libraries to use with WebCell:
 -   [x] [Server-side Render][51]
 -   [x] [Async Component loading][52]
 
+## [v2 to v3 migration][53]
+
 ## More guides
 
-1.  [v2 to v3 migration][53]
-2.  [Development contribution][54]
+1.  [Development contribution][54]
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
