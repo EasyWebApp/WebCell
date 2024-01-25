@@ -1,54 +1,54 @@
-![WebCell logo](https://github.com/EasyWebApp.png)
-
 # WebCell
 
-[简体中文](./ReadMe-zh) | English
+![WebCell logo](https://github.com/EasyWebApp.png)
 
-[Web Components][1] engine based on VDOM, [JSX][2], [MobX][3] & [TypeScript][4]
+简体中文 | [English](./ReadMe)
 
-[![NPM Dependency](https://img.shields.io/librariesio/github/EasyWebApp/WebCell.svg)][5]
-[![CI & CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][6]
+基于 VDOM、[JSX][2]、[MobX][3] 和 [TypeScript][4] 的 [Web 组件][1] 引擎
 
-[![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][7]
-[![jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][8]
+[![NPM 依赖性](https://img.shields.io/librariesio/github/EasyWebApp/WebCell.svg)][5]
+[![CI 和 CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][6]
 
-[![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][9]
+[![反 996 许可证](https://img.shields.io/badge/license-Anti%20996-blue.svg)][7]
+[![Jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][8]
+
+[![幻灯片](https://img.shields.io/badge/learn-Slideshow-blue)][9]
 [![Gitter](https://badges.gitter.im/EasyWebApp/community.svg)][10]
 
-[![Edit WebCell demo](https://codesandbox.io/static/img/play-codesandbox.svg)][11]
+[![编辑 WebCell 演示](https://codesandbox.io/static/img/play-codesandbox.svg)][11]
 
 [![NPM](https://nodei.co/npm/web-cell.png?downloads=true&downloadRank=true&stars=true)][12]
 
-## Feature
+## 特性
 
-### Engines comparison
+### 引擎比较
 
-|    feature    |         WebCell 3          |      WebCell 2       |             React             |                 Vue                 |
-| :-----------: | :------------------------: | :------------------: | :---------------------------: | :---------------------------------: |
-|  JS language  |     [TypeScript 5][13]     |     TypeScript 4     |   ECMAScript or TypeScript    |      ECMAScript or TypeScript       |
-|   JS syntax   | [ES decorator stage-3][14] | ES decorator stage-2 |                               |                                     |
-|  XML syntax   |      [JSX import][15]      |     JSX factory      |      JSX factory/import       | HTML/Vue template or JSX (optional) |
-|    DOM API    |    [Web components][16]    |    Web components    |            HTML 5+            |               HTML 5+               |
-| view renderer |    [DOM renderer 2][17]    |       SnabbDOM       |          (built-in)           |          SnabbDOM (forked)          |
-|   state API   |  [MobX `@observable`][18]  |     `this.state`     | `this.state` or `useState()`  |       `this.$data` or `ref()`       |
-|   props API   |     MobX `@observable`     |       `@watch`       | `this.props` or `props => {}` |  `this.$props` or `defineProps()`   |
-| state manager |       [MobX 6+][19]        |       MobX 4/5       |             Redux             |                VueX                 |
-|  page router  |       [JSX][20] tags       | JSX tags + JSON data |           JSX tags            |              JSON data              |
-| asset bundler |       [Parcel 2][21]       |       Parcel 1       |            webpack            |                Vite                 |
+| 特性 | WebCell 3 | WebCell 2 | React | Vue |
+| :------------------------: | :------------------------: | :------------------: | :----------------------------------------: | :------------------------------------------------: |
+| JS 语言 | [TypeScript 5][13] | TypeScript 4 | ECMAScript 或 TypeScript | ECMAScript 或 TypeScript |
+| JS 语法 | [ES 装饰器阶段-3][14] | ES装饰器阶段-2 | | |
+| XML 语法 | [JSX 导入][15] | JSX 工厂 | JSX 工厂/导入 | HTML/Vue 模板或 JSX（可选）|
+| DOM API | [Web 组件][16] | Web 组件 | HTML 5+ | HTML 5+ |
+| 视图渲染器 | [DOM 渲染器 2][17] | SnabbDOM |(内置)| SnabbDOM（分叉）|
+| 状态 API | [MobX `@observable`][18] | `this.state` | `this.state` 或 `useState()` | `this.$data` 或 `ref()` |
+| props API | MobX `@observable` | `@watch` | `this.props` or `props => {}` | `this.$props` or `defineProps()` |
+| 状态管理 | [MobX 6+][19] | MobX 4/5 | Redux | VueX |
+| 页面路由器 | [JSX][20] 标签 | JSX 标签 + JSON 数据 | JSX 标签 | JSON 数据 |
+| 资源打包工具 | [Parcel 2][21] | Parcel 1 | webpack | Vite |
 
-## Installation
+## 安装
 
 ```shell
 npm install dom-renderer mobx web-cell
 ```
 
-## Web browser usage
+## 网页浏览器使用
 
-[Demo & **GitHub template**][22]
+[演示和 **GitHub 模板**][22]
 
-### Project bootstrap
+### 项目引导
 
-#### Tool chain
+#### 工具链
 
 ```shell
 npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
@@ -103,22 +103,22 @@ npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
 <my-tag></my-tag>
 ```
 
-### Function component
+### 函数组件
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
 import { FC, PropsWithChildren } from 'web-cell';
 
-const Hello: FC<PropsWithChildren> = ({ children = 'World' }) => (
-    <h1>Hello, {children}!</h1>
+const Hello: FC<PropsWithChildren> = ({ children = '世界' }) => (
+    <h1>你好, {children}!</h1>
 );
 
 new DOMRenderer().render(<Hello>WebCell</Hello>);
 ```
 
-### Class component
+### 类组件
 
-#### Children slot
+#### 子元素插槽
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -132,7 +132,7 @@ class Hello extends HTMLElement {
     render() {
         return (
             <h1>
-                Hello, <slot />!
+                你好, <slot />!
             </h1>
         );
     }
@@ -147,7 +147,7 @@ new DOMRenderer().render(
 );
 ```
 
-#### DOM Props
+#### DOM 属性
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -168,7 +168,7 @@ class Hello extends HTMLElement implements WebCell<HelloProps> {
     accessor name = '';
 
     render() {
-        return <h1>Hello, {this.name}!</h1>;
+        return <h1>你好，{this.name}!</h1>;
     }
 }
 
@@ -186,9 +186,9 @@ declare global {
 new DOMRenderer().render(<hello-world name="WebCell" />);
 ```
 
-### Inner state
+### 内部状态
 
-#### Function component
+#### 函数组件
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -211,7 +211,7 @@ const Counter: FC = observer(() => (
 new DOMRenderer().render(<Counter />);
 ```
 
-#### Class component
+#### 类组件
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -227,16 +227,16 @@ class Counter extends HTMLElement {
     handleClick = () => (this.times += 1);
 
     render() {
-        return <button onClick={this.handleClick}>Counts: {this.times}</button>;
+        return <button onClick={this.handleClick}>计数：{this.times}</button>;
     }
 }
 
 new DOMRenderer().render(<Counter />);
 ```
 
-### CSS scope
+### CSS 作用域
 
-#### Inline style
+#### 内联样式
 
 ```tsx
 import { component } from 'web-cell';
@@ -268,7 +268,7 @@ export class MyButton extends HTMLElement {
 }
 ```
 
-#### Link stylesheet
+#### 链接样式表
 
 ```tsx
 import { component } from 'web-cell';
@@ -294,7 +294,7 @@ export class MyButton extends HTMLElement {
 }
 ```
 
-#### CSS module
+#### CSS 模块
 
 ##### `scoped.css`
 
@@ -333,7 +333,7 @@ export class MyButton extends HTMLElement implements WebCell {
 }
 ```
 
-### Event delegation
+### 事件委托
 
 ```tsx
 import { component, on } from 'web-cell';
@@ -342,7 +342,7 @@ import { component, on } from 'web-cell';
 export class MyTable extends HTMLElement {
     @on('click', ':host td > button')
     handleEdit(event: MouseEvent, { dataset: { id } }: HTMLButtonElement) {
-        console.log(`editing row: ${id}`);
+        console.log(`编辑行: ${id}`);
     }
 
     render() {
@@ -352,21 +352,21 @@ export class MyTable extends HTMLElement {
                     <td>1</td>
                     <td>A</td>
                     <td>
-                        <button data-id="1">edit</button>
+                        <button data-id="1">编辑</button>
                     </td>
                 </tr>
                 <tr>
                     <td>2</td>
                     <td>B</td>
                     <td>
-                        <button data-id="2">edit</button>
+                        <button data-id="2">编辑</button>
                     </td>
                 </tr>
                 <tr>
                     <td>3</td>
                     <td>C</td>
                     <td>
-                        <button data-id="3">edit</button>
+                        <button data-id="3">编辑</button>
                     </td>
                 </tr>
             </table>
@@ -400,7 +400,7 @@ export class Counter extends HTMLElement {
 }
 ```
 
-### Form association
+### 表单关联
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -433,12 +433,12 @@ new DOMRenderer().render(
     <form method="POST" action="/api/data">
         <MyField name="test" />
 
-        <button>submit</button>
+        <button>提交</button>
     </form>
 );
 ```
 
-### Async component
+### 异步组件
 
 #### `AsyncTag.tsx`
 
@@ -461,7 +461,7 @@ const AsyncTag = lazy(() => import('./AsyncTag'));
 new DOMRenderer().render(<AsyncTag />);
 ```
 
-### Animate CSS component
+### Animate CSS 组件
 
 ```tsx
 import { DOMRenderer } from 'dom-renderer';
@@ -475,9 +475,9 @@ new DOMRenderer().render(
 );
 ```
 
-## Node.js usage
+## Node.js 用法
 
-### Tool chain
+### 工具链
 
 ```shell
 npm install jsdom element-internals-polyfill
@@ -489,61 +489,60 @@ npm install jsdom element-internals-polyfill
 import 'web-cell/polyfill';
 ```
 
-## Basic knowledge
+## 基础知识
 
--   [Web components][23]
--   [Custom elements][24]
--   [Shadow DOM][25]
--   [Element Internals][26]
--   [CSS variables][27]
--   [ECMAScript 6+][28]
--   [TypeScript 5+][29]
+- [Web 组件][23]
+- [自定义元素][24]
+- [虚拟 DOM][25]
+- [Element Internals][26]
+- [CSS 变量][27]
+- [ECMAScript 6+][28]
+- [TypeScript 5+][29]
 
-## Life Cycle hooks
+## 生命周期钩子
 
-1.  [`connectedCallback`][30]
-2.  [`disconnectedCallback`][31]
-3.  [`attributeChangedCallback`][32]
-4.  [`adoptedCallback`][33]
-5.  [`updatedCallback`][34]
-6.  [`formAssociatedCallback`][35]
-7.  [`formDisabledCallback`][36]
-8.  [`formResetCallback`][37]
-9.  [`formStateRestoreCallback`][38]
+1. [`connectedCallback`][30]
+2. [`disconnectedCallback`][31]
+3. [`attributeChangedCallback`][32]
+4. [`adoptedCallback`][33]
+5. [`updatedCallback`][34]
+6. [`formAssociatedCallback`][35]
+7. [`formDisabledCallback`][36]
+8. [`formResetCallback`][37]
+9. [`formStateRestoreCallback`][38]
 
-## Scaffolds
+## 脚手架
 
-1.  [Basic][39]
-2.  [DashBoard][40]
-3.  [Static site][41]
+1. [基础][39]
+2. [仪表盘][40]
+3. [静态网站][41]
 
-## Ecosystem
+## 生态系统
 
-We recommend these libraries to use with WebCell:
+我们建议将这些库与 WebCell 一起使用：
 
--   **State management**: [MobX][3] (also powered by **TypeScript** & **Decorator**)
--   **Router**: [Cell Router][43]
--   **UI components**
+- **状态管理**: [MobX][3]（也由 **TypeScript** 和 **Decorator** 提供支持）
+- **路由**: [Cell Router][43]
+- **UI 组件**
+  - [BootCell][44]（基于 **BootStrap v4**）
+  - [Material Cell][45]（基于 **Material Design**）
+  - [GitHub Web Widget][46]
 
-    -   [BootCell][44] (based on **BootStrap v4**)
-    -   [Material Cell][45] (based on **Material Design**)
-    -   [GitHub Web Widget][46]
+- **HTTP请求**: [KoAJAX][47]（基于 类**Koa** 中间件）
+- **实用程序**: [Web utility][48]（方法和类型）
+- **事件流**: [Iterable Observer][49]（**可观察** 提案）
+- **MarkDown 集成**: [MarkCell][50]（**MDX** 实现）
 
--   **HTTP request**: [KoAJAX][47] (based on **Koa**\-like middlewares)
--   **Utility**: [Web utility][48] (Methods & Types)
--   **Event stream**: [Iterable Observer][49] (**Observable** proposal)
--   **MarkDown integration**: [MarkCell][50] (**MDX** implement)
+## 路线图
 
-## Roadmap
+- [x] [服务器端渲染][51]
+- [x] [异步组件加载][52]
 
--   [x] [Server-side Render][51]
--   [x] [Async Component loading][52]
+## [v2 到 v3 迁移][53]
 
-## [v2 to v3 migration][53]
+## 更多指南
 
-## More guides
-
-1.  [Development contribution][54]
+1. [开发贡献][54]
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
