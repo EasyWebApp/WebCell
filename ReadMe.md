@@ -1,6 +1,6 @@
-![WebCell logo](https://github.com/EasyWebApp.png)
-
 # WebCell
+
+![WebCell logo](https://web-cell.dev/WebCell-0.f9823b00.png)
 
 [简体中文](./ReadMe-zh) | English
 
@@ -525,7 +525,7 @@ We recommend these libraries to use with WebCell:
 -   **Router**: [Cell Router][43]
 -   **UI components**
 
-    -   [BootCell][44] (based on **BootStrap v4**)
+    -   [BootCell][44] (based on **BootStrap v5**)
     -   [Material Cell][45] (based on **Material Design**)
     -   [GitHub Web Widget][46]
 
