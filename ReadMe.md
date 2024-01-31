@@ -10,7 +10,7 @@
 [![CI & CD](https://github.com/EasyWebApp/WebCell/actions/workflows/main.yml/badge.svg)][6]
 
 [![Anti 996 license](https://img.shields.io/badge/license-Anti%20996-blue.svg)][7]
-[![jaywcjlove/sb](https://jaywcjlove.github.io/sb/ico/awesome.svg)][8]
+[![UI library recommendation list](https://jaywcjlove.github.io/sb/ico/awesome.svg)][8]
 
 [![Slideshow](https://img.shields.io/badge/learn-Slideshow-blue)][9]
 [![Gitter](https://badges.gitter.im/EasyWebApp/community.svg)][10]
@@ -29,7 +29,7 @@
 |   JS syntax   | [ES decorator stage-3][14] | ES decorator stage-2 |                               |                                     |
 |  XML syntax   |      [JSX import][15]      |     JSX factory      |      JSX factory/import       | HTML/Vue template or JSX (optional) |
 |    DOM API    |    [Web components][16]    |    Web components    |            HTML 5+            |               HTML 5+               |
-| view renderer |    [DOM renderer 2][17]    |       SnabbDOM       |          (built-in)           |          SnabbDOM (forked)          |
+| view renderer |    [DOM Renderer 2][17]    |       SnabbDOM       |          (built-in)           |          SnabbDOM (forked)          |
 |   state API   |  [MobX `@observable`][18]  |     `this.state`     | `this.state` or `useState()`  |       `this.$data` or `ref()`       |
 |   props API   |     MobX `@observable`     |       `@watch`       | `this.props` or `props => {}` |  `this.$props` or `defineProps()`   |
 | state manager |       [MobX 6+][19]        |       MobX 4/5       |             Redux             |                VueX                 |
@@ -532,7 +532,7 @@ We recommend these libraries to use with WebCell:
 -   **HTTP request**: [KoAJAX][47] (based on **Koa**\-like middlewares)
 -   **Utility**: [Web utility][48] (Methods & Types)
 -   **Event stream**: [Iterable Observer][49] (**Observable** proposal)
--   **MarkDown integration**: [MarkCell][50] (**MDX** implement)
+-   **MarkDown integration**: [Parcel MDX transformer][50] (**MDX** Compiler plugin)
 
 ## Roadmap
 
@@ -593,7 +593,7 @@ We recommend these libraries to use with WebCell:
 [47]: https://web-cell.dev/KoAJAX/
 [48]: https://web-cell.dev/web-utility/
 [49]: https://web-cell.dev/iterable-observer/
-[50]: https://github.com/EasyWebApp/MarkCell
+[50]: https://github.com/EasyWebApp/Parcel-transformer-MDX
 [51]: https://web.dev/declarative-shadow-dom/
 [52]: https://reactjs.org/docs/react-api.html#reactlazy
 [53]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md

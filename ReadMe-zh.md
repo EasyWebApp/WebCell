@@ -29,7 +29,7 @@
 |   JS 语法    | [ES 装饰器 stage-3][14]  |  ES 装饰器 stage-2   |                               |                                  |
 |   XML 语法   |     [JSX import][15]     |     JSX factory      |      JSX factory/import       |   HTML/Vue 模板或 JSX（可选）    |
 |   DOM API    |      [Web 组件][16]      |       Web 组件       |            HTML 5+            |             HTML 5+              |
-|  视图渲染器  |    [DOM 渲染器 2][17]    |       SnabbDOM       |           （内置）            |         SnabbDOM（分叉）         |
+|  视图渲染器  |   [DOM Renderer 2][17]   |       SnabbDOM       |           （内置）            |         SnabbDOM（分叉）         |
 |  state API   | [MobX `@observable`][18] |     `this.state`     | `this.state` 或 `useState()`  |     `this.$data` 或 `ref()`      |
 |  props API   |    MobX `@observable`    |       `@watch`       | `this.props` 或 `props => {}` | `this.$props` 或 `defineProps()` |
 |   状态管理   |      [MobX 6+][19]       |       MobX 4/5       |             Redux             |               VueX               |
