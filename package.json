@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.0-rc.8",
+    "version": "3.0.0-rc.9",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -55,10 +55,11 @@
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
         "jsdom": "^24.0.0",
-        "lint-staged": "^15.2.0",
+        "lint-staged": "^15.2.1",
         "open-cli": "^8.0.0",
         "parcel": "~2.11.0",
         "prettier": "^3.2.4",
+        "replace": "^1.2.2",
         "rimraf": "^5.0.5",
         "ts-jest": "^29.1.2",
         "ts-node": "^10.9.2",
@@ -73,7 +74,8 @@
         "preview": "npm run clean  &&  cd preview/  &&  parcel --dist-dir=../docs/preview/ --open",
         "pack-preview": "rimraf .parcel-cache/ docs/preview/  &&  cd preview/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
         "pack-dist": "parcel build source/index.ts",
-        "pack-docs": "typedoc source/",
+        "pack-docs": "typedoc --readme ReadMe-zh.md && mv docs/index.html ReadMe-zh.html && typedoc source/ && npm run pack-docs-language",
+        "pack-docs-language": "mv ReadMe-zh.html docs/ && replace './ReadMe-zh.md' './ReadMe-zh' docs/index.html && replace './ReadMe.md' './' docs/ReadMe-zh.html",
         "build": "npm run clean  &&  npm run pack-dist  &&  npm run pack-docs  &&  npm run pack-preview",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"

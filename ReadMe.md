@@ -2,7 +2,7 @@
 
 ![WebCell logo](https://web-cell.dev/WebCell-0.f9823b00.png)
 
-[简体中文](./ReadMe-zh) | English
+[简体中文](./ReadMe-zh.md) | English
 
 [Web Components][1] engine based on VDOM, [JSX][2], [MobX][3] & [TypeScript][4]
 
