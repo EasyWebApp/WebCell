@@ -75,7 +75,7 @@
         "pack-preview": "rimraf .parcel-cache/ docs/preview/  &&  cd preview/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
         "pack-dist": "parcel build source/index.ts",
         "pack-docs": "typedoc --readme ReadMe-zh.md && mv docs/index.html ReadMe-zh.html && typedoc source/ && npm run pack-docs-language",
-        "pack-docs-language": "mv ReadMe-zh.html docs/ && replace './ReadMe-zh.md' './ReadMe-zh.html' docs/index.html && replace './ReadMe.md' './' docs/ReadMe-zh.html",
+        "pack-docs-language": "mv ReadMe-zh.html docs/ && replace './ReadMe-zh.md' './ReadMe-zh.html' docs/index.html",
         "build": "npm run clean  &&  npm run pack-dist  &&  npm run pack-docs  &&  npm run pack-preview",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"

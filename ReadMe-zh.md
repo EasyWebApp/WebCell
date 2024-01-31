@@ -2,7 +2,7 @@
 
 ![WebCell logo](https://web-cell.dev/WebCell-0.f9823b00.png)
 
-简体中文 | [English](./ReadMe.md)
+简体中文 | [English](./)
 
 基于 VDOM、[JSX][2]、[MobX][3] 和 [TypeScript][4] 的 [Web 组件][1] 引擎
 
