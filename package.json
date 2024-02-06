@@ -59,6 +59,7 @@
         "open-cli": "^8.0.0",
         "parcel": "~2.11.0",
         "prettier": "^3.2.4",
+        "prettier-plugin-sh": "^0.14.0",
         "replace": "^1.2.2",
         "rimraf": "^5.0.5",
         "ts-jest": "^29.1.2",
@@ -80,14 +81,17 @@
         "prepublishOnly": "npm test  &&  npm run build"
     },
     "lint-staged": {
-        "*.{md,json,yml,js,ts,tsx}": "prettier --write",
+        "*.{md,json,yml,js,ts,tsx,sh}": "prettier --write",
         "*.{js,ts,tsx}": "eslint --fix"
     },
     "prettier": {
         "singleQuote": true,
         "trailingComma": "none",
         "arrowParens": "avoid",
-        "tabWidth": 4
+        "tabWidth": 4,
+        "plugins": [
+            "prettier-plugin-sh"
+        ]
     },
     "browserslist": "> 0.5%, last 2 versions, not dead, IE 11",
     "targets": {
