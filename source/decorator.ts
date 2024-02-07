@@ -14,7 +14,7 @@ import {
 } from 'web-utility';
 
 import { ClassComponent } from './WebCell';
-import { getMobxData } from './MobX';
+import { getMobxData } from './utility';
 
 export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
@@ -70,9 +70,11 @@ function wrapClass<T extends ClassComponent>(Component: T) {
 
             this['update'] = () =>
                 this.disposers.push(autorun(() => update.call(this)));
+
+            Promise.resolve().then(this.boot);
         }
 
-        connectedCallback() {
+        protected boot = () => {
             const names: string[] =
                     this.constructor['observedAttributes'] || [],
                 reactions = reactionMap.get(this) || [];
@@ -86,13 +88,14 @@ function wrapClass<T extends ClassComponent>(Component: T) {
                     )
                 )
             );
-            super['connectedCallback']?.();
-        }
+        };
 
         disconnectedCallback() {
             for (const disposer of this.disposers) disposer();
 
             this.disposers.length = 0;
+
+            super['disconnectedCallback']?.();
         }
 
         setAttribute(name: string, value: string) {

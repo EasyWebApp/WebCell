@@ -7,6 +7,8 @@ import {
     stringifyDOM
 } from 'web-utility';
 
+import { Defer } from './utility';
+
 export interface ComponentMeta
     extends ElementDefinitionOptions,
         Partial<ShadowRootInit> {
@@ -22,7 +24,16 @@ export interface WebCell<P = {}> extends CustomElement {
     internals: ElementInternals;
     renderer: DOMRenderer;
     root: ParentNode;
+    mounted: Defer;
     update: () => void;
+    /**
+     * Called at DOM tree updated
+     */
+    updatedCallback?: () => any;
+    /**
+     * Called at first time of DOM tree updated
+     */
+    mountedCallback?: () => any;
     emit: (event: string, detail?: any, option?: EventInit) => boolean;
 }
 
@@ -53,6 +64,8 @@ export function component(meta: ComponentMeta) {
             get root(): ParentNode {
                 return this.internals.shadowRoot || this;
             }
+            mounted = new Defer();
+            declare mountedCallback?: () => any;
 
             constructor() {
                 super();
@@ -79,14 +92,22 @@ export function component(meta: ComponentMeta) {
                 }
 
                 super['connectedCallback']?.();
+
+                this.mounted.promise.then(this.mountedCallback);
+                this.mounted.resolve();
             }
 
-            declare render: () => VNode;
+            declare render?: () => VNode;
+            declare updatedCallback?: () => any;
 
             update() {
                 const vNode = this.render?.();
 
-                this.renderer.render(isEmpty(vNode) ? <></> : vNode, this.root);
+                this.renderer.render(
+                    isEmpty(vNode) ? meta.mode ? <slot /> : <></> : vNode,
+                    this.root
+                );
+                this.updatedCallback?.();
             }
 
             disconnectedCallback() {

@@ -503,16 +503,17 @@ import 'web-cell/polyfill';
 3. [`attributeChangedCallback`][32]
 4. [`adoptedCallback`][33]
 5. [`updatedCallback`][34]
-6. [`formAssociatedCallback`][35]
-7. [`formDisabledCallback`][36]
-8. [`formResetCallback`][37]
-9. [`formStateRestoreCallback`][38]
+6. [`mountedCallback`][35]
+7. [`formAssociatedCallback`][36]
+8. [`formDisabledCallback`][37]
+9. [`formResetCallback`][38]
+10. [`formStateRestoreCallback`][39]
 
 ## 脚手架
 
-1. [基础][39]
-2. [仪表盘][40]
-3. [静态网站][41]
+1. [基础][40]
+2. [仪表盘][41]
+3. [静态网站][42]
 
 ## 生态系统
 
@@ -571,18 +572,19 @@ import 'web-cell/polyfill';
 [27]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables
 [28]: http://es6-features.org/
 [29]: https://www.typescriptlang.org/
-[30]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#connectedCallback
-[31]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#disconnectedCallback
-[32]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#attributeChangedCallback
-[33]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomElement.html#adoptedCallback
-[34]: https://web-cell.dev/WebCell/interfaces/WebCell.WebCellComponent.html#updatedCallback
-[35]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formAssociatedCallback
-[36]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formDisabledCallback
-[37]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formResetCallback
-[38]: https://web-cell.dev/web-utility/interfaces/DOM_type.CustomFormElement.html#formStateRestoreCallback
-[39]: https://github.com/EasyWebApp/scaffold
-[40]: https://github.com/EasyWebApp/DashBoard
-[41]: https://github.com/EasyWebApp/mark-wiki
+[30]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#connectedCallback
+[31]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#disconnectedCallback
+[32]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#attributeChangedCallback
+[33]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#adoptedCallback
+[34]: https://web-cell.dev/WebCell/interfaces/WebCell.html#updatedCallback
+[35]: https://web-cell.dev/WebCell/interfaces/WebCell.html#mountedCallback
+[36]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formAssociatedCallback
+[37]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formDisabledCallback
+[38]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formResetCallback
+[39]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formStateRestoreCallback
+[40]: https://github.com/EasyWebApp/scaffold
+[41]: https://github.com/EasyWebApp/DashBoard
+[42]: https://github.com/EasyWebApp/mark-wiki
 [43]: https://web-cell.dev/cell-router/
 [44]: https://bootstrap.web-cell.dev/
 [45]: https://material.web-cell.dev/
