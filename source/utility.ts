@@ -2,6 +2,16 @@ import { DataObject } from 'dom-renderer';
 import { ObservableValue } from 'mobx/dist/internal';
 import { delegate } from 'web-utility';
 
+export class Defer<T = void> {
+    resolve: (value: T | PromiseLike<T>) => void;
+    reject: (reason?: any) => void;
+
+    promise = new Promise<T>((resolve, reject) => {
+        this.resolve = resolve;
+        this.reject = reject;
+    });
+}
+
 export function getMobxData<T extends DataObject>(observable: T) {
     for (const key of Object.getOwnPropertySymbols(observable)) {
         const store = observable[key as keyof T]?.values_ as Map<
