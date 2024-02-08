@@ -7,8 +7,6 @@ import {
     stringifyDOM
 } from 'web-utility';
 
-import { Defer } from './utility';
-
 export interface ComponentMeta
     extends ElementDefinitionOptions,
         Partial<ShadowRootInit> {
@@ -24,7 +22,7 @@ export interface WebCell<P = {}> extends CustomElement {
     internals: ElementInternals;
     renderer: DOMRenderer;
     root: ParentNode;
-    mounted: Defer;
+    mounted: boolean;
     update: () => void;
     /**
      * Called at DOM tree updated
@@ -64,7 +62,7 @@ export function component(meta: ComponentMeta) {
             get root(): ParentNode {
                 return this.internals.shadowRoot || this;
             }
-            mounted = new Defer();
+            mounted = false;
             declare mountedCallback?: () => any;
 
             constructor() {
@@ -75,8 +73,6 @@ export function component(meta: ComponentMeta) {
             }
 
             connectedCallback() {
-                this.update();
-
                 const { mode } = meta;
                 const renderChildren = !(mode != null);
 
@@ -93,8 +89,12 @@ export function component(meta: ComponentMeta) {
 
                 super['connectedCallback']?.();
 
-                this.mounted.promise.then(this.mountedCallback);
-                this.mounted.resolve();
+                if (this.mounted) return;
+
+                this.update();
+
+                this.mounted = true;
+                this.mountedCallback?.();
             }
 
             declare render?: () => VNode;
@@ -103,11 +103,18 @@ export function component(meta: ComponentMeta) {
             update() {
                 const vNode = this.render?.();
 
-                this.renderer.render(
-                    isEmpty(vNode) ? meta.mode ? <slot /> : <></> : vNode,
-                    this.root
+                const content = isEmpty(vNode) ? (
+                    meta.mode ? (
+                        <slot />
+                    ) : null
+                ) : (
+                    vNode
                 );
-                this.updatedCallback?.();
+
+                if (content != null) {
+                    this.renderer.render(content, this.root);
+                    this.updatedCallback?.();
+                }
             }
 
             disconnectedCallback() {
