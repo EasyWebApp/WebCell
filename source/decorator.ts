@@ -71,10 +71,10 @@ function wrapClass<T extends ClassComponent>(Component: T) {
             this['update'] = () =>
                 this.disposers.push(autorun(() => update.call(this)));
 
-            Promise.resolve().then(this.boot);
+            Promise.resolve().then(() => this.#boot());
         }
 
-        protected boot = () => {
+        #boot() {
             const names: string[] =
                     this.constructor['observedAttributes'] || [],
                 reactions = reactionMap.get(this) || [];
@@ -88,7 +88,7 @@ function wrapClass<T extends ClassComponent>(Component: T) {
                     )
                 )
             );
-        };
+        }
 
         disconnectedCallback() {
             for (const disposer of this.disposers) disposer();

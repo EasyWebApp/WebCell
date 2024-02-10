@@ -105,7 +105,7 @@ import {
 }
 ```
 
-## control Render Target with Shadow DOM Mode option
+## control Render Target with Shadow DOM `mode` option
 
 ### render to `children`
 
@@ -144,7 +144,7 @@ import {
 
 ## move Shadow CSS injection into `render()`
 
-This makes **Shadow CSS** to react with the data of component instances.
+This makes **Shadow CSS** to react with Observable Data updating.
 
 ```diff
 +import { stringifyCSS } from 'web-utility';
@@ -180,9 +180,7 @@ import {
 }
 ```
 
-## rename some APIs
-
-[JSDoc's `@deprecated` hints][7] will lead your way to rename them:
+## replace some APIs
 
 1. `mixin()` => `HTMLElement` & its Sub-classes
 2. `mixinForm()` => `HTMLElement` & `@formField`
@@ -200,4 +198,3 @@ import {
 [4]: https://github.com/mobxjs/mobx/blob/mobx4and5/docs/refguide/observable-decorator.md
 [5]: https://github.com/mobxjs/mobx/blob/mobx4and5/docs/refguide/reaction.md
 [6]: https://github.com/EasyWebApp/WebCell/tree/v2/MobX
-[7]: https://jsdoc.app/tags-deprecated.html

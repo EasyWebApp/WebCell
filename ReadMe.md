@@ -497,7 +497,7 @@ import 'web-cell/polyfill';
 -   [Element Internals][26]
 -   [CSS variables][27]
 -   [ECMAScript 6+][28]
--   [TypeScript 5+][29]
+-   [TypeScript 5+][4]
 
 ## Life Cycle hooks
 
@@ -527,7 +527,7 @@ We recommend these libraries to use with WebCell:
 -   **UI components**
 
     -   [BootCell][44] (based on **BootStrap v5**)
-    -   [Material Cell][45] (based on **Material Design**)
+    -   [Material Web][45] (based on **Material Design**)
     -   [GitHub Web Widget][46]
 
 -   **HTTP request**: [KoAJAX][47] (based on **Koa**\-like middlewares)
@@ -568,13 +568,12 @@ We recommend these libraries to use with WebCell:
 [20]: https://facebook.github.io/jsx/
 [21]: https://parceljs.org/
 [22]: https://web-cell.dev/scaffold/
-[23]: https://developer.mozilla.org/en-US/docs/Web/Web_Components
-[24]: https://developers.google.cn/web/fundamentals/web-components/customelements
-[25]: https://developers.google.cn/web/fundamentals/web-components/shadowdom
-[26]: https://web.dev/more-capable-form-controls/
-[27]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_variables
+[23]: https://developer.mozilla.org/en-US/docs/Web/API/Web_components
+[24]: https://web.dev/articles/custom-elements-v1
+[25]: https://web.dev/articles/shadowdom-v1
+[26]: https://web.dev/articles/more-capable-form-controls
+[27]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
 [28]: http://es6-features.org/
-[29]: https://www.typescriptlang.org/
 [30]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#connectedCallback
 [31]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#disconnectedCallback
 [32]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#attributeChangedCallback
@@ -590,13 +589,13 @@ We recommend these libraries to use with WebCell:
 [42]: https://github.com/EasyWebApp/mark-wiki
 [43]: https://web-cell.dev/cell-router/
 [44]: https://bootstrap.web-cell.dev/
-[45]: https://material.web-cell.dev/
+[45]: https://material-web.dev/
 [46]: https://tech-query.me/GitHub-Web-Widget/
 [47]: https://web-cell.dev/KoAJAX/
 [48]: https://web-cell.dev/web-utility/
 [49]: https://web-cell.dev/iterable-observer/
 [50]: https://github.com/EasyWebApp/Parcel-transformer-MDX
-[51]: https://web.dev/declarative-shadow-dom/
-[52]: https://reactjs.org/docs/react-api.html#reactlazy
+[51]: https://developer.chrome.com/docs/css-ui/declarative-shadow-dom
+[52]: https://legacy.reactjs.org/docs/react-api.html#reactlazy
 [53]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md
 [54]: https://github.com/EasyWebApp/WebCell/blob/main/Contributing.md
