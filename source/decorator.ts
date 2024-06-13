@@ -66,13 +66,18 @@ function wrapClass<T extends ClassComponent>(Component: T) {
         constructor() {
             super();
 
-            const { update } = Object.getPrototypeOf(this);
-
-            this['update'] = () =>
-                this.disposers.push(autorun(() => update.call(this)));
-
             Promise.resolve().then(() => this.#boot());
         }
+
+        update = () => {
+            const { update } = Object.getPrototypeOf(this);
+
+            return new Promise<void>(resolve =>
+                this.disposers.push(
+                    autorun(() => update.call(this).then(resolve))
+                )
+            );
+        };
 
         #boot() {
             const names: string[] =

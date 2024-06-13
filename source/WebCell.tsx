@@ -11,6 +11,7 @@ export interface ComponentMeta
     extends ElementDefinitionOptions,
         Partial<ShadowRootInit> {
     tagName: string;
+    transitible?: boolean;
 }
 
 export type ClassComponent = CustomElementConstructor;
@@ -23,7 +24,7 @@ export interface WebCell<P = {}> extends CustomElement {
     renderer: DOMRenderer;
     root: ParentNode;
     mounted: boolean;
-    update: () => void;
+    update: () => Promise<void>;
     /**
      * Called at DOM tree updated
      */
@@ -72,7 +73,7 @@ export function component(meta: ComponentMeta) {
                     this.attachShadow(meta as ShadowRootInit);
             }
 
-            connectedCallback() {
+            async connectedCallback() {
                 const { mode } = meta;
                 const renderChildren = !(mode != null);
 
@@ -91,7 +92,7 @@ export function component(meta: ComponentMeta) {
 
                 if (this.mounted) return;
 
-                this.update();
+                await this.update();
 
                 this.mounted = true;
                 this.mountedCallback?.();
@@ -100,7 +101,7 @@ export function component(meta: ComponentMeta) {
             declare render?: () => VNode;
             declare updatedCallback?: () => any;
 
-            update() {
+            async update() {
                 const vNode = this.render?.();
 
                 const content = isEmpty(vNode) ? (
@@ -110,10 +111,25 @@ export function component(meta: ComponentMeta) {
                 ) : (
                     vNode
                 );
+                if (!(content != null)) return;
 
-                if (content != null) {
+                const render = () => {
                     this.renderer.render(content, this.root);
                     this.updatedCallback?.();
+                };
+                if (
+                    !meta.transitible ||
+                    typeof document.startViewTransition !== 'function'
+                )
+                    return render();
+
+                const { updateCallbackDone, finished } =
+                    document.startViewTransition(render);
+
+                try {
+                    await finished;
+                } catch {
+                    return updateCallbackDone;
                 }
             }
 
