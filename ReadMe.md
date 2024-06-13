@@ -283,7 +283,7 @@ export class MyButton extends HTMLElement {
             <>
                 <link
                     rel="stylesheet"
-                    href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+                    href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
                 />
                 <a className="btn">
                     <slot />
@@ -496,7 +496,8 @@ import 'web-cell/polyfill';
 -   [Shadow DOM][25]
 -   [Element Internals][26]
 -   [CSS variables][27]
--   [ECMAScript 6+][28]
+-   [View transitions][28]
+-   [ECMAScript 6+][29]
 -   [TypeScript 5+][4]
 
 ## Life Cycle hooks
@@ -573,7 +574,8 @@ We recommend these libraries to use with WebCell:
 [25]: https://web.dev/articles/shadowdom-v1
 [26]: https://web.dev/articles/more-capable-form-controls
 [27]: https://developer.mozilla.org/en-US/docs/Web/CSS/Using_CSS_custom_properties
-[28]: http://es6-features.org/
+[28]: https://developer.chrome.com/docs/web-platform/view-transitions/
+[29]: http://es6-features.org/
 [30]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#connectedCallback
 [31]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#disconnectedCallback
 [32]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#attributeChangedCallback

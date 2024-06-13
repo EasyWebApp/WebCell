@@ -60,7 +60,7 @@ MobX's [`@observable`][4] & [`reaction()`][5] are awesome APIs to implement thes
 npm install mobx
 ```
 
-On the other hand, [`mobx-web-cell` adapter][6] has been merged into the core package. And cause of replacing **Prototype Overwrite** with **Class Inheritance** to refactor **Class Mixins**, `@observer` decorator should follow strict order to make observation work:
+On the other hand, [`mobx-web-cell` adapter][6] has been merged into the core package.
 
 ```diff
 +import { JsxProps } from 'dom-renderer';
