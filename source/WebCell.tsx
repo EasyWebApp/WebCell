@@ -3,8 +3,7 @@ import {
     CustomElement,
     DelegateEventHandler,
     delegate,
-    isEmpty,
-    stringifyDOM
+    isEmpty
 } from 'web-utility';
 
 export interface ComponentMeta
@@ -156,10 +155,6 @@ export function component(meta: ComponentMeta) {
                         composed
                     })
                 );
-            }
-
-            toString() {
-                return stringifyDOM(this.root);
             }
         }
 
