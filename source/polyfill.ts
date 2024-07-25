@@ -1,4 +1,3 @@
-import 'element-internals-polyfill';
 import { JSDOM } from 'jsdom';
 
 const { window } = new JSDOM();

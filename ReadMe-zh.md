@@ -283,7 +283,7 @@ export class MyButton extends HTMLElement {
             <>
                 <link
                     rel="stylesheet"
-                    href="https://unpkg.com/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+                    href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
                 />
                 <a className="btn">
                     <slot />
@@ -477,7 +477,7 @@ new DOMRenderer().render(
 ### 工具链
 
 ```shell
-npm install jsdom element-internals-polyfill
+npm install jsdom
 ```
 
 ### Polyfill
@@ -486,6 +486,10 @@ npm install jsdom element-internals-polyfill
 import 'web-cell/polyfill';
 ```
 
+### 服务端渲染
+
+https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
+
 ## 基础知识
 
 -   [Web 组件][23]
@@ -493,27 +497,29 @@ import 'web-cell/polyfill';
 -   [虚拟 DOM][25]
 -   [Element Internals][26]
 -   [CSS 变量][27]
--   [ECMAScript 6+][28]
+-   [视图渐变][28]
+-   [ECMAScript 6+][29]
 -   [TypeScript 5+][4]
 
 ## 生命周期钩子
 
-1. [`connectedCallback`][30]
-2. [`disconnectedCallback`][31]
-3. [`attributeChangedCallback`][32]
-4. [`adoptedCallback`][33]
-5. [`updatedCallback`][34]
-6. [`mountedCallback`][35]
-7. [`formAssociatedCallback`][36]
-8. [`formDisabledCallback`][37]
-9. [`formResetCallback`][38]
+1.  [`connectedCallback`][30]
+2.  [`disconnectedCallback`][31]
+3.  [`attributeChangedCallback`][32]
+4.  [`adoptedCallback`][33]
+5.  [`updatedCallback`][34]
+6.  [`mountedCallback`][35]
+7.  [`formAssociatedCallback`][36]
+8.  [`formDisabledCallback`][37]
+9.  [`formResetCallback`][38]
 10. [`formStateRestoreCallback`][39]
 
 ## 脚手架
 
-1. [基础][40]
-2. [仪表盘][41]
-3. [静态网站][42]
+1.  [基础][22]
+2.  [仪表盘][40]
+3.  [移动端][41]
+4.  [静态网站][42]
 
 ## 生态系统
 
@@ -524,12 +530,12 @@ import 'web-cell/polyfill';
 -   **UI 组件**
 
     -   [BootCell][44]（基于 **BootStrap v5**）
-    -   [Material Web][45]（基于 **Material Design**）
+    -   [MDUI][45]（基于 **Material Design v3**）
     -   [GitHub Web Widget][46]
 
--   **HTTP请求**：[KoAJAX][47]（基于 类**Koa** 中间件）
--   **实用程序**：[Web utility][48]（方法和类型）
--   **事件流**：[Iterable Observer][49]（**Observable** 提案）
+-   **HTTP 请求**：[KoAJAX][47]（基于类 **Koa** 中间件）
+-   **实用程序**：[Web utility][48] 方法和类型
+-   **事件流**：[Iterable Observer][49]（`Observable` 提案）
 -   **MarkDown 集成**：[Parcel MDX transformer][50]（**MDX** 编译器插件）
 
 ## 路线图
@@ -564,13 +570,14 @@ import 'web-cell/polyfill';
 [19]: https://mobx.js.org/enabling-decorators.html
 [20]: https://facebook.github.io/jsx/
 [21]: https://parceljs.org/
-[22]: https://web-cell.dev/scaffold/
+[22]: https://github.com/EasyWebApp/WebCell-scaffold
 [23]: https://developer.mozilla.org/zh-CN/docs/Web/API/Web_components
 [24]: https://web.dev/articles/custom-elements-v1?hl=zh-cn
 [25]: https://web.dev/articles/shadowdom-v1?hl=zh-cn
 [26]: https://web.dev/articles/more-capable-form-controls?hl=zh-cn
 [27]: https://developer.mozilla.org/zh-CN/docs/Web/CSS/Using_CSS_custom_properties
-[28]: http://es6-features.org/
+[28]: https://developer.chrome.com/docs/web-platform/view-transitions?hl=zh-cn
+[29]: https://rse.github.io/es6-features/
 [30]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#connectedCallback
 [31]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#disconnectedCallback
 [32]: https://web-cell.dev/web-utility/interfaces/CustomElement.html#attributeChangedCallback
@@ -581,12 +588,12 @@ import 'web-cell/polyfill';
 [37]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formDisabledCallback
 [38]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formResetCallback
 [39]: https://web-cell.dev/web-utility/interfaces/CustomFormElement.html#formStateRestoreCallback
-[40]: https://github.com/EasyWebApp/scaffold
-[41]: https://github.com/EasyWebApp/DashBoard
+[40]: https://github.com/EasyWebApp/WebCell-dashboard
+[41]: https://github.com/EasyWebApp/WebCell-mobile
 [42]: https://github.com/EasyWebApp/mark-wiki
 [43]: https://web-cell.dev/cell-router/
 [44]: https://bootstrap.web-cell.dev/
-[45]: https://material-web.dev/
+[45]: https://www.mdui.org/zh-cn/
 [46]: https://tech-query.me/GitHub-Web-Widget/
 [47]: https://web-cell.dev/KoAJAX/
 [48]: https://web-cell.dev/web-utility/

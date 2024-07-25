@@ -19,7 +19,7 @@ export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
 
 export interface WebCell<P = {}> extends CustomElement {
     props: P & WebCellProps;
-    internals: ElementInternals;
+    internals: ReturnType<HTMLElement['attachInternals']>;
     renderer: DOMRenderer;
     root: ParentNode;
     mounted: boolean;
