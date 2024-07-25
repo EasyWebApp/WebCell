@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.0-rc.16",
+    "version": "3.0.0-rc.17",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -26,8 +26,8 @@
     "source": "source/index.ts",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@swc/helpers": "^0.5.11",
-        "dom-renderer": "^2.1.7",
+        "@swc/helpers": "^0.5.12",
+        "dom-renderer": "^2.3.0",
         "mobx": ">=6.11",
         "regenerator-runtime": "^0.14.1",
         "web-utility": "^4.4.0"
@@ -35,8 +35,7 @@
     "peerDependencies": {
         "@webcomponents/webcomponentsjs": "^2.8",
         "core-js": "^3",
-        "element-internals-polyfill": "^1",
-        "jsdom": ">=21"
+        "jsdom": ">=23.1"
     },
     "devDependencies": {
         "@jest/types": "^29.6.3",
@@ -44,30 +43,30 @@
         "@parcel/packager-ts": "~2.12.0",
         "@parcel/transformer-typescript-tsc": "~2.12.0",
         "@parcel/transformer-typescript-types": "~2.12.0",
-        "@types/dom-view-transitions": "^1.0.4",
+        "@types/dom-view-transitions": "^1.0.5",
         "@types/jest": "^29.5.12",
-        "@typescript-eslint/eslint-plugin": "^7.13.0",
-        "@typescript-eslint/parser": "^7.13.0",
+        "@typescript-eslint/eslint-plugin": "^7.17.0",
+        "@typescript-eslint/parser": "^7.17.0",
         "core-js": "^3.37.1",
         "element-internals-polyfill": "^1.3.11",
         "eslint": "^8.57.0",
         "eslint-config-prettier": "^9.1.0",
-        "husky": "^9.0.11",
+        "husky": "^9.1.2",
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^29.7.0",
-        "jsdom": "^24.1.0",
+        "jsdom": "^24.1.1",
         "lint-staged": "^15.2.7",
         "open-cli": "^8.0.0",
         "parcel": "~2.12.0",
-        "prettier": "^3.3.2",
+        "prettier": "^3.3.3",
         "prettier-plugin-sh": "^0.14.0",
         "replace": "^1.2.2",
-        "rimraf": "^5.0.7",
-        "ts-jest": "^29.1.4",
+        "rimraf": "^5.0.9",
+        "ts-jest": "^29.2.3",
         "ts-node": "^10.9.2",
-        "typedoc": "^0.25.13",
-        "typedoc-plugin-mdn-links": "^3.1.29",
-        "typescript": "~5.4.5"
+        "typedoc": "^0.26.5",
+        "typedoc-plugin-mdn-links": "^3.2.5",
+        "typescript": "~5.5.4"
     },
     "scripts": {
         "prepare": "husky",

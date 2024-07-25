@@ -9,8 +9,7 @@
         "jsx": "react-jsx",
         "jsxImportSource": "dom-renderer",
         "skipLibCheck": true,
-        "lib": ["ES2022", "DOM"],
-        "types": ["@types/dom-view-transitions"]
+        "lib": ["ES2022", "DOM"]
     },
     "include": ["source/**/*"],
     "typedocOptions": {

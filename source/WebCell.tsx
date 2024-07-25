@@ -3,8 +3,7 @@ import {
     CustomElement,
     DelegateEventHandler,
     delegate,
-    isEmpty,
-    stringifyDOM
+    isEmpty
 } from 'web-utility';
 
 export interface ComponentMeta
@@ -20,7 +19,7 @@ export type WebCellProps<T extends HTMLElement = HTMLElement> = JsxProps<T>;
 
 export interface WebCell<P = {}> extends CustomElement {
     props: P & WebCellProps;
-    internals: ElementInternals;
+    internals: ReturnType<HTMLElement['attachInternals']>;
     renderer: DOMRenderer;
     root: ParentNode;
     mounted: boolean;
@@ -156,10 +155,6 @@ export function component(meta: ComponentMeta) {
                         composed
                     })
                 );
-            }
-
-            toString() {
-                return stringifyDOM(this.root);
             }
         }
 
