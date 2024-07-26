@@ -1,21 +1,32 @@
 import 'element-internals-polyfill';
 import { sleep } from 'web-utility';
+import { configure } from 'mobx';
 
-import { render, createCell } from '../source/renderer';
-import { component, observer } from '../source/decorator';
-import { WebFieldProps, WebField } from '../source/WebField';
+import { DOMRenderer } from 'dom-renderer';
+import { component, WebCellProps } from '../source/WebCell';
+import { observer } from '../source/decorator';
+import { WebField, formField } from '../source/WebField';
+
+configure({ enforceActions: 'never' });
 
 describe('Field Class & Decorator', () => {
-    @component({
-        tagName: 'test-input'
-    })
+    const renderer = new DOMRenderer();
+
+    interface TestInputProps extends WebCellProps<HTMLInputElement> {
+        a?: number;
+    }
+    interface TestInput extends WebField<TestInputProps> {}
+
+    @component({ tagName: 'test-input' })
+    @formField
     @observer
-    class TestInput extends WebField<{ a?: number } & WebFieldProps>() {}
+    class TestInput extends HTMLElement implements WebField<TestInputProps> {}
 
     it('should define a Custom Field Element', () => {
-        render(<TestInput />);
+        renderer.render(<TestInput />);
 
-        expect(self.customElements.get('test-input')).toBe(TestInput);
+        expect(customElements.get('test-input')).toBe(TestInput);
+
         expect(document.querySelector('test-input').tagName.toLowerCase()).toBe(
             'test-input'
         );

@@ -1,92 +1,93 @@
 import 'element-internals-polyfill';
-import { sleep, stringifyCSS } from 'web-utility';
-import { observable } from 'mobx';
 
-import { component, observer, attribute, on } from '../source/decorator';
-import { WebCell } from '../source/WebCell';
-import { Fragment, render, createCell } from '../source/renderer';
-import type { WebCellProps } from '../source/utility/vDOM';
+import { sleep, stringifyCSS } from 'web-utility';
+import { configure, observable } from 'mobx';
+
+import { observer, attribute } from '../source/decorator';
+import { component, on, WebCell, WebCellProps } from '../source/WebCell';
+import { DOMRenderer } from 'dom-renderer';
+
+configure({ enforceActions: 'never' });
 
 describe('Base Class & Decorator', () => {
+    const renderer = new DOMRenderer();
+
     it('should define a Custom Element', () => {
         @component({
             tagName: 'x-first',
             mode: 'open'
         })
-        class XFirst extends WebCell() {}
+        class XFirst extends HTMLElement {}
 
-        render(<XFirst />);
+        renderer.render(<XFirst />);
 
-        expect(self.customElements.get('x-first')).toBe(XFirst);
+        expect(customElements.get('x-first')).toBe(XFirst);
         expect(document.body.lastElementChild.tagName).toBe('X-FIRST');
     });
 
-    it('should inject CSS into Shadow Root', () => {
+    it('should inject CSS into Shadow Root', async () => {
         @component({
             tagName: 'x-second',
             mode: 'open'
         })
-        class XSecond extends WebCell() {
-            private innerStyle = (
-                <style>
-                    {stringifyCSS({
-                        h2: { color: 'red' }
-                    })}
-                </style>
-            );
+        class XSecond extends HTMLElement {
+            private innerStyle = stringifyCSS({
+                h2: { color: 'red' }
+            });
 
             render() {
                 return (
                     <>
-                        {this.innerStyle}
+                        <style>{this.innerStyle}</style>
                         <h2 />
                     </>
                 );
             }
         }
-        render(<XSecond />);
+        renderer.render(<XSecond />);
 
-        const tag = document.body.lastElementChild as XSecond;
+        await sleep();
 
-        expect(tag.toString()).toBe(`<style>h2 {
+        const { shadowRoot } = document.body.lastElementChild as XSecond;
+
+        expect(shadowRoot.innerHTML).toBe(`<style>h2 {
     color: red;
 }</style><h2></h2>`);
     });
 
     it('should put .render() returned DOM into .children of a Custom Element', () => {
-        @component({
-            tagName: 'x-third'
-        })
-        class XThird extends WebCell() {
+        @component({ tagName: 'x-third' })
+        class XThird extends HTMLElement {
             render() {
                 return <h2 />;
             }
         }
+        renderer.render(<XThird />);
 
-        render(<XThird />);
+        const { shadowRoot, innerHTML } = document.body.lastElementChild;
 
-        const tag = document.body.lastElementChild;
-
-        expect(tag.shadowRoot).toBeNull();
-        expect(tag.innerHTML).toBe('<h2></h2>');
+        expect(shadowRoot).toBeNull();
+        expect(innerHTML).toBe('<h2></h2>');
     });
 
     it('should update Property & Attribute by watch() & attribute() decorators', async () => {
-        @component({
-            tagName: 'x-fourth'
-        })
+        interface XFourthProps extends WebCellProps {
+            name?: string;
+        }
+        interface XFourth extends WebCell<XFourthProps> {}
+
+        @component({ tagName: 'x-fourth' })
         @observer
-        class XFourth extends WebCell<{ name?: string } & WebCellProps>() {
+        class XFourth extends HTMLElement implements WebCell<XFourthProps> {
             @attribute
             @observable
-            name: string;
+            accessor name: string | undefined;
 
             render() {
                 return <h2>{this.name}</h2>;
             }
         }
-
-        render(<XFourth />);
+        renderer.render(<XFourth />);
 
         const tag = document.body.lastElementChild as XFourth;
 
@@ -107,13 +108,16 @@ describe('Base Class & Decorator', () => {
     });
 
     it('should delegate DOM Event by on() decorator', () => {
-        @component({
-            tagName: 'x-firth'
-        })
+        interface XFirthProps extends WebCellProps {
+            name?: string;
+        }
+        interface XFirth extends WebCell<XFirthProps> {}
+
+        @component({ tagName: 'x-firth' })
         @observer
-        class XFirth extends WebCell<{ name?: string } & WebCellProps>() {
+        class XFirth extends HTMLElement implements WebCell<XFirthProps> {
             @observable
-            name: string;
+            accessor name: string | undefined;
 
             @on('click', 'h2')
             handleClick(
@@ -131,15 +135,13 @@ describe('Base Class & Decorator', () => {
                 );
             }
         }
-
-        render(<XFirth />);
+        renderer.render(<XFirth />);
 
         const tag = document.body.lastElementChild as XFirth;
 
         tag.querySelector('a').dispatchEvent(
             new CustomEvent('click', { bubbles: true, detail: 1 })
         );
-
         expect(tag.name).toBe('click,H2,1');
     });
 
@@ -149,7 +151,7 @@ describe('Base Class & Decorator', () => {
             extends: 'blockquote',
             mode: 'open'
         })
-        class XSixth extends WebCell(HTMLQuoteElement) {
+        class XSixth extends HTMLQuoteElement {
             render() {
                 return (
                     <>
@@ -159,7 +161,7 @@ describe('Base Class & Decorator', () => {
                 );
             }
         }
-        render(<blockquote is="x-sixth">test</blockquote>);
+        renderer.render(<blockquote is="x-sixth">test</blockquote>);
 
         const element = document.querySelector('blockquote');
 
@@ -167,6 +169,6 @@ describe('Base Class & Decorator', () => {
         expect(element).toBeInstanceOf(HTMLQuoteElement);
 
         expect(element.textContent).toBe('test');
-        expect(element + '').toBe('💖<slot></slot>');
+        expect(element.shadowRoot.innerHTML).toBe('💖<slot></slot>');
     });
 });

@@ -2,7 +2,8 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "target": "ES6",
-        "module": "CommonJS"
+        "module": "CommonJS",
+        "types": ["@types/dom-view-transitions", "jest"]
     },
     "include": ["./*", "../source/**/*"]
 }
