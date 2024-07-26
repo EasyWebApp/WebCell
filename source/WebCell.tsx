@@ -56,11 +56,13 @@ export function component(meta: ComponentMeta) {
         {
             declare props: WebCellProps;
 
-            internals = this.attachInternals();
+            internals = this.tagName.includes('-')
+                ? this.attachInternals()
+                : undefined;
             renderer = new DOMRenderer();
 
             get root(): ParentNode {
-                return this.internals.shadowRoot || this;
+                return (this.internals || this).shadowRoot || this;
             }
             mounted = false;
             declare mountedCallback?: () => any;
@@ -68,7 +70,7 @@ export function component(meta: ComponentMeta) {
             constructor() {
                 super();
 
-                if (meta.mode && !this.internals.shadowRoot)
+                if (meta.mode && !this.internals?.shadowRoot)
                     this.attachShadow(meta as ShadowRootInit);
             }
 

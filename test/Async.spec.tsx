@@ -1,28 +1,33 @@
 import 'element-internals-polyfill';
 import { sleep } from 'web-utility';
+import { configure } from 'mobx';
 
-import { WebCellProps } from '../source/utility/vDOM';
-import { createCell, render } from '../source/renderer';
+import { WebCellProps } from '../source/WebCell';
+import { DOMRenderer } from 'dom-renderer';
+import { FC } from '../source/decorator';
 import { lazy } from '../source/Async';
 
-describe('Async Box component', () => {
-    it('should render an Async Component', async () => {
-        const Async = lazy(async () => ({
-            default: ({
-                defaultSlot,
-                ...props
-            }: WebCellProps<HTMLAnchorElement>) => (
-                <a {...props}>{defaultSlot}</a>
-            )
-        }));
-        render(<Async href="test">Test</Async>);
+configure({ enforceActions: 'never' });
 
-        expect(document.body.innerHTML).toBe('<async-box></async-box>');
+describe('Async Box component', () => {
+    const renderer = new DOMRenderer();
+
+    it('should render an Async Component', async () => {
+        const Sync: FC<WebCellProps<HTMLAnchorElement>> = ({
+            children,
+            ...props
+        }) => <a {...props}>{children}</a>;
+
+        const Async = lazy(async () => ({ default: Sync }));
+
+        renderer.render(<Async href="test">Test</Async>);
+
+        expect(document.body.innerHTML).toBe('<async-cell></async-cell>');
 
         await sleep();
 
-        // expect(document.body.innerHTML).toBe(
-        //     '<async-box><a href="test">Test</a></async-box>'
-        // );
+        expect(document.body.innerHTML).toBe(
+            '<async-cell><a href="test">Test</a></async-cell>'
+        );
     });
 });
