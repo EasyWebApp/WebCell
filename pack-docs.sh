@@ -1,7 +1,7 @@
 mkdir dist/
 cp *.md dist/
 cd dist/
-# remove markdown suffix, because typedoc will copy markdown file to media folder
+# remove Markdown suffix, because TypeDoc will copy Markdown file to `/media` folder
 replace ".md\)" ")" *.md
 
 # generate multilingual file
