@@ -1,23 +1,32 @@
+mkdir dist/
+cp *.md dist/
+cd dist/
+# remove markdown suffix, because typedoc will copy markdown file to media folder
+replace ".md\)" ")" *.md
+
 # generate multilingual file
 for file in *.md; do
     typedoc --readme $file
 
-    mv docs/index.html ${file%.md}.html
+    mv docs/index.html ./${file%.md}.html
 done
 
+cd ../
 # generate docs
 typedoc source/
 
-mv *.html docs/
+mv dist/*.html docs/
+rm -r dist/docs dist/*.md
+
+cd docs
+# default language
+mv ReadMe.html index.html
 
 # replace ReadMe-*.md to *.html, change url in *.html
-for file in docs/ReadMe-*.html; do
+for file in ReadMe-*.html; do
     # example: mv ReadMe-zh.html docs/zh.html
-    mv docs/$file docs/"${file#ReadMe-}"
+    mv $file "${file#ReadMe-}"
 
     # example: replace ReadMe-zh.md zh.html
-    replace "./${file%.html}" "./${file#ReadMe-}" docs/*.html
+    replace "./${file%.html}" "./${file#ReadMe-}" *.html
 done
-
-# default language
-mv docs/ReadMe.html docs/index.html

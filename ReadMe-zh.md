@@ -543,11 +543,11 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 -   [x] [服务器端渲染][51]
 -   [x] [异步组件加载][52]
 
-## [v2 到 v3 迁移](./Migrating)
+## [v2 到 v3 迁移](./Migrating.md)
 
 ## 更多指南
 
-1. [开发贡献](./Contributing)
+1. [开发贡献](./Contributing.md)
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
