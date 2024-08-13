@@ -22,7 +22,7 @@ cd docs
 # default language
 mv ReadMe.html index.html
 
-# replace ReadMe-*.md to *.html, change url in *.html
+# replace ReadMe-*.md to *.html, change URL in *.html
 for file in ReadMe-*.html; do
     # example: mv ReadMe-zh.html docs/zh.html
     mv $file "${file#ReadMe-}"
