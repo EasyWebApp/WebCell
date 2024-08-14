@@ -2,7 +2,7 @@
 
 ![WebCell logo](https://web-cell.dev/WebCell-0.f9823b00.png)
 
-[简体中文](./ReadMe-zh.md) | English
+[简体中文](./guide/ReadMe-zh.md) | English
 
 [Web Components][1] engine based on VDOM, [JSX][2], [MobX][3] & [TypeScript][4]
 
@@ -546,11 +546,11 @@ We recommend these libraries to use with WebCell:
 -   [x] [Server-side Render][51]
 -   [x] [Async Component loading][52]
 
-## [v2 to v3 migration](./Migrating.md)
+## [v2 to v3 migration](./guide/Migrating.md)
 
 ## More guides
 
-1.  [Development contribution](./Contributing.md)
+1.  [Development contribution](./guide/Contributing.md)
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/

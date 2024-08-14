@@ -543,7 +543,7 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 -   [x] [服务器端渲染][51]
 -   [x] [异步组件加载][52]
 
-## [v2 到 v3 迁移](./Migrating.md)
+## [v2 到 v3 迁移](./Migrating-zh.md)
 
 ## 更多指南
 
