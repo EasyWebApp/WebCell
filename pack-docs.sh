@@ -1,4 +1,4 @@
-mkdir dist/
+mkdir -p dist/
 cp ReadMe.md dist/
 cp guide/*.md dist/
 cd dist/

@@ -23,7 +23,6 @@
         "no-unused-vars": "warn",
         "no-undef": "warn",
         "@typescript-eslint/ban-ts-comment": "warn",
-        "@typescript-eslint/ban-types": "warn",
         "@typescript-eslint/no-explicit-any": "warn",
         "@typescript-eslint/no-unsafe-declaration-merging": "off",
         "@typescript-eslint/no-namespace": "warn",
