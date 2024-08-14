@@ -543,11 +543,11 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 -   [x] [服务器端渲染][51]
 -   [x] [异步组件加载][52]
 
-## [v2 到 v3 迁移][53]
+## [v2 到 v3 迁移](./Migrating-zh.md)
 
 ## 更多指南
 
-1. [开发贡献][54]
+1. [开发贡献](./Contributing.md)
 
 [1]: https://www.webcomponents.org/
 [2]: https://facebook.github.io/jsx/
@@ -601,5 +601,3 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 [50]: https://github.com/EasyWebApp/Parcel-transformer-MDX
 [51]: https://developer.chrome.com/docs/css-ui/declarative-shadow-dom?hl=zh-cn
 [52]: https://legacy.reactjs.org/docs/react-api.html#reactlazy
-[53]: https://github.com/EasyWebApp/WebCell/blob/main/Migrating.md
-[54]: https://github.com/EasyWebApp/WebCell/blob/main/Contributing.md
