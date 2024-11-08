@@ -7,28 +7,29 @@ jobs:
     Build-and-Publish:
         runs-on: ubuntu-latest
         permissions:
+            contents: write
             id-token: write
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
-            - uses: pnpm/action-setup@v2
+            - uses: pnpm/action-setup@v4
               with:
                   version: 9
-            - uses: actions/setup-node@v3
+            - uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 20
                   registry-url: https://registry.npmjs.org
                   cache: pnpm
             - name: Install Dependencies
               run: pnpm i --frozen-lockfile
 
             - name: Build & Publish
-              run: npm publish
+              run: npm publish --access public provenance
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
             - name: Update document
-              uses: peaceiris/actions-gh-pages@v3
+              uses: peaceiris/actions-gh-pages@v4
               with:
                   publish_dir: ./docs
                   personal_token: ${{ secrets.GITHUB_TOKEN }}

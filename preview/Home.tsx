@@ -1,6 +1,6 @@
 import { formToJSON } from 'web-utility';
-import { AnimateCSS, FC, WebCellProps, lazy } from '../source';
 
+import { AnimateCSS, FC, lazy, WebCellProps } from '../source';
 import { ClassClock, FunctionClock } from './Clock';
 import { TestField } from './Field';
 
@@ -39,7 +39,6 @@ export const HomePage = () => (
         </ul>
 
         <form
-            // @ts-ignore
             onSubmit={({ currentTarget }) =>
                 alert(JSON.stringify(formToJSON(currentTarget)))
             }

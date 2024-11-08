@@ -1,13 +1,13 @@
 import { observable } from 'mobx';
 
-import { ClassComponent, WebCell, WebCellProps, component } from './WebCell';
 import {
     FC,
     FunctionComponent,
+    observer,
     PropsWithChildren,
-    WebCellComponent,
-    observer
+    WebCellComponent
 } from './decorator';
+import { ClassComponent, component, WebCell, WebCellProps } from './WebCell';
 
 export type ComponentTag = string | WebCellComponent;
 

@@ -1,8 +1,8 @@
 import { observable } from 'mobx';
 import { CustomFormElement, HTMLFieldProps } from 'web-utility';
 
-import { ClassComponent, WebCell } from './WebCell';
 import { attribute, reaction } from './decorator';
+import { ClassComponent, WebCell } from './WebCell';
 
 export interface WebField<P = {}>
     extends CustomFormElement,

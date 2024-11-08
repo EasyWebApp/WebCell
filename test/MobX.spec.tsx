@@ -1,11 +1,11 @@
 import 'element-internals-polyfill';
 
-import { sleep } from 'web-utility';
+import { DOMRenderer } from 'dom-renderer';
 import { configure, observable } from 'mobx';
+import { sleep } from 'web-utility';
 
 import { observer, reaction } from '../source/decorator';
 import { component } from '../source/WebCell';
-import { DOMRenderer } from 'dom-renderer';
 
 configure({ enforceActions: 'never' });
 

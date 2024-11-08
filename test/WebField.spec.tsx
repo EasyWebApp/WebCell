@@ -1,11 +1,12 @@
 import 'element-internals-polyfill';
-import { sleep } from 'web-utility';
-import { configure } from 'mobx';
 
 import { DOMRenderer } from 'dom-renderer';
-import { component, WebCellProps } from '../source/WebCell';
+import { configure } from 'mobx';
+import { sleep } from 'web-utility';
+
 import { observer } from '../source/decorator';
-import { WebField, formField } from '../source/WebField';
+import { component, WebCellProps } from '../source/WebCell';
+import { formField, WebField } from '../source/WebField';
 
 configure({ enforceActions: 'never' });
 

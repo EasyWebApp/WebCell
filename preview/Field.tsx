@@ -1,4 +1,4 @@
-import { WebField, component, formField, observer } from '../source';
+import { component, formField, observer, WebField } from '../source';
 
 export interface TestField extends WebField {}
 
@@ -15,9 +15,8 @@ export class TestField extends HTMLElement implements WebField {
         return (
             <input
                 name={name}
-                // @ts-ignore
-                onChange={({ currentTarget: { value } }) =>
-                    (this.value = value)
+                onChange={({ currentTarget }) =>
+                    (this.value = (currentTarget as HTMLInputElement).value)
                 }
             />
         );
