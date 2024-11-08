@@ -1,8 +1,8 @@
-import { DOMRenderer, DataObject, VNode, JsxChildren } from 'dom-renderer';
+import { DataObject, DOMRenderer, JsxChildren, VNode } from 'dom-renderer';
 import {
+    autorun,
     IReactionDisposer,
     IReactionPublic,
-    autorun,
     reaction as watch
 } from 'mobx';
 import {
@@ -13,8 +13,8 @@ import {
     toHyphenCase
 } from 'web-utility';
 
-import { ClassComponent } from './WebCell';
 import { getMobxData } from './utility';
+import { ClassComponent } from './WebCell';
 
 export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
@@ -46,7 +46,7 @@ function wrapFunction<P>(func: FC<P>) {
 
 interface ReactionItem {
     expression: ReactionExpression;
-    effect: Function;
+    effect: (...data: any[]) => any;
 }
 const reactionMap = new WeakMap<CustomElement, ReactionItem[]>();
 
@@ -120,7 +120,7 @@ function wrapClass<T extends ClassComponent>(Component: T) {
         }
 
         syncPropAttr(name: string) {
-            var value = this[toCamelCase(name)];
+            let value = this[toCamelCase(name)];
 
             if (!(value != null) || value === false)
                 return this.removeAttribute(name);

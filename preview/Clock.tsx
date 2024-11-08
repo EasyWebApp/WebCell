@@ -1,12 +1,13 @@
 import { IReactionPublic, observable } from 'mobx';
 import { Second } from 'web-utility';
+
 import {
-    WebCell,
     attribute,
     component,
     observer,
     on,
-    reaction
+    reaction,
+    WebCell
 } from '../source';
 
 class ClockModel {

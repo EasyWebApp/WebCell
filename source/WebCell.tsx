@@ -1,8 +1,8 @@
 import { DOMRenderer, JsxProps, VNode } from 'dom-renderer';
 import {
     CustomElement,
-    DelegateEventHandler,
     delegate,
+    DelegateEventHandler,
     isEmpty
 } from 'web-utility';
 

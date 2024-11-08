@@ -3,7 +3,7 @@
     "compilerOptions": {
         "target": "ES6",
         "module": "CommonJS",
-        "types": ["@types/dom-view-transitions", "jest"]
+        "types": ["jest"]
     },
     "include": ["./*", "../source/**/*"]
 }

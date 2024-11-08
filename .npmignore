@@ -1,13 +1,8 @@
 *.sh
-.parcel*
-.eslintrc.json
+.*
+eslint.config.mjs
 jest.config.ts
 test/
 preview/
 Contributing.md
 docs/
-.husky/
-.github/
-.vscode/
-.gitpod.yml
-.vercel/

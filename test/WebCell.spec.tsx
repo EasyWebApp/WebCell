@@ -1,11 +1,11 @@
 import 'element-internals-polyfill';
 
-import { sleep, stringifyCSS } from 'web-utility';
-import { configure, observable } from 'mobx';
-
-import { observer, attribute } from '../source/decorator';
-import { component, on, WebCell, WebCellProps } from '../source/WebCell';
 import { DOMRenderer } from 'dom-renderer';
+import { configure, observable } from 'mobx';
+import { sleep, stringifyCSS } from 'web-utility';
+
+import { attribute, observer } from '../source/decorator';
+import { component, on, WebCell, WebCellProps } from '../source/WebCell';
 
 configure({ enforceActions: 'never' });
 

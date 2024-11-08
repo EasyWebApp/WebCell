@@ -1,11 +1,12 @@
 import 'element-internals-polyfill';
-import { sleep } from 'web-utility';
-import { configure } from 'mobx';
 
-import { WebCellProps } from '../source/WebCell';
 import { DOMRenderer } from 'dom-renderer';
-import { FC } from '../source/decorator';
+import { configure } from 'mobx';
+import { sleep } from 'web-utility';
+
 import { lazy } from '../source/Async';
+import { FC } from '../source/decorator';
+import { WebCellProps } from '../source/WebCell';
 
 configure({ enforceActions: 'never' });
 
