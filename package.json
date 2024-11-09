@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.0",
+    "version": "3.0.1",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -27,7 +27,7 @@
     "types": "dist/index.d.ts",
     "dependencies": {
         "@swc/helpers": "^0.5.13",
-        "dom-renderer": "^2.4.1",
+        "dom-renderer": "^2.4.4",
         "mobx": ">=6.11",
         "regenerator-runtime": "^0.14.1",
         "web-utility": "^4.4.2"

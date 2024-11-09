@@ -24,7 +24,7 @@ jobs:
               run: pnpm i --frozen-lockfile
 
             - name: Build & Publish
-              run: npm publish --access public provenance
+              run: npm publish --access public --provenance
               env:
                   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 

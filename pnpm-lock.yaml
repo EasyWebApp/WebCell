@@ -12,8 +12,8 @@ importers:
         specifier: ^0.5.13
         version: 0.5.13
       dom-renderer:
-        specifier: ^2.4.1
-        version: 2.4.1(typescript@5.6.3)
+        specifier: ^2.4.4
+        version: 2.4.4(typescript@5.6.3)
       mobx:
         specifier: '>=6.11'
         version: 6.13.5
@@ -1581,8 +1581,8 @@ packages:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
     engines: {node: '>=0.10.0'}
 
-  dom-renderer@2.4.1:
-    resolution: {integrity: sha512-kqoMCRKFPJOpHyL/qwcOGTB9v/L+yVcsmDX1Ck+BoaRQi4eOMEnAoPCDbGlO00N0vyYC8AdzfMZ4bCQ87VNdrQ==}
+  dom-renderer@2.4.4:
+    resolution: {integrity: sha512-JZu5uV4FtYBdyapizU3NwquMn11NUc/VabSTk9qkm4EKMKbmK6kHO2TfRQ7Od5mpbujA+uBF+bX8YgiU8A3SVQ==}
     peerDependencies:
       happy-dom: ^14
 
@@ -5599,7 +5599,7 @@ snapshots:
     dependencies:
       esutils: 2.0.3
 
-  dom-renderer@2.4.1(typescript@5.6.3):
+  dom-renderer@2.4.4(typescript@5.6.3):
     dependencies:
       declarative-shadow-dom-polyfill: 0.4.0(typescript@5.6.3)
       tslib: 2.8.1
