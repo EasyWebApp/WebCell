@@ -62,7 +62,7 @@ export function component(meta: ComponentMeta) {
             renderer = new DOMRenderer();
 
             get root(): ParentNode {
-                return (this.internals || this).shadowRoot || this;
+                return this.shadowRoot || this.internals.shadowRoot || this;
             }
             mounted = false;
             declare mountedCallback?: () => any;

@@ -26,22 +26,24 @@ function wrapFunction<P>(func: FC<P>) {
     const renderer = new DOMRenderer();
 
     return (props: P) => {
-        const tree = func(props);
-        let disposer: IReactionDisposer | undefined;
+        let tree = func(props),
+            root: Node;
 
-        const { ref } = tree;
+        if (!VNode.isFragment(tree)) {
+            const disposer = autorun(() => {
+                tree = func(props);
 
-        tree.ref = node => {
-            disposer?.();
+                if (tree && root) renderer.patch(VNode.fromDOM(root), tree);
+            });
+            const { ref } = tree;
 
-            if (node)
-                disposer = autorun(() => {
-                    const newTree = func(props);
+            tree.ref = node => {
+                if (node) root = node;
+                else disposer();
 
-                    renderer.patch(VNode.fromDOM(node), newTree);
-                });
-            ref?.(node);
-        };
+                ref?.(node);
+            };
+        }
         return tree;
     };
 }
