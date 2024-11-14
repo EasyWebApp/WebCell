@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.2",
+    "version": "3.0.3-rc.0",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -27,7 +27,7 @@
     "types": "dist/index.d.ts",
     "dependencies": {
         "@swc/helpers": "^0.5.15",
-        "dom-renderer": "^2.5.1",
+        "dom-renderer": "^2.5.2-rc.0",
         "mobx": ">=6.11",
         "regenerator-runtime": "^0.14.1",
         "web-utility": "^4.4.2"
@@ -38,7 +38,7 @@
         "jsdom": ">=23.1"
     },
     "devDependencies": {
-        "@eslint/compat": "^1.2.2",
+        "@eslint/compat": "^1.2.3",
         "@eslint/js": "^9.14.0",
         "@parcel/config-default": "~2.13.0",
         "@parcel/packager-ts": "~2.13.0",

@@ -9,6 +9,7 @@ import {
     reaction,
     WebCell
 } from '../source';
+import { renderMode } from './utility';
 
 class ClockModel {
     @observable
@@ -35,7 +36,8 @@ export interface ClassClock extends WebCell {}
 
 @component({
     tagName: 'class-clock',
-    mode: 'open'
+    mode: 'open',
+    renderMode
 })
 @observer
 export class ClassClock extends HTMLElement implements WebCell {
@@ -46,7 +48,7 @@ export class ClassClock extends HTMLElement implements WebCell {
     private timer: number;
 
     connectedCallback() {
-        this.timer = setInterval(() => (this.time = new Date()), Second);
+        this.timer = window.setInterval(() => (this.time = new Date()), Second);
     }
 
     disconnectedCallback() {
