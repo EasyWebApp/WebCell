@@ -1,4 +1,4 @@
-import { DOMRenderer, JsxProps, VNode } from 'dom-renderer';
+import { DOMRenderer, JsxProps, RenderMode, VNode } from 'dom-renderer';
 import {
     CustomElement,
     delegate,
@@ -11,6 +11,7 @@ export interface ComponentMeta
         Partial<ShadowRootInit> {
     tagName: string;
     transitible?: boolean;
+    renderMode?: RenderMode;
 }
 
 export type ClassComponent = CustomElementConstructor;
@@ -102,6 +103,17 @@ export function component(meta: ComponentMeta) {
             declare render?: () => VNode;
             declare updatedCallback?: () => any;
 
+            protected updateDOM(content: VNode) {
+                const result = this.renderer.render(
+                    content,
+                    this.root,
+                    meta.renderMode as 'async'
+                );
+                return result instanceof Promise
+                    ? result.then(this.updatedCallback?.bind(this))
+                    : this.updatedCallback?.();
+            }
+
             async update() {
                 const vNode = this.render?.();
 
@@ -114,18 +126,14 @@ export function component(meta: ComponentMeta) {
                 );
                 if (!(content != null)) return;
 
-                const render = () => {
-                    this.renderer.render(content, this.root);
-                    this.updatedCallback?.();
-                };
                 if (
                     !meta.transitible ||
                     typeof document.startViewTransition !== 'function'
                 )
-                    return render();
+                    return this.updateDOM(content);
 
                 const { updateCallbackDone, finished } =
-                    document.startViewTransition(render);
+                    document.startViewTransition(() => this.updateDOM(content));
 
                 try {
                     await finished;

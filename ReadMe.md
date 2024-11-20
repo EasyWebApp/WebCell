@@ -461,6 +461,42 @@ const AsyncTag = lazy(() => import('./AsyncTag'));
 new DOMRenderer().render(<AsyncTag />);
 ```
 
+### Async rendering (experimental)
+
+#### DOM tree
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+
+new DOMRenderer().render(
+    <a>
+        <b>Async rendering</b>
+    </a>,
+    document.body,
+    'async'
+);
+```
+
+#### Class component
+
+```tsx
+import { component } from 'web-cell';
+
+@component({
+    tagName: 'async-renderer',
+    renderMode: 'async'
+})
+export class AsyncRenderer extends HTMLElement {
+    render() {
+        return (
+            <a>
+                <b>Async rendering</b>
+            </a>
+        );
+    }
+}
+```
+
 ### Animate CSS component
 
 ```tsx
