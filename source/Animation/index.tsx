@@ -1,9 +1,9 @@
 import { observable } from 'mobx';
 import { importCSS } from 'web-utility';
 
+import { attribute, FC, observer, reaction } from '../decorator';
 import { animated } from '../utility';
-import { WebCell, WebCellProps, component } from '../WebCell';
-import { FC, attribute, observer, reaction } from '../decorator';
+import { component, WebCell, WebCellProps } from '../WebCell';
 import { AnimationType } from './type';
 
 export * from './type';

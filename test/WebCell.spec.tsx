@@ -74,6 +74,7 @@ describe('Base Class & Decorator', () => {
         interface XFourthProps extends WebCellProps {
             name?: string;
         }
+
         interface XFourth extends WebCell<XFourthProps> {}
 
         @component({ tagName: 'x-fourth' })
@@ -111,6 +112,7 @@ describe('Base Class & Decorator', () => {
         interface XFirthProps extends WebCellProps {
             name?: string;
         }
+
         interface XFirth extends WebCell<XFirthProps> {}
 
         @component({ tagName: 'x-firth' })
