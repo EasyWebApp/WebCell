@@ -109,6 +109,7 @@ export function component(meta: ComponentMeta) {
                     this.root,
                     meta.renderMode as 'async'
                 );
+
                 return result instanceof Promise
                     ? result.then(this.updatedCallback?.bind(this))
                     : this.updatedCallback?.();
@@ -171,6 +172,7 @@ export function component(meta: ComponentMeta) {
         addInitializer(function () {
             globalThis.customElements?.define(meta.tagName, this, meta);
         });
+
         return RendererComponent as unknown as T;
     };
 }

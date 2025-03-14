@@ -57,12 +57,12 @@ export class ClassClock extends HTMLElement implements WebCell {
 
     @reaction(({ time }) => time)
     handleReaction(newValue: Date, oldValue: Date, reaction: IReactionPublic) {
-        console.log(newValue, oldValue, reaction);
+        console.info(newValue, oldValue, reaction);
     }
 
     @on('click', 'time')
     handleClick(event: MouseEvent, currentTarget: HTMLTimeElement) {
-        console.log(event, currentTarget);
+        console.info(event, currentTarget);
     }
 
     render() {

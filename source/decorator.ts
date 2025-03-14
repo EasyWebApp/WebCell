@@ -44,6 +44,7 @@ function wrapFunction<P>(func: FC<P>) {
                 ref?.(node);
             };
         }
+
         return tree;
     };
 }
@@ -140,6 +141,7 @@ function wrapClass<T extends ClassComponent>(Component: T) {
             super.setAttribute(name, value);
         }
     }
+
     return ObserverComponent as unknown as T;
 }
 

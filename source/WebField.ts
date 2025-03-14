@@ -82,5 +82,6 @@ export function formField<T extends ClassComponent>(
             return this.internals.reportValidity();
         }
     }
+
     return FormFieldComponent as unknown as T;
 }

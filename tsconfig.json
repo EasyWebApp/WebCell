@@ -13,12 +13,13 @@
         "skipLibCheck": true,
         "lib": ["ES2022", "DOM"]
     },
-    "include": ["source/**/*", "*.mjs"],
+    "include": ["source/**/*", "*.ts"],
     "typedocOptions": {
         "name": "WebCell",
         "excludeExternals": true,
         "excludePrivate": true,
         "readme": "./ReadMe.md",
-        "plugin": ["typedoc-plugin-mdn-links"]
+        "plugin": ["typedoc-plugin-mdn-links"],
+        "customCss": "./guide/table.css"
     }
 }

@@ -16,6 +16,7 @@ describe('Field Class & Decorator', () => {
     interface TestInputProps extends WebCellProps<HTMLInputElement> {
         a?: number;
     }
+
     interface TestInput extends WebField<TestInputProps> {}
 
     @component({ tagName: 'test-input' })
