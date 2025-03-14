@@ -22,7 +22,6 @@ td {
 
 th {
     vertical-align: bottom;
-    background: black;
 }
 
 th:last-child,
@@ -38,6 +37,6 @@ tr td:first-child,
 tr th:first-child {
     position: sticky;
     left: 0;
-    background: black;
+    background: var(--color-background-secondary);
     z-index: 1;
 }
