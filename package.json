@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.0.3",
+    "version": "3.0.4",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -81,7 +81,7 @@
         "preview": "npm run clean  &&  cd preview/  &&  parcel --dist-dir=../docs/preview/ --open",
         "pack-preview": "rimraf .parcel-cache/ docs/preview/  &&  cd preview/  &&  parcel build --public-url=. --dist-dir=../docs/preview/",
         "pack-dist": "parcel build source/index.ts",
-        "pack-docs": "sh ./pack-docs.sh",
+        "pack-docs": "sh ./guide/pack-docs.sh",
         "build": "npm run clean  &&  npm run pack-dist  &&  npm run pack-docs  &&  npm run pack-preview",
         "start": "npm run pack-docs  &&  open-cli docs/index.html",
         "prepublishOnly": "npm test  &&  npm run build"

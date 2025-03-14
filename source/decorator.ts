@@ -178,8 +178,8 @@ export function attribute<C extends HTMLElement, V>(
 }
 
 export type ReactionExpression<I = any, O = any> = (
-    data?: I,
-    reaction?: IReactionPublic
+    data: I,
+    reaction: IReactionPublic
 ) => O;
 
 export type ReactionEffect<V> = (
