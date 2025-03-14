@@ -1,13 +1,16 @@
 /* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table#displaying_large_tables_in_small_spaces */
+@media (max-width: 768px) {
+    table {
+        white-space: nowrap;
+    }
+}
+
 table {
     width: 100%;
     margin: 0 auto;
     display: block;
     overflow-x: auto;
     border-spacing: 0;
-    @media (max-width: 768px) {
-        white-space: nowrap;
-    }
 }
 
 th,

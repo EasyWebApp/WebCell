@@ -3,7 +3,6 @@
         "outDir": "dist/",
         "target": "ES2017",
         "checkJs": true,
-        "allowJs": true,
         "declaration": true,
         "module": "ES2022",
         "moduleResolution": "Node",
@@ -14,13 +13,13 @@
         "skipLibCheck": true,
         "lib": ["ES2022", "DOM"]
     },
-    "include": ["source/**/*", "eslint.config.ts"],
+    "include": ["source/**/*", "*.ts"],
     "typedocOptions": {
         "name": "WebCell",
         "excludeExternals": true,
         "excludePrivate": true,
         "readme": "./ReadMe.md",
         "plugin": ["typedoc-plugin-mdn-links"],
-        "customCss": "./table.css"
+        "customCss": "./guide/table.css"
     }
 }

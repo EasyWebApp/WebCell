@@ -27,7 +27,12 @@ const config: ConfigArray = tsEslint.config(
     },
     {
         // config with just ignores is the replacement for `.eslintignore`
-        ignores: ['**/node_modules/**', '**/public/**', '**/.next/**']
+        ignores: [
+            '**/node_modules/**',
+            'dist/**',
+            '.parcel-cache/**',
+            'docs/**'
+        ]
     },
 
     // extends ...
