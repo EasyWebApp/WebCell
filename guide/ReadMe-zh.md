@@ -283,7 +283,7 @@ export class MyButton extends HTMLElement {
             <>
                 <link
                     rel="stylesheet"
-                    href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                    href="https://unpkg.com/bootstrap@5.3.6/dist/css/bootstrap.min.css"
                 />
                 <a className="btn">
                     <slot />
@@ -461,6 +461,42 @@ const AsyncTag = lazy(() => import('./AsyncTag'));
 new DOMRenderer().render(<AsyncTag />);
 ```
 
+### 异步渲染（试验）
+
+#### DOM 树
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+
+new DOMRenderer().render(
+    <a>
+        <b>异步渲染</b>
+    </a>,
+    document.body,
+    'async'
+);
+```
+
+#### 类组件
+
+```tsx
+import { component } from 'web-cell';
+
+@component({
+    tagName: 'async-renderer',
+    renderMode: 'async'
+})
+export class AsyncRenderer extends HTMLElement {
+    render() {
+        return (
+            <a>
+                <b>异步渲染</b>
+            </a>
+        );
+    }
+}
+```
+
 ### Animate CSS 组件
 
 ```tsx
@@ -492,14 +528,14 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 
 ## 基础知识
 
--   [Web 组件][23]
--   [自定义元素][24]
--   [虚拟 DOM][25]
--   [Element Internals][26]
--   [CSS 变量][27]
--   [视图渐变][28]
--   [ECMAScript 6+][29]
--   [TypeScript 5+][4]
+- [Web 组件][23]
+- [自定义元素][24]
+- [虚拟 DOM][25]
+- [Element Internals][26]
+- [CSS 变量][27]
+- [视图渐变][28]
+- [ECMAScript 6+][29]
+- [TypeScript 5+][4]
 
 ## 生命周期钩子
 
@@ -525,23 +561,23 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 
 我们建议将这些库与 WebCell 一起使用：
 
--   **状态管理**：[MobX][3]（也由 **TypeScript** 和 **Decorator** 提供支持）
--   **路由**：[Cell Router][43]
--   **UI 组件**
+- **状态管理**：[MobX][3]（也由 **TypeScript** 和 **Decorator** 提供支持）
+- **路由**：[Cell Router][43]
+- **UI 组件**
 
-    -   [BootCell][44]（基于 **BootStrap v5**）
-    -   [MDUI][45]（基于 **Material Design v3**）
-    -   [GitHub Web Widget][46]
+    - [BootCell][44]（基于 **BootStrap v5**）
+    - [MDUI][45]（基于 **Material Design v3**）
+    - [GitHub Web Widget][46]
 
--   **HTTP 请求**：[KoAJAX][47]（基于类 **Koa** 中间件）
--   **实用程序**：[Web utility][48] 方法和类型
--   **事件流**：[Iterable Observer][49]（`Observable` 提案）
--   **MarkDown 集成**：[Parcel MDX transformer][50]（**MDX** 编译器插件）
+- **HTTP 请求**：[KoAJAX][47]（基于类 **Koa** 中间件）
+- **实用程序**：[Web utility][48] 方法和类型
+- **事件流**：[Iterable Observer][49]（`Observable` 提案）
+- **MarkDown 集成**：[Parcel MDX transformer][50]（**MDX** 编译器插件）
 
 ## 路线图
 
--   [x] [服务器端渲染][51]
--   [x] [异步组件加载][52]
+- [x] [服务器端渲染][51]
+- [x] [异步组件加载][52]
 
 ## [v2 到 v3 迁移](./Migrating-zh.md)
 

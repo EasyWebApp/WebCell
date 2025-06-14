@@ -5,6 +5,7 @@ import {
     FunctionComponent,
     observer,
     PropsWithChildren,
+    reaction,
     WebCellComponent
 } from './decorator';
 import { ClassComponent, component, WebCell, WebCellProps } from './WebCell';
@@ -12,18 +13,17 @@ import { ClassComponent, component, WebCell, WebCellProps } from './WebCell';
 export type ComponentTag = string | WebCellComponent;
 
 export interface AsyncCellProps {
-    loader: () => Promise<ComponentTag>;
+    loader?: () => Promise<ComponentTag>;
     delegatedProps?: WebCellProps;
 }
 
 export interface AsyncCell extends WebCell<AsyncCellProps> {}
 
-@component({
-    tagName: 'async-cell'
-})
+@component({ tagName: 'async-cell' })
 @observer
 export class AsyncCell extends HTMLElement implements WebCell<AsyncCellProps> {
-    loader: AsyncCellProps['loader'];
+    @observable
+    accessor loader: AsyncCellProps['loader'];
 
     @observable
     accessor component: FC<PropsWithChildren>;
@@ -31,14 +31,15 @@ export class AsyncCell extends HTMLElement implements WebCell<AsyncCellProps> {
     @observable
     accessor delegatedProps: AsyncCellProps['delegatedProps'];
 
-    connectedCallback() {
-        this.load();
-    }
+    @reaction(({ loader }) => loader)
+    async connectedCallback() {
+        const { loader } = this;
 
-    protected async load() {
+        if (!loader) return;
+
         this.component = undefined;
 
-        const Tag = await this.loader();
+        const Tag = await loader();
 
         this.component = ({ children, ...props }) => (
             <Tag {...props}>{children}</Tag>
@@ -60,13 +61,13 @@ type GetAsyncProps<T> = T extends () => Promise<{
     ? P
     : {};
 
-export function lazy<
-    T extends () => Promise<{ default: FunctionComponent | ClassComponent }>
->(loader: T) {
-    return (props: GetAsyncProps<T>) => (
+export const lazy =
+    <T extends () => Promise<{ default: FunctionComponent | ClassComponent }>>(
+        loader: T
+    ) =>
+    (props: GetAsyncProps<T>) => (
         <AsyncCell
             delegatedProps={props}
             loader={async () => (await loader()).default}
         />
     );
-}

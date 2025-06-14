@@ -1,4 +1,4 @@
-import { DataObject, DOMRenderer, JsxChildren, VNode } from 'dom-renderer';
+import { DataObject, JsxChildren, VNode } from 'dom-renderer';
 import {
     autorun,
     IReactionDisposer,
@@ -13,6 +13,7 @@ import {
     toHyphenCase
 } from 'web-utility';
 
+import { AsyncCell } from './Async';
 import { getMobxData } from './utility';
 import { ClassComponent } from './WebCell';
 
@@ -22,32 +23,9 @@ export type PropsWithChildren<P extends DataObject = {}> = P & {
 export type FunctionComponent<P extends DataObject = {}> = (props: P) => VNode;
 export type FC<P extends DataObject = {}> = FunctionComponent<P>;
 
-function wrapFunction<P>(func: FC<P>) {
-    const renderer = new DOMRenderer();
-
-    return (props: P) => {
-        let tree = func(props),
-            root: Node;
-
-        if (!VNode.isFragment(tree)) {
-            const disposer = autorun(() => {
-                tree = func(props);
-
-                if (tree && root) renderer.patch(VNode.fromDOM(root), tree);
-            });
-            const { ref } = tree;
-
-            tree.ref = node => {
-                if (node) root = node;
-                else disposer();
-
-                ref?.(node);
-            };
-        }
-
-        return tree;
-    };
-}
+const wrapFunction =
+    <P,>(func: FC<P>) =>
+    (props: P) => <AsyncCell delegatedProps={props} component={func} />;
 
 interface ReactionItem {
     expression: ReactionExpression;

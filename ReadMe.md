@@ -283,7 +283,7 @@ export class MyButton extends HTMLElement {
             <>
                 <link
                     rel="stylesheet"
-                    href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+                    href="https://unpkg.com/bootstrap@5.3.6/dist/css/bootstrap.min.css"
                 />
                 <a className="btn">
                     <slot />
@@ -531,14 +531,14 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 
 ## Basic knowledge
 
--   [Web components][23]
--   [Custom elements][24]
--   [Shadow DOM][25]
--   [Element Internals][26]
--   [CSS variables][27]
--   [View transitions][28]
--   [ECMAScript 6+][29]
--   [TypeScript 5+][4]
+- [Web components][23]
+- [Custom elements][24]
+- [Shadow DOM][25]
+- [Element Internals][26]
+- [CSS variables][27]
+- [View transitions][28]
+- [ECMAScript 6+][29]
+- [TypeScript 5+][4]
 
 ## Life Cycle hooks
 
@@ -564,23 +564,23 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 
 We recommend these libraries to use with WebCell:
 
--   **State management**: [MobX][3] (also powered by **TypeScript** & **Decorator**)
--   **Router**: [Cell Router][43]
--   **UI components**
+- **State management**: [MobX][3] (also powered by **TypeScript** & **Decorator**)
+- **Router**: [Cell Router][43]
+- **UI components**
 
-    -   [BootCell][44] (based on **BootStrap v5**)
-    -   [MDUI][45] (based on **Material Design v3**)
-    -   [GitHub Web Widget][46]
+    - [BootCell][44] (based on **BootStrap v5**)
+    - [MDUI][45] (based on **Material Design v3**)
+    - [GitHub Web Widget][46]
 
--   **HTTP request**: [KoAJAX][47] (based on **Koa**-like middlewares)
--   **Utility**: [Web utility][48] methods & types
--   **Event stream**: [Iterable Observer][49] (`Observable` proposal)
--   **MarkDown integration**: [Parcel MDX transformer][50] (**MDX** Compiler plugin)
+- **HTTP request**: [KoAJAX][47] (based on **Koa**-like middlewares)
+- **Utility**: [Web utility][48] methods & types
+- **Event stream**: [Iterable Observer][49] (`Observable` proposal)
+- **MarkDown integration**: [Parcel MDX transformer][50] (**MDX** Compiler plugin)
 
 ## Roadmap
 
--   [x] [Server-side Render][51]
--   [x] [Async Component loading][52]
+- [x] [Server-side Render][51]
+- [x] [Async Component loading][52]
 
 ## [v2 to v3 migration](./guide/Migrating.md)
 

@@ -20,6 +20,15 @@
         "excludePrivate": true,
         "readme": "./ReadMe.md",
         "plugin": ["typedoc-plugin-mdn-links"],
+        "highlightLanguages": [
+            "html",
+            "css",
+            "json",
+            "js",
+            "tsx",
+            "shell",
+            "diff"
+        ],
         "customCss": "./guide/table.css"
     }
 }

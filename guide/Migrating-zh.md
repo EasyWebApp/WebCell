@@ -28,9 +28,7 @@ import {
 +   accessor key = '';
 }
 
-@component({
-    tagName: 'my-tag'
-})
+@component({ tagName: 'my-tag' })
 +@observer
 -export class MyTag extends mixin<{}, State>() {
 +export class MyTag extends HTMLElement {
@@ -63,9 +61,8 @@ npm install mobx
 另一方面，[`mobx-web-cell` 适配器][6] 已经合并到了核心包中。
 
 ```diff
-+import { JsxProps } from 'dom-renderer';
 import {
--   WebCellProps,
+    WebCellProps,
     component,
     attribute,
 -   watch,
@@ -77,14 +74,11 @@ import {
 -import { observer } from 'mobx-web-cell';
 +import { observable } from 'mobx';
 
--export interface MyTagProps extends WebCellProps {
-+export interface MyTagProps extends JsxProps<HTMLElement> {
+export interface MyTagProps extends WebCellProps {
     count?: number
 }
 
-@component({
-    tagName: 'my-tag'
-})
+@component({ tagName: 'my-tag' })
 @observer
 -export class MyTag extends mixin<MyTagProps>() {
 +export class MyTag extends HTMLElement {
