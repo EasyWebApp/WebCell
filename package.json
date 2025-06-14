@@ -1,6 +1,6 @@
 {
     "name": "web-cell",
-    "version": "3.1.0-rc.0",
+    "version": "3.1.0",
     "description": "Web Components engine based on VDOM, JSX, MobX & TypeScript",
     "keywords": [
         "web",
@@ -38,7 +38,7 @@
         "jsdom": ">=23.1"
     },
     "devDependencies": {
-        "@cspell/eslint-plugin": "^9.0.2",
+        "@cspell/eslint-plugin": "^9.1.1",
         "@eslint/js": "^9.29.0",
         "@parcel/config-default": "~2.15.2",
         "@parcel/packager-ts": "~2.15.2",
@@ -60,7 +60,7 @@
         "jest-environment-jsdom": "^29.7.0",
         "jiti": "^2.4.2",
         "jsdom": "^26.1.0",
-        "lint-staged": "^16.1.0",
+        "lint-staged": "^16.1.1",
         "parcel": "~2.15.2",
         "prettier": "^3.5.3",
         "prettier-plugin-sh": "^0.17.4",
