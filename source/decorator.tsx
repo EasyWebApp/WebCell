@@ -1,10 +1,5 @@
 import { DataObject, JsxChildren, VNode } from 'dom-renderer';
-import {
-    autorun,
-    IReactionDisposer,
-    IReactionPublic,
-    reaction as watch
-} from 'mobx';
+import { autorun, IReactionDisposer, IReactionPublic, reaction as watch } from 'mobx';
 import {
     CustomElement,
     isHTMLElementClass,
@@ -13,7 +8,7 @@ import {
     toHyphenCase
 } from 'web-utility';
 
-import { AsyncCell } from './Async';
+import { FunctionCell } from './Async';
 import { getMobxData } from './utility';
 import { ClassComponent } from './WebCell';
 
@@ -21,11 +16,11 @@ export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
 };
 export type FunctionComponent<P extends DataObject = {}> = (props: P) => VNode;
-export type FC<P extends DataObject = {}> = FunctionComponent<P>;
 
-const wrapFunction =
-    <P,>(func: FC<P>) =>
-    (props: P) => <AsyncCell delegatedProps={props} component={func} />;
+export type AsyncFunctionComponent<P extends DataObject = {}> = (props: P) => Promise<VNode>;
+
+export type FC<P extends DataObject = {}> = FunctionComponent<P>;
+export type AFC<P extends DataObject = {}> = AsyncFunctionComponent<P>;
 
 interface ReactionItem {
     expression: ReactionExpression;
@@ -34,10 +29,7 @@ interface ReactionItem {
 const reactionMap = new WeakMap<CustomElement, ReactionItem[]>();
 
 function wrapClass<T extends ClassComponent>(Component: T) {
-    class ObserverComponent
-        extends (Component as ClassComponent)
-        implements CustomElement
-    {
+    class ObserverComponent extends (Component as ClassComponent) implements CustomElement {
         static observedAttributes = [];
 
         protected disposers: IReactionDisposer[] = [];
@@ -56,24 +48,18 @@ function wrapClass<T extends ClassComponent>(Component: T) {
             const { update } = Object.getPrototypeOf(this);
 
             return new Promise<void>(resolve =>
-                this.disposers.push(
-                    autorun(() => update.call(this).then(resolve))
-                )
+                this.disposers.push(autorun(() => update.call(this).then(resolve)))
             );
         };
 
         #boot() {
-            const names: string[] =
-                    this.constructor['observedAttributes'] || [],
+            const names: string[] = this.constructor['observedAttributes'] || [],
                 reactions = reactionMap.get(this) || [];
 
             this.disposers.push(
                 ...names.map(name => autorun(() => this.syncPropAttr(name))),
                 ...reactions.map(({ expression, effect }) =>
-                    watch(
-                        reaction => expression(this, reaction),
-                        effect.bind(this)
-                    )
+                    watch(reaction => expression(this, reaction), effect.bind(this))
                 )
             );
         }
@@ -92,8 +78,7 @@ function wrapClass<T extends ClassComponent>(Component: T) {
 
             super.setAttribute(name, value);
 
-            if (names.includes(name))
-                this.attributeChangedCallback(name, old, value);
+            if (names.includes(name)) this.attributeChangedCallback(name, old, value);
         }
 
         attributeChangedCallback(name: string, old: string, value: string) {
@@ -105,16 +90,14 @@ function wrapClass<T extends ClassComponent>(Component: T) {
         syncPropAttr(name: string) {
             let value = this[toCamelCase(name)];
 
-            if (!(value != null) || value === false)
-                return this.removeAttribute(name);
+            if (!(value != null) || value === false) return this.removeAttribute(name);
 
             value = value === true ? name : value;
 
             if (typeof value === 'object') {
                 value = value.toJSON?.();
 
-                value =
-                    typeof value === 'object' ? JSON.stringify(value) : value;
+                value = typeof value === 'object' ? JSON.stringify(value) : value;
             }
             super.setAttribute(name, value);
         }
@@ -125,19 +108,26 @@ function wrapClass<T extends ClassComponent>(Component: T) {
 
 export type WebCellComponent = FunctionComponent | ClassComponent;
 
+export type ObservableComponent = WebCellComponent | AsyncFunctionComponent;
+
+export type AwaitedComponent<T extends ObservableComponent> = T extends (
+    props: infer P
+) => Promise<infer R>
+    ? (props: P) => R
+    : T;
+
 /**
  * `class` decorator of Web components for MobX
  */
-export function observer<T extends WebCellComponent>(
+export function observer<T extends ObservableComponent>(
     func: T,
     _: ClassDecoratorContext
-): T;
-export function observer<T extends WebCellComponent>(func: T): T;
-export function observer<T extends WebCellComponent>(
-    func: T,
-    _?: ClassDecoratorContext
-) {
-    return isHTMLElementClass(func) ? wrapClass(func) : wrapFunction(func);
+): AwaitedComponent<T>;
+export function observer<T extends ObservableComponent>(func: T): AwaitedComponent<T>;
+export function observer<T extends ObservableComponent>(func: T, _?: ClassDecoratorContext) {
+    return isHTMLElementClass(func)
+        ? wrapClass(func)
+        : (props: object) => <FunctionCell component={(() => func(props)) as FC | AFC} />;
 }
 
 /**
@@ -155,27 +145,42 @@ export function attribute<C extends HTMLElement, V>(
     });
 }
 
-export type ReactionExpression<I = any, O = any> = (
-    data: I,
-    reaction: IReactionPublic
-) => O;
+export type ReactionExpression<I = any, O = any> = (data: I, reaction: IReactionPublic) => O;
 
-export type ReactionEffect<V> = (
-    newValue: V,
-    oldValue: V,
-    reaction: IReactionPublic
-) => any;
+export type ReactionEffect<V> = (newValue: V, oldValue: V, reaction: IReactionPublic) => any;
 
 /**
- * Method decorator of MobX `reaction()`
+ * Method decorator of [MobX `reaction()`](https://mobx.js.org/reactions.html#reaction)
+ *
+ * @example
+ * ```tsx
+ * import { observable } from 'mobx';
+ * import { component, observer, reaction } from 'web-cell';
+ *
+ * @component({ tagName: 'my-tag' })
+ * @observer
+ * export class MyTag extends HTMLElement {
+ *     @observable
+ *     accessor count = 0;
+ *
+ *     @reaction(({ count }) => count)
+ *     handleCountChange(newValue: number, oldValue: number) {
+ *         console.log(`Count changed from ${oldValue} to ${newValue}`);
+ *     }
+ *
+ *     render() {
+ *        return (
+ *            <button onClick={() => this.count++}>
+ *                Up count {this.count}
+ *            </button>
+ *        );
+ *    }
+ * }
+ * ```
  */
-export function reaction<C extends HTMLElement, V>(
-    expression: ReactionExpression<C, V>
-) {
-    return (
-        effect: ReactionEffect<V>,
-        { addInitializer }: ClassMethodDecoratorContext<C>
-    ) =>
+export const reaction =
+    <C extends HTMLElement, V>(expression: ReactionExpression<C, V>) =>
+    (effect: ReactionEffect<V>, { addInitializer }: ClassMethodDecoratorContext<C>) =>
         addInitializer(function () {
             const reactions = reactionMap.get(this) || [];
 
@@ -183,4 +188,3 @@ export function reaction<C extends HTMLElement, V>(
 
             reactionMap.set(this, reactions);
         });
-}
