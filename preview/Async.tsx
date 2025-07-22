@@ -1,6 +1,5 @@
 import { FC, PropsWithChildren } from '../source';
 
-const Async: FC<PropsWithChildren> = ({ children }) => (
-    <div>Async load: {children}</div>
-);
-export default Async;
+const AsyncLoad: FC<PropsWithChildren> = ({ children }) => <p>Async load: {children}</p>;
+
+export default AsyncLoad;

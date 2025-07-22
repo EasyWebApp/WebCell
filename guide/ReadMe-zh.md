@@ -109,9 +109,7 @@ npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
 import { DOMRenderer } from 'dom-renderer';
 import { FC, PropsWithChildren } from 'web-cell';
 
-const Hello: FC<PropsWithChildren> = ({ children = '世界' }) => (
-    <h1>你好，{children}！</h1>
-);
+const Hello: FC<PropsWithChildren> = ({ children = '世界' }) => <h1>你好，{children}！</h1>;
 
 new DOMRenderer().render(<Hello>WebCell</Hello>);
 ```
@@ -203,9 +201,7 @@ class CounterModel {
 const couterStore = new CounterModel();
 
 const Counter: FC = observer(() => (
-    <button onClick={() => (couterStore.times += 1)}>
-        计数：{couterStore.times}
-    </button>
+    <button onClick={() => (couterStore.times += 1)}>计数：{couterStore.times}</button>
 ));
 
 new DOMRenderer().render(<Counter />);
@@ -419,12 +415,7 @@ class MyField extends HTMLElement implements WebField {
         const { name } = this;
 
         return (
-            <input
-                name={name}
-                onChange={({ currentTarget: { value } }) =>
-                    (this.value = value)
-                }
-            />
+            <input name={name} onChange={({ currentTarget: { value } }) => (this.value = value)} />
         );
     }
 }
@@ -439,6 +430,22 @@ new DOMRenderer().render(
 ```
 
 ### 异步组件
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { observer, PropsWithChildren } from 'web-cell';
+import { sleep } from 'web-utility';
+
+const AsyncComponent = observer(async ({ children }: PropsWithChildren) => {
+    await sleep(1);
+
+    return <p>{children} 中的异步组件</p>;
+});
+
+new DOMRenderer().render(<AsyncComponent>WebCell</AsyncComponent>);
+```
+
+### 异步加载
 
 #### `AsyncTag.tsx`
 
@@ -564,7 +571,6 @@ https://github.com/EasyWebApp/DOM-Renderer?tab=readme-ov-file#nodejs--bun
 - **状态管理**：[MobX][3]（也由 **TypeScript** 和 **Decorator** 提供支持）
 - **路由**：[Cell Router][43]
 - **UI 组件**
-
     - [BootCell][44]（基于 **BootStrap v5**）
     - [MDUI][45]（基于 **Material Design v3**）
     - [GitHub Web Widget][46]

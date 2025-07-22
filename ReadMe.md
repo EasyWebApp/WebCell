@@ -109,9 +109,7 @@ npm install parcel @parcel/config-default @parcel/transformer-typescript-tsc -D
 import { DOMRenderer } from 'dom-renderer';
 import { FC, PropsWithChildren } from 'web-cell';
 
-const Hello: FC<PropsWithChildren> = ({ children = 'World' }) => (
-    <h1>Hello, {children}!</h1>
-);
+const Hello: FC<PropsWithChildren> = ({ children = 'World' }) => <h1>Hello, {children}!</h1>;
 
 new DOMRenderer().render(<Hello>WebCell</Hello>);
 ```
@@ -203,9 +201,7 @@ class CounterModel {
 const couterStore = new CounterModel();
 
 const Counter: FC = observer(() => (
-    <button onClick={() => (couterStore.times += 1)}>
-        Counts: {couterStore.times}
-    </button>
+    <button onClick={() => (couterStore.times += 1)}>Counts: {couterStore.times}</button>
 ));
 
 new DOMRenderer().render(<Counter />);
@@ -419,12 +415,7 @@ class MyField extends HTMLElement implements WebField {
         const { name } = this;
 
         return (
-            <input
-                name={name}
-                onChange={({ currentTarget: { value } }) =>
-                    (this.value = value)
-                }
-            />
+            <input name={name} onChange={({ currentTarget: { value } }) => (this.value = value)} />
         );
     }
 }
@@ -439,6 +430,22 @@ new DOMRenderer().render(
 ```
 
 ### Async component
+
+```tsx
+import { DOMRenderer } from 'dom-renderer';
+import { observer, PropsWithChildren } from 'web-cell';
+import { sleep } from 'web-utility';
+
+const AsyncComponent = observer(async ({ children }: PropsWithChildren) => {
+    await sleep(1);
+
+    return <p>Async Component in {children}</p>;
+});
+
+new DOMRenderer().render(<AsyncComponent>WebCell</AsyncComponent>);
+```
+
+### Async loading
 
 #### `AsyncTag.tsx`
 
@@ -504,10 +511,7 @@ import { DOMRenderer } from 'dom-renderer';
 import { AnimateCSS } from 'web-cell';
 
 new DOMRenderer().render(
-    <AnimateCSS
-        type="fadeIn"
-        component={props => <h1 {...props}>Fade In</h1>}
-    />
+    <AnimateCSS type="fadeIn" component={props => <h1 {...props}>Fade In</h1>} />
 );
 ```
 
@@ -567,7 +571,6 @@ We recommend these libraries to use with WebCell:
 - **State management**: [MobX][3] (also powered by **TypeScript** & **Decorator**)
 - **Router**: [Cell Router][43]
 - **UI components**
-
     - [BootCell][44] (based on **BootStrap v5**)
     - [MDUI][45] (based on **Material Design v3**)
     - [GitHub Web Widget][46]

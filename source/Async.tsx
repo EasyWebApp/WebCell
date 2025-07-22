@@ -1,57 +1,31 @@
+import { VNode } from 'dom-renderer';
 import { observable } from 'mobx';
 
-import {
-    FC,
-    FunctionComponent,
-    observer,
-    PropsWithChildren,
-    reaction,
-    WebCellComponent
-} from './decorator';
+import { AFC, FC, FunctionComponent, observer, WebCellComponent } from './decorator';
 import { ClassComponent, component, WebCell, WebCellProps } from './WebCell';
 
 export type ComponentTag = string | WebCellComponent;
 
-export interface AsyncCellProps {
-    loader?: () => Promise<ComponentTag>;
-    delegatedProps?: WebCellProps;
+export interface FunctionCellProps extends WebCellProps {
+    component: FC | AFC;
 }
+export interface FunctionCell extends WebCell<FunctionCellProps> {}
 
-export interface AsyncCell extends WebCell<AsyncCellProps> {}
-
-@component({ tagName: 'async-cell' })
+@component({ tagName: 'function-cell' })
 @observer
-export class AsyncCell extends HTMLElement implements WebCell<AsyncCellProps> {
+export class FunctionCell extends HTMLElement implements WebCell<FunctionCellProps> {
     @observable
-    accessor loader: AsyncCellProps['loader'];
-
-    @observable
-    accessor component: FC<PropsWithChildren>;
+    accessor component: FunctionCellProps['component'];
 
     @observable
-    accessor delegatedProps: AsyncCellProps['delegatedProps'];
-
-    @reaction(({ loader }) => loader)
-    async connectedCallback() {
-        const { loader } = this;
-
-        if (!loader) return;
-
-        this.component = undefined;
-
-        const Tag = await loader();
-
-        this.component = ({ children, ...props }) => (
-            <Tag {...props}>{children}</Tag>
-        );
-        this.emit('load', this.component);
-    }
+    accessor vNode: VNode | undefined;
 
     render() {
-        const { component: Tag, props, delegatedProps } = this;
-        const { children, ...data } = { ...props, ...delegatedProps };
+        const result = this.vNode || this.component({});
 
-        return Tag && <Tag {...data}>{children}</Tag>;
+        if (!(result instanceof Promise)) return result;
+
+        result.then(vNode => (this.vNode = vNode));
     }
 }
 
@@ -62,12 +36,13 @@ type GetAsyncProps<T> = T extends () => Promise<{
     : {};
 
 export const lazy =
-    <T extends () => Promise<{ default: FunctionComponent | ClassComponent }>>(
-        loader: T
-    ) =>
+    <T extends () => Promise<{ default: FunctionComponent | ClassComponent }>>(loader: T) =>
     (props: GetAsyncProps<T>) => (
-        <AsyncCell
-            delegatedProps={props}
-            loader={async () => (await loader()).default}
+        <FunctionCell
+            component={async () => {
+                const { default: Tag } = await loader();
+
+                return <Tag {...props} />;
+            }}
         />
     );

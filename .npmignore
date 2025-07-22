@@ -1,7 +1,6 @@
 *.sh
 .*
-eslint.config.mjs
-jest.config.ts
+*.config.ts
 test/
 preview/
 Contributing.md

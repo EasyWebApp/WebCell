@@ -5,7 +5,7 @@ import { configure } from 'mobx';
 import { sleep } from 'web-utility';
 
 import { lazy } from '../source/Async';
-import { FC } from '../source/decorator';
+import { FC, observer } from '../source/decorator';
 import { WebCellProps } from '../source/WebCell';
 
 configure({ enforceActions: 'never' });
@@ -13,22 +13,40 @@ configure({ enforceActions: 'never' });
 describe('Async Box component', () => {
     const renderer = new DOMRenderer();
 
+    afterEach(() => renderer.render(<></>));
+
     it('should render an Async Component', async () => {
-        const Sync: FC<WebCellProps<HTMLAnchorElement>> = ({
-            children,
-            ...props
-        }) => <a {...props}>{children}</a>;
+        const Async = observer(async ({ children, ...props }: WebCellProps<HTMLAnchorElement>) => {
+            await sleep(1);
+
+            return <a {...props}>{children}</a>;
+        });
+        renderer.render(<Async href="test">Async Component</Async>);
+
+        expect(document.body.innerHTML).toBe('<function-cell></function-cell>');
+
+        await sleep(2);
+
+        expect(document.body.innerHTML).toBe(
+            '<function-cell><a href="test">Async Component</a></function-cell>'
+        );
+    });
+
+    it('should render a Sync Component after Async Loading', async () => {
+        const Sync: FC<WebCellProps<HTMLAnchorElement>> = ({ children, ...props }) => (
+            <a {...props}>{children}</a>
+        );
 
         const Async = lazy(async () => ({ default: Sync }));
 
-        renderer.render(<Async href="test">Test</Async>);
+        renderer.render(<Async href="test">Sync Component from Async Loading</Async>);
 
-        expect(document.body.innerHTML).toBe('<async-cell></async-cell>');
+        expect(document.body.innerHTML).toBe('<function-cell></function-cell>');
 
         await sleep();
 
         expect(document.body.innerHTML).toBe(
-            '<async-cell><a href="test">Test</a></async-cell>'
+            '<function-cell><a href="test">Sync Component from Async Loading</a></function-cell>'
         );
     });
 });
