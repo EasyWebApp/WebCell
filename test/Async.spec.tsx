@@ -40,6 +40,7 @@ describe('Async Box component', () => {
         const Async = lazy(async () => ({ default: Sync }));
 
         renderer.render(<Async href="test">Sync Component from Async Loading</Async>);
+
         expect(document.body.innerHTML).toBe('<function-cell></function-cell>');
 
         await sleep();

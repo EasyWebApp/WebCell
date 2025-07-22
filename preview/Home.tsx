@@ -4,7 +4,7 @@ import { AnimateCSS, FC, lazy, observer, PropsWithChildren, WebCellProps } from 
 import { ClassClock, FunctionClock } from './Clock';
 import { TestField } from './Field';
 
-const Async = lazy(() => import('./Async'));
+const AsyncLoad = lazy(() => import('./Async'));
 
 const Hello: FC<WebCellProps> = ({ className, children }) => (
     <h1 className={className}>Hello {children}!</h1>
@@ -43,7 +43,7 @@ export const HomePage = () => (
             <button>√</button>
         </form>
 
-        <Async>content</Async>
+        <AsyncLoad>content</AsyncLoad>
         <AsyncComponent>content</AsyncComponent>
     </>
 );
