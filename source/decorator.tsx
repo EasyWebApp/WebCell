@@ -10,7 +10,7 @@ import {
 
 import { FunctionCell } from './Async';
 import { getMobxData } from './utility';
-import { ClassComponent } from './WebCell';
+import { ClassComponent, WebCell } from './WebCell';
 
 export type PropsWithChildren<P extends DataObject = {}> = P & {
     children?: JsxChildren;
@@ -108,6 +108,16 @@ function wrapClass<T extends ClassComponent>(Component: T) {
 
 export type WebCellComponent = FunctionComponent | ClassComponent;
 
+export type ComponentType<P extends object = {}> = FC<P> | (WebCell<P> & ClassComponent);
+
+export type ComponentProps<C extends keyof JSX.IntrinsicElements | WebCellComponent> =
+    C extends keyof JSX.IntrinsicElements
+        ? JSX.IntrinsicElements[C]
+        : C extends FC<infer P>
+          ? P
+          : C extends WebCell<infer P> & ClassComponent
+            ? P
+            : never;
 export type ObservableComponent = WebCellComponent | AsyncFunctionComponent;
 
 export type AwaitedComponent<T extends ObservableComponent> = T extends (
