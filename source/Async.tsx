@@ -1,5 +1,5 @@
 import { VNode } from 'dom-renderer';
-import { observable } from 'mobx';
+import { observable, reaction } from 'mobx';
 
 import { AFC, FC, FunctionComponent, observer, WebCellComponent } from './decorator';
 import { ClassComponent, component, WebCell, WebCellProps } from './WebCell';
@@ -19,6 +19,11 @@ export class FunctionCell extends HTMLElement implements WebCell<FunctionCellPro
 
     @observable
     accessor vNode: VNode | undefined;
+
+    disconnectedCallback = reaction(
+        () => this.component,
+        () => (this.vNode = undefined)
+    );
 
     render() {
         const result = this.vNode || this.component({});
