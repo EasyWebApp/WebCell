@@ -1,0 +1,42 @@
+/* https://developer.mozilla.org/en-US/docs/Web/HTML/Element/table#displaying_large_tables_in_small_spaces */
+@media (max-width: 768px) {
+    table {
+        white-space: nowrap;
+    }
+}
+
+table {
+    width: 100%;
+    margin: 0 auto;
+    display: block;
+    overflow-x: auto;
+    border-spacing: 0;
+}
+
+th,
+td {
+    border-top-width: 0;
+    border-left-width: 0;
+    padding: 0.25rem 0.5rem;
+}
+
+th {
+    vertical-align: bottom;
+}
+
+th:last-child,
+td:last-child {
+    border-right-width: 0;
+}
+
+tr:last-child td {
+    border-bottom-width: 0;
+}
+
+tr td:first-child,
+tr th:first-child {
+    position: sticky;
+    left: 0;
+    background: var(--color-background-secondary);
+    z-index: 1;
+}
